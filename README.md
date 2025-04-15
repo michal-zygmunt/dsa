@@ -1,4 +1,9 @@
 # Data Structures and Algorithms
 
-Repository with concepts of data structures and algorithms implemented
-in C and C++.
+Repository with data structures and algorithms implemented
+in C++.
+
+Implemented Data Structures
+- Forward List
+
+
