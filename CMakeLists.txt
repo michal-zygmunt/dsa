@@ -12,13 +12,6 @@ endif()
 project (dsa)
 include (CTest)
 
-# Add source to this project's executable.
-add_executable (dsa "main.cpp")
-
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET dsa PROPERTY CXX_STANDARD 20)
-endif()
-
 if(BUILD_TESTING)
 	add_subdirectory(tests)
 endif()
