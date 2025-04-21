@@ -16,93 +16,87 @@
 #include <iostream>
 
  /**
-  * @brief Implementation of Node<T> with pointer to prev and next elements
-  * @tparam T type of stored data
+  * @brief Implements List using Node with pointer to adjacent
+  *        element as internal base
+  *
+  * @tparam T type of data stored in List Node
   */
-
-  /**
-   * @brief Implements Node template class with pointer to adjacent elements
-   *
-   * @tparam T type of data stored in Node
-   */
-template<typename T>
-class Node
-{
-public:
-
-    /**
-     * @brief Construct a new Node object with initial value
-     *
-     * @param[in] value to store in Node object
-     */
-    Node(T value)
-        : m_value{ value }
-    {
-    }
-
-    /**
-     * @brief Destroy the Node object
-     */
-    ~Node()
-    {
-    }
-
-    /**
-     * @brief Function returns value stored in Node object
-     *
-     * @return T value stored in Node
-     */
-    T value() const
-    {
-        return m_value;
-    }
-
-    /**
-     * @brief Function returns pointer to next Node object
-     *
-     * @return Node<T>* pointer to value stored in Node
-     */
-    Node<T>* next() const
-    {
-        return m_next;
-    }
-
-    /**
-     * @brief Function returns pointer to previous Node object
-     *
-     * @return Node<T>* pointer to value stored in Node
-     */
-    Node<T>* prev() const
-    {
-        return m_prev;
-    }
-
-private:
-
-    /**
-     * @brief Forward friend declaration of List
-     *
-     * @tparam T type of data stored in Node/List objects
-     */
-    template<typename T>
-    friend class List;
-
-    T m_value{};
-    Node<T>* m_next{};
-    Node<T>* m_prev{};
-
-};
-
-/**
- * @brief Implements List using Node with pointer to adjacent
- *        element as internal base
- *
- * @tparam T type of data stored in List Node
- */
 template<typename T>
 class List
 {
 public:
+
+    /**
+     * @brief Implements Node template class with pointer to adjacent elements
+     *
+     * @tparam T type of data stored in Node
+     */
+    template<typename T>
+    class Node
+    {
+    public:
+
+        /**
+         * @brief Construct a new Node object with initial value
+         *
+         * @param[in] value to store in Node object
+         */
+        Node(T value)
+            : m_value{ value }
+        {
+        }
+
+        /**
+         * @brief Destroy the Node object
+         */
+        ~Node()
+        {
+        }
+
+        /**
+         * @brief Function returns value stored in Node object
+         *
+         * @return T value stored in Node
+         */
+        T value() const
+        {
+            return m_value;
+        }
+
+        /**
+         * @brief Function returns pointer to next Node object
+         *
+         * @return Node<T>* pointer to value stored in Node
+         */
+        Node<T>* next() const
+        {
+            return m_next;
+        }
+
+        /**
+         * @brief Function returns pointer to previous Node object
+         *
+         * @return Node<T>* pointer to value stored in Node
+         */
+        Node<T>* prev() const
+        {
+            return m_prev;
+        }
+
+    private:
+
+        /**
+         * @brief Forward friend declaration of List
+         *
+         * @tparam T type of data stored in Node/List objects
+         */
+        template<typename T>
+        friend class List;
+
+        T m_value{};
+        Node<T>* m_next{};
+        Node<T>* m_prev{};
+    };
 
     /**
      * @brief Construct a new List object
@@ -547,7 +541,7 @@ void List<T>::pop_front()
 }
 
 template<typename T>
-Node<T>* List<T>::get(int index) const
+List<T>::Node<T>* List<T>::get(int index) const
 {
     if (index < 0 || index > m_size)
     {
@@ -645,7 +639,7 @@ List<T> operator+(const List<T>& l1, const List<T>& l2)
 template<typename T>
 std::ostream& operator<<(std::ostream& out, const List<T>& ll)
 {
-    Node<T>* temp = ll.head();
+    List<T>::Node<T>* temp = ll.head();
     while (temp)
     {
         out << temp->value() << ' ';
