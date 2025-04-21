@@ -16,76 +16,77 @@
 #include <iostream>
 
  /**
-  * @brief Implements Node template class with pointer to next element
+  * @brief Implements ForwardList using Node with pointer to next element
+  *        as internal base
   *
-  * @tparam T type of data stored in Node
+  * @tparam T type of data stored in ForwardList Node
   */
-template<typename T>
-class Node
-{
-public:
-
-    /**
-     * @brief Construct a new Node object with initial value
-     *
-     * @param[in] value to store in Node object
-     */
-    Node(T value)
-        : m_value{ value }
-    {
-    }
-
-    /**
-     * @brief Destroy the Node object
-     */
-    ~Node()
-    {
-    }
-
-    /**
-     * @brief Function returns value stored in Node object
-     *
-     * @return T value stored in Node
-     */
-    T value() const
-    {
-        return m_value;
-    }
-
-    /**
-     * @brief Function returns pointer to next Node object
-     *
-     * @return Node<T>* pointer to value stored in Node
-     */
-    Node<T>* next() const
-    {
-        return m_next;
-    }
-
-private:
-
-    /**
-     * @brief Forward friend declaration of ForwardList
-     *
-     * @tparam T type of data stored in Node objects
-     */
-    template<typename T>
-    friend class ForwardList;
-
-    T m_value{};
-    Node<T>* m_next{};
-};
-
-/**
- * @brief Implements ForwardList using Node with pointer to next element
- *        as internal base
- *
- * @tparam T type of data stored in ForwardList Node
- */
 template<typename T>
 class ForwardList
 {
 public:
+
+    /**
+     * @brief Implements Node template class with pointer to next element
+     *
+     * @tparam T type of data stored in Node
+     */
+    template<typename T>
+    class Node
+    {
+    public:
+
+        /**
+         * @brief Construct a new Node object with initial value
+         *
+         * @param[in] value to store in Node object
+         */
+        Node(T value)
+            : m_value{ value }
+        {
+        }
+
+        /**
+         * @brief Destroy the Node object
+         */
+        ~Node()
+        {
+        }
+
+        /**
+         * @brief Function returns value stored in Node object
+         *
+         * @return T value stored in Node
+         */
+        T value() const
+        {
+            return m_value;
+        }
+
+        /**
+         * @brief Function returns pointer to next Node object
+         *
+         * @return Node<T>* pointer to value stored in Node
+         */
+        Node<T>* next() const
+        {
+            return m_next;
+        }
+
+    private:
+
+        /**
+         * @brief Forward friend declaration of ForwardList
+         *
+         * @tparam T type of data stored in Node objects
+         */
+        template<typename T>
+        friend class ForwardList;
+
+        T m_value{};
+        Node<T>* m_next{};
+    };
+
 
     /**
      * @brief Construct a new ForwardList object
@@ -531,7 +532,7 @@ void ForwardList<T>::pop_front()
 }
 
 template<typename T>
-Node<T>* ForwardList<T>::get(int index) const
+ForwardList<T>::Node<T>* ForwardList<T>::get(int index) const
 {
     if (index < 0 || index > m_size)
     {
@@ -594,7 +595,7 @@ ForwardList<T> operator+(const ForwardList<T>& l1, const ForwardList<T>& l2)
 {
     ForwardList<T> temp(l1);
 
-    Node<T>* node = l2.head();
+    ForwardList<T>::Node<T>* node = l2.head();
     for (size_t i = 0; i < l2.size(); i++)
     {
         temp.push_back(node->value());
@@ -615,7 +616,7 @@ ForwardList<T> operator+(const ForwardList<T>& l1, const ForwardList<T>& l2)
 template<typename T>
 std::ostream& operator<<(std::ostream& out, const ForwardList<T>& ll)
 {
-    Node<T>* temp = ll.head();
+    ForwardList<T>::Node<T>* temp = ll.head();
     while (temp)
     {
         out << temp->value() << ' ';
