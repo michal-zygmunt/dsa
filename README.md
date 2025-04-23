@@ -6,4 +6,5 @@ in C++.
 Implemented Data Structures
 - Forward List
 - List
+- Queue
 
