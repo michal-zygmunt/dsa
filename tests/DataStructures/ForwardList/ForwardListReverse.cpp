@@ -21,7 +21,6 @@ int main()
 
     ForwardList<int> l1 = ForwardList<int>({ 0, 10, 20, 30, 40, 50 });
     l1.reverse();
-
     res = if_error(l1, expected);
     std::cout << "ForwardList:\t" << l1 << '\n';
     std::cout << "Expected:\t" << expected << '\n';

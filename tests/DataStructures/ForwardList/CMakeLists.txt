@@ -26,3 +26,18 @@ add_test(NAME ForwardListReverse COMMAND ForwardListReverse)
 
 add_executable(ForwardListOperators ForwardListOperators.cpp)
 add_test(NAME ForwardListOperators COMMAND ForwardListOperators)
+
+add_executable(ForwardListSwap ForwardListSwap.cpp)
+add_test(NAME ForwardListSwap COMMAND ForwardListSwap)
+
+add_executable(ForwardListMerge ForwardListMerge.cpp)
+add_test(NAME ForwardListMerge COMMAND ForwardListMerge)
+
+add_executable(ForwardListResize ForwardListResize.cpp)
+add_test(NAME ForwardListResize COMMAND ForwardListResize)
+
+add_executable(ForwardListUnique ForwardListUnique.cpp)
+add_test(NAME ForwardListUnique COMMAND ForwardListUnique)
+
+add_executable(ForwardListSplice ForwardListSplice.cpp)
+add_test(NAME ForwardListSplice COMMAND ForwardListSplice)

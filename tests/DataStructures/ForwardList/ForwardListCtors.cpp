@@ -21,9 +21,9 @@ int main()
 
     std::cout << "Default ctor\n";
     ForwardList<int> l1;
-    l1.push_back(0);
-    l1.push_back(10);
-    l1.push_back(20);
+    l1.push_front(20);
+    l1.push_front(10);
+    l1.push_front(0);
     res = if_error(l1, expected);
     std::cout << "ForwardList l1:\t" << l1 << '\n';
     std::cout << "Expected:  \t" << expected << '\n';
@@ -31,8 +31,8 @@ int main()
 
     std::cout << "Value ctor\n";
     ForwardList<int> l2(0);
-    l2.push_back(10);
-    l2.push_back(20);
+    l2.insert_after(l2.size() - 1, 10);
+    l2.insert_after(l2.size() - 1, 20);
     res = if_error(l2, expected);
     std::cout << "ForwardList l2:\t" << l2 << '\n';
     std::cout << "Expected:  \t" << expected << '\n';
@@ -54,11 +54,11 @@ int main()
 
     std::cout << "Copy assignment ctor\n";
     ForwardList<int> l5;
-    l5.push_back(1);
-    l5.push_back(2);
-    l5.push_back(3);
-    l5.push_back(4);
-    l5.push_back(5);
+    l5.push_front(5);
+    l5.push_front(4);
+    l5.push_front(3);
+    l5.push_front(2);
+    l5.push_front(1);
     l5 = l1;
     res = if_error(l5, expected);
     std::cout << "ForwardList l5:\t" << l5 << '\n';

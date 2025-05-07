@@ -20,7 +20,6 @@ int main()
     std::initializer_list<int> expected{ 0, 10, 20 };
 
     ForwardList<int> l1 = ForwardList<int>({ 0, 10, 20 });
-
     // Try reading some nodes with invalid indexes
     auto indexes = { -1, 0, 1, 2, 100 };
     for (int i = 0; i < indexes.size(); i++)

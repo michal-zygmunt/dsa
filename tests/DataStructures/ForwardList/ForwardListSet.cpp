@@ -20,16 +20,30 @@ int main()
     std::initializer_list<int> expected{ 0, 50, 20 };
 
     ForwardList<int> l1 = ForwardList<int>({ 0, 10, 20 });
-
     // Try setting values for nodes with invalid indexes
     constexpr int new_value{ 50 };
     bool if_set{};
     if_set |= l1.set(-1, new_value);
     if_set |= l1.set(1, new_value);
     if_set |= l1.set(100, new_value);
-
     res = if_error(l1, expected);
     std::cout << "ForwardList:\t" << l1 << '\n';
+    std::cout << "Expected:\t" << expected << '\n';
+    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+
+    ForwardList<int> l2 = ForwardList<int>({ 0, 10, 20 });
+    l2.assign(4, 1);
+    expected = { 1, 1, 1, 1 };
+    res = if_error(l2, expected);
+    std::cout << "ForwardList l2:\t" << l2 << '\n';
+    std::cout << "Expected:\t" << expected << '\n';
+    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+
+    ForwardList<int> l3 = ForwardList<int>({ 0, 10, 20 });
+    expected = { 1, 2, 3, 4 };
+    l3.assign(expected);
+    res = if_error(l3, expected);
+    std::cout << "ForwardList l3:\t" << l3 << '\n';
     std::cout << "Expected:\t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
