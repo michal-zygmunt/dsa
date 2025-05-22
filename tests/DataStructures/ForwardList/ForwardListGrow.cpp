@@ -20,16 +20,16 @@ int main()
     std::initializer_list<int> expected{ -10, 0, 0, 2, 10, 20, 4, 30, 40 };
 
     ForwardList<int> l1 = ForwardList<int>(10);
-    l1.insert_after(l1.size() - 1, 20);
-    l1.insert_after(l1.size() - 1, 30);
-    l1.insert_after(l1.size() - 1, 40);
+    auto it = l1.insert_after(l1.cbegin(), 20);
+    l1.insert_after(*it, { 30, 40 });
     l1.push_front(0);
     l1.push_front(-10);
     // Try inserting nodes at invalid indexes
     auto indexes = { -1, 0, 4, 2, 100 };
-    for (const auto& i : indexes)
+    for (int i = 0; i < indexes.size(); i++)
     {
-        l1.insert_after(i, i);
+        int idx_val = indexes.begin()[i];
+        l1.insert_after(l1.cbegin()[idx_val], idx_val);
     }
     res = if_error(l1, expected);
     std::cout << "ForwardList l1:\t" << l1 << '\n';
@@ -41,7 +41,7 @@ int main()
     l2.push_front(30);
     l2.push_front(20);
     l2.push_front(10);
-    l2.insert_after(0, 5, 5);
+    l2.insert_after(l2.cbegin(), 5, 5);
     expected = { 10, 5, 5, 5, 5, 5, 20, 30, 40, 50 };
     res = if_error(l2, expected);
     std::cout << "ForwardList l2:\t" << l2 << '\n';
@@ -51,10 +51,11 @@ int main()
     ForwardList<int> l3 = ForwardList<int>(50);
     l3.push_front(40);
     l3.push_front(30);
-    l3.push_front(20);
     l3.push_front(10);
-    l3.insert_after(1, { 1, 2, 3 });
-    expected = { 10, 20, 1, 2, 3, 30, 40, 50 };
+    it = l3.insert_after(l3.cbegin(), 20);
+    l3.insert_after(*it, { 1, 2, 3 });
+    l3.insert_after(l3.cbegin()[l3.size() - 1], 60);
+    expected = { 10, 20, 1, 2, 3, 30, 40, 50, 60 };
     res = if_error(l3, expected);
     std::cout << "ForwardList l3:\t" << l3 << '\n';
     std::cout << "Expected:\t" << expected << '\n';

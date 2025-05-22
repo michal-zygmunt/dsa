@@ -30,9 +30,9 @@ int main()
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
     std::cout << "Value ctor\n";
-    ForwardList<int> l2(0);
-    l2.insert_after(l2.size() - 1, 10);
-    l2.insert_after(l2.size() - 1, 20);
+    ForwardList<int> l2(20);
+    l2.push_front(0);
+    l2.insert_after(l2.cbegin(), 10);
     res = if_error(l2, expected);
     std::cout << "ForwardList l2:\t" << l2 << '\n';
     std::cout << "Expected:  \t" << expected << '\n';

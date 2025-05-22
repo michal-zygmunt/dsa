@@ -59,7 +59,7 @@ public:
          *
          * @return T to value stored in Node
          */
-        T value()
+        T& value()
         {
             return m_value;
         }
@@ -97,6 +97,165 @@ public:
         T m_value{};
         Node<T>* m_next{};
     };
+
+    /**
+     * @brief Implements Basic_Iterator
+     *
+     * Class is used to generate Iterator and Const_Iterator types.
+     * Template variable \p IF_CONST control whether reference
+     * or const reference is returned to underlying data type
+     *
+     * @tparam IF_CONST if \p true generate class with const reference to underlying data type
+     * @tparam T type of data stored in Node
+     */
+    template<bool IF_CONST, typename T>
+    class Basic_Iterator
+    {
+    public:
+
+        using iterator_type = typename std::conditional<IF_CONST, const T, T>::type;
+
+        /**
+         * @brief Construct a new Basic_Iterator object
+         *
+         * @param[in] node input Node
+         */
+        Basic_Iterator(Node<T>* node) noexcept
+            : m_current_node{ node }
+        {
+        }
+
+        /**
+         * @brief Destroy the Basic_Iterator object
+         */
+        ~Basic_Iterator()
+        {
+        }
+
+        /**
+         * @brief Overload operator= to assign \p node to currently pointed Basic_Iterator
+         *
+         * @param[in] node input Node
+         * @return Basic_Iterator& reference to updated Node
+         */
+        Basic_Iterator& operator=(Node<T>* node)
+        {
+            this->m_current_node = node;
+            return *this;
+        }
+
+        /**
+         * @brief Overload pre-increment operator++ to point Basic_Iterator at next Node
+         *
+         * @return Basic_Iterator& reference to next Node
+         */
+        Basic_Iterator& operator++()
+        {
+            if (m_current_node)
+            {
+                m_current_node = m_current_node->m_next;
+            }
+
+            return *this;
+        }
+
+        /**
+         * @brief Overload post-increment operator++ to point Basic_Iterator at next Node
+         *
+         * @return Basic_Iterator& reference to next Basic_Iterator
+         */
+        Basic_Iterator operator++(int)
+        {
+            Basic_Iterator<IF_CONST, T> Basic_Iterator = *this;
+            ++(*this);
+            return Basic_Iterator;
+        }
+
+        /**
+         * @brief Overload operator!= for Basic_Iterator objects comparison
+         *
+         * @param[in] other input Basic_Iterator of \p other object
+         * @return bool comparison result
+         * @retval true if Basic_Iterator objects are the same
+         * @retval false if Basic_Iterator objects are different
+         */
+        bool operator==(const Basic_Iterator<IF_CONST, T>& other)
+        {
+            return m_current_node == other.m_current_node;
+        }
+
+        /**
+         * @brief Overload operator!= for Basic_Iterator objects comparison
+         *
+         * @param[in] other input Basic_Iterator of \p other object
+         * @return bool comparison result
+         * @retval true if Basic_Iterator objects are different
+         * @retval false if Basic_Iterator objects are the same
+         */
+        bool operator!=(const Basic_Iterator<IF_CONST, T>& other)
+        {
+            return !operator==(other);// m_current_node != other.m_current_node;
+        }
+
+        /**
+         * @brief Overload operator[] for Basic_Iterator iterator access
+         *
+         * @param[in] index number of Node to move forward
+         * @return Basic_Iterator to Node pointed by \p index from ForwardList front
+         * @retval valid Basic_Iterator if index is valid
+         * @retval nullptr if index is invalid
+         */
+        Basic_Iterator operator[](size_t index)
+        {
+            Node<T>* temp{};
+            if (index >= 0)
+            {
+                temp = m_current_node;
+
+                for (size_t i = 0; i < index; i++)
+                {
+                    if (temp->m_next)
+                    {
+                        temp = temp->m_next;
+                    }
+                    else
+                    {
+                        return nullptr;
+                    }
+                }
+            }
+
+            return temp;
+        }
+
+        /**
+         * @brief Overload operator* to dereference Node value / data
+         *
+         * @return T& reference or const reference to data stored in Node
+         */
+        iterator_type& operator*() const noexcept
+        {
+            return m_current_node->value();
+        }
+
+        /**
+         * @brief convert Basic_Iterator to Basic_Const_Iterator
+         */
+        operator Basic_Iterator<true, T>()
+        {
+            return Basic_Iterator<true, T>(m_current_node);
+        }
+
+    private:
+
+        template<typename T>
+        friend class ForwardList;
+
+        Node<T>* m_current_node{};
+    };
+
+    using Const_Iterator = Basic_Iterator<true, T>;
+    using Iterator = Basic_Iterator<false, T>;
 
     /**
      * @brief Construct a new ForwardList object
@@ -172,16 +331,16 @@ public:
     /**
      * @brief Function returns reference to value stored in ForwardList first Node
      *
-     * @return Node<T>* pointer to ForwardList first Node
+     * @return reference to data stored in ForwardList first Node
      */
-    Node<T>* front();
+    T& front();
 
     /**
      * @brief Function returns const reference value stored in ForwardList first Node
      *
-     * @return Node<T>* pointer to ForwardList first Node
+     * @return const reference to data stored in ForwardList first Node
      */
-    Node<T>* front() const;
+    const T& front() const;
 
     /// @todo add before_begin
 
@@ -190,30 +349,44 @@ public:
     /**
      * @brief Function returns pointer to ForwardList first Node
      *
-     * @return Node<T>* pointer to ForwardList first Node
+     * @return Iterator Iterator to ForwardList first Node
      */
-    Node<T>* begin();
+    Iterator begin() noexcept;
 
     /**
      * @brief Function returns const pointer to ForwardList first Node
      *
-     * @return Node<T>* const pointer to ForwardList first Node
+     * @return Const_Iterator const Iterator to ForwardList first Node
      */
-    Node<T>* cbegin() const;
+    Const_Iterator begin() const noexcept;
+
+    /**
+     * @brief Function returns const pointer to ForwardList first Node
+     *
+     * @return Const_Iterator const Iterator to ForwardList first Node
+     */
+    Const_Iterator cbegin() const noexcept;
 
     /**
      * @brief Function returns pointer to ForwardList last Node
      *
-     * @return Node<T>* pointer to ForwardList last Node
+     * @return Iterator Iterator to ForwardList last Node
      */
-    Node<T>* end();
+    Iterator end() noexcept;
 
     /**
      * @brief Function returns pointer to ForwardList last Node
      *
-     * @return Node<T>* const pointer to ForwardList last Node
+     * @return Const_Iterator const Iterator to ForwardList last Node
      */
-    Node<T>* cend() const;
+    Const_Iterator end() const noexcept;
+
+    /**
+     * @brief Function returns pointer to ForwardList last Node
+     *
+     * @return Const_Iterator const Iterator to ForwardList last Node
+     */
+    Const_Iterator cend() const noexcept;
 
     /**
      * @brief Function checks if container has no elements
@@ -231,61 +404,61 @@ public:
     void clear();
 
     /**
-     * @brief Function inserts new Node after specified index of ForwardList
+     * @brief Function inserts new Node after specified ForwardList Const_Iterator
      *
-     * @param[in] index index to insert element after
-     * @param[in] value element of type T to be inserted
+     * @param[in] pos Const_Iterator to insert element after
+     * @param[in] value element of type T to be inserted after \p pos
      * @return pointer to inserted element
-     * @retval Node<T>* pointer to next Node inserted after specified index
-     * @retval nullptr if invalid index
+     * @retval Const_Iterator* pointer to inserted element
+     * @retval nullptr if invalid inputIterator
      */
-    Node<T>* insert_after(int index, const T& value);
+    Iterator* insert_after(Const_Iterator pos, const T& value);
 
     /**
-     * @brief Function inserts new Node after specified index of ForwardList
+     * @brief Function inserts new Node after specified ForwardList Const_Iterator
      *
-     * @param[in] index index to insert element after specified index
-     * @param[in] count number of elements to insert after specified index
+     * @param[in] pos Const_Iterator to insert element after
+     * @param[in] count number of elements to insert after \p pos
      * @param[in] value element of type T to be inserted
      * @return pointer to the last inserted element
-     * @retval Node<T>* pointer to last Node inserted after specified index
-     * @retval nullptr if invalid index
+     * @retval 1Const_Iterator* pointer to last inserted element
+     * @retval nullptr if invalid input Iterator
      */
-    Node<T>* insert_after(int index, size_t count, const T& value);
+    Iterator* insert_after(Const_Iterator pos, size_t count, const T& value);
 
     /**
-     * @brief Function inserts new Node after specified index of ForwardList
+     * @brief Function inserts new Node after specified ForwardList Const_Iterator
      *
-     * @param[in] index index to insert element after
-     * @param[in] std::initializer_list to be inserted after specified index
+     * @param[in] pos Const_Iterator to insert element after
+     * @param[in] std::initializer_list to insert after \p pos
      * @return pointer to the last inserted element
-     * @retval Node<T>* pointer to last Node inserted after specified index
-     * @retval nullptr if invalid index
+     * @retval Iterator* pointer to last inserted element
+     * @retval nullptr if invalid input Iterator
      */
-    Node<T>* insert_after(int index, std::initializer_list<T> init_list);
+    Iterator* insert_after(Const_Iterator pos, std::initializer_list<T> init_list);
 
     /// @todo add emplace_after
 
     /**
-    * @brief Function erases Node from specified index of ForwardList
+    * @brief Function erases Node after specified ForwardList Const_Iterator
     *
-    * @param[in] index index of element to be erased
-    * @return pointer to element after deleted index
-    * @retval Node<T>* pointer to element after deleted index
-    * @retval nullptr if invalid index
+    * @param[in] pos Const_Iterator after which element will be erased
+    * @return pointer to element after deleted Iterator
+    * @retval Iterator* pointer to element after deleted element
+    * @retval nullptr if invalid Iterator
     */
-    Node<T>* erase_after(size_t index);
+    Iterator* erase_after(Const_Iterator pos);
 
     /**
-     * @brief Function erases Node from specified index of ForwardList
+     * @brief Function erases Node between specified ForwardList Const_Iterators
      *
-     * @param[in] start_index start index of element to be erased
-     * @param[in] end_index end index of element to be erased
+     * @param[in] first element after which element will be erased
+     * @param[in] last element after last erased element
      * @return pointer to element after last deleted element
-     * @retval Node<T>* pointer to element after deleted index
-     * @retval nullptr if invalid index
+     * @retval Const_Iterator* pointer to element after deleted element
+     * @retval nullptr if invalid Iterator
      */
-    Node<T>* erase_after(size_t start_index, size_t end_index);
+    Iterator* erase_after(Const_Iterator first, Const_Iterator last);
 
     /**
      * @brief Function adds new Node at the beginning of ForwardList
@@ -342,62 +515,62 @@ public:
     /**
      * @brief Function moves elements from other ForwardList object
      *
-     * @param[in] index index after which content of other container will be inserted
+     * @param[in] pos Const_Iterator after which content of other container will be inserted
      * @param[in,out] other container to take elements from
      * @details Content of other object will be taken by constructed object
      */
-    void splice_after(int index, ForwardList<T>& other);
+    void splice_after(Const_Iterator pos, ForwardList<T>& other);
 
     /**
      * @brief Function moves elements from other ForwardList object
      *
-     * @param[in] index index after which content of other container will be inserted
+     * @param[in] pos Const_Iterator after which content of other container will be inserted
      * @param[in,out] other container to take elements from
      * @details Content of other object will be taken by constructed object
      */
-    void splice_after(int index, ForwardList<T>&& other);
+    void splice_after(Const_Iterator pos, ForwardList<T>&& other);
 
     /**
      * @brief Function moves elements from other ForwardList object
      *
-     * @param[in] index index after which content of other container will be inserted
+     * @param[in] pos Const_Iterator after which content of other container will be inserted
      * @param[in,out] other container to take elements from
-     * @param[in] it index from which elements of \p other will be taken
+     * @param[in] it Const_Iterator after which elements of \p other will be taken
      * @details Content of other object will be taken by constructed object
      */
-    void splice_after(int index, ForwardList<T>& other, int it);
+    void splice_after(Const_Iterator pos, ForwardList<T>& other, Const_Iterator it);
 
     /**
      * @brief Function moves elements from other ForwardList object
      *
-     * @param[in] index index after which content of other container will be inserted
+     * @param[in] pos Const_Iterator after which content of other container will be inserted
      * @param[in,out] other container to take elements from
-     * @param[in] it index after which elements of \p other will be taken
+     * @param[in] it Const_Iterator after which elements of \p other will be taken
      * @details Content of other object will be taken by constructed object
      */
-    void splice_after(int index, ForwardList<T>&& other, int it);
+    void splice_after(Const_Iterator pos, ForwardList<T>&& other, Const_Iterator it);
 
     /**
      * @brief Function moves elements from other ForwardList object
      *
-     * @param[in] index index after which content of other container will be inserted
+     * @param[in] pos Const_Iterator after which content of other container will be inserted
      * @param[in,out] other container to take elements from
-     * @param[in] first index after which elements of \p other will be taken
-     * @param[in] last index until which elements of \p other will be taken
+     * @param[in] first Const_Iterator after which elements of \p other will be taken
+     * @param[in] last Const_Iterator until which elements of \p other will be taken
      * @details Content of other object will be taken by constructed object
      */
-    void splice_after(int index, ForwardList<T>& other, int first, int last);
+    void splice_after(Const_Iterator pos, ForwardList<T>& other, Const_Iterator first, Const_Iterator last);
 
     /**
      * @brief Function moves elements from other ForwardList object
      *
-     * @param[in] index index after which content of other container will be inserted
+     * @param[in] pos Const_Iterator after which content of other container will be inserted
      * @param[in,out] other container to take elements from
-     * @param[in] first index after which elements of \p other will be taken
-     * @param[in] last index until which elements of \p other will be taken
+     * @param[in] first Const_Iterator after which elements of \p other will be taken
+     * @param[in] last Const_Iterator until which elements of \p other will be taken
      * @details Content of other object will be taken by constructed object
      */
-    void splice_after(int index, ForwardList<T>&& other, int first, int last);
+    void splice_after(Const_Iterator pos, ForwardList<T>&& other, Const_Iterator first, Const_Iterator last);
 
     /**
      * @brief Function removes all elements equal to \p value
@@ -430,11 +603,10 @@ public:
     template<typename T>
     ForwardList<T>& operator+=(const ForwardList<T>& other)
     {
-        Node<T>* node = other.front();
-        for (size_t i = 0; i < other.size(); i++)
+        for (auto it = other.cbegin(); it != other.cend(); ++it)
         {
-            push_back(node->value());
-            node = node->next();
+            auto value = *it;
+            push_back(value);
         }
 
         return *this;
@@ -482,7 +654,7 @@ public:
     }
 
     /**
-     * @brief Function sets value of specifed Node of ForwardList
+     * @brief Function sets value of specified Node of ForwardList
      *
      * @param[in] index index of element to be modified
      * @param[in] value to overwrite Node at index
@@ -517,90 +689,88 @@ private:
     template<typename T>
     friend ForwardList<T> operator+(const ForwardList<T>& l1, const ForwardList<T>& l2);
 
-    Node<T>* erase_element_after(int index)
+    /**
+     * @brief Function remove next element
+     *
+     * @param[in] pos Iterator after which element will be erased
+     * @return Iterator* pointer to Iterator to input element
+     */
+    Iterator* erase_element_after(Iterator pos)
     {
-        if (index < 0 || index >= m_size)
+        if (!if_valid_iterator(pos))
         {
             return nullptr;
         }
 
-        Node<T>* temp = get(index);
+        Node<T>* temp = pos.m_current_node;
         Node<T>* to_remove = temp->m_next;
 
         temp->m_next = to_remove->m_next;
         delete to_remove;
 
         m_size--;
-        return temp;
+        return &Iterator(temp);
     }
 
     /**
-    * @brief Function inserts new Node at specified index of ForwardList
+    * @brief Function inserts new Node after specified ForwardList Iterator
     *
-    * @param[in] index index to insert element at
-    * @param[in] value element of type T to be inserted
-    * @return operation result
-    * @retval true if new Node was inserted at specified index
-    * @retval false if invalid index
-    */
-    bool insert(int index, T value)
-    {
-        if (index < 0 || index > m_size)
-        {
-            return false;
-        }
-
-        if (index == 0)
-        {
-            push_front(value);
-            return true;
-        }
-
-        if (index == m_size)
-        {
-            push_back(value);
-            return true;
-        }
-
-        Node<T>* temp = get(index - 1);
-
-        Node<T>* newNode = new Node<T>(value);
-        newNode->m_next = temp->m_next;
-
-        temp->m_next = newNode;
-        m_size++;
-        return true;
-    }
-
-    /**
-    * @brief Function inserts new Node after specified index of ForwardList
-    *
-    * @param[in] index index to insert element after
+    * @param[in] pos Iterator to insert element after
     * @param[in] value element of type T to be inserted
     * @return pointer to next element
-    * @retval Node<T>* pointer to next Node inserted after specified index
-    * @retval nullptr if invalid index
+    * @retval Iterator* pointer to Iterator inserted after \pos
+    * @retval nullptr if invalid Iterator
     */
-    Node<T>* insert_element_after(int index, const T& value)
+    Iterator* insert_element_after(Iterator pos, const T& value)
     {
-        if (index < 0 || index > m_size)
+        if (!if_valid_iterator(pos))
         {
             return nullptr;
         }
 
-        Node<T>* temp = get(index);
+        Node<T>* temp = pos.m_current_node;
 
         Node<T>* newNode = new Node<T>(value);
         newNode->m_next = temp->m_next;
 
         temp->m_next = newNode;
         m_size++;
-        return newNode;
+        return &Iterator(newNode);
     }
 
     /**
-     * @brief Function adds new element at the end of ForwardList
+     * @brief Function checks ForwardList contains Iterator
      *
+     * @param[in] pos Iterator to check
+     * @return bool \p pos iterator status
+     * @return true if \p pos belong to ForwardList
+     * @return false if otherwise
+     */
+    bool if_valid_iterator(Const_Iterator pos)
+    {
+        bool valid_iterator{};
+        for (auto it = cbegin(); it != cend(); ++it)
+        {
+            if (it == pos)
+            {
+                valid_iterator = true;
+                break;
+            }
+        }
+        return valid_iterator;
+    }
+
+    /**
+     * @brief Function calculate number of elements from first to last
+     *
+     * @tparam T type of input objects
+     * @param[in] first Const_Iterator pointing first element
+     * @param[in] last Const_Iterator pointing to last (inclusive) element
+     * @return size_t number of elements between input elements
+     */
+    size_t distance(Const_Iterator first, Const_Iterator last);
+
+    /**
      * @param[in] value element of type T
      */
     void push_back(T value)
@@ -655,52 +825,15 @@ private:
     }
 
     /**
-     * @brief Function erases Node from specified index of ForwardList
-     *
-     * @param[in] index index of element to be erased
-     * @return operation result
-     * @retval true if Node was erased from specified index
-     * @retval false if invalid index
-     */
-    bool erase(int index)
-    {
-        if (index < 0 || index >= m_size)
-        {
-            return false;
-        }
-
-        if (index == 0)
-        {
-            pop_front();
-            return true;
-        }
-
-        if (index == m_size - 1)
-        {
-            pop_back();
-            return true;
-        }
-
-        Node<T>* temp = get(index - 1);
-        Node<T>* to_remove = temp->m_next;
-
-        temp->m_next = to_remove->m_next;
-        delete to_remove;
-
-        m_size--;
-        return true;
-    }
-
-    /**
      * @brief Function moves elements from other ForwardList object
      *
-     * @param[in] index index after which content of other container will be inserted
+     * @param[in] pos Const_Iterator after which content of other container will be inserted
      * @param[in,out] other container to take elements from
-     * @param[in] first index after which elements of \p other will be taken
-     * @param[in] last index until which elements of \p other will be taken
+     * @param[in] first Const_Iterator after which elements of \p other will be taken
+     * @param[in] last Const_Iterator until which elements of \p other will be taken
      * @details Content of other object will be taken by constructed object
      */
-    void transfer(int index, ForwardList<T>& other, int first, int last);
+    void transfer(Const_Iterator pos, ForwardList<T>& other, Const_Iterator first, Const_Iterator last);
 
     Node<T>* m_front{};
     Node<T>* m_back{};
@@ -816,40 +949,53 @@ void ForwardList<T>::assign(const std::initializer_list<T>& init_list)
 }
 
 template<typename T>
-ForwardList<T>::Node<T>* ForwardList<T>::front()
+T& ForwardList<T>::front()
 {
-    return m_front;
+    return *begin();
 }
 
 template<typename T>
-ForwardList<T>::Node<T>* ForwardList<T>::front() const
+const T& ForwardList<T>::front() const
 {
-    return m_front;
+    return *cbegin();
 }
 
 template<typename T>
-ForwardList<T>::Node<T>* ForwardList<T>::begin()
+typename ForwardList<T>::Iterator ForwardList<T>::begin() noexcept
 {
-    return m_front;
+    return Iterator(m_front);
 }
 
 template<typename T>
-ForwardList<T>::Node<T>* ForwardList<T>::cbegin() const
+typename ForwardList<T>::Const_Iterator ForwardList<T>::begin() const noexcept
 {
-    return m_front;
+    return Const_Iterator(m_front);
 }
 
 template<typename T>
-ForwardList<T>::Node<T>* ForwardList<T>::end()
+typename ForwardList<T>::Const_Iterator ForwardList<T>::cbegin() const noexcept
 {
-    return m_back;
+    return begin();
 }
 
 template<typename T>
-ForwardList<T>::Node<T>* ForwardList<T>::cend() const
+typename ForwardList<T>::Iterator ForwardList<T>::end() noexcept
 {
-    return m_back;
+    return Iterator(nullptr);
 }
+
+template<typename T>
+typename ForwardList<T>::Const_Iterator ForwardList<T>::end() const noexcept
+{
+    return Const_Iterator(nullptr);
+}
+
+template<typename T>
+typename ForwardList<T>::Const_Iterator ForwardList<T>::cend() const noexcept
+{
+    return end();
+}
+
 
 template<typename T>
 bool ForwardList<T>::empty() const
@@ -874,95 +1020,85 @@ void ForwardList<T>::clear()
 }
 
 template<typename T>
-ForwardList<T>::Node<T>* ForwardList<T>::insert_after(int index, const T& value)
+typename ForwardList<T>::Iterator* ForwardList<T>::insert_after(Const_Iterator pos, const T& value)
 {
-    if (index < 0 || index > m_size)
-    {
-        return nullptr;
-    }
-
-    Node<T>* newNode = insert_element_after(index, value);
-
-    return newNode;
+    return insert_after(pos, 1, value);
 }
 
 template<typename T>
-ForwardList<T>::Node<T>* ForwardList<T>::insert_after(int index, size_t count, const T& value)
+typename ForwardList<T>::Iterator* ForwardList<T>::insert_after(Const_Iterator pos, size_t count, const T& value)
 {
-    if (index < 0 || index > m_size)
+    if (!if_valid_iterator(pos))
     {
         return nullptr;
     }
 
-    Node<T>* newNode{};
+    Iterator copy{ pos.m_current_node };
+    Iterator* it{ &copy };
     for (size_t i = 0; i < count; i++)
     {
-        newNode = insert_element_after(index + i, value);
+        it = insert_element_after(*it, value);
     }
 
-    return newNode;
+    return it;
 }
 
 template<typename T>
-ForwardList<T>::Node<T>* ForwardList<T>::insert_after(int index, std::initializer_list<T> init_list)
+typename ForwardList<T>::Iterator* ForwardList<T>::insert_after(Const_Iterator pos, std::initializer_list<T> init_list)
 {
-    if (index < 0 || index > m_size)
+    if (!if_valid_iterator(pos))
     {
-        return false;
+        return nullptr;
     }
 
-    Node<T>* newNode{};
+    Iterator copy(pos.m_current_node);
+    Iterator* it{ &copy };
     for (size_t i = 0; i < init_list.size(); i++)
     {
-        newNode = insert_element_after(index + i, init_list.begin()[i]);
+        it = insert_element_after(*it, init_list.begin()[i]);
     }
 
-    return newNode;
+    return it;
 }
 
 template<typename T>
-ForwardList<T>::Node<T>* ForwardList<T>::erase_after(size_t index)
+typename ForwardList<T>::Iterator* ForwardList<T>::erase_after(Const_Iterator pos)
 {
-    if (index < 0 || index > m_size)
+    if (!if_valid_iterator(pos))
     {
         return nullptr;
     }
 
-    Node<T>* newNode = erase_element_after(index);
+    Iterator copy(pos.m_current_node);
+    Iterator* it{ &copy };
+    it = erase_element_after(*it);
 
-    return newNode;
+    return it;
 }
 
 template<typename T>
-ForwardList<T>::Node<T>* ForwardList<T>::erase_after(size_t start_index, size_t end_index)
+typename ForwardList<T>::Iterator* ForwardList<T>::erase_after(Const_Iterator first, Const_Iterator last)
 {
-    if (start_index < 0 || start_index > m_size ||
-        end_index < 0 || end_index > m_size)
+    if (!if_valid_iterator(first) || !if_valid_iterator(last))
     {
         return nullptr;
     }
 
-    Node<T>* newNode{};
-    for (size_t i = start_index; i < end_index; i++)
+    Iterator copy(first.m_current_node);
+    Iterator* it{ &copy };
+    size_t dist = distance(first, last);
+    for (size_t i = 0; i < dist - 1; i++)
     {
-        newNode = erase_element_after(start_index);
+        it = erase_element_after(*it);
     }
 
-    if (newNode)
-    {
-        return newNode->m_next;
-    }
-    else
-    {
-        return newNode;
-    }
+    return it;
 }
 
 template<typename T>
 void ForwardList<T>::push_front(T value)
 {
     Node<T>* newNode = new Node<T>(value);
-
     if (!m_front)
     {
         m_front = newNode;
@@ -1106,23 +1242,31 @@ void ForwardList<T>::merge(ForwardList<T>&& other)
 }
 
 template<typename T>
-void ForwardList<T>::transfer(int index, ForwardList<T>& other, int first, int last)
+size_t ForwardList<T>::distance(Const_Iterator first, Const_Iterator last)
 {
-    if (last <= first)
+    size_t dist{};
+    while (first != last)
     {
-        return;
+        ++first;
+        ++dist;
     }
 
+    return dist;
+}
+
+template<typename T>
+void ForwardList<T>::transfer(Const_Iterator pos, ForwardList<T>& other, Const_Iterator first, Const_Iterator last)
+{
     if (&other != this && other.m_size > 0)
     {
-        Node<T>* temp_prev = get(index);        // to append to
-        Node<T>* temp_next = other.get(first);  // does not move
+        Node<T>* temp_prev = pos.m_current_node;    // to append to
+        Node<T>* temp_next = first.m_current_node;  // does not move
 
-        //Node<T>* first_to_move = temp_next->m_next;
         Node<T>* first_to_move = temp_next->m_next;
         Node<T>* last_to_move = temp_next;
-        int ctr = 0;
-        for (int i = 0; i < (last - first); i++)
+        size_t ctr = 0;
+        size_t dist = distance(first, last);
+        for (size_t i = 0; i < dist; i++)
         {
             if (last_to_move)
             {
@@ -1135,7 +1279,6 @@ void ForwardList<T>::transfer(int index, ForwardList<T>& other, int first, int l
         last_to_move->m_next = temp_prev->m_next;
         temp_prev->m_next = first_to_move;
 
-        /// @todo verify with iterators
         if (!last_to_move->m_next)
         {
             other.m_back = nullptr;
@@ -1146,11 +1289,11 @@ void ForwardList<T>::transfer(int index, ForwardList<T>& other, int first, int l
 }
 
 template<typename T>
-void ForwardList<T>::splice_after(int index, ForwardList<T>& other)
+void ForwardList<T>::splice_after(Const_Iterator pos, ForwardList<T>& other)
 {
     if (&other != this && other.m_size > 0)
     {
-        Node<T>* temp = get(index);
+        Node<T>* temp = pos.m_current_node;
         other.m_back->m_next = temp->m_next;
         temp->m_next = other.m_front;
         m_size += other.m_size;
@@ -1162,33 +1305,33 @@ void ForwardList<T>::splice_after(int index, ForwardList<T>& other)
 }
 
 template<typename T>
-void ForwardList<T>::splice_after(int index, ForwardList<T>&& other)
+void ForwardList<T>::splice_after(Const_Iterator pos, ForwardList<T>&& other)
 {
-    splice_after(index, other);
+    splice_after(pos, other);
 }
 
 template<typename T>
-void ForwardList<T>::splice_after(int index, ForwardList<T>& other, int it)
+void ForwardList<T>::splice_after(Const_Iterator pos, ForwardList<T>& other, Const_Iterator it)
 {
-    transfer(index, other, it, it + 1);
+    transfer(pos, other, it, it.m_current_node->next());
 }
 
 template<typename T>
-void ForwardList<T>::splice_after(int index, ForwardList<T>&& other, int it)
+void ForwardList<T>::splice_after(Const_Iterator pos, ForwardList<T>&& other, Const_Iterator it)
 {
-    transfer(index, other, it, it + 1);
+    transfer(pos, other, it, it.m_current_node->next());
 }
 
 template<typename T>
-void ForwardList<T>::splice_after(int index, ForwardList<T>& other, int first, int last)
+void ForwardList<T>::splice_after(Const_Iterator pos, ForwardList<T>& other, Const_Iterator first, Const_Iterator last)
 {
-    transfer(index, other, first, last);
+    transfer(pos, other, first, last);
 }
 
 template<typename T>
-void ForwardList<T>::splice_after(int index, ForwardList<T>&& other, int first, int last)
+void ForwardList<T>::splice_after(Const_Iterator pos, ForwardList<T>&& other, Const_Iterator first, Const_Iterator last)
 {
-    transfer(index, other, first, last);
+    transfer(pos, other, first, last);
 }
 
 template<typename T>
@@ -1292,11 +1435,10 @@ ForwardList<T> operator+(const ForwardList<T>& l1, const ForwardList<T>& l2)
 {
     ForwardList<T> temp(l1);
 
-    ForwardList<T>::Node<T>* node = l2.front();
-    for (size_t i = 0; i < l2.size(); i++)
+    for (auto it = l2.cbegin(); it != l2.cend(); ++it)
     {
-        temp.push_back(node->value());
-        node = node->next();
+        T value = *it;
+        temp.push_back(value);
     }
 
     return temp;
@@ -1313,12 +1455,12 @@ ForwardList<T> operator+(const ForwardList<T>& l1, const ForwardList<T>& l2)
 template<typename T>
 std::ostream& operator<<(std::ostream& out, const ForwardList<T>& ll)
 {
-    ForwardList<T>::Node<T>* temp = ll.front();
-    while (temp)
+    for (auto it = ll.cbegin(); it != ll.cend(); ++it)
     {
-        out << temp->value() << ' ';
-        temp = temp->next();
+        T value = *it;
+        out << value << ' ';
     }
+
     return out;
 }
 
@@ -1339,18 +1481,18 @@ bool operator==(const ForwardList<T>& l1, const ForwardList<T>& l2)
         return false;
     }
 
-    ForwardList<T>::Node<T>* node_1 = l1.front();
-    ForwardList<T>::Node<T>* node_2 = l2.front();
+    auto l1_it = l1.cbegin();
+    auto l2_it = l2.cbegin();
 
-    while (node_1 && node_2)
+    while (l1_it != l1.cend() && l2_it != l2.cend())
     {
-        if (node_1->value() != node_2->value())
+        if (*l1_it != *l2_it)
         {
             return false;
         }
 
-        node_1 = node_1->next();
-        node_2 = node_2->next();
+        l1_it++;
+        l2_it++;
     }
 
     return true;
@@ -1384,18 +1526,18 @@ bool operator!=(const ForwardList<T>& l1, const ForwardList<T>& l2)
 template<typename T>
 bool operator<(const ForwardList<T>& l1, const ForwardList<T>& l2)
 {
-    ForwardList<T>::Node<T>* node_1 = l1.front();
-    ForwardList<T>::Node<T>* node_2 = l2.front();
+    auto l1_it = l1.cbegin();
+    auto l2_it = l2.cbegin();
 
-    while (node_1 && node_2)
+    while (l1_it != l1.cend() && l2_it != l2.cend())
     {
-        if (node_1->value() >= node_2->value())
+        if (*l1_it >= *l2_it)
         {
             return false;
         }
 
-        node_1 = node_1->next();
-        node_2 = node_2->next();
+        l1_it++;
+        l2_it++;
     }
 
     return true;

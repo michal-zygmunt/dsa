@@ -26,7 +26,7 @@ int main()
 
     ForwardList<int> l1 = ForwardList<int>(expected_1);
     ForwardList<int> l2 = ForwardList<int>(expected_2);
-    l1.splice_after(0, l2);
+    l1.splice_after(l1.begin(), l2);
     expected = { 1, 10, 20, 30, 40, 50, 2, 3, 4, 5 };
     res = if_error(l1, expected);
     std::cout << "ForwardList l1:\t" << l1 << '\n';
@@ -40,7 +40,7 @@ int main()
 
     ForwardList<int> l3 = ForwardList<int>(expected_1);
     ForwardList<int> l4 = ForwardList<int>(expected_2);
-    l3.splice_after(3, l4);
+    l3.splice_after(l3.begin()[3], l4);
     expected = { 1, 2, 3, 4, 10, 20, 30, 40, 50, 5 };
     res = if_error(l3, expected);
     std::cout << "ForwardList l3:\t" << l3 << '\n';
@@ -54,7 +54,7 @@ int main()
 
     ForwardList<int> l5 = ForwardList<int>(expected_1);
     ForwardList<int> l6 = ForwardList<int>(expected_2);
-    l5.splice_after(l5.size() - 1, l6);
+    l5.splice_after(l5.begin()[l5.size() - 1], l6);
     expected = { 1, 2, 3, 4, 5, 10, 20, 30, 40, 50 };
     res = if_error(l5, expected);
     std::cout << "ForwardList l5:\t" << l5 << '\n';
@@ -71,7 +71,7 @@ int main()
 
     ForwardList<int> l7 = ForwardList<int>(expected_1);
     ForwardList<int> l8;
-    l7.splice_after(l7.size() - 1, l8);
+    l7.splice_after(l7.begin()[l7.size() - 1], l8);
     expected = expected_1;
     res = if_error(l7, expected);
     std::cout << "ForwardList l7:\t" << l7 << '\n';
@@ -88,7 +88,7 @@ int main()
 
     ForwardList<int> l9 = ForwardList<int>(expected_1);
     ForwardList<int> l10 = ForwardList<int>(expected_2);
-    l9.splice_after(0, l10, 0);
+    l9.splice_after(l9.begin(), l10, l10.begin());
     expected = { 1, 20, 2, 3, 4, 5 };
     res = if_error(l9, expected);
     std::cout << "ForwardList l9:\t" << l9 << '\n';
@@ -102,7 +102,7 @@ int main()
 
     ForwardList<int> l11 = ForwardList<int>(expected_1);
     ForwardList<int> l12 = ForwardList<int>(expected_2);
-    l11.splice_after(0, l12, 2);
+    l11.splice_after(l11.begin(), l12, l12.begin()[2]);
     expected = { 1, 40, 2, 3, 4, 5 };
     res = if_error(l11, expected);
     std::cout << "ForwardList l11:\t" << l11 << '\n';
@@ -116,7 +116,7 @@ int main()
 
     ForwardList<int> l13 = ForwardList<int>(expected_1);
     ForwardList<int> l14 = ForwardList<int>(expected_2);
-    l13.splice_after(0, l14, l14.size() - 2);
+    l13.splice_after(l13.begin(), l14, l14.begin()[l14.size() - 2]);
     expected = { 1, 50, 2, 3, 4, 5 };
     res = if_error(l13, expected);
     std::cout << "ForwardList l13:\t" << l13 << '\n';
@@ -131,7 +131,7 @@ int main()
 
     ForwardList<int> l15 = ForwardList<int>(expected_1);
     ForwardList<int> l16 = ForwardList<int>(expected_2);
-    l15.splice_after(3, l16, 0);
+    l15.splice_after(l15.begin()[3], l16, l16.begin());
     expected = { 1, 2, 3, 4, 20, 5 };
     res = if_error(l15, expected);
     std::cout << "ForwardList l15:\t" << l15 << '\n';
@@ -145,7 +145,7 @@ int main()
 
     ForwardList<int> l17 = ForwardList<int>(expected_1);
     ForwardList<int> l18 = ForwardList<int>(expected_2);
-    l17.splice_after(3, l18, 2);
+    l17.splice_after(l17.begin()[3], l18, l18.begin()[2]);
     expected = { 1, 2, 3, 4, 40, 5 };
     res = if_error(l17, expected);
     std::cout << "ForwardList l17:\t" << l17 << '\n';
@@ -159,7 +159,7 @@ int main()
 
     ForwardList<int> l19 = ForwardList<int>(expected_1);
     ForwardList<int> l20 = ForwardList<int>(expected_2);
-    l19.splice_after(3, l20, l20.size() - 2);
+    l19.splice_after(l19.begin()[3], l20, l20.begin()[l20.size() - 2]);
     expected = { 1, 2, 3, 4, 50, 5 };
     res = if_error(l19, expected);
     std::cout << "ForwardList l19:\t" << l19 << '\n';
@@ -174,7 +174,7 @@ int main()
 
     ForwardList<int> l21 = ForwardList<int>(expected_1);
     ForwardList<int> l22 = ForwardList<int>(expected_2);
-    l21.splice_after(l21.size() - 1, l22, 0);
+    l21.splice_after(l21.begin()[l21.size() - 1], l22, l22.begin());
     expected = { 1, 2, 3, 4, 5, 20 };
     res = if_error(l21, expected);
     std::cout << "ForwardList l21:\t" << l21 << '\n';
@@ -188,7 +188,7 @@ int main()
 
     ForwardList<int> l23 = ForwardList<int>(expected_1);
     ForwardList<int> l24 = ForwardList<int>(expected_2);
-    l23.splice_after(l23.size() - 1, l24, 3);
+    l23.splice_after(l23.begin()[l23.size() - 1], l24, l24.begin()[3]);
     expected = { 1, 2, 3, 4, 5, 50 };
     res = if_error(l23, expected);
     std::cout << "ForwardList l23:\t" << l23 << '\n';
@@ -202,7 +202,7 @@ int main()
 
     ForwardList<int> l25 = ForwardList<int>(expected_1);
     ForwardList<int> l26 = ForwardList<int>(expected_2);
-    l25.splice_after(l25.size() - 1, l26, l26.size() - 2);
+    l25.splice_after(l25.begin()[l25.size() - 1], l26, l26.begin()[l26.size() - 2]);
     expected = { 1, 2, 3, 4, 5, 50 };
     res = if_error(l25, expected);
     std::cout << "ForwardList l25:\t" << l25 << '\n';
@@ -219,7 +219,7 @@ int main()
 
     ForwardList<int> l27 = ForwardList<int>(expected_1);
     ForwardList<int> l28 = ForwardList<int>(expected_2);
-    l27.splice_after(0, l28, 0, 1);
+    l27.splice_after(l27.begin(), l28, l28.begin(), l28.begin()[1]);
     expected = { 1, 20, 2, 3, 4, 5 };
     res = if_error(l27, expected);
     std::cout << "ForwardList l27:\t" << l27 << '\n';
@@ -233,7 +233,7 @@ int main()
 
     ForwardList<int> l29 = ForwardList<int>(expected_1);
     ForwardList<int> l30 = ForwardList<int>(expected_2);
-    l29.splice_after(0, l30, 1, 3);
+    l29.splice_after(l29.begin(), l30, l30.begin()[1], l30.begin()[3]);
     expected = { 1, 30, 40, 2, 3, 4, 5 };
     res = if_error(l29, expected);
     std::cout << "ForwardList l29:\t" << l29 << '\n';
@@ -247,7 +247,7 @@ int main()
 
     ForwardList<int> l31 = ForwardList<int>(expected_1);
     ForwardList<int> l32 = ForwardList<int>(expected_2);
-    l31.splice_after(0, l32, 0, l32.size() - 1);
+    l31.splice_after(l31.begin(), l32, l32.begin(), l32.begin()[l32.size() - 1]);
     expected = { 1, 20, 30, 40, 50, 2, 3, 4, 5 };
     res = if_error(l31, expected);
     std::cout << "ForwardList l31:\t" << l31 << '\n';
@@ -262,7 +262,7 @@ int main()
 
     ForwardList<int> l33 = ForwardList<int>(expected_1);
     ForwardList<int> l34 = ForwardList<int>(expected_2);
-    l33.splice_after(2, l34, 0, 1);
+    l33.splice_after(l33.begin()[2], l34, l34.begin(), l34.begin()[1]);
     expected = { 1, 2, 3, 20, 4, 5 };
     res = if_error(l33, expected);
     std::cout << "ForwardList l33:\t" << l33 << '\n';
@@ -276,7 +276,7 @@ int main()
 
     ForwardList<int> l35 = ForwardList<int>(expected_1);
     ForwardList<int> l36 = ForwardList<int>(expected_2);
-    l35.splice_after(2, l36, 1, 3);
+    l35.splice_after(l35.begin()[2], l36, l36.begin()[1], l36.begin()[3]);
     expected = { 1, 2, 3, 30, 40, 4, 5 };
     res = if_error(l35, expected);
     std::cout << "ForwardList l35:\t" << l35 << '\n';
@@ -290,7 +290,7 @@ int main()
 
     ForwardList<int> l37 = ForwardList<int>(expected_1);
     ForwardList<int> l38 = ForwardList<int>(expected_2);
-    l37.splice_after(2, l38, 0, l38.size() - 1);
+    l37.splice_after(l37.begin()[2], l38, l38.begin(), l38.begin()[l38.size() - 1]);
     expected = { 1, 2, 3, 20, 30, 40, 50, 4, 5 };
     res = if_error(l37, expected);
     std::cout << "ForwardList l37:\t" << l37 << '\n';
@@ -305,7 +305,8 @@ int main()
 
     ForwardList<int> l39 = ForwardList<int>(expected_1);
     ForwardList<int> l40 = ForwardList<int>(expected_2);
-    l39.splice_after(l40.size() - 1, l40, 0, 1);
+    //l39.splice_after(l40.size() - 1, l40, 0, 1);
+    l39.splice_after(l39.begin()[l39.size() - 1], l40, l40.begin(), l40.begin()[1]);
     expected = { 1, 2, 3, 4, 5, 20 };
     res = if_error(l39, expected);
     std::cout << "ForwardList l39:\t" << l39 << '\n';
@@ -319,7 +320,7 @@ int main()
 
     ForwardList<int> l41 = ForwardList<int>(expected_1);
     ForwardList<int> l42 = ForwardList<int>(expected_2);
-    l41.splice_after(l41.size() - 1, l42, 1, 3);
+    l41.splice_after(l41.begin()[l41.size() - 1], l42, l42.begin()[1], l42.begin()[3]);
     expected = { 1, 2, 3, 4, 5, 30, 40 };
     res = if_error(l41, expected);
     std::cout << "ForwardList l41:\t" << l41 << '\n';
@@ -333,7 +334,7 @@ int main()
 
     ForwardList<int> l43 = ForwardList<int>(expected_1);
     ForwardList<int> l44 = ForwardList<int>(expected_2);
-    l43.splice_after(l43.size() - 1, l44, 0, l44.size() - 1);
+    l43.splice_after(l43.begin()[l43.size() - 1], l44, l44.begin(), l44.begin()[l44.size() - 1]);
     expected = { 1, 2, 3, 4, 5, 20, 30, 40, 50 };
     res = if_error(l43, expected);
     std::cout << "ForwardList l43:\t" << l43 << '\n';

@@ -41,3 +41,6 @@ add_test(NAME ForwardListUnique COMMAND ForwardListUnique)
 
 add_executable(ForwardListSplice ForwardListSplice.cpp)
 add_test(NAME ForwardListSplice COMMAND ForwardListSplice)
+
+add_executable(ForwardListItors ForwardListItors.cpp)
+add_test(NAME ForwardListItors COMMAND ForwardListItors)

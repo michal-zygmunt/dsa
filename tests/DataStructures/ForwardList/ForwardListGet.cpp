@@ -34,5 +34,19 @@ int main()
     std::cout << "Expected:\t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
+    ForwardList<int> l2 = ForwardList<int>({ 20, 10, 0 });
+    for (int i = 0; i < indexes.size(); i++)
+    {
+        auto temp = l1.get(i);
+        if (temp)
+        {
+            res = temp->value() != expected.begin()[i - 1] ? false : true;
+        }
+    }
+    std::cout << "ForwardList:\t" << l2 << '\n';
+    std::cout << "Expected:\t" << expected << '\n';
+    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+
+
     return tests::failed;
 }
