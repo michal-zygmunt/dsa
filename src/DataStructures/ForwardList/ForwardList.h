@@ -475,6 +475,18 @@ public:
     void pop_front();
 
     /**
+     * @brief Function adds new element at the end of ForwardList
+     *
+     * @param[in] value element of type T
+     */
+    void push_back(T value);
+
+    /**
+     * @brief Function removes last Node of ForwardList
+     */
+    void pop_back();
+
+    /**
      * @brief Function resize ForwardList to specified number of elements
      *
      * @param[in] count new size of container
@@ -762,67 +774,12 @@ private:
 
     /**
      * @brief Function calculate number of elements from first to last
-     *
      * @tparam T type of input objects
      * @param[in] first Const_Iterator pointing first element
      * @param[in] last Const_Iterator pointing to last (inclusive) element
      * @return size_t number of elements between input elements
      */
     size_t distance(Const_Iterator first, Const_Iterator last);
-
-    /**
-     * @param[in] value element of type T
-     */
-    void push_back(T value)
-    {
-        Node<T>* newNode = new Node<T>(value);
-
-        if (!m_front)
-        {
-            m_front = newNode;
-            m_back = newNode;
-        }
-        else
-        {
-            m_back->m_next = newNode;
-            m_back = newNode;
-        }
-
-        m_size++;
-    }
-
-    /**
-     * @brief Function removes last Node of ForwardList
-     */
-    void pop_back()
-    {
-        if (m_size == 0)
-        {
-            return;
-        }
-
-        Node<T>* temp = m_front;
-        if (m_size == 1)
-        {
-            m_front = nullptr;
-            m_back = nullptr;
-        }
-        else
-        {
-            Node<T>* prev = temp;
-
-            while (temp->m_next)
-            {
-                prev = temp;
-                temp = temp->m_next;
-            }
-            m_back = prev;
-            m_back->m_next = nullptr;
-        }
-
-        delete temp;
-        m_size--;
-    }
 
     /**
      * @brief Function moves elements from other ForwardList object
@@ -1131,6 +1088,56 @@ void ForwardList<T>::pop_front()
     {
         m_front = m_front->m_next;
     }
+    delete temp;
+    m_size--;
+}
+
+template<typename T>
+void ForwardList<T>::push_back(T value)
+{
+    Node<T>* newNode = new Node<T>(value);
+
+    if (!m_front)
+    {
+        m_front = newNode;
+        m_back = newNode;
+    }
+    else
+    {
+        m_back->m_next = newNode;
+        m_back = newNode;
+    }
+
+    m_size++;
+}
+
+template<typename T>
+void ForwardList<T>::pop_back()
+{
+    if (m_size == 0)
+    {
+        return;
+    }
+
+    Node<T>* temp = m_front;
+    if (m_size == 1)
+    {
+        m_front = nullptr;
+        m_back = nullptr;
+    }
+    else
+    {
+        Node<T>* prev = temp;
+
+        while (temp->m_next)
+        {
+            prev = temp;
+            temp = temp->m_next;
+        }
+        m_back = prev;
+        m_back->m_next = nullptr;
+    }
+
     delete temp;
     m_size--;
 }
