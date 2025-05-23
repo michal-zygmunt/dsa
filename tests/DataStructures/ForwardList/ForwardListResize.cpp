@@ -83,5 +83,11 @@ int main()
     std::cout << "Expected:\t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
+    ForwardList<int> l9;
+    res = if_error(l9.max_size(), UINTMAX_MAX);
+    std::cout << "max_size():\t" << l9.max_size() << '\n';
+    std::cout << "Expected:\t" << UINTMAX_MAX << '\n';
+    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+
     return tests::failed;
 }

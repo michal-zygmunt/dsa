@@ -396,7 +396,12 @@ public:
      */
     bool empty() const;
 
-    /// @todo add max_size()
+    /**
+     * @brief Function returns maximum number of elements container can hold
+     *
+     * @return size_t maximum number of elements
+     */
+    size_t max_size() const noexcept;
 
     /**
      * @brief Function removes all elements of ForwardList
@@ -774,6 +779,7 @@ private:
 
     /**
      * @brief Function calculate number of elements from first to last
+     *
      * @tparam T type of input objects
      * @param[in] first Const_Iterator pointing first element
      * @param[in] last Const_Iterator pointing to last (inclusive) element
@@ -958,6 +964,12 @@ template<typename T>
 bool ForwardList<T>::empty() const
 {
     return m_size == 0;
+}
+
+template<typename T>
+size_t ForwardList<T>::max_size() const noexcept
+{
+    return std::numeric_limits<size_t>::max();
 }
 
 template<typename T>
