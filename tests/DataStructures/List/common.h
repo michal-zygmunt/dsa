@@ -59,6 +59,26 @@ bool if_error(const List<T>& ll, const std::initializer_list<T>& test_values)
 }
 
 /**
+ * @brief Function compares values of two objects
+ *
+ * @tparam T type of compared objects
+ * @param[in] a input object
+ * @param[in] b input object
+ * @retval true if objects are not equal
+ * @retval false otherwise
+ */
+template<typename T>
+bool if_error(T a, T b)
+{
+    bool res = a != b ? true : false;
+    if (res)
+    {
+        tests::failed++;
+    }
+    return res;
+}
+
+/**
  * @brief Function overloads out operator to print all elements of initializer
  *        list
  *

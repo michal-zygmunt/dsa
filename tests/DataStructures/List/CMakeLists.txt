@@ -26,3 +26,21 @@ add_test(NAME ListReverse COMMAND ListReverse)
 
 add_executable(ListOperators ListOperators.cpp)
 add_test(NAME ListOperators COMMAND ListOperators)
+
+add_executable(ListSwap ListSwap.cpp)
+add_test(NAME ListSwap COMMAND ListSwap)
+
+add_executable(ListMerge ListMerge.cpp)
+add_test(NAME ListMerge COMMAND ListMerge)
+
+add_executable(ListResize ListResize.cpp)
+add_test(NAME ListResize COMMAND ListResize)
+
+add_executable(ListUnique ListUnique.cpp)
+add_test(NAME ListUnique COMMAND ListUnique)
+
+add_executable(ListSplice ListSplice.cpp)
+add_test(NAME ListSplice COMMAND ListSplice)
+
+add_executable(ListItors ListItors.cpp)
+add_test(NAME ListItors COMMAND ListItors)

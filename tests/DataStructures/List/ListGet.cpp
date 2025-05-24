@@ -20,18 +20,30 @@ int main()
     std::initializer_list<int> expected{ 0, 10, 20 };
 
     List<int> l1 = List<int>({ 0, 10, 20 });
-
     // Try reading some nodes with invalid indexes
     auto indexes = { -1, 0, 1, 2, 100 };
     for (int i = 0; i < indexes.size(); i++)
     {
-        auto temp = l1.get(indexes.begin()[i]);
+        auto temp = l1.get(i);
         if (temp)
         {
-            res = temp->value() != expected.begin()[i - 1] ? true : false;
+            res = temp->value() != expected.begin()[i - 1] ? false : true;
         }
     }
     std::cout << "List:\t" << l1 << '\n';
+    std::cout << "Expected:\t" << expected << '\n';
+    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+
+    List<int> l2 = List<int>({ 20, 10, 0 });
+    for (int i = 0; i < indexes.size(); i++)
+    {
+        auto temp = l1.get(i);
+        if (temp)
+        {
+            res = temp->value() != expected.begin()[i - 1] ? false : true;
+        }
+    }
+    std::cout << "List:\t" << l2 << '\n';
     std::cout << "Expected:\t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 

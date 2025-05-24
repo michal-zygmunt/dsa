@@ -1,6 +1,6 @@
 /**
- * @file ListSet.cpp
- * @brief This file tests setting values of List Nodes
+ * @file ListGrow.cpp
+ * @brief This file tests functions swapping List objects
  * @author Michal Zygmunt
  *
  * @copyright Copyright (c) 2025 Michal Zygmunt
@@ -14,36 +14,38 @@
 
 int main()
 {
-    std::cout << "Start ListSet test:\n";
+    std::cout << "Start ListSwap test:\n";
 
     bool res{};
-    std::initializer_list<int> expected{ 0, 50, 20 };
+    std::initializer_list<int> expected{};
+    std::initializer_list<int> expected_1{ 1, 2, 3, 4, 5 };
+    std::initializer_list<int> expected_2{ 10, 20, 30, 40, 50 };
 
-    List<int> l1 = List<int>({ 0, 10, 20 });
-    // Try setting values for nodes with invalid indexes
-    constexpr int new_value{ 50 };
-    bool if_set{};
-    if_set |= l1.set(-1, new_value);
-    if_set |= l1.set(1, new_value);
-    if_set |= l1.set(100, new_value);
+    List<int> l1 = List<int>(expected_1);
+    List<int> l2 = List<int>(expected_2);
+    l1.swap(l2);
+    expected = expected_2;
     res = if_error(l1, expected);
-    std::cout << "List:\t" << l1 << '\n';
+    std::cout << "List l1:\t" << l1 << '\n';
     std::cout << "Expected:\t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-
-    List<int> l2 = List<int>({ 0, 10, 20 });
-    l2.assign(4, 1);
-    expected = { 1, 1, 1, 1 };
+    expected = expected_1;
     res = if_error(l2, expected);
     std::cout << "List l2:\t" << l2 << '\n';
     std::cout << "Expected:\t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
-    List<int> l3 = List<int>({ 0, 10, 20 });
-    expected = { 1, 2, 3, 4 };
-    l3.assign(expected);
+    List<int> l3 = List<int>(expected_1);
+    List<int> l4;
+    l3.swap(l4);
+    expected = { };
     res = if_error(l3, expected);
     std::cout << "List l3:\t" << l3 << '\n';
+    std::cout << "Expected:\t" << expected << '\n';
+    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    expected = expected_1;
+    res = if_error(l4, expected);
+    std::cout << "List l4:\t" << l4 << '\n';
     std::cout << "Expected:\t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
