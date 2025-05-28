@@ -742,6 +742,27 @@ private:
     friend List<T> operator+(const List<T>& l1, const List<T>& l2);
 
     /**
+     * @brief Function add end Node located just after last user created data
+     * Node is used by iterators indicating end of container
+     */
+    void add_end_node()
+    {
+        Node<T>* newNode = new Node<T>(T{});
+
+        if (!m_front)
+        {
+            m_front = newNode;
+            m_back = newNode;
+        }
+        else
+        {
+            m_back->m_next = newNode;
+            newNode->m_prev = m_back;
+            m_back = newNode;
+        }
+    }
+
+    /**
      * @brief Function remove next element
      *
      * @param[in] pos Iterator before which element will be erased
@@ -829,6 +850,12 @@ private:
     bool if_valid_iterator(Const_Iterator pos)
     {
         bool valid_iterator{};
+
+        if (pos == cbegin() || pos == cend())
+        {
+            return true;
+        }
+
         for (auto it = cbegin(); it != cend(); ++it)
         {
             if (it == pos)
@@ -869,6 +896,7 @@ private:
 template<typename T>
 List<T>::List()
 {
+    add_end_node();
 }
 
 template<typename T>
@@ -878,6 +906,8 @@ List<T>::List(T value)
     m_front = newNode;
     m_back = newNode;
     m_size++;
+
+    add_end_node();
 }
 
 template<typename T>
@@ -1019,13 +1049,13 @@ typename List<T>::Const_Iterator List<T>::cbegin() const noexcept
 template<typename T>
 typename List<T>::Iterator List<T>::end() noexcept
 {
-    return Iterator(nullptr);
+    return Iterator(m_back);
 }
 
 template<typename T>
 typename List<T>::Const_Iterator List<T>::end() const noexcept
 {
-    return Const_Iterator(nullptr);
+    return Const_Iterator(m_back);
 }
 
 template<typename T>
@@ -1202,18 +1232,22 @@ void List<T>::pop_front()
 template<typename T>
 void List<T>::push_back(T value)
 {
+
     Node<T>* newNode = new Node<T>(value);
 
-    if (!m_front)
+    if (!m_size)
     {
         m_front = newNode;
         m_back = newNode;
+
+        add_end_node();
     }
     else
     {
-        m_back->m_next = newNode;
-        newNode->m_prev = m_back;
-        m_back = newNode;
+        m_back->m_prev->m_next = newNode;
+        newNode->m_prev = m_back->m_prev;
+        newNode->m_next = m_back;
+        m_back->m_prev = newNode;
     }
 
     m_size++;
@@ -1328,12 +1362,15 @@ void List<T>::merge(List<T>& other)
     {
         if (m_size)
         {
-            m_back->m_next = other.m_front;
-            other.m_front->m_prev = m_back;
+            m_back->m_prev->m_next = other.m_front;
+            other.m_front->m_prev = m_back->m_prev;
 
-            m_back = other.m_back;
+            other.m_back->m_prev->m_next = m_back;
+            m_back->m_prev = other.m_back->m_prev;
             m_size += other.m_size;
 
+            // cleanup other list
+            delete other.m_back;
             other.m_front = nullptr;
             other.m_back = nullptr;
             other.m_size = 0;
@@ -1427,16 +1464,18 @@ void List<T>::splice(Const_Iterator pos, List<T>& other)
 
         if (temp_next)
         {
-            temp_next->m_prev = other.m_back;
+            temp_next->m_prev = other.m_back->m_prev;
         }
         else
         {
-            m_back = other.m_back;
+            m_back->m_prev = other.m_back->m_prev;
         }
-        other.m_back->m_next = temp_next;
+        other.m_back->m_prev->m_next = temp_next;
 
         m_size += other.m_size;
 
+        // cleanup other list
+        delete other.m_back;
         other.m_front = nullptr;
         other.m_back = nullptr;
         other.m_size = 0;
@@ -1512,8 +1551,9 @@ template<typename T>
 void List<T>::reverse()
 {
     Node<T>* temp = m_front;
-    m_front = m_back;
-    m_back = temp;
+    Node<T>* temp_back = m_back->m_prev;
+    m_front = temp_back;
+    temp_back = temp;
 
     Node<T>* prev{};
     Node<T>* next{};
@@ -1527,6 +1567,10 @@ void List<T>::reverse()
         prev = temp;
         temp = next;
     }
+
+    m_front->m_prev = nullptr;
+    temp_back->m_next = m_back;
+    m_back->m_prev = temp_back;
 }
 
 template<typename T>
@@ -1543,7 +1587,7 @@ void List<T>::unique()
         {
             next = prev->m_next;
 
-            if (next && next->value() == temp->value())
+            if (next && next->value() == temp->value() && next != m_back)
             {
                 Node<T>* to_remove = next;
 
@@ -1606,7 +1650,7 @@ List<T>::Node<T>* List<T>::get(int index) const
         }
         else
         {
-            temp = m_back;
+            temp = m_back->m_prev;
             for (size_t i = m_size - 1; i > index; i--)
             {
                 temp = temp->m_prev;
@@ -1616,7 +1660,7 @@ List<T>::Node<T>* List<T>::get(int index) const
     else
     {
         // count nodes from back
-        temp = m_back;
+        temp = m_back->m_prev;
         for (size_t i = m_size - 1; i > index; i--)
         {
             temp = temp->m_prev;
