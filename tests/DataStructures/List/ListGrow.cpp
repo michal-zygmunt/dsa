@@ -73,5 +73,21 @@ int main()
     std::cout << "Expected:\t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
+    List<int> l5{ 10, 20, 30 };
+    l5.insert(l5.end(), 40);
+    expected = { 10, 20, 30, 40 };
+    res = if_error(l5, expected);
+    std::cout << "List l5:\t" << l5 << '\n';
+    std::cout << "Expected:\t" << expected << '\n';
+    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+
+    List<int> l6{ 10, 20, 30 };
+    l6.insert(l6.end(), { 40, 50, 60 });
+    expected = { 10, 20, 30, 40, 50, 60 };
+    res = if_error(l6, expected);
+    std::cout << "List l6:\t" << l6 << '\n';
+    std::cout << "Expected:\t" << expected << '\n';
+    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+
     return tests::failed;
 }

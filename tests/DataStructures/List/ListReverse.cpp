@@ -23,7 +23,7 @@ int main()
     l1.reverse();
 
     res = if_error(l1, expected);
-    std::cout << "List:\t" << l1 << '\n';
+    std::cout << "List:\t\t" << l1 << '\n';
     std::cout << "Expected:\t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
