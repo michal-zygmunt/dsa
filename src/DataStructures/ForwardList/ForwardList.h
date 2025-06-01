@@ -1157,28 +1157,7 @@ void ForwardList<T>::pop_back()
 template<typename T>
 void ForwardList<T>::resize(size_t count)
 {
-    if (count == m_size)
-    {
-        return;
-    }
-
-    if (m_size > count)
-    {
-        // container is reduced to its count elements
-        while (m_size > count)
-        {
-            pop_back();
-        }
-    }
-
-    if (m_size < count)
-    {
-        // additional default-inserted elements are appended
-        while (m_size < count)
-        {
-            push_back(T());
-        }
-    }
+    resize(count, T{});
 }
 
 template<typename T>
