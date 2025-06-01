@@ -213,21 +213,75 @@ int main()
     auto citer11e = l11.cend();
     //*citer11e = 1; // compilation error
 
-    // Iterate over Const_Iterator
+    // Increment Iterator
     List<int> l12 = List<int>{ 10, 20, 30 };
-    auto cit = l12.cbegin();
-    std::cout << *cit << ' ';
-    res = if_error(*cit, 10);
+    std::cout << "List l12:\t" << l12 << '\n';
+    auto it_12 = l12.begin();
+    std::cout << *it_12 << ' ';
+    res = if_error(*it_12, 10);
     std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
-    cit++;
-    std::cout << *cit << ' ';
-    res = if_error(*cit, 20);
+    it_12++;
+    std::cout << *it_12 << ' ';
+    res = if_error(*it_12, 20);
     std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
-    cit++;
-    std::cout << *cit << ' ';
-    res = if_error(*cit, 30);
+    it_12++;
+    std::cout << *it_12 << ' ';
+    res = if_error(*it_12, 30);
+    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    it_12++;
+
+    // Increment Const_Iterator
+    List<int> l13 = List<int>{ 10, 20, 30 };
+    std::cout << "List l13:\t" << l13 << '\n';
+    auto cit_13 = l13.cbegin();
+    std::cout << *cit_13 << ' ';
+    res = if_error(*cit_13, 10);
     std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
-    cit++;
+    cit_13++;
+    std::cout << *cit_13 << ' ';
+    res = if_error(*cit_13, 20);
+    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    cit_13++;
+    std::cout << *cit_13 << ' ';
+    res = if_error(*cit_13, 30);
+    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    cit_13++;
+
+    // Decrement Iterator
+    List<int> l14 = List<int>{ 10, 20, 30 };
+    std::cout << "List l14:\t" << l14 << '\n';
+    auto it_14 = l14.end();
+    it_14--;
+    std::cout << *it_14 << ' ';
+    res = if_error(*it_14, 30);
+    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    --it_14;
+    std::cout << *it_14 << ' ';
+    res = if_error(*it_14, 20);
+    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    --it_14;
+    std::cout << *it_14 << ' ';
+    res = if_error(*it_14, 10);
+    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    --it_14;
+
+    // Decrement Const_Iterator
+    List<int> l15 = List<int>{ 10, 20, 30 };
+    std::cout << "List l15:\t" << l15 << '\n';
+    auto cit_15 = l15.cend();
+    cit_15--;
+    std::cout << *cit_15 << ' ';
+    res = if_error(*cit_15, 30);
+    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    --cit_15;
+    std::cout << *cit_15 << ' ';
+    res = if_error(*cit_15, 20);
+    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    --cit_15;
+    std::cout << *cit_15 << ' ';
+    res = if_error(*cit_15, 10);
+    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    --cit_15;
 
     return tests::failed;
 }
