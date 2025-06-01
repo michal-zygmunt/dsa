@@ -182,6 +182,33 @@ public:
         }
 
         /**
+         * @brief Overload pre-decrement operator-- to point Basic_Iterator at previous Node
+         *
+         * @return Basic_Iterator& reference to previous Node
+         */
+        Basic_Iterator& operator--()
+        {
+            if (m_current_node)
+            {
+                m_current_node = m_current_node->m_prev;
+            }
+
+            return *this;
+        }
+
+        /**
+         * @brief Overload post-decrement operator-- to point Basic_Iterator at previous Node
+         *
+         * @return Basic_Iterator& reference to previous Basic_Iterator
+         */
+        Basic_Iterator operator--(int)
+        {
+            Basic_Iterator<IF_CONST, T> Basic_Iterator = *this;
+            --(*this);
+            return Basic_Iterator;
+        }
+
+        /**
          * @brief Overload operator!= for Basic_Iterator objects comparison
          *
          * @param[in] other input Basic_Iterator of \p other object
