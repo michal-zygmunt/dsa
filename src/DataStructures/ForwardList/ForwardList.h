@@ -28,12 +28,22 @@ class ForwardList
 public:
 
     /**
+     * @brief Class implements base pointer used by ForwardList
+     */
+    class NodeBase
+    {
+    public:
+        virtual ~NodeBase() = default;
+        NodeBase* m_next{};
+    };
+
+    /**
      * @brief Implements Node template class with pointer to next element
      *
      * @tparam T type of data stored in Node
      */
     template<typename T>
-    class Node
+    class Node : public NodeBase
     {
     public:
 
@@ -81,10 +91,10 @@ public:
          */
         Node<T>* next() const
         {
-            return m_next;
+            return static_cast<Node<T>*>(NodeBase::m_next);
         }
 
-    private:
+    public:
 
         /**
          * @brief Forward friend declaration of ForwardList
@@ -95,7 +105,6 @@ public:
         friend class ForwardList;
 
         T m_value{};
-        Node<T>* m_next{};
     };
 
     /**
@@ -109,7 +118,7 @@ public:
      * @tparam T type of data stored in Node
      */
     template<bool IF_CONST, typename T>
-    class Basic_Iterator
+    class Basic_Iterator : public NodeBase
     {
     public:
 
@@ -120,7 +129,7 @@ public:
          *
          * @param[in] node input Node
          */
-        Basic_Iterator(Node<T>* node) noexcept
+        Basic_Iterator(NodeBase* node) noexcept
             : m_current_node{ node }
         {
         }
@@ -138,7 +147,7 @@ public:
          * @param[in] node input Node
          * @return Basic_Iterator& reference to updated Node
          */
-        Basic_Iterator& operator=(Node<T>* node)
+        Basic_Iterator& operator=(NodeBase* node)
         {
             this->m_current_node = node;
             return *this;
@@ -194,7 +203,7 @@ public:
          */
         bool operator!=(const Basic_Iterator<IF_CONST, T>& other)
         {
-            return !operator==(other);// m_current_node != other.m_current_node;
+            return !operator==(other);
         }
 
         /**
@@ -210,13 +219,13 @@ public:
             Node<T>* temp{};
             if (index >= 0)
             {
-                temp = m_current_node;
+                temp = static_cast<Node<T>*>(m_current_node);
 
                 for (size_t i = 0; i < index; i++)
                 {
                     if (temp->m_next)
                     {
-                        temp = temp->m_next;
+                        temp = temp->next();
                     }
                     else
                     {
@@ -235,7 +244,12 @@ public:
          */
         iterator_type& operator*() const noexcept
         {
-            return m_current_node->value();
+            return static_cast<Node<T>*>(m_current_node)->value();
+        }
+
+        T* operator->()
+        {
+            return &static_cast<Node<T>*>(m_current_node)->value();
         }
 
         /**
@@ -251,7 +265,7 @@ public:
         template<typename T>
         friend class ForwardList;
 
-        Node<T>* m_current_node{};
+        NodeBase* m_current_node{};
     };
 
     using Const_Iterator = Basic_Iterator<true, T>;
@@ -342,9 +356,26 @@ public:
      */
     const T& front() const;
 
-    /// @todo add before_begin
+    /**
+     * @brief Function returns iterator just before ForwardList first Node
+     *
+     * @return Iterator iterator just before ForwardList first Node
+     */
+    Iterator before_begin() noexcept;
 
-    /// @todo add const before_begin
+    /**
+     * @brief Function returns Const_Iterator just before ForwardList first Node
+     *
+     * @return Const_Iterator iterator just before ForwardList first Node
+     */
+    Const_Iterator before_begin() const noexcept;
+
+    /**
+     * @brief Function returns Const_Iterator just before ForwardList first Node
+     *
+     * @return Const_Iterator iterator just before ForwardList first Node
+     */
+    Const_Iterator cbefore_begin() const noexcept;
 
     /**
      * @brief Function returns pointer to ForwardList first Node
@@ -661,10 +692,10 @@ public:
             return nullptr;
         }
 
-        Node<T>* temp = m_front;
+        Node<T>* temp = static_cast<Node<T>*>(m_front->m_next);
         for (int i = 0; i < index; i++)
         {
-            temp = temp->m_next;
+            temp = static_cast<Node<T>*>(temp->m_next);
         }
 
         return temp;
@@ -707,6 +738,15 @@ private:
     friend ForwardList<T> operator+(const ForwardList<T>& l1, const ForwardList<T>& l2);
 
     /**
+     * @brief Function initialize ForwardList pointer located just before user added data
+     * It is used be before begin iterator
+     */
+    void init_node()
+    {
+        m_front = new NodeBase;
+    }
+
+    /**
      * @brief Function remove next element
      *
      * @param[in] pos Iterator after which element will be erased
@@ -719,8 +759,8 @@ private:
             return nullptr;
         }
 
-        Node<T>* temp = pos.m_current_node;
-        Node<T>* to_remove = temp->m_next;
+        Node<T>* temp = static_cast<Node<T>*>(pos.m_current_node);
+        Node<T>* to_remove = static_cast<Node<T>*>(temp->m_next);
 
         temp->m_next = to_remove->m_next;
         delete to_remove;
@@ -745,7 +785,7 @@ private:
             return nullptr;
         }
 
-        Node<T>* temp = pos.m_current_node;
+        Node<T>* temp = static_cast<Node<T>*>(pos.m_current_node);
 
         Node<T>* newNode = new Node<T>(value);
         newNode->m_next = temp->m_next;
@@ -765,8 +805,10 @@ private:
      */
     bool if_valid_iterator(Const_Iterator pos)
     {
+        /* initial implementation
+        */
         bool valid_iterator{};
-        for (auto it = cbegin(); it != cend(); ++it)
+        for (auto it = cbefore_begin(); it != cend(); ++it)
         {
             if (it == pos)
             {
@@ -798,7 +840,7 @@ private:
      */
     void transfer(Const_Iterator pos, ForwardList<T>& other, Const_Iterator first, Const_Iterator last);
 
-    Node<T>* m_front{};
+    NodeBase* m_front{};
     Node<T>* m_back{};
     size_t m_size{};
 };
@@ -806,13 +848,16 @@ private:
 template<typename T>
 ForwardList<T>::ForwardList()
 {
+    init_node();
 }
 
 template<typename T>
 ForwardList<T>::ForwardList(T value)
 {
+    init_node();
+
     Node<T>* newNode = new Node<T>(value);
-    m_front = newNode;
+    m_front->m_next = newNode;
     m_back = newNode;
     m_size++;
 }
@@ -820,6 +865,8 @@ ForwardList<T>::ForwardList(T value)
 template<typename T>
 ForwardList<T>::ForwardList(const std::initializer_list<T>& init_list)
 {
+    init_node();
+
     for (const auto& item : init_list)
     {
         push_back(item);
@@ -829,6 +876,8 @@ ForwardList<T>::ForwardList(const std::initializer_list<T>& init_list)
 template<typename T>
 ForwardList<T>::ForwardList(const ForwardList<T>& other)
 {
+    init_node();
+
     for (int i = 0; i < other.size(); i++)
     {
         push_back(other.get(i)->value());
@@ -838,9 +887,14 @@ ForwardList<T>::ForwardList(const ForwardList<T>& other)
 template<typename T>
 ForwardList<T>& ForwardList<T>::operator=(const ForwardList<T>& other)
 {
+    if (!m_front)
+    {
+        init_node();
+    }
+
     if (&other != this)
     {
-        while (m_front)
+        while (m_front->m_next)
         {
             pop_front();
         }
@@ -857,13 +911,7 @@ ForwardList<T>& ForwardList<T>::operator=(const ForwardList<T>& other)
 template<typename T>
 ForwardList<T>::ForwardList(ForwardList<T>&& other) noexcept
 {
-    m_front = other.m_front;
-    m_back = other.m_back;
-    m_size = other.m_size;
-
-    other.m_front = nullptr;
-    other.m_back = nullptr;
-    other.m_size = 0;
+    operator=(other);
 }
 
 template<typename T>
@@ -871,11 +919,16 @@ ForwardList<T>& ForwardList<T>::operator=(ForwardList<T>&& other) noexcept
 {
     if (&other != this)
     {
-        m_front = other.m_front;
+        if (!m_front)
+        {
+            init_node();
+        }
+
+        m_front->m_next = other.m_front->m_next;
         m_back = other.m_back;
         m_size = other.m_size;
 
-        other.m_front = nullptr;
+        other.m_front->m_next = nullptr;
         other.m_back = nullptr;
         other.m_size = 0;
     }
@@ -924,15 +977,33 @@ const T& ForwardList<T>::front() const
 }
 
 template<typename T>
-typename ForwardList<T>::Iterator ForwardList<T>::begin() noexcept
+typename ForwardList<T>::Iterator ForwardList<T>::before_begin() noexcept
 {
     return Iterator(m_front);
 }
 
 template<typename T>
-typename ForwardList<T>::Const_Iterator ForwardList<T>::begin() const noexcept
+typename ForwardList<T>::Const_Iterator ForwardList<T>::before_begin() const noexcept
 {
     return Const_Iterator(m_front);
+}
+
+template<typename T>
+typename ForwardList<T>::Const_Iterator ForwardList<T>::cbefore_begin() const noexcept
+{
+    return before_begin();
+}
+
+template<typename T>
+typename ForwardList<T>::Iterator ForwardList<T>::begin() noexcept
+{
+    return Iterator(m_front->m_next);
+}
+
+template<typename T>
+typename ForwardList<T>::Const_Iterator ForwardList<T>::begin() const noexcept
+{
+    return Const_Iterator(m_front->m_next);
 }
 
 template<typename T>
@@ -975,17 +1046,24 @@ size_t ForwardList<T>::max_size() const noexcept
 template<typename T>
 void ForwardList<T>::clear()
 {
-    Node<T>* temp = m_front;
-    while (m_front)
+    if (m_front && m_front->m_next)
     {
-        m_front = m_front->m_next;
-        delete temp;
-        temp = m_front;
+        //Node<T>* temp = m_front->m_next;
+        Node<T>* temp = static_cast<Node<T>*>(m_front->m_next);
+        while (m_front->m_next)
+        {
+            m_front->m_next = temp->next();
+            delete temp;
+            temp = static_cast<Node<T>*>(m_front->m_next);
+        }
+
+        m_size = 0;
+        m_front->m_next = nullptr;
+        m_back = nullptr;
     }
 
-    m_size = 0;
     m_front = nullptr;
-    m_back = nullptr;
+    delete m_front;
 }
 
 template<typename T>
@@ -1068,15 +1146,15 @@ template<typename T>
 void ForwardList<T>::push_front(T value)
 {
     Node<T>* newNode = new Node<T>(value);
-    if (!m_front)
+    if (!m_front->m_next)
     {
-        m_front = newNode;
+        m_front->m_next = newNode;
         m_back = newNode;
     }
     else
     {
-        newNode->m_next = m_front;
-        m_front = newNode;
+        newNode->m_next = m_front->m_next;
+        m_front->m_next = newNode;
     }
 
     m_size++;
@@ -1085,20 +1163,20 @@ void ForwardList<T>::push_front(T value)
 template<typename T>
 void ForwardList<T>::pop_front()
 {
-    if (!m_front)
+    if (!m_front->m_next)
     {
         return;
     }
 
-    Node<T>* temp = m_front;
+    Node<T>* temp = static_cast<Node<T>*>(m_front->m_next);
     if (m_size == 1)
     {
-        m_front = nullptr;
+        m_front->m_next = nullptr;
         m_back = nullptr;
     }
     else
     {
-        m_front = m_front->m_next;
+        m_front->m_next = temp->next();
     }
     delete temp;
     m_size--;
@@ -1107,11 +1185,16 @@ void ForwardList<T>::pop_front()
 template<typename T>
 void ForwardList<T>::push_back(T value)
 {
-    Node<T>* newNode = new Node<T>(value);
-
     if (!m_front)
     {
-        m_front = newNode;
+        init_node();
+    }
+
+    Node<T>* newNode = new Node<T>(value);
+
+    if (!m_front->m_next)
+    {
+        m_front->m_next = newNode;
         m_back = newNode;
     }
     else
@@ -1131,10 +1214,10 @@ void ForwardList<T>::pop_back()
         return;
     }
 
-    Node<T>* temp = m_front;
+    Node<T>* temp = static_cast<Node<T>*>(m_front->m_next);
     if (m_size == 1)
     {
-        m_front = nullptr;
+        m_front->m_next = nullptr;
         m_back = nullptr;
     }
     else
@@ -1144,7 +1227,7 @@ void ForwardList<T>::pop_back()
         while (temp->m_next)
         {
             prev = temp;
-            temp = temp->m_next;
+            temp = temp->next();
         }
         m_back = prev;
         m_back->m_next = nullptr;
@@ -1218,11 +1301,11 @@ void ForwardList<T>::merge(ForwardList<T>& other)
     {
         if (m_size)
         {
-            m_back->m_next = other.m_front;
+            m_back->m_next = other.m_front->m_next;
             m_back = other.m_back;
             m_size += other.m_size;
 
-            other.m_front = nullptr;
+            other.m_front->m_next = nullptr;
             other.m_back = nullptr;
             other.m_size = 0;
         }
@@ -1257,10 +1340,10 @@ void ForwardList<T>::transfer(Const_Iterator pos, ForwardList<T>& other, Const_I
 {
     if (&other != this && other.m_size > 0)
     {
-        Node<T>* temp_prev = pos.m_current_node;    // to append to
-        Node<T>* temp_next = first.m_current_node;  // does not move
+        Node<T>* temp_prev = static_cast<Node<T>*>(pos.m_current_node);     // to append to
+        Node<T>* temp_next = static_cast<Node<T>*>(first.m_current_node);   // does not move
 
-        Node<T>* first_to_move = temp_next->m_next;
+        Node<T>* first_to_move = static_cast<Node<T>*>(temp_next->m_next);
         Node<T>* last_to_move = temp_next;
         size_t ctr = 0;
         size_t dist = distance(first, last);
@@ -1268,7 +1351,7 @@ void ForwardList<T>::transfer(Const_Iterator pos, ForwardList<T>& other, Const_I
         {
             if (last_to_move)
             {
-                last_to_move = last_to_move->m_next;
+                last_to_move = static_cast<Node<T>*>(last_to_move->m_next);
                 ctr++;
             }
         }
@@ -1291,12 +1374,12 @@ void ForwardList<T>::splice_after(Const_Iterator pos, ForwardList<T>& other)
 {
     if (&other != this && other.m_size > 0)
     {
-        Node<T>* temp = pos.m_current_node;
+        Node<T>* temp = static_cast<Node<T>*>(pos.m_current_node);
         other.m_back->m_next = temp->m_next;
-        temp->m_next = other.m_front;
+        temp->m_next = static_cast<Node<T>*>(other.m_front->m_next);
         m_size += other.m_size;
 
-        other.m_front = nullptr;
+        other.m_front->m_next = nullptr;
         other.m_back = nullptr;
         other.m_size = 0;
     }
@@ -1311,13 +1394,13 @@ void ForwardList<T>::splice_after(Const_Iterator pos, ForwardList<T>&& other)
 template<typename T>
 void ForwardList<T>::splice_after(Const_Iterator pos, ForwardList<T>& other, Const_Iterator it)
 {
-    transfer(pos, other, it, it.m_current_node->next());
+    transfer(pos, other, it, it.m_current_node->m_next);
 }
 
 template<typename T>
 void ForwardList<T>::splice_after(Const_Iterator pos, ForwardList<T>&& other, Const_Iterator it)
 {
-    transfer(pos, other, it, it.m_current_node->next());
+    transfer(pos, other, it, it.m_current_node->m_next);
 }
 
 template<typename T>
@@ -1335,34 +1418,34 @@ void ForwardList<T>::splice_after(Const_Iterator pos, ForwardList<T>&& other, Co
 template<typename T>
 void ForwardList<T>::remove(const T& value)
 {
-    Node<T>* temp = m_front;
+    Node<T>* temp = static_cast<Node<T>*>(m_front->m_next);
     Node<T>* next{};
     while (temp)
     {
-        next = temp->m_next;
+        next = temp->next();
 
-        if (m_front->value() == value)
+        if (static_cast<Node<T>*>(m_front->m_next)->value() == value)
         {
             pop_front();
-            temp = m_front;
+            temp = static_cast<Node<T>*>(m_front->m_next);
             continue;
         }
 
         if (next && next->value() == value)
         {
-            Node<T>* to_remove = temp->m_next;
-            temp->m_next = to_remove->m_next;
+            Node<T>* to_remove = temp->next();
+            temp->m_next = to_remove->next();
             delete to_remove;
             m_size--;
             continue;
         }
 
-        temp = temp->m_next;
+        temp = temp->next();
     }
 
     if (m_size == 0)
     {
-        m_front = nullptr;
+        m_front->m_next = nullptr;
         m_back = nullptr;
     }
 }
@@ -1370,8 +1453,8 @@ void ForwardList<T>::remove(const T& value)
 template<typename T>
 void ForwardList<T>::reverse()
 {
-    Node<T>* temp = m_front;
-    m_front = m_back;
+    Node<T>* temp = static_cast<Node<T>*>(m_front->m_next);
+    m_front->m_next = m_back;
     m_back = temp;
 
     Node<T>* prev{};
@@ -1379,7 +1462,7 @@ void ForwardList<T>::reverse()
 
     for (int i = 0; i < m_size; i++)
     {
-        next = temp->m_next;
+        next = static_cast<Node<T>*>(temp->m_next);
         temp->m_next = prev;
 
         prev = temp;
@@ -1390,7 +1473,7 @@ void ForwardList<T>::reverse()
 template<typename T>
 void ForwardList<T>::unique()
 {
-    Node<T>* temp = m_front;
+    Node<T>* temp = static_cast<Node<T>*>(m_front->m_next);
     Node<T>* prev{};
     Node<T>* next{};
     while (temp)
@@ -1399,7 +1482,7 @@ void ForwardList<T>::unique()
 
         while (prev)
         {
-            next = prev->m_next;
+            next = static_cast<Node<T>*>(prev->m_next);
 
             if (next && next->value() == temp->value())
             {
@@ -1412,11 +1495,11 @@ void ForwardList<T>::unique()
 
             if (prev)
             {
-                prev = prev->m_next;
+                prev = static_cast<Node<T>*>(prev->m_next);
             }
         }
 
-        temp = temp->m_next;
+        temp = static_cast<Node<T>*>(temp->m_next);
     }
 }
 
@@ -1453,6 +1536,11 @@ ForwardList<T> operator+(const ForwardList<T>& l1, const ForwardList<T>& l2)
 template<typename T>
 std::ostream& operator<<(std::ostream& out, const ForwardList<T>& ll)
 {
+    if (ll.empty())
+    {
+        return out;
+    }
+
     for (auto it = ll.cbegin(); it != ll.cend(); ++it)
     {
         T value = *it;

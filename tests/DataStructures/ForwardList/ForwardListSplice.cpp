@@ -305,7 +305,6 @@ int main()
 
     ForwardList<int> l39 = ForwardList<int>(expected_1);
     ForwardList<int> l40 = ForwardList<int>(expected_2);
-    //l39.splice_after(l40.size() - 1, l40, 0, 1);
     l39.splice_after(l39.begin()[l39.size() - 1], l40, l40.begin(), l40.begin()[1]);
     expected = { 1, 2, 3, 4, 5, 20 };
     res = if_error(l39, expected);
