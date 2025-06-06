@@ -72,5 +72,26 @@ int main()
     std::cout << "Expected:\t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
+    ForwardList<int> l5;
+    l5.insert_after(l5.before_begin(), 40);
+    l5.insert_after(l5.before_begin(), 30);
+    l5.insert_after(l5.cbefore_begin(), 20);
+    l5.insert_after(l5.cbefore_begin(), 10);
+    expected = { 10, 20, 30, 40 };
+    res = if_error(l5, expected);
+    std::cout << "ForwardList l5:\t" << l5 << '\n';
+    std::cout << "Expected:\t" << expected << '\n';
+    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+
+    ForwardList<int> l6{ 40 };
+    l6.insert_after(l6.before_begin(), 30);
+    l6.insert_after(l6.before_begin(), 20);
+    l6.insert_after(l6.before_begin(), 10);
+    expected = { 10, 20, 30, 40 };
+    res = if_error(l6, expected);
+    std::cout << "ForwardList l6:\t" << l6 << '\n';
+    std::cout << "Expected:\t" << expected << '\n';
+    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+
     return tests::failed;
 }
