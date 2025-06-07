@@ -85,11 +85,12 @@ int main()
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
     ForwardList<int> l8 = ForwardList<int>({ 10, 20, 30 });
-    l8.pop_back();
-    l8.pop_back();
-    l8.pop_back();
-    l8.pop_back();
+    l8.pop_front();
+    l8.pop_front();
+    l8.pop_front();
+    l8.pop_front();
     expected = { };
+    res = if_error(l8, expected);
     std::cout << "ForwardList l8:\t" << l8 << '\n';
     std::cout << "Expected:\t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";

@@ -511,18 +511,6 @@ public:
     void pop_front();
 
     /**
-     * @brief Function adds new element at the end of ForwardList
-     *
-     * @param[in] value element of type T
-     */
-    void push_back(T value);
-
-    /**
-     * @brief Function removes last Node of ForwardList
-     */
-    void pop_back();
-
-    /**
      * @brief Function resize ForwardList to specified number of elements
      *
      * @param[in] count new size of container
@@ -752,7 +740,7 @@ private:
 
     /**
      * @brief Function iterates ForwardList to find Iterator to Node before last one
-     * 
+     *
      * @return Iterator to Node before last one
      */
     Iterator find_iter_before_last()
@@ -767,7 +755,7 @@ private:
         if (!it.m_current_node)
         {
             it = before_begin();
-    }
+        }
 
         return it;
     }
@@ -867,7 +855,6 @@ private:
     void transfer(Const_Iterator pos, ForwardList<T>& other, Const_Iterator first, Const_Iterator last);
 
     NodeBase* m_front{};
-    Node<T>* m_back{};
     size_t m_size{};
 };
 
@@ -884,7 +871,6 @@ ForwardList<T>::ForwardList(T value)
 
     Node<T>* newNode = new Node<T>(value);
     m_front->m_next = newNode;
-    m_back = newNode;
     m_size++;
 }
 
@@ -954,11 +940,9 @@ ForwardList<T>& ForwardList<T>::operator=(ForwardList<T>&& other) noexcept
         }
 
         m_front->m_next = other.m_front->m_next;
-        m_back = other.m_back;
         m_size = other.m_size;
 
         other.m_front->m_next = nullptr;
-        other.m_back = nullptr;
         other.m_size = 0;
     }
 
@@ -1096,7 +1080,6 @@ void ForwardList<T>::clear()
 
         m_size = 0;
         m_front->m_next = nullptr;
-        m_back = nullptr;
     }
 
     m_front = nullptr;
@@ -1182,7 +1165,6 @@ void ForwardList<T>::push_front(T value)
     if (!m_front->m_next)
     {
         m_front->m_next = newNode;
-        m_back = newNode;
     }
     else
     {
@@ -1205,67 +1187,11 @@ void ForwardList<T>::pop_front()
     if (m_size == 1)
     {
         m_front->m_next = nullptr;
-        m_back = nullptr;
     }
     else
     {
         m_front->m_next = temp->next();
     }
-    delete temp;
-    m_size--;
-}
-
-template<typename T>
-void ForwardList<T>::push_back(T value)
-{
-    if (!m_front)
-    {
-        init_node();
-    }
-
-    Node<T>* newNode = new Node<T>(value);
-
-    if (!m_front->m_next)
-    {
-        m_front->m_next = newNode;
-        m_back = newNode;
-    }
-    else
-    {
-        m_back->m_next = newNode;
-        m_back = newNode;
-    }
-
-    m_size++;
-}
-
-template<typename T>
-void ForwardList<T>::pop_back()
-{
-    if (m_size == 0)
-    {
-        return;
-    }
-
-    Node<T>* temp = static_cast<Node<T>*>(m_front->m_next);
-    if (m_size == 1)
-    {
-        m_front->m_next = nullptr;
-        m_back = nullptr;
-    }
-    else
-    {
-        Node<T>* prev = temp;
-
-        while (temp->m_next)
-        {
-            prev = temp;
-            temp = temp->next();
-        }
-        m_back = prev;
-        m_back->m_next = nullptr;
-    }
-
     delete temp;
     m_size--;
 }
@@ -1325,19 +1251,15 @@ void ForwardList<T>::swap(ForwardList<T>& other) noexcept
     {
         ForwardList<T> temp;
         temp.m_front = m_front;
-        temp.m_back = m_back;
         temp.m_size = m_size;
 
         m_front = other.m_front;
-        m_back = other.m_back;
         m_size = other.m_size;
 
         other.m_front = temp.m_front;
-        other.m_back = temp.m_back;
         other.m_size = temp.m_size;
 
         temp.m_front = nullptr;
-        temp.m_back = nullptr;
         temp.m_size = 0;
     }
 }
@@ -1414,10 +1336,6 @@ void ForwardList<T>::transfer(Const_Iterator pos, ForwardList<T>& other, Const_I
         last_to_move->m_next = temp_prev->m_next;
         temp_prev->m_next = first_to_move;
 
-        if (!last_to_move->m_next)
-        {
-            other.m_back = nullptr;
-        }
         m_size += ctr;
         other.m_size -= ctr;
     }
@@ -1503,7 +1421,6 @@ void ForwardList<T>::remove(const T& value)
     if (m_size == 0)
     {
         m_front->m_next = nullptr;
-        m_back = nullptr;
     }
 }
 

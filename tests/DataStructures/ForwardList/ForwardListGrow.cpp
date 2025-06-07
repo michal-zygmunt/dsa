@@ -62,9 +62,9 @@ int main()
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
     ForwardList<int> l4;
-    l4.push_back(10);
-    l4.push_back(30);
-    l4.push_back(40);
+    l4.push_front(40);
+    l4.push_front(30);
+    l4.push_front(10);
     it = l4.insert_after(l4.cbegin(), 20);
     expected = { 10, 20, 30, 40 };
     res = if_error(l4, expected);
