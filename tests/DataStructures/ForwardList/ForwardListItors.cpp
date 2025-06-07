@@ -89,7 +89,7 @@ int main()
     // Check iterator of one element
     ForwardList<int> l5 = ForwardList<int>(0);
     auto it = l5.insert_after(l5.cbegin(), 10);
-    int val = it->operator*();
+    int val = *it;
     int expected_val = 10;
     res = if_error(val, expected_val);
     std::cout << "ForwardList l5:\t" << val << '\n';
@@ -101,7 +101,7 @@ int main()
     l6.push_front(40);
     l6.push_front(30);
     it = l6.insert_after(l6.cbegin(), 0, 5);
-    val = it->operator*();
+    val = *it;
     expected_val = 30;
     res = if_error(val, expected_val);
     std::cout << "ForwardList l6:\t" << val << '\n';

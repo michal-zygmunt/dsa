@@ -21,7 +21,7 @@ int main()
 
     ForwardList<int> l1 = ForwardList<int>(10);
     auto it = l1.insert_after(l1.cbegin(), 20);
-    l1.insert_after(*it, { 30, 40 });
+    l1.insert_after(it, { 30, 40 });
     l1.push_front(0);
     l1.push_front(-10);
     // Try inserting nodes at invalid indexes
@@ -53,7 +53,7 @@ int main()
     l3.push_front(30);
     l3.push_front(10);
     it = l3.insert_after(l3.cbegin(), 20);
-    l3.insert_after(*it, { 1, 2, 3 });
+    l3.insert_after(it, { 1, 2, 3 });
     l3.insert_after(l3.cbegin()[l3.size() - 1], 60);
     expected = { 10, 20, 1, 2, 3, 30, 40, 50, 60 };
     res = if_error(l3, expected);
