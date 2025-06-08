@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  @file dsa.natvis
+  @brief This file contains visualization rules for custom data structures for VS debugger
+  @author Michal Zygmunt
+  
+  @copyright Copyright (c) 2025 Michal Zygmunt
+  @license Distributed under the MIT License.
+  See accompanying LICENSE.txt file or obtain copy at
+  https://opensource.org/license/mit
+-->
+
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<Type Name="ForwardList&lt;*&gt;">
+		<DisplayString Condition="m_front == 0xcccccccccccccccc">invalid</DisplayString>
+		<DisplayString Condition="m_size == 0">empty</DisplayString>
+		<DisplayString Condition="m_size != 0">non-empty</DisplayString>
+		<Expand>
+			<LinkedListItems>
+				<Size>m_size</Size>
+				<HeadPointer>m_front->m_next</HeadPointer>
+				<NextPointer>m_next</NextPointer>
+				<ValueNode>(*this)</ValueNode>
+			</LinkedListItems>
+		</Expand>
+	</Type>
+
+	<Type Name="ForwardList&lt;*&gt;::Node">
+		<DisplayString>{m_value}</DisplayString>
+	</Type>
+</AutoVisualizer>
