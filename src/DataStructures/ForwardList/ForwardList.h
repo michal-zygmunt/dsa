@@ -38,11 +38,8 @@ public:
     };
 
     /**
-     * @brief Implements Node template class with pointer to next element
-     *
-     * @tparam T type of data stored in Node
+     * @brief Implements Node class with user data
      */
-    template<typename T>
     class Node : public NodeBase
     {
     public:
@@ -67,7 +64,7 @@ public:
         /**
          * @brief Function returns value stored in Node object
          *
-         * @return T to value stored in Node
+         * @return T& reference to value stored in Node
          */
         T& value()
         {
@@ -87,11 +84,11 @@ public:
         /**
          * @brief Function returns pointer to next Node object
          *
-         * @return Node<T>* pointer to value stored in Node
+         * @return Node* pointer to next Node
          */
-        Node<T>* next() const
+        Node* next() const
         {
-            return static_cast<Node<T>*>(NodeBase::m_next);
+            return static_cast<Node*>(NodeBase::m_next);
         }
 
     public:
@@ -115,10 +112,9 @@ public:
      * or const reference is returned to underlying data type
      *
      * @tparam IF_CONST if \p true generate class with const reference to underlying data type
-     * @tparam T type of data stored in Node
      */
-    template<bool IF_CONST, typename T>
-    class Basic_Iterator : public NodeBase
+    template<bool IF_CONST>
+    class Basic_Iterator : NodeBase
     {
     public:
 
@@ -175,7 +171,7 @@ public:
          */
         Basic_Iterator operator++(int)
         {
-            Basic_Iterator<IF_CONST, T> Basic_Iterator = *this;
+            Basic_Iterator<IF_CONST> Basic_Iterator = *this;
             ++(*this);
             return Basic_Iterator;
         }
@@ -188,7 +184,7 @@ public:
          * @retval true if Basic_Iterator objects are the same
          * @retval false if Basic_Iterator objects are different
          */
-        bool operator==(const Basic_Iterator<IF_CONST, T>& other)
+        bool operator==(const Basic_Iterator<IF_CONST>& other)
         {
             return m_current_node == other.m_current_node;
         }
@@ -201,7 +197,7 @@ public:
          * @retval true if Basic_Iterator objects are different
          * @retval false if Basic_Iterator objects are the same
          */
-        bool operator!=(const Basic_Iterator<IF_CONST, T>& other)
+        bool operator!=(const Basic_Iterator<IF_CONST>& other)
         {
             return !operator==(other);
         }
@@ -216,10 +212,10 @@ public:
          */
         Basic_Iterator operator[](size_t index)
         {
-            Node<T>* temp{};
+            Node* temp{};
             if (index >= 0)
             {
-                temp = static_cast<Node<T>*>(m_current_node);
+                temp = static_cast<Node*>(m_current_node);
 
                 for (size_t i = 0; i < index; i++)
                 {
@@ -244,20 +240,20 @@ public:
          */
         iterator_type& operator*() const noexcept
         {
-            return static_cast<Node<T>*>(m_current_node)->value();
+            return static_cast<Node*>(m_current_node)->value();
         }
 
         T* operator->()
         {
-            return &static_cast<Node<T>*>(m_current_node)->value();
+            return &static_cast<Node*>(m_current_node)->value();
         }
 
         /**
          * @brief convert Basic_Iterator to Basic_Const_Iterator
          */
-        operator Basic_Iterator<true, T>()
+        operator Basic_Iterator<true>()
         {
-            return Basic_Iterator<true, T>(m_current_node);
+            return Basic_Iterator<true>(m_current_node);
         }
 
     private:
@@ -268,8 +264,8 @@ public:
         NodeBase* m_current_node{};
     };
 
-    using Const_Iterator = Basic_Iterator<true, T>;
-    using Iterator = Basic_Iterator<false, T>;
+    using Const_Iterator = Basic_Iterator<true>;
+    using Iterator = Basic_Iterator<false>;
 
     /**
      * @brief Construct a new ForwardList object
@@ -673,21 +669,21 @@ public:
      * @brief Function returns pointer to specific Node of ForwardList
      *
      * @param[in] index index of element
-     * @return Node<T>*
-     * @retval Node<T>* if index is valid
+     * @return Node*
+     * @retval Node* if index is valid
      * @retval nullptr if invalid index
      */
-    Node<T>* get(int index) const
+    Node* get(int index) const
     {
         if (index < 0 || index > m_size)
         {
             return nullptr;
         }
 
-        Node<T>* temp = static_cast<Node<T>*>(m_front->m_next);
+        Node* temp = static_cast<Node*>(m_front->m_next);
         for (int i = 0; i < index; i++)
         {
-            temp = static_cast<Node<T>*>(temp->m_next);
+            temp = static_cast<Node*>(temp->m_next);
         }
 
         return temp;
@@ -704,7 +700,7 @@ public:
      */
     bool set(int index, T value)
     {
-        Node<T>* temp = get(index);
+        Node* temp = get(index);
         if (temp)
         {
             temp->m_value = value;
@@ -745,7 +741,7 @@ private:
      */
     Iterator find_iter_before_last()
     {
-        Node<T>* temp = static_cast<Node<T>*>(m_front->m_next);
+        Node* temp = static_cast<Node*>(m_front->m_next);
         while (temp && temp->next() && temp->next()->next())
         {
             temp = temp->next();
@@ -773,8 +769,8 @@ private:
             return nullptr;
         }
 
-        Node<T>* temp = static_cast<Node<T>*>(pos.m_current_node);
-        Node<T>* to_remove = static_cast<Node<T>*>(temp->m_next);
+        Node* temp = static_cast<Node*>(pos.m_current_node);
+        Node* to_remove = static_cast<Node*>(temp->m_next);
 
         temp->m_next = to_remove->m_next;
         delete to_remove;
@@ -799,9 +795,9 @@ private:
             return nullptr;
         }
 
-        Node<T>* temp = static_cast<Node<T>*>(pos.m_current_node);
+        Node* temp = static_cast<Node*>(pos.m_current_node);
 
-        Node<T>* newNode = new Node<T>(value);
+        Node* newNode = new Node(value);
         newNode->m_next = temp->m_next;
 
         temp->m_next = newNode;
@@ -869,7 +865,7 @@ ForwardList<T>::ForwardList(T value)
 {
     init_node();
 
-    Node<T>* newNode = new Node<T>(value);
+    Node* newNode = new Node(value);
     m_front->m_next = newNode;
     m_size++;
 }
@@ -953,6 +949,9 @@ template<typename T>
 ForwardList<T>::~ForwardList()
 {
     clear();
+
+    m_front = nullptr;
+    delete m_front;
 }
 
 template<typename T>
@@ -1069,21 +1068,17 @@ void ForwardList<T>::clear()
 {
     if (m_front && m_front->m_next)
     {
-        //Node<T>* temp = m_front->m_next;
-        Node<T>* temp = static_cast<Node<T>*>(m_front->m_next);
+        Node* temp = static_cast<Node*>(m_front->m_next);
         while (m_front->m_next)
         {
             m_front->m_next = temp->next();
             delete temp;
-            temp = static_cast<Node<T>*>(m_front->m_next);
+            temp = static_cast<Node*>(m_front->m_next);
         }
 
         m_size = 0;
         m_front->m_next = nullptr;
     }
-
-    m_front = nullptr;
-    delete m_front;
 }
 
 template<typename T>
@@ -1161,7 +1156,7 @@ typename ForwardList<T>::Iterator ForwardList<T>::erase_after(Const_Iterator fir
 template<typename T>
 void ForwardList<T>::push_front(T value)
 {
-    Node<T>* newNode = new Node<T>(value);
+    Node* newNode = new Node(value);
     if (!m_front->m_next)
     {
         m_front->m_next = newNode;
@@ -1183,7 +1178,7 @@ void ForwardList<T>::pop_front()
         return;
     }
 
-    Node<T>* temp = static_cast<Node<T>*>(m_front->m_next);
+    Node* temp = static_cast<Node*>(m_front->m_next);
     if (m_size == 1)
     {
         m_front->m_next = nullptr;
@@ -1272,10 +1267,10 @@ void ForwardList<T>::merge(ForwardList<T>& other)
         if (m_size)
         {
             auto it = find_iter_before_last();
-            Node<T>* last = static_cast<Node<T>*>(it.m_current_node->m_next);
+            Node* last = static_cast<Node*>(it.m_current_node->m_next);
 
             it = other.find_iter_before_last();
-            Node<T>* other_last = static_cast<Node<T>*>(it.m_current_node->m_next);
+            Node* other_last = static_cast<Node*>(it.m_current_node->m_next);
 
             last->m_next = other.m_front->m_next;
             last = other_last;
@@ -1316,18 +1311,18 @@ void ForwardList<T>::transfer(Const_Iterator pos, ForwardList<T>& other, Const_I
 {
     if (&other != this && other.m_size > 0)
     {
-        Node<T>* temp_prev = static_cast<Node<T>*>(pos.m_current_node);     // to append to
-        Node<T>* temp_next = static_cast<Node<T>*>(first.m_current_node);   // does not move
+        Node* temp_prev = static_cast<Node*>(pos.m_current_node);     // to append to
+        Node* temp_next = static_cast<Node*>(first.m_current_node);   // does not move
 
-        Node<T>* first_to_move = static_cast<Node<T>*>(temp_next->m_next);
-        Node<T>* last_to_move = temp_next;
+        Node* first_to_move = static_cast<Node*>(temp_next->m_next);
+        Node* last_to_move = temp_next;
         size_t ctr = 0;
         size_t dist = distance(first, last);
         for (size_t i = 0; i < dist; i++)
         {
             if (last_to_move)
             {
-                last_to_move = static_cast<Node<T>*>(last_to_move->m_next);
+                last_to_move = static_cast<Node*>(last_to_move->m_next);
                 ctr++;
             }
         }
@@ -1347,11 +1342,11 @@ void ForwardList<T>::splice_after(Const_Iterator pos, ForwardList<T>& other)
     if (&other != this && other.m_size > 0)
     {
         auto it = other.find_iter_before_last();
-        Node<T>* other_last = static_cast<Node<T>*>(it.m_current_node->m_next);
+        Node* other_last = static_cast<Node*>(it.m_current_node->m_next);
 
-        Node<T>* temp = static_cast<Node<T>*>(pos.m_current_node);
+        Node* temp = static_cast<Node*>(pos.m_current_node);
         other_last->m_next = temp->m_next;
-        temp->m_next = static_cast<Node<T>*>(other.m_front->m_next);
+        temp->m_next = static_cast<Node*>(other.m_front->m_next);
         m_size += other.m_size;
 
         other.m_front->m_next = nullptr;
@@ -1393,22 +1388,22 @@ void ForwardList<T>::splice_after(Const_Iterator pos, ForwardList<T>&& other, Co
 template<typename T>
 void ForwardList<T>::remove(const T& value)
 {
-    Node<T>* temp = static_cast<Node<T>*>(m_front->m_next);
-    Node<T>* next{};
+    Node* temp = static_cast<Node*>(m_front->m_next);
+    Node* next{};
     while (temp)
     {
         next = temp->next();
 
-        if (static_cast<Node<T>*>(m_front->m_next)->value() == value)
+        if (static_cast<Node*>(m_front->m_next)->value() == value)
         {
             pop_front();
-            temp = static_cast<Node<T>*>(m_front->m_next);
+            temp = static_cast<Node*>(m_front->m_next);
             continue;
         }
 
         if (next && next->value() == value)
         {
-            Node<T>* to_remove = temp->next();
+            Node* to_remove = temp->next();
             temp->m_next = to_remove->next();
             delete to_remove;
             m_size--;
@@ -1427,20 +1422,20 @@ void ForwardList<T>::remove(const T& value)
 template<typename T>
 void ForwardList<T>::reverse()
 {
-    Node<T>* temp = static_cast<Node<T>*>(m_front->m_next);
+    Node* temp = static_cast<Node*>(m_front->m_next);
 
     auto it = find_iter_before_last();
-    Node<T>* last = static_cast<Node<T>*>(it.m_current_node->m_next);
+    Node* last = static_cast<Node*>(it.m_current_node->m_next);
 
     m_front->m_next = last;
     last = temp;
 
-    Node<T>* prev{};
-    Node<T>* next{};
+    Node* prev{};
+    Node* next{};
 
     for (int i = 0; i < m_size; i++)
     {
-        next = static_cast<Node<T>*>(temp->m_next);
+        next = static_cast<Node*>(temp->m_next);
         temp->m_next = prev;
 
         prev = temp;
@@ -1451,20 +1446,20 @@ void ForwardList<T>::reverse()
 template<typename T>
 void ForwardList<T>::unique()
 {
-    Node<T>* temp = static_cast<Node<T>*>(m_front->m_next);
-    Node<T>* prev{};
-    Node<T>* next{};
+    Node* temp = static_cast<Node*>(m_front->m_next);
+    Node* prev{};
+    Node* next{};
     while (temp)
     {
         prev = temp;
 
         while (prev)
         {
-            next = static_cast<Node<T>*>(prev->m_next);
+            next = static_cast<Node*>(prev->m_next);
 
             if (next && next->value() == temp->value())
             {
-                Node<T>* to_remove = next;
+                Node* to_remove = next;
                 prev->m_next = to_remove->m_next;
                 delete to_remove;
                 m_size--;
@@ -1473,11 +1468,11 @@ void ForwardList<T>::unique()
 
             if (prev)
             {
-                prev = static_cast<Node<T>*>(prev->m_next);
+                prev = static_cast<Node*>(prev->m_next);
             }
         }
 
-        temp = static_cast<Node<T>*>(temp->m_next);
+        temp = static_cast<Node*>(temp->m_next);
     }
 }
 
