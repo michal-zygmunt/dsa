@@ -28,11 +28,10 @@ class ForwardList
 public:
 
     /**
-     * @brief Class implements base pointer used by ForwardList
+     * @brief Struct implements base pointer used by ForwardList
      */
-    class NodeBase
+    struct NodeBase
     {
-    public:
         virtual ~NodeBase() = default;
         NodeBase* m_next{};
     };
@@ -40,7 +39,7 @@ public:
     /**
      * @brief Implements Node class with user data
      */
-    class Node : public NodeBase
+    class Node : NodeBase
     {
     public:
 
@@ -57,9 +56,7 @@ public:
         /**
          * @brief Destroy the Node object
          */
-        ~Node()
-        {
-        }
+        ~Node() = default;
 
         /**
          * @brief Function returns value stored in Node object
@@ -91,7 +88,7 @@ public:
             return static_cast<Node*>(NodeBase::m_next);
         }
 
-    public:
+    private:
 
         /**
          * @brief Forward friend declaration of ForwardList
@@ -133,9 +130,7 @@ public:
         /**
          * @brief Destroy the Basic_Iterator object
          */
-        ~Basic_Iterator()
-        {
-        }
+        ~Basic_Iterator() = default;
 
         /**
          * @brief Overload operator= to assign \p node to currently pointed Basic_Iterator
