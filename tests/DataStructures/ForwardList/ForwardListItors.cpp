@@ -24,9 +24,9 @@ int main()
     bool res{};
     std::initializer_list<int> expected{};
 
-    std::cout << "Explicit Iterator\n";
+    std::cout << "Explicit iterator\n";
     ForwardList<int> l1{ 0, 10, 20 };
-    for (ForwardList<int>::Iterator it = l1.begin(); it != l1.end(); it++)
+    for (ForwardList<int>::iterator it = l1.begin(); it != l1.end(); it++)
     {
         auto& val = *it;
         std::cout << val << '\t';
@@ -39,7 +39,7 @@ int main()
     std::cout << "Expected:  \t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
-    std::cout << "Auto Iterator\n";
+    std::cout << "Auto iterator\n";
     ForwardList<int> l2{ 0, 25, 50 };
     for (auto it = l2.begin(); it != l2.end(); it++)
     {
@@ -54,9 +54,9 @@ int main()
     std::cout << "Expected:  \t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
-    std::cout << "Explicit Const Iterator\n";
+    std::cout << "Explicit Const iterator\n";
     ForwardList<int> l3{ 0, 10, 20 };
-    for (ForwardList<int>::Const_Iterator it = l3.cbegin(); it != l3.cend(); it++)
+    for (ForwardList<int>::const_iterator it = l3.cbegin(); it != l3.cend(); it++)
     {
         //auto& val = *it; // reference generate compilation error
         auto val = *it;
@@ -70,7 +70,7 @@ int main()
     std::cout << "Expected:  \t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
-    std::cout << "Auto Const Iterator\n";
+    std::cout << "Auto Const iterator\n";
     ForwardList<int> l4{ 0, 25, 50 };
     for (auto it = l4.cbegin(); it != l4.cend(); it++)
     {
@@ -213,7 +213,7 @@ int main()
     auto citer11e = l11.cend();
     //*citer11e = 1; // compilation error
 
-    // Iterate over Const_Iterator
+    // Iterate over const_iterator
     ForwardList<int> l12 = ForwardList<int>{ 10, 20, 30 };
     auto cit = l12.cbegin();
     std::cout << *cit << ' ';
