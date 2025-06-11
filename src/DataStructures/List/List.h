@@ -27,12 +27,22 @@ class List
 public:
 
     /**
+     * @brief Struct implements base pointer used by List
+     */
+    struct NodeBase
+    {
+        virtual ~NodeBase() = default;
+        NodeBase* m_next{};
+        NodeBase* m_prev{};
+    };
+
+    /**
      * @brief Implements Node template class with pointer to adjacent elements
      *
      * @tparam T type of data stored in Node
      */
     template<typename T>
-    class Node
+    class Node : NodeBase
     {
     public:
 
@@ -80,7 +90,7 @@ public:
          */
         Node<T>* next() const
         {
-            return m_next;
+            return static_cast<Node<T>*>(NodeBase::m_next);
         }
 
         /**
@@ -90,7 +100,7 @@ public:
          */
         Node<T>* prev() const
         {
-            return m_prev;
+            return static_cast<Node<T>*>(NodeBase::m_prev);
         }
 
     private:
@@ -104,8 +114,6 @@ public:
         friend class List;
 
         T m_value{};
-        Node<T>* m_next{};
-        Node<T>* m_prev{};
     };
 
     /**
@@ -119,7 +127,7 @@ public:
      * @tparam T type of data stored in Node
      */
     template<bool IF_CONST, typename T>
-    class Basic_Iterator
+    class Basic_Iterator : NodeBase
     {
     public:
 
@@ -130,7 +138,7 @@ public:
          *
          * @param[in] node input Node
          */
-        Basic_Iterator(Node<T>* node) noexcept
+        Basic_Iterator(NodeBase* node) noexcept
             : m_current_node{ node }
         {
         }
@@ -138,9 +146,7 @@ public:
         /**
          * @brief Destroy the Basic_Iterator object
          */
-        ~Basic_Iterator()
-        {
-        }
+        ~Basic_Iterator() = default;
 
         /**
          * @brief Overload operator= to assign \p node to currently pointed Basic_Iterator
@@ -148,7 +154,7 @@ public:
          * @param[in] node input Node
          * @return Basic_Iterator& reference to updated Node
          */
-        Basic_Iterator& operator=(Node<T>* node)
+        Basic_Iterator& operator=(NodeBase* node)
         {
             this->m_current_node = node;
             return *this;
@@ -247,13 +253,13 @@ public:
             Node<T>* temp{};
             if (index >= 0)
             {
-                temp = m_current_node;
+                temp = static_cast<Node<T>*>(m_current_node);
 
                 for (size_t i = 0; i < index; i++)
                 {
                     if (temp->m_next)
                     {
-                        temp = temp->m_next;
+                        temp = temp->next();
                     }
                     else
                     {
@@ -272,7 +278,17 @@ public:
          */
         iterator_type& operator*() const noexcept
         {
-            return m_current_node->value();
+            return static_cast<Node<T>*>(m_current_node)->value();
+        }
+
+        /**
+         * @brief Overload operator-> to get pointer to Node value / data
+         *
+         * @return T* pointer to data stored in Node
+         */
+        T* operator->()
+        {
+            return &static_cast<Node<T>*>(m_current_node)->value();
         }
 
         /**
@@ -288,7 +304,7 @@ public:
         template<typename T>
         friend class List;
 
-        Node<T>* m_current_node{};
+        NodeBase* m_current_node{};
     };
 
     using Const_Iterator = Basic_Iterator<true, T>;
@@ -814,8 +830,8 @@ private:
             return &Iterator(end());
         }
 
-        Node<T>* temp = pos.m_current_node->m_prev;
-        Node<T>* to_remove = temp->m_next;
+        Node<T>* temp = static_cast<Node<T>*>(pos.m_current_node->m_prev);
+        Node<T>* to_remove = static_cast<Node<T>*>(temp->m_next);
 
         temp->m_next = to_remove->m_next;
         temp->m_next->m_prev = temp;
@@ -853,7 +869,7 @@ private:
             return &end();
         }
 
-        Node<T>* temp = pos.m_current_node->m_prev;
+        Node<T>* temp = static_cast<Node<T>*>(pos.m_current_node->m_prev);
 
         Node<T>* newNode = new Node<T>(value);
         newNode->m_next = temp->m_next;
@@ -915,8 +931,8 @@ private:
      */
     void transfer(Const_Iterator pos, List<T>& other, Const_Iterator first, Const_Iterator last);
 
-    Node<T>* m_front{};
-    Node<T>* m_back{};
+    NodeBase* m_front{};
+    NodeBase* m_back{};
     size_t m_size{};
 };
 
@@ -977,13 +993,7 @@ List<T>& List<T>::operator=(const List<T>& other)
 template<typename T>
 List<T>::List(List<T>&& other) noexcept
 {
-    m_front = other.m_front;
-    m_back = other.m_back;
-    m_size = other.m_size;
-
-    other.m_front = nullptr;
-    other.m_back = nullptr;
-    other.m_size = 0;
+    operator=(other);
 }
 
 template<typename T>
@@ -1112,12 +1122,12 @@ size_t List<T>::max_size() const noexcept
 template<typename T>
 void List<T>::clear()
 {
-    Node<T>* temp = m_front;
+    Node<T>* temp = static_cast<Node<T>*>(m_front);
     while (m_front)
     {
         m_front = m_front->m_next;
         delete temp;
-        temp = m_front;
+        temp = static_cast<Node<T>*>(m_front);
     }
 
     m_size = 0;
@@ -1147,7 +1157,6 @@ typename List<T>::Iterator* List<T>::insert(Const_Iterator pos, size_t count, co
         auto temp = insert_element_before(copy, value);
         if (res == nullptr)
         {
-            //res = *temp;
             it = temp;
         }
     }
@@ -1171,7 +1180,6 @@ typename List<T>::Iterator* List<T>::insert(Const_Iterator pos, std::initializer
         auto temp = insert_element_before(copy, init_list.begin()[i]);
         if (res == nullptr)
         {
-            //res = *temp;
             it = temp;
         }
     }
@@ -1241,7 +1249,7 @@ void List<T>::pop_front()
         return;
     }
 
-    Node<T>* temp = m_front;
+    Node<T>* temp = static_cast<Node<T>*>(m_front);
     if (m_size == 1)
     {
         m_front = nullptr;
@@ -1288,7 +1296,7 @@ void List<T>::pop_back()
         return;
     }
 
-    Node<T>* temp = m_back;
+    Node<T>* temp = static_cast<Node<T>*>(m_back);
     if (m_size == 1)
     {
         m_front = nullptr;
@@ -1412,10 +1420,10 @@ void List<T>::transfer(Const_Iterator pos, List<T>& other, Const_Iterator first,
 {
     if (&other != this && other.m_size > 0)
     {
-        Node<T>* temp_prev = pos.m_current_node;    // to append to
-        Node<T>* temp_next = first.m_current_node;  // does not move
+        Node<T>* temp_prev = static_cast<Node<T>*>(pos.m_current_node);    // to append to
+        Node<T>* temp_next = static_cast<Node<T>*>(first.m_current_node);  // does not move
 
-        Node<T>* first_to_move = temp_next->m_next;
+        Node<T>* first_to_move = static_cast<Node<T>*>(temp_next->m_next);
         Node<T>* last_to_move = temp_next;
         size_t ctr = 0;
         size_t dist = distance(first, last);
@@ -1423,7 +1431,7 @@ void List<T>::transfer(Const_Iterator pos, List<T>& other, Const_Iterator first,
         {
             if (last_to_move)
             {
-                last_to_move = last_to_move->m_next;
+                last_to_move = static_cast<Node<T>*>(last_to_move->m_next);
                 ctr++;
             }
         }
@@ -1462,8 +1470,8 @@ void List<T>::splice(Const_Iterator pos, List<T>& other)
 {
     if (&other != this && other.m_size > 0)
     {
-        Node<T>* temp = pos.m_current_node;
-        Node<T>* temp_next = temp->m_next;
+        Node<T>* temp = static_cast<Node<T>*>(pos.m_current_node);
+        Node<T>* temp_next = static_cast<Node<T>*>(temp->m_next);
 
         temp->m_next = other.m_front;
         other.m_front->m_prev = temp;
@@ -1497,13 +1505,13 @@ void List<T>::splice(Const_Iterator pos, List<T>&& other)
 template<typename T>
 void List<T>::splice(Const_Iterator pos, List<T>& other, Const_Iterator it)
 {
-    transfer(pos, other, it, it.m_current_node->next());
+    transfer(pos, other, it, it.m_current_node->m_next);
 }
 
 template<typename T>
 void List<T>::splice(Const_Iterator pos, List<T>&& other, Const_Iterator it)
 {
-    transfer(pos, other, it, it.m_current_node->next());
+    transfer(pos, other, it, it.m_current_node->m_next);
 }
 
 template<typename T>
@@ -1521,29 +1529,29 @@ void List<T>::splice(Const_Iterator pos, List<T>&& other, Const_Iterator first, 
 template<typename T>
 void List<T>::remove(const T& value)
 {
-    Node<T>* temp = m_front;
+    Node<T>* temp = static_cast<Node<T>*>(m_front);
     Node<T>* next{};
     while (temp)
     {
-        next = temp->m_next;
+        next = temp->next();
 
-        if (m_front->value() == value)
+        if (static_cast<Node<T>*>(m_front)->value() == value)
         {
             pop_front();
-            temp = m_front;
+            temp = static_cast<Node<T>*>(m_front);
             continue;
         }
 
         if (next && next->value() == value)
         {
-            Node<T>* to_remove = temp->m_next;
-            temp->m_next = to_remove->m_next;
+            Node<T>* to_remove = temp->next();
+            temp->m_next = to_remove->next();
             delete to_remove;
             m_size--;
             continue;
         }
 
-        temp = temp->m_next;
+        temp = temp->next();
     }
 
     if (m_size == 0)
@@ -1556,8 +1564,8 @@ void List<T>::remove(const T& value)
 template<typename T>
 void List<T>::reverse()
 {
-    Node<T>* temp = m_front;
-    Node<T>* temp_back = m_back->m_prev;
+    Node<T>* temp = static_cast<Node<T>*>(m_front);
+    Node<T>* temp_back = static_cast<Node<T>*>(m_back->m_prev);
     m_front = temp_back;
     temp_back = temp;
 
@@ -1566,7 +1574,7 @@ void List<T>::reverse()
 
     for (int i = 0; i < m_size; i++)
     {
-        next = temp->m_next;
+        next = static_cast<Node<T>*>(temp->m_next);
         temp->m_next = prev;
         temp->m_prev = next;
 
@@ -1582,7 +1590,7 @@ void List<T>::reverse()
 template<typename T>
 void List<T>::unique()
 {
-    Node<T>* temp = m_front;
+    Node<T>* temp = static_cast<Node<T>*>(m_front);
     Node<T>* prev{};
     Node<T>* next{};
     while (temp)
@@ -1591,7 +1599,7 @@ void List<T>::unique()
 
         while (prev)
         {
-            next = prev->m_next;
+            next = static_cast<Node<T>*>(prev->m_next);
 
             if (next && next->value() == temp->value() && next != m_back)
             {
@@ -1615,18 +1623,18 @@ void List<T>::unique()
 
             if (prev)
             {
-                prev = prev->m_next;
+                prev = static_cast<Node<T>*>(prev->m_next);
             }
         }
 
-        temp = temp->m_next;
+        temp = static_cast<Node<T>*>(temp->m_next);
     }
 }
 
 template<typename T>
 List<T>::Node<T>* List<T>::get(int index) const
 {
-    if (index < 0 || index > m_size)
+    if (index < 0 || index >= m_size)
     {
         return nullptr;
     }
@@ -1637,10 +1645,10 @@ List<T>::Node<T>* List<T>::get(int index) const
     if (ver == 0)
     {
         // count nodes from front
-        temp = m_front;
+        temp = static_cast<Node<T>*>(m_front);
         for (size_t i = 0; i < index; i++)
         {
-            temp = temp->m_next;
+            temp = static_cast<Node<T>*>(temp->m_next);
         }
     }
     else if (ver == 1)
@@ -1648,28 +1656,28 @@ List<T>::Node<T>* List<T>::get(int index) const
         // optimize counting nodes from front or back
         if (index < m_size / 2)
         {
-            temp = m_front;
+            temp = static_cast<Node<T>*>(m_front);
             for (size_t i = 0; i < index; i++)
             {
-                temp = temp->m_next;
+                temp = static_cast<Node<T>*>(temp->m_next);
             }
         }
         else
         {
-            temp = m_back->m_prev;
+            temp = static_cast<Node<T>*>(m_back->m_prev);
             for (size_t i = m_size - 1; i > index; i--)
             {
-                temp = temp->m_prev;
+                temp = static_cast<Node<T>*>(temp->m_prev);
             }
         }
     }
     else
     {
         // count nodes from back
-        temp = m_back->m_prev;
+        temp = static_cast<Node<T>*>(m_back->m_prev);
         for (size_t i = m_size - 1; i > index; i--)
         {
-            temp = temp->m_prev;
+            temp = static_cast<Node<T>*>(temp->m_prev);
         }
     }
 
