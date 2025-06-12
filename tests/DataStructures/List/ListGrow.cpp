@@ -21,7 +21,7 @@ int main()
 
     List<int> l1 = List<int>(40);
     auto it = l1.insert(l1.cbegin(), 30);
-    l1.insert(*it, { 10, 20 });
+    l1.insert(it, { 10, 20 });
     l1.push_front(0);
     l1.push_front(-10);
     // Try inserting nodes at invalid indexes
@@ -54,7 +54,7 @@ int main()
     l3.push_front(30);
     l3.push_front(20);
     it = l3.insert(l3.cbegin(), 10);
-    l3.insert(*it, { 1, 2, 3 });
+    l3.insert(it, { 1, 2, 3 });
     l3.insert(l3.cbegin()[l3.size() - 1], 60);
     expected = { 1, 2, 3, 10, 20, 30, 40, 60, 50 };
     res = if_error(l3, expected);

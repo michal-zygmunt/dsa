@@ -89,7 +89,7 @@ int main()
     // Check iterator of one element
     List<int> l5 = List<int>(0);
     auto it = l5.insert(l5.cbegin(), 10);
-    int val = it->operator*();
+    int val = *it;
     int expected_val = 10;
     res = if_error(val, expected_val);
     std::cout << "List l5:\t" << val << '\n';
@@ -101,7 +101,7 @@ int main()
     l6.push_front(40);
     l6.push_front(30);
     it = l6.insert(l6.cbegin(), 0, 5);
-    val = it->operator*();
+    val = *it;
     expected_val = 30;
     res = if_error(val, expected_val);
     std::cout << "List l6:\t" << val << '\n';

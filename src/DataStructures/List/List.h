@@ -59,9 +59,7 @@ public:
         /**
          * @brief Destroy the Node object
          */
-        ~Node()
-        {
-        }
+        ~Node() = default;
 
         /**
          * @brief Function returns value stored in Node object
@@ -250,16 +248,29 @@ public:
          */
         Basic_Iterator operator[](size_t index)
         {
-            Node<T>* temp{};
+            Node<T>* temp{ static_cast<Node<T>*>(m_current_node) };
+
             if (index >= 0)
             {
-                temp = static_cast<Node<T>*>(m_current_node);
-
                 for (size_t i = 0; i < index; i++)
                 {
                     if (temp->m_next)
                     {
                         temp = temp->next();
+                    }
+                    else
+                    {
+                        return nullptr;
+                    }
+                }
+            }
+            else
+            {
+                for (size_t i = 0; i < index; i++)
+                {
+                    if (temp->m_prev)
+                    {
+                        temp = temp->prev();
                     }
                     else
                     {
@@ -495,11 +506,11 @@ public:
      *
      * @param[in] \p pos Const_Iterator to insert element before
      * @param[in] value element of type T to be inserted before \p pos
-     * @return pointer to inserted element
-     * @retval Iterator* pointer to inserted element or \p pos if no element is inserted
-     * @retval nullptr if invalid inputIterator
+     * @return Iterator to list element
+     * @retval Iterator to inserted element
+     * @retval Iterator to \p pos if no element is inserted
      */
-    Iterator* insert(Const_Iterator pos, const T& value);
+    Iterator insert(Const_Iterator pos, const T& value);
 
     /**
      * @brief Function inserts new Node before specified \p pos
@@ -507,22 +518,22 @@ public:
      * @param[in] pos Const_Iterator to insert element before
      * @param[in] count number of elements to insert before \p pos
      * @param[in] value element of type T to be inserted
-     * @return pointer to the first inserted element
-     * @retval Iterator* pointer to first inserted element or \p pos if no element is inserted
-     * @retval nullptr if invalid input Const_Iterator
+     * @return Iterator to list element
+     * @retval Iterator to first inserted element
+     * @retval Iterator to \p pos if no element is inserted
      */
-    Iterator* insert(Const_Iterator pos, size_t count, const T& value);
+    Iterator insert(Const_Iterator pos, size_t count, const T& value);
 
     /**
      * @brief Function inserts new Node before specified \p pos
      *
      * @param[in] pos Const_Iterator to insert element before
      * @param[in] std::initializer_list to insert before \p pos
-     * @return pointer to the first inserted element
-     * @retval Iterator* pointer to first inserted element or \p pos if no element is inserted
-     * @retval nullptr if invalid input Const_Iterator
+     * @return Iterator to list element
+     * @retval Iterator to first inserted element
+     * @retval Iterator to \p pos if no element is inserted
      */
-    Iterator* insert(Const_Iterator pos, std::initializer_list<T> init_list);
+    Iterator insert(Const_Iterator pos, std::initializer_list<T> init_list);
 
     /// @todo add insert_range
 
@@ -532,43 +543,47 @@ public:
     * @brief Function erases Node object at specified \pos
     *
     * @param[in] \p pos Iterator to element to erase
-    * @return Iterator to element after erased element
-    * @retval Iterator* pointer to element after deleted element
-    * @retval end Iterator if \pos was last element prior to removal
+    * @return Iterator following erased element
+    * @retval Iterator to element following \p pos
+    * @retval begin Iterator if \p pos was first element prior to removal
+    * @retval end Iterator if \p pos was last element prior to removal
     */
-    Iterator* erase(Iterator pos);
+    Iterator erase(Iterator pos);
 
     /**
     * @brief Function erases Node object at specified \pos
     *
     * @param[in] \p pos Iterator to element to erase
-    * @return Iterator to element after erased element
-    * @retval Iterator* pointer to element after deleted element
-    * @retval end Iterator if \pos was last element prior to removal
+    * @return Iterator following erased element
+    * @retval Iterator to element following \p pos
+    * @retval begin Iterator if \p pos was first element prior to removal
+    * @retval end Iterator if \p pos was last element prior to removal
     */
-    Iterator* erase(Const_Iterator pos);
+    Iterator erase(Const_Iterator pos);
 
     /**
      * @brief Function erases Node objects in range [first, last)
      *
      * @param[in] first element to erase
      * @param[in] last element after last erased element
-     * @return pointer to element after last deleted element
-     * @retval Iterator* pointer to element after deleted element
-     * @retval end Iterator if \pos was last element prior to removal
+     * @return Iterator following last erased element
+     * @retval Iterator to \p last
+     * @retval end Iterator if \p last was end element prior to removal
+     * @retval last Iterator if \p first to \last is empty range
      */
-    Iterator* erase(Iterator first, Iterator last);
+    Iterator erase(Iterator first, Iterator last);
 
     /**
      * @brief Function erases Node objects in range [first, last)
      *
      * @param[in] first element to erase
      * @param[in] last element after last erased element
-     * @return pointer to element after last deleted element
-     * @retval Iterator* pointer to element after deleted element
-     * @retval end Iterator if \pos was last element prior to removal
+     * @return Iterator following last erased element
+     * @retval Iterator to \p last
+     * @retval end Iterator if \p last was end element prior to removal
+     * @retval last Iterator if \p first to \last is empty range
      */
-    Iterator* erase(Const_Iterator first, Const_Iterator last);
+    Iterator erase(Const_Iterator first, Const_Iterator last);
 
     /**
      * @brief Function adds new Node at the end of List
@@ -734,8 +749,7 @@ public:
     {
         for (auto it = other.cbegin(); it != other.cend(); ++it)
         {
-            auto value = *it;
-            push_back(value);
+            push_back(*it);
         }
 
         return *this;
@@ -785,33 +799,24 @@ private:
     friend List<T> operator+(const List<T>& l1, const List<T>& l2);
 
     /**
-     * @brief Function add end Node located just after last user created data
+     * @brief Function add end node located just after last user created data
      * Node is used by iterators indicating end of container
      */
-    void add_end_node()
+    void init_node()
     {
-        Node<T>* newNode = new Node<T>(T{});
-
-        if (!m_front)
+        if (!m_back)
         {
-            m_front = newNode;
-            m_back = newNode;
-        }
-        else
-        {
-            m_back->m_next = newNode;
-            newNode->m_prev = m_back;
-            m_back = newNode;
+            m_back = new NodeBase;
         }
     }
 
     /**
      * @brief Function remove next element
      *
-     * @param[in] pos Iterator before which element will be erased
-     * @return Iterator* pointer to Iterator to input element
+     * @param[in] Iterator to element to which will be erased
+     * @return Iterator to element following \p pos
      */
-    Iterator* erase_element(Iterator pos)
+    Iterator erase_element(Iterator pos)
     {
         if (!if_valid_iterator(pos))
         {
@@ -821,13 +826,13 @@ private:
         if (pos == begin())
         {
             pop_front();
-            return &Iterator(begin());
+            return Iterator(begin());
         }
 
         if (pos == end() || pos == m_back)
         {
             pop_back();
-            return &Iterator(end());
+            return Iterator(end());
         }
 
         Node<T>* temp = static_cast<Node<T>*>(pos.m_current_node->m_prev);
@@ -838,7 +843,7 @@ private:
         delete to_remove;
 
         m_size--;
-        return &Iterator(temp->m_next);
+        return Iterator(temp->m_next);
     }
 
     /**
@@ -846,11 +851,11 @@ private:
     *
     * @param[in] pos Iterator to insert element before
     * @param[in] value element of type T to be inserted
-    * @return pointer to inserted element
-    * @retval Iterator* pointer to inserted element
-    * @retval nullptr if invalid Iterator
+    * @return Iterator to list element
+    * @retval Iterator to inserted element
+    * @retval Iterator to \p pos if no element was inserted
     */
-    Iterator* insert_element_before(Iterator pos, const T& value)
+    Iterator insert_element_before(Iterator pos, const T& value)
     {
         if (!if_valid_iterator(pos))
         {
@@ -860,13 +865,13 @@ private:
         if (pos == begin())
         {
             push_front(value);
-            return &begin();
+            return begin();
         }
 
         if (pos == end())
         {
             push_back(value);
-            return &end();
+            return end().m_current_node->m_prev;
         }
 
         Node<T>* temp = static_cast<Node<T>*>(pos.m_current_node->m_prev);
@@ -879,7 +884,7 @@ private:
         temp->m_next = newNode;
 
         m_size++;
-        return &Iterator(newNode);
+        return Iterator(newNode);
     }
 
     /**
@@ -939,18 +944,15 @@ private:
 template<typename T>
 List<T>::List()
 {
-    add_end_node();
+    init_node();
 }
 
 template<typename T>
 List<T>::List(T value)
 {
-    Node<T>* newNode = new Node<T>(value);
-    m_front = newNode;
-    m_back = newNode;
-    m_size++;
+    init_node();
 
-    add_end_node();
+    push_front(value);
 }
 
 template<typename T>
@@ -1056,13 +1058,13 @@ const T& List<T>::front() const
 template<typename T>
 T& List<T>::back()
 {
-    return *end();
+    return *(--end());
 }
 
 template<typename T>
 const T& List<T>::back() const
 {
-    return *cend();
+    return *(--cend());
 }
 
 template<typename T>
@@ -1136,86 +1138,77 @@ void List<T>::clear()
 }
 
 template<typename T>
-typename List<T>::Iterator* List<T>::insert(Const_Iterator pos, const T& value)
+typename List<T>::Iterator List<T>::insert(Const_Iterator pos, const T& value)
 {
     return insert(pos, 1, value);
 }
 
 template<typename T>
-typename List<T>::Iterator* List<T>::insert(Const_Iterator pos, size_t count, const T& value)
+typename List<T>::Iterator List<T>::insert(Const_Iterator pos, size_t count, const T& value)
 {
+    Iterator it{ pos.m_current_node };
+
     if (!if_valid_iterator(pos))
     {
         return nullptr;
     }
 
-    Iterator copy{ pos.m_current_node };
-    Iterator res{ nullptr };
-    Iterator* it{ &copy };
     for (size_t i = 0; i < count; i++)
     {
-        auto temp = insert_element_before(copy, value);
-        if (res == nullptr)
-        {
-            it = temp;
-        }
+        it = insert_element_before(it, value);
     }
 
     return it;
 }
 
 template<typename T>
-typename List<T>::Iterator* List<T>::insert(Const_Iterator pos, std::initializer_list<T> init_list)
+typename List<T>::Iterator List<T>::insert(Const_Iterator pos, std::initializer_list<T> init_list)
+{
+    Iterator it(pos.m_current_node);
+
+    if (!if_valid_iterator(pos))
+    {
+        return nullptr;
+    }
+
+    size_t list_size = init_list.size();
+    for (size_t i = 0; i < list_size; i++)
+    {
+        it = insert_element_before(it, init_list.begin()[list_size - 1 - i]);
+    }
+
+    return it;
+}
+
+template<typename T>
+typename List<T>::Iterator List<T>::erase(Iterator pos)
 {
     if (!if_valid_iterator(pos))
     {
         return nullptr;
     }
 
-    Iterator copy(pos.m_current_node);
-    Iterator res{ nullptr };
-    Iterator* it{ &copy };
-    for (size_t i = 0; i < init_list.size(); i++)
-    {
-        auto temp = insert_element_before(copy, init_list.begin()[i]);
-        if (res == nullptr)
-        {
-            it = temp;
-        }
-    }
-
-    return it;
+    return erase_element(pos);
 }
 
 template<typename T>
-typename List<T>::Iterator* List<T>::erase(Iterator pos)
-{
-    if (!if_valid_iterator(pos))
-    {
-        return nullptr;
-    }
-
-    Iterator copy(pos.m_current_node);
-    Iterator* it{ &copy };
-    it = erase_element(*it);
-
-    return it;
-}
-
-template<typename T>
-typename List<T>::Iterator* List<T>::erase(Iterator first, Iterator last)
+typename List<T>::Iterator List<T>::erase(Iterator first, Iterator last)
 {
     if (!if_valid_iterator(first) || !if_valid_iterator(last))
     {
         return nullptr;
     }
 
-    Iterator copy(first.m_current_node);
-    Iterator* it{ &copy };
     size_t dist = distance(first, last);
+    if (!dist)
+    {
+        return last;
+    }
+
+    Iterator it(first.m_current_node);
     for (size_t i = 0; i < dist; i++)
     {
-        it = erase_element(*it);
+        it = erase_element(it);
     }
 
     return it;
@@ -1224,12 +1217,15 @@ typename List<T>::Iterator* List<T>::erase(Iterator first, Iterator last)
 template<typename T>
 void List<T>::push_front(T value)
 {
+    init_node();
+
     Node<T>* newNode = new Node<T>(value);
 
     if (!m_front)
     {
         m_front = newNode;
-        m_back = newNode;
+        m_front->m_next = m_back;
+        m_back->m_prev = newNode;
     }
     else
     {
@@ -1267,15 +1263,15 @@ void List<T>::pop_front()
 template<typename T>
 void List<T>::push_back(T value)
 {
+    init_node();
 
     Node<T>* newNode = new Node<T>(value);
 
     if (!m_size)
     {
         m_front = newNode;
-        m_back = newNode;
-
-        add_end_node();
+        m_front->m_next = m_back;
+        m_back->m_prev = newNode;
     }
     else
     {
@@ -1732,6 +1728,11 @@ List<T> operator+(const List<T>& l1, const List<T>& l2)
 template<typename T>
 std::ostream& operator<<(std::ostream& out, const List<T>& ll)
 {
+    if (ll.empty())
+    {
+        return out;
+    }
+
     for (auto it = ll.cbegin(); it != ll.cend(); ++it)
     {
         T value = *it;
