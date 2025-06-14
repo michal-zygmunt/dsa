@@ -29,4 +29,24 @@
 	<Type Name="ForwardList&lt;*&gt;::Node">
 		<DisplayString>{m_value}</DisplayString>
 	</Type>
+
+
+	<Type Name="List&lt;*&gt;">
+		<DisplayString Condition="m_front == 0xcccccccccccccccc">invalid</DisplayString>
+		<DisplayString Condition="m_size == 0">empty</DisplayString>
+		<DisplayString Condition="m_size != 0">non-empty</DisplayString>
+		<Expand>
+			<LinkedListItems>
+				<Size>m_size</Size>
+				<HeadPointer>m_front</HeadPointer>
+				<NextPointer>m_next</NextPointer>
+				<ValueNode>(*this)</ValueNode>
+			</LinkedListItems>
+		</Expand>
+	</Type>
+
+	<Type Name="List&lt;*&gt;::Node">
+		<DisplayString>{m_value}</DisplayString>
+	</Type>
+
 </AutoVisualizer>
