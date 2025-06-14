@@ -12,8 +12,12 @@
 #ifndef LIST_H
 #define LIST_H
 
+#include <cstddef>
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
+#include <limits>
+
 
  /**
   * @brief Implements List using Node with pointer to adjacent
@@ -103,7 +107,7 @@ public:
         /**
          * @brief Forward friend declaration of List
          *
-         * @tparam T type of data stored in Node/List objects
+         * @tparam T type of data stored in Node objects
          */
         template<typename T>
         friend class List;
@@ -112,9 +116,9 @@ public:
     };
 
     /**
-     * @brief Implements Basic_Iterator
+     * @brief Implements ListIterator
      *
-     * Class is used to generate Iterator and Const_Iterator types.
+     * Class is used to generate iterator and const_iterator types.
      * Template variable \p IF_CONST control whether reference
      * or const reference is returned to underlying data type
      *
@@ -122,45 +126,51 @@ public:
      * @tparam T type of data stored in Node
      */
     template<bool IF_CONST>
-    class Basic_Iterator : NodeBase
+    class ListIterator : NodeBase
     {
     public:
 
         using iterator_type = typename std::conditional<IF_CONST, const T, T>::type;
 
+        using iterator_category = std::bidirectional_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        using value_type = T;
+        using pointer = T*;
+        using reference = iterator_type&;
+
         /**
-         * @brief Construct a new Basic_Iterator object
+         * @brief Construct a new ListIterator object
          *
          * @param[in] node input Node
          */
-        Basic_Iterator(NodeBase* node) noexcept
+        ListIterator(NodeBase* node) noexcept
             : m_current_node{ node }
         {
         }
 
         /**
-         * @brief Destroy the Basic_Iterator object
+         * @brief Destroy the ListIterator object
          */
-        ~Basic_Iterator() = default;
+        ~ListIterator() = default;
 
         /**
-         * @brief Overload operator= to assign \p node to currently pointed Basic_Iterator
+         * @brief Overload operator= to assign \p node to currently pointed ListIterator
          *
          * @param[in] node input Node
-         * @return Basic_Iterator& reference to updated Node
+         * @return ListIterator& reference to updated Node
          */
-        Basic_Iterator& operator=(NodeBase* node)
+        ListIterator& operator=(NodeBase* node)
         {
             this->m_current_node = node;
             return *this;
         }
 
         /**
-         * @brief Overload pre-increment operator++ to point Basic_Iterator at next Node
+         * @brief Overload pre-increment operator++ to point ListIterator at next Node
          *
-         * @return Basic_Iterator& reference to next Node
+         * @return ListIterator& reference to next Node
          */
-        Basic_Iterator& operator++()
+        ListIterator& operator++()
         {
             if (m_current_node)
             {
@@ -171,23 +181,23 @@ public:
         }
 
         /**
-         * @brief Overload post-increment operator++ to point Basic_Iterator at next Node
+         * @brief Overload post-increment operator++ to point ListIterator at next Node
          *
-         * @return Basic_Iterator& reference to next Basic_Iterator
+         * @return ListIterator& reference to next ListIterator
          */
-        Basic_Iterator operator++(int)
+        ListIterator operator++(int)
         {
-            Basic_Iterator<IF_CONST> Basic_Iterator = *this;
+            ListIterator<IF_CONST> ListIterator = *this;
             ++(*this);
-            return Basic_Iterator;
+            return ListIterator;
         }
 
         /**
-         * @brief Overload pre-decrement operator-- to point Basic_Iterator at previous Node
+         * @brief Overload pre-decrement operator-- to point ListIterator at previous Node
          *
-         * @return Basic_Iterator& reference to previous Node
+         * @return ListIterator& reference to previous Node
          */
-        Basic_Iterator& operator--()
+        ListIterator& operator--()
         {
             if (m_current_node)
             {
@@ -198,52 +208,52 @@ public:
         }
 
         /**
-         * @brief Overload post-decrement operator-- to point Basic_Iterator at previous Node
+         * @brief Overload post-decrement operator-- to point ListIterator at previous Node
          *
-         * @return Basic_Iterator& reference to previous Basic_Iterator
+         * @return ListIterator& reference to previous ListIterator
          */
-        Basic_Iterator operator--(int)
+        ListIterator operator--(int)
         {
-            Basic_Iterator<IF_CONST> Basic_Iterator = *this;
+            ListIterator<IF_CONST> ListIterator = *this;
             --(*this);
-            return Basic_Iterator;
+            return ListIterator;
         }
 
         /**
-         * @brief Overload operator!= for Basic_Iterator objects comparison
+         * @brief Overload operator!= for ListIterator objects comparison
          *
-         * @param[in] other input Basic_Iterator of \p other object
+         * @param[in] other input ListIterator of \p other object
          * @return bool comparison result
-         * @retval true if Basic_Iterator objects are the same
-         * @retval false if Basic_Iterator objects are different
+         * @retval true if ListIterator objects are the same
+         * @retval false if ListIterator objects are different
          */
-        bool operator==(const Basic_Iterator<IF_CONST>& other)
+        bool operator==(const ListIterator<IF_CONST>& other)
         {
             return m_current_node == other.m_current_node;
         }
 
         /**
-         * @brief Overload operator!= for Basic_Iterator objects comparison
+         * @brief Overload operator!= for ListIterator objects comparison
          *
-         * @param[in] other input Basic_Iterator of \p other object
+         * @param[in] other input ListIterator of \p other object
          * @return bool comparison result
-         * @retval true if Basic_Iterator objects are different
-         * @retval false if Basic_Iterator objects are the same
+         * @retval true if ListIterator objects are different
+         * @retval false if ListIterator objects are the same
          */
-        bool operator!=(const Basic_Iterator<IF_CONST>& other)
+        bool operator!=(const ListIterator<IF_CONST>& other)
         {
-            return !operator==(other);// m_current_node != other.m_current_node;
+            return !operator==(other);
         }
 
         /**
-         * @brief Overload operator[] for Basic_Iterator iterator access
+         * @brief Overload operator[] for ListIterator iterator access
          *
          * @param[in] index number of Node to move forward
-         * @return Basic_Iterator to Node pointed by \p index from List front
-         * @retval valid Basic_Iterator if index is valid
+         * @return ListIterator to Node pointed by \p index from List front
+         * @retval valid ListIterator if index is valid
          * @retval nullptr if index is invalid
          */
-        Basic_Iterator operator[](size_t index)
+        ListIterator operator[](size_t index)
         {
             Node* temp{ static_cast<Node*>(m_current_node) };
 
@@ -284,7 +294,7 @@ public:
          *
          * @return T& reference or const reference to data stored in Node
          */
-        iterator_type& operator*() const noexcept
+        reference operator*() const noexcept
         {
             return static_cast<Node*>(m_current_node)->value();
         }
@@ -294,17 +304,17 @@ public:
          *
          * @return T* pointer to data stored in Node
          */
-        T* operator->()
+        pointer operator->()
         {
             return &static_cast<Node*>(m_current_node)->value();
         }
 
         /**
-         * @brief convert Basic_Iterator to Basic_Const_Iterator
+         * @brief convert ListIterator to Basic_const_iterator
          */
-        operator Basic_Iterator<true>()
+        operator ListIterator<true>()
         {
-            return Basic_Iterator<true>(m_current_node);
+            return ListIterator<true>(m_current_node);
         }
 
     private:
@@ -315,8 +325,13 @@ public:
         NodeBase* m_current_node{};
     };
 
-    using Const_Iterator = Basic_Iterator<true>;
-    using Iterator = Basic_Iterator<false>;
+    using value_type = T;
+    using pointer = T*;
+    using const_pointer = const T*;
+    using reference = T&;
+    using const_reference = const T&;
+    using const_iterator = ListIterator<true>;
+    using iterator = ListIterator<false>;
 
     /**
      * @brief Construct a new List object
@@ -380,7 +395,7 @@ public:
      * @param[in] count new size of the container
      * @param[in] value value to initialize elements of the container with
      */
-    void assign(size_t count, const T& value);
+    void assign(size_t count, const_reference value);
 
     /**
      * @brief Function assign values to the List
@@ -398,70 +413,70 @@ public:
      *
      * @return reference to data stored in List first Node
      */
-    T& front();
+    reference front();
 
     /**
      * @brief Function returns const reference value stored in List first Node
      *
      * @return const reference to data stored in List first Node
      */
-    const T& front() const;
+    const_reference front() const;
 
     /**
      * @brief Function returns reference to value stored in List last Node
      *
      * @return reference to data stored in List last Node
      */
-    T& back();
+    reference back();
 
     /**
      * @brief Function returns const reference value stored in List last Node
      *
      * @return const reference to data stored in List last Node
      */
-    const T& back() const;
+    const_reference back() const;
 
     /**
      * @brief Function returns pointer to List first Node
      *
-     * @return Iterator Iterator to List first Node
+     * @return iterator iterator to List first Node
      */
-    Iterator begin() noexcept;
+    iterator begin() noexcept;
 
     /**
      * @brief Function returns const pointer to List first Node
      *
-     * @return Const_Iterator const Iterator to List first Node
+     * @return const_iterator const iterator to List first Node
      */
-    Const_Iterator begin() const noexcept;
+    const_iterator begin() const noexcept;
 
     /**
      * @brief Function returns const pointer to List first Node
      *
-     * @return Const_Iterator const Iterator to List first Node
+     * @return const_iterator const iterator to List first Node
      */
-    Const_Iterator cbegin() const noexcept;
+    const_iterator cbegin() const noexcept;
 
     /**
      * @brief Function returns pointer to List last Node
      *
-     * @return Iterator Iterator to List last Node
+     * @return iterator iterator to List last Node
      */
-    Iterator end() noexcept;
+    iterator end() noexcept;
 
     /**
      * @brief Function returns pointer to List last Node
      *
-     * @return Const_Iterator const Iterator to List last Node
+     * @return const_iterator const iterator to List last Node
      */
-    Const_Iterator end() const noexcept;
+    const_iterator end() const noexcept;
 
     /**
      * @brief Function returns pointer to List last Node
      *
-     * @return Const_Iterator const Iterator to List last Node
+     * @return const_iterator const iterator to List last Node
      */
-    Const_Iterator cend() const noexcept;
+    const_iterator cend() const noexcept;
 
     /// @todo add rbegin
 
@@ -501,36 +516,36 @@ public:
     /**
      * @brief Function inserts new Node before specified \p pos
      *
-     * @param[in] \p pos Const_Iterator to insert element before
+     * @param[in] \p pos const_iterator to insert element before
      * @param[in] value element of type T to be inserted before \p pos
-     * @return Iterator to list element
-     * @retval Iterator to inserted element
-     * @retval Iterator to \p pos if no element is inserted
+     * @return iterator to list element
+     * @retval iterator to inserted element
+     * @retval iterator to \p pos if no element is inserted
      */
-    Iterator insert(Const_Iterator pos, const T& value);
+    iterator insert(const_iterator pos, const_reference value);
 
     /**
      * @brief Function inserts new Node before specified \p pos
      *
-     * @param[in] pos Const_Iterator to insert element before
+     * @param[in] pos const_iterator to insert element before
      * @param[in] count number of elements to insert before \p pos
      * @param[in] value element of type T to be inserted
-     * @return Iterator to list element
-     * @retval Iterator to first inserted element
-     * @retval Iterator to \p pos if no element is inserted
+     * @return iterator to list element
+     * @retval iterator to first inserted element
+     * @retval iterator to \p pos if no element is inserted
      */
-    Iterator insert(Const_Iterator pos, size_t count, const T& value);
+    iterator insert(const_iterator pos, size_t count, const_reference value);
 
     /**
      * @brief Function inserts new Node before specified \p pos
      *
-     * @param[in] pos Const_Iterator to insert element before
+     * @param[in] pos const_iterator to insert element before
      * @param[in] std::initializer_list to insert before \p pos
-     * @return Iterator to list element
-     * @retval Iterator to first inserted element
-     * @retval Iterator to \p pos if no element is inserted
+     * @return iterator to list element
+     * @retval iterator to first inserted element
+     * @retval iterator to \p pos if no element is inserted
      */
-    Iterator insert(Const_Iterator pos, std::initializer_list<T> init_list);
+    iterator insert(const_iterator pos, std::initializer_list<T> init_list);
 
     /// @todo add insert_range
 
@@ -539,48 +554,48 @@ public:
     /**
     * @brief Function erases Node object at specified \pos
     *
-    * @param[in] \p pos Iterator to element to erase
-    * @return Iterator following erased element
-    * @retval Iterator to element following \p pos
-    * @retval begin Iterator if \p pos was first element prior to removal
-    * @retval end Iterator if \p pos was last element prior to removal
+    * @param[in] \p pos iterator to element to erase
+    * @return iterator following erased element
+    * @retval iterator to element following \p pos
+    * @retval begin iterator if \p pos was first element prior to removal
+    * @retval end iterator if \p pos was last element prior to removal
     */
-    Iterator erase(Iterator pos);
+    iterator erase(iterator pos);
 
     /**
     * @brief Function erases Node object at specified \pos
     *
-    * @param[in] \p pos Iterator to element to erase
-    * @return Iterator following erased element
-    * @retval Iterator to element following \p pos
-    * @retval begin Iterator if \p pos was first element prior to removal
-    * @retval end Iterator if \p pos was last element prior to removal
+    * @param[in] \p pos iterator to element to erase
+    * @return iterator following erased element
+    * @retval iterator to element following \p pos
+    * @retval begin iterator if \p pos was first element prior to removal
+    * @retval end iterator if \p pos was last element prior to removal
     */
-    Iterator erase(Const_Iterator pos);
+    iterator erase(const_iterator pos);
 
     /**
      * @brief Function erases Node objects in range [first, last)
      *
      * @param[in] first element to erase
      * @param[in] last element after last erased element
-     * @return Iterator following last erased element
-     * @retval Iterator to \p last
-     * @retval end Iterator if \p last was end element prior to removal
-     * @retval last Iterator if \p first to \last is empty range
+     * @return iterator following last erased element
+     * @retval iterator to \p last
+     * @retval end iterator if \p last was end element prior to removal
+     * @retval last iterator if \p first to \last is empty range
      */
-    Iterator erase(Iterator first, Iterator last);
+    iterator erase(iterator first, iterator last);
 
     /**
      * @brief Function erases Node objects in range [first, last)
      *
      * @param[in] first element to erase
      * @param[in] last element after last erased element
-     * @return Iterator following last erased element
-     * @retval Iterator to \p last
-     * @retval end Iterator if \p last was end element prior to removal
-     * @retval last Iterator if \p first to \last is empty range
+     * @return iterator following last erased element
+     * @retval iterator to \p last
+     * @retval end iterator if \p last was end element prior to removal
+     * @retval last iterator if \p first to \last is empty range
      */
-    Iterator erase(Const_Iterator first, Const_Iterator last);
+    iterator erase(const_iterator first, const_iterator last);
 
     /**
      * @brief Function adds new Node at the end of List
@@ -627,7 +642,7 @@ public:
      * @param[in] count count new size of container
      * @param[in] value value to initialize new elements
      */
-    void resize(size_t count, const T& value);
+    void resize(size_t count, const_reference value);
 
     /**
      * @brief Function swaps content of two List objects
@@ -655,69 +670,69 @@ public:
     /**
      * @brief Function moves elements from other List object
      *
-     * @param[in] pos Const_Iterator before which content of other container will be inserted
+     * @param[in] pos const_iterator before which content of other container will be inserted
      * @param[in,out] other container to take elements from
      * @details Content of other object will be taken by constructed object
      */
-    void splice(Const_Iterator pos, List<T>& other);
+    void splice(const_iterator pos, List<T>& other);
 
     /**
      * @brief Function moves elements from other List object
      *
-     * @param[in] pos Const_Iterator before which content of other container will be inserted
+     * @param[in] pos const_iterator before which content of other container will be inserted
      * @param[in,out] other container to take elements from
      * @details Content of other object will be taken by constructed object
      */
-    void splice(Const_Iterator pos, List<T>&& other);
+    void splice(const_iterator pos, List<T>&& other);
 
     /**
      * @brief Function moves elements from other List object
      *
-     * @param[in] pos Const_Iterator before which content of other container will be inserted
+     * @param[in] pos const_iterator before which content of other container will be inserted
      * @param[in,out] other container to take elements from
-     * @param[in] it Const_Iterator pointing to element to move
+     * @param[in] it const_iterator pointing to element to move
      * @details Content of other object will be taken by constructed object
      */
-    void splice(Const_Iterator pos, List<T>& other, Const_Iterator it);
+    void splice(const_iterator pos, List<T>& other, const_iterator it);
 
     /**
      * @brief Function moves elements from other List object
      *
-     * @param[in] pos Const_Iterator before which content of other container will be inserted
+     * @param[in] pos const_iterator before which content of other container will be inserted
      * @param[in,out] other container to take elements from
-     * @param[in] it Const_Iterator pointing to element to move
+     * @param[in] it const_iterator pointing to element to move
      * @details Content of other object will be taken by constructed object
      */
-    void splice(Const_Iterator pos, List<T>&& other, Const_Iterator it);
+    void splice(const_iterator pos, List<T>&& other, const_iterator it);
 
     /**
      * @brief Function moves elements in range [first, last) from other List object
      *
-     * @param[in] pos Const_Iterator before which content of other container will be inserted
+     * @param[in] pos const_iterator before which content of other container will be inserted
      * @param[in,out] other container to take elements from
-     * @param[in] first Const_Iterator pointing to first element to move
-     * @param[in] last Const_Iterator pointing to element after last taken element
+     * @param[in] first const_iterator pointing to first element to move
+     * @param[in] last const_iterator pointing to element after last taken element
      * @details Content of other object will be taken by constructed object
      */
-    void splice(Const_Iterator pos, List<T>& other, Const_Iterator first, Const_Iterator last);
+    void splice(const_iterator pos, List<T>& other, const_iterator first, const_iterator last);
 
     /**
      * @brief Function moves elements in range [first, last) from other List object
      *
-     * @param[in] pos Const_Iterator before which content of other container will be inserted
+     * @param[in] pos const_iterator before which content of other container will be inserted
      * @param[in,out] other container to take elements from
-     * @param[in] first Const_Iterator pointing to first element to move
-     * @param[in] last Const_Iterator pointing to element after last taken element
+     * @param[in] first const_iterator pointing to first element to move
+     * @param[in] last const_iterator pointing to element after last taken element
      * @details Content of other object will be taken by constructed object
      */
-    void splice(Const_Iterator pos, List<T>&& other, Const_Iterator first, Const_Iterator last);
+    void splice(const_iterator pos, List<T>&& other, const_iterator first, const_iterator last);
 
     /**
      * @brief Function removes all elements equal to \p value
      *
      * @param[in] value value of elements to remove
      */
-    void remove(const T& value);
+    void remove(const_reference value);
 
     /// @todo add remove_if
 
@@ -810,10 +825,10 @@ private:
     /**
      * @brief Function remove next element
      *
-     * @param[in] Iterator to element to which will be erased
-     * @return Iterator to element following \p pos
+     * @param[in] iterator to element to which will be erased
+     * @return iterator to element following \p pos
      */
-    Iterator erase_element(Iterator pos)
+    iterator erase_element(iterator pos)
     {
         if (!if_valid_iterator(pos))
         {
@@ -823,13 +838,13 @@ private:
         if (pos == begin())
         {
             pop_front();
-            return Iterator(begin());
+            return iterator(begin());
         }
 
         if (pos == end() || pos == m_back)
         {
             pop_back();
-            return Iterator(end());
+            return iterator(end());
         }
 
         Node* temp = static_cast<Node*>(pos.m_current_node->m_prev);
@@ -840,19 +855,19 @@ private:
         delete to_remove;
 
         m_size--;
-        return Iterator(temp->m_next);
+        return iterator(temp->m_next);
     }
 
     /**
-    * @brief Function inserts new Node before specified List Iterator
+    * @brief Function inserts new Node before specified List iterator
     *
-    * @param[in] pos Iterator to insert element before
+    * @param[in] pos iterator to insert element before
     * @param[in] value element of type T to be inserted
-    * @return Iterator to list element
-    * @retval Iterator to inserted element
-    * @retval Iterator to \p pos if no element was inserted
+    * @return iterator to list element
+    * @retval iterator to inserted element
+    * @retval iterator to \p pos if no element was inserted
     */
-    Iterator insert_element_before(Iterator pos, const T& value)
+    iterator insert_element_before(iterator pos, const_reference value)
     {
         if (!if_valid_iterator(pos))
         {
@@ -881,18 +896,18 @@ private:
         temp->m_next = newNode;
 
         m_size++;
-        return Iterator(newNode);
+        return iterator(newNode);
     }
 
     /**
-     * @brief Function checks List contains Iterator
+     * @brief Function checks List contains iterator
      *
-     * @param[in] pos Iterator to check
+     * @param[in] pos iterator to check
      * @return bool \p pos iterator status
      * @return true if \p pos belong to List
      * @return false if otherwise
      */
-    bool if_valid_iterator(Const_Iterator pos)
+    bool if_valid_iterator(const_iterator pos)
     {
         bool valid_iterator{};
 
@@ -916,22 +931,22 @@ private:
      * @brief Function calculate number of elements from first to last
      *
      * @tparam T type of input objects
-     * @param[in] first Const_Iterator pointing first element
-     * @param[in] last Const_Iterator pointing to last (inclusive) element
+     * @param[in] first const_iterator pointing first element
+     * @param[in] last const_iterator pointing to last (inclusive) element
      * @return size_t number of elements between input elements
      */
-    size_t distance(Const_Iterator first, Const_Iterator last);
+    size_t distance(const_iterator first, const_iterator last);
 
     /**
      * @brief Function moves elements from other List object
      *
-     * @param[in] pos Const_Iterator after which content of other container will be inserted
+     * @param[in] pos const_iterator after which content of other container will be inserted
      * @param[in,out] other container to take elements from
-     * @param[in] first Const_Iterator after which elements of \p other will be taken
-     * @param[in] last Const_Iterator until which elements of \p other will be taken
+     * @param[in] first const_iterator after which elements of \p other will be taken
+     * @param[in] last const_iterator until which elements of \p other will be taken
      * @details Content of other object will be taken by constructed object
      */
-    void transfer(Const_Iterator pos, List<T>& other, Const_Iterator first, Const_Iterator last);
+    void transfer(const_iterator pos, List<T>& other, const_iterator first, const_iterator last);
 
     NodeBase* m_front{};
     NodeBase* m_back{};
@@ -1019,7 +1034,7 @@ List<T>::~List()
 }
 
 template<typename T>
-void List<T>::assign(size_t count, const T& value)
+void List<T>::assign(size_t count, const_reference value)
 {
     clear();
 
@@ -1041,61 +1056,61 @@ void List<T>::assign(const std::initializer_list<T>& init_list)
 }
 
 template<typename T>
-T& List<T>::front()
+typename List<T>::reference List<T>::front()
 {
     return *begin();
 }
 
 template<typename T>
-const T& List<T>::front() const
+typename List<T>::const_reference List<T>::front() const
 {
     return *cbegin();
 }
 
 template<typename T>
-T& List<T>::back()
+typename List<T>::reference List<T>::back()
 {
     return *(--end());
 }
 
 template<typename T>
-const T& List<T>::back() const
+typename List<T>::const_reference List<T>::back() const
 {
     return *(--cend());
 }
 
 template<typename T>
-typename List<T>::Iterator List<T>::begin() noexcept
+typename List<T>::iterator List<T>::begin() noexcept
 {
-    return Iterator(m_front);
+    return iterator(m_front);
 }
 
 template<typename T>
-typename List<T>::Const_Iterator List<T>::begin() const noexcept
+typename List<T>::const_iterator List<T>::begin() const noexcept
 {
-    return Const_Iterator(m_front);
+    return const_iterator(m_front);
 }
 
 template<typename T>
-typename List<T>::Const_Iterator List<T>::cbegin() const noexcept
+typename List<T>::const_iterator List<T>::cbegin() const noexcept
 {
     return begin();
 }
 
 template<typename T>
-typename List<T>::Iterator List<T>::end() noexcept
+typename List<T>::iterator List<T>::end() noexcept
 {
-    return Iterator(m_back);
+    return iterator(m_back);
 }
 
 template<typename T>
-typename List<T>::Const_Iterator List<T>::end() const noexcept
+typename List<T>::const_iterator List<T>::end() const noexcept
 {
-    return Const_Iterator(m_back);
+    return const_iterator(m_back);
 }
 
 template<typename T>
-typename List<T>::Const_Iterator List<T>::cend() const noexcept
+typename List<T>::const_iterator List<T>::cend() const noexcept
 {
     return end();
 }
@@ -1135,15 +1150,15 @@ void List<T>::clear()
 }
 
 template<typename T>
-typename List<T>::Iterator List<T>::insert(Const_Iterator pos, const T& value)
+typename List<T>::iterator List<T>::insert(const_iterator pos, const_reference value)
 {
     return insert(pos, 1, value);
 }
 
 template<typename T>
-typename List<T>::Iterator List<T>::insert(Const_Iterator pos, size_t count, const T& value)
+typename List<T>::iterator List<T>::insert(const_iterator pos, size_t count, const_reference value)
 {
-    Iterator it{ pos.m_current_node };
+    iterator it{ pos.m_current_node };
 
     if (!if_valid_iterator(pos))
     {
@@ -1159,9 +1174,9 @@ typename List<T>::Iterator List<T>::insert(Const_Iterator pos, size_t count, con
 }
 
 template<typename T>
-typename List<T>::Iterator List<T>::insert(Const_Iterator pos, std::initializer_list<T> init_list)
+typename List<T>::iterator List<T>::insert(const_iterator pos, std::initializer_list<T> init_list)
 {
-    Iterator it(pos.m_current_node);
+    iterator it(pos.m_current_node);
 
     if (!if_valid_iterator(pos))
     {
@@ -1178,7 +1193,7 @@ typename List<T>::Iterator List<T>::insert(Const_Iterator pos, std::initializer_
 }
 
 template<typename T>
-typename List<T>::Iterator List<T>::erase(Iterator pos)
+typename List<T>::iterator List<T>::erase(iterator pos)
 {
     if (!if_valid_iterator(pos))
     {
@@ -1189,7 +1204,7 @@ typename List<T>::Iterator List<T>::erase(Iterator pos)
 }
 
 template<typename T>
-typename List<T>::Iterator List<T>::erase(Iterator first, Iterator last)
+typename List<T>::iterator List<T>::erase(iterator first, iterator last)
 {
     if (!if_valid_iterator(first) || !if_valid_iterator(last))
     {
@@ -1202,7 +1217,7 @@ typename List<T>::Iterator List<T>::erase(Iterator first, Iterator last)
         return last;
     }
 
-    Iterator it(first.m_current_node);
+    iterator it(first.m_current_node);
     for (size_t i = 0; i < dist; i++)
     {
         it = erase_element(it);
@@ -1312,7 +1327,7 @@ void List<T>::resize(size_t count)
 }
 
 template<typename T>
-void List<T>::resize(size_t count, const T& value)
+void List<T>::resize(size_t count, const_reference value)
 {
     if (count == m_size)
     {
@@ -1396,7 +1411,7 @@ void List<T>::merge(List<T>&& other)
 }
 
 template<typename T>
-size_t List<T>::distance(Const_Iterator first, Const_Iterator last)
+size_t List<T>::distance(const_iterator first, const_iterator last)
 {
     size_t dist{};
     while (first != last)
@@ -1409,7 +1424,7 @@ size_t List<T>::distance(Const_Iterator first, Const_Iterator last)
 }
 
 template<typename T>
-void List<T>::transfer(Const_Iterator pos, List<T>& other, Const_Iterator first, Const_Iterator last)
+void List<T>::transfer(const_iterator pos, List<T>& other, const_iterator first, const_iterator last)
 {
     if (&other != this && other.m_size > 0)
     {
@@ -1455,43 +1470,43 @@ void List<T>::transfer(Const_Iterator pos, List<T>& other, Const_Iterator first,
 }
 
 template<typename T>
-void List<T>::splice(Const_Iterator pos, List<T>& other)
+void List<T>::splice(const_iterator pos, List<T>& other)
 {
     transfer(pos, other, other.begin(), other.end());
 }
 
 template<typename T>
-void List<T>::splice(Const_Iterator pos, List<T>&& other)
+void List<T>::splice(const_iterator pos, List<T>&& other)
 {
     transfer(pos, other, other.begin(), other.end());
 }
 
 template<typename T>
-void List<T>::splice(Const_Iterator pos, List<T>& other, Const_Iterator it)
+void List<T>::splice(const_iterator pos, List<T>& other, const_iterator it)
 {
     transfer(pos, other, it, it.m_current_node->m_next);
 }
 
 template<typename T>
-void List<T>::splice(Const_Iterator pos, List<T>&& other, Const_Iterator it)
+void List<T>::splice(const_iterator pos, List<T>&& other, const_iterator it)
 {
     transfer(pos, other, it, it.m_current_node->m_next);
 }
 
 template<typename T>
-void List<T>::splice(Const_Iterator pos, List<T>& other, Const_Iterator first, Const_Iterator last)
+void List<T>::splice(const_iterator pos, List<T>& other, const_iterator first, const_iterator last)
 {
     transfer(pos, other, first, last);
 }
 
 template<typename T>
-void List<T>::splice(Const_Iterator pos, List<T>&& other, Const_Iterator first, Const_Iterator last)
+void List<T>::splice(const_iterator pos, List<T>&& other, const_iterator first, const_iterator last)
 {
     transfer(pos, other, first, last);
 }
 
 template<typename T>
-void List<T>::remove(const T& value)
+void List<T>::remove(const_reference value)
 {
     Node* temp = static_cast<Node*>(m_front);
     Node* next{};

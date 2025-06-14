@@ -24,9 +24,9 @@ int main()
     bool res{};
     std::initializer_list<int> expected{};
 
-    std::cout << "Explicit Iterator\n";
+    std::cout << "Explicit iterator\n";
     List<int> l1{ 0, 10, 20 };
-    for (List<int>::Iterator it = l1.begin(); it != l1.end(); it++)
+    for (List<int>::iterator it = l1.begin(); it != l1.end(); it++)
     {
         auto& val = *it;
         std::cout << val << '\t';
@@ -39,7 +39,7 @@ int main()
     std::cout << "Expected:  \t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
-    std::cout << "Auto Iterator\n";
+    std::cout << "Auto iterator\n";
     List<int> l2{ 0, 25, 50 };
     for (auto it = l2.begin(); it != l2.end(); it++)
     {
@@ -54,9 +54,9 @@ int main()
     std::cout << "Expected:  \t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
-    std::cout << "Explicit Const Iterator\n";
+    std::cout << "Explicit Const iterator\n";
     List<int> l3{ 0, 10, 20 };
-    for (List<int>::Const_Iterator it = l3.cbegin(); it != l3.cend(); it++)
+    for (List<int>::const_iterator it = l3.cbegin(); it != l3.cend(); it++)
     {
         //auto& val = *it; // reference generate compilation error
         auto val = *it;
@@ -70,7 +70,7 @@ int main()
     std::cout << "Expected:  \t" << expected << '\n';
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
-    std::cout << "Auto Const Iterator\n";
+    std::cout << "Auto Const iterator\n";
     List<int> l4{ 0, 25, 50 };
     for (auto it = l4.cbegin(); it != l4.cend(); it++)
     {
@@ -213,7 +213,7 @@ int main()
     auto citer11e = l11.cend();
     //*citer11e = 1; // compilation error
 
-    // Increment Iterator
+    // Increment iterator
     List<int> l12 = List<int>{ 10, 20, 30 };
     std::cout << "List l12:\t" << l12 << '\n';
     auto it_12 = l12.begin();
@@ -230,7 +230,7 @@ int main()
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     it_12++;
 
-    // Increment Const_Iterator
+    // Increment const_iterator
     List<int> l13 = List<int>{ 10, 20, 30 };
     std::cout << "List l13:\t" << l13 << '\n';
     auto cit_13 = l13.cbegin();
@@ -247,7 +247,7 @@ int main()
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     cit_13++;
 
-    // Decrement Iterator
+    // Decrement iterator
     List<int> l14 = List<int>{ 10, 20, 30 };
     std::cout << "List l14:\t" << l14 << '\n';
     auto it_14 = l14.end();
@@ -265,7 +265,7 @@ int main()
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     --it_14;
 
-    // Decrement Const_Iterator
+    // Decrement const_iterator
     List<int> l15 = List<int>{ 10, 20, 30 };
     std::cout << "List l15:\t" << l15 << '\n';
     auto cit_15 = l15.cend();
