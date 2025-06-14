@@ -857,11 +857,22 @@ private:
      *
      * @param[in] pos const_iterator after which content of other container will be inserted
      * @param[in,out] other container to take elements from
+     * @param[in] it const_iterator after which elements of \p other will be taken
+     * @details Content of other object will be taken by constructed object
+     */
+    void transfer(const_iterator pos, ForwardList<T>& other, const_iterator it);
+
+    /**
+     * @brief Function moves elements from other ForwardList object
+     *
+     * @param[in] pos const_iterator after which content of other container will be inserted
+     * @param[in,out] other container to take elements from
      * @param[in] first const_iterator after which elements of \p other will be taken
      * @param[in] last const_iterator until which elements of \p other will be taken
      * @details Content of other object will be taken by constructed object
      */
     void transfer(const_iterator pos, ForwardList<T>& other, const_iterator first, const_iterator last);
+
 
     NodeBase* m_front{};
     size_t m_size{};
@@ -1320,70 +1331,86 @@ size_t ForwardList<T>::distance(const_iterator first, const_iterator last)
 }
 
 template<typename T>
+void ForwardList<T>::transfer(const_iterator pos, ForwardList<T>& other, const_iterator it)
+{
+    if (&other != this && other.m_size > 0)
+    {
+        Node* temp_prev = static_cast<Node*>(pos.m_current_node);  // to append to
+        Node* temp_next = static_cast<Node*>(it.m_current_node);   // does not move
+
+        Node* to_move = static_cast<Node*>(temp_next->m_next);
+
+        if (to_move)
+        {
+            temp_next->m_next = to_move->m_next;
+            to_move->m_next = temp_prev->m_next;
+            temp_prev->m_next = to_move;
+
+            m_size += 1;
+            other.m_size -= 1;
+        }
+    }
+}
+
+template<typename T>
 void ForwardList<T>::transfer(const_iterator pos, ForwardList<T>& other, const_iterator first, const_iterator last)
 {
     if (&other != this && other.m_size > 0)
     {
+        size_t dist = distance(first, last) - 1;
+
+        if (first == last || !dist)
+        {
+            return;
+        }
+
         Node* temp_prev = static_cast<Node*>(pos.m_current_node);     // to append to
         Node* temp_next = static_cast<Node*>(first.m_current_node);   // does not move
 
         Node* first_to_move = static_cast<Node*>(temp_next->m_next);
         Node* last_to_move = temp_next;
-        size_t ctr = 0;
-        size_t dist = distance(first, last);
         for (size_t i = 0; i < dist; i++)
         {
             if (last_to_move)
             {
                 last_to_move = static_cast<Node*>(last_to_move->m_next);
-                ctr++;
             }
         }
 
-        temp_next->m_next = last_to_move->m_next;
-        last_to_move->m_next = temp_prev->m_next;
-        temp_prev->m_next = first_to_move;
+        if (temp_next)
+        {
+            temp_next->m_next = last_to_move->m_next;
+            last_to_move->m_next = temp_prev->m_next;
+            temp_prev->m_next = first_to_move;
 
-        m_size += ctr;
-        other.m_size -= ctr;
+            m_size += dist;
+            other.m_size -= dist;
+        }
     }
 }
 
 template<typename T>
 void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>& other)
 {
-    if (&other != this && other.m_size > 0)
-    {
-        auto it = other.find_iter_before_last();
-        Node* other_last = static_cast<Node*>(it.m_current_node->m_next);
-
-        Node* temp = static_cast<Node*>(pos.m_current_node);
-        other_last->m_next = temp->m_next;
-        temp->m_next = static_cast<Node*>(other.m_front->m_next);
-        m_size += other.m_size;
-
-        other.m_front->m_next = nullptr;
-        other_last = nullptr;
-        other.m_size = 0;
-    }
+    transfer(pos, other, other.before_begin(), other.end());
 }
 
 template<typename T>
 void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>&& other)
 {
-    splice_after(pos, other);
+    transfer(pos, other, other.before_begin(), other.end());
 }
 
 template<typename T>
 void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>& other, const_iterator it)
 {
-    transfer(pos, other, it, it.m_current_node->m_next);
+    transfer(pos, other, it);
 }
 
 template<typename T>
 void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>&& other, const_iterator it)
 {
-    transfer(pos, other, it, it.m_current_node->m_next);
+    transfer(pos, other, it);
 }
 
 template<typename T>
