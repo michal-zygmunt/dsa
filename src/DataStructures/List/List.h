@@ -1416,86 +1416,57 @@ void List<T>::transfer(Const_Iterator pos, List<T>& other, Const_Iterator first,
 {
     if (&other != this && other.m_size > 0)
     {
-        Node<T>* temp_prev = static_cast<Node<T>*>(pos.m_current_node);    // to append to
-        Node<T>* temp_next = static_cast<Node<T>*>(first.m_current_node);  // does not move
+        Node<T>* temp_prev = static_cast<Node<T>*>(pos.m_current_node->m_prev);
+        Node<T>* temp_next = static_cast<Node<T>*>(pos.m_current_node);
 
-        Node<T>* first_to_move = static_cast<Node<T>*>(temp_next->m_next);
-        Node<T>* last_to_move = temp_next;
-        size_t ctr = 0;
+        Node<T>* first_to_move = static_cast<Node<T>*>(first.m_current_node);
+        Node<T>* last_to_move = static_cast<Node<T>*>(last.m_current_node->m_prev);
+
         size_t dist = distance(first, last);
-        for (size_t i = 0; i < dist; i++)
+
+        if (first == other.begin())
         {
-            if (last_to_move)
-            {
-                last_to_move = static_cast<Node<T>*>(last_to_move->m_next);
-                ctr++;
-            }
+            other.m_front = last.m_current_node;
+            last.m_current_node->m_prev = nullptr;
+        }
+        else
+        {
+            first.m_current_node->m_prev->m_next = last.m_current_node;
+            last.m_current_node->m_prev = first.m_current_node->m_prev;
         }
 
-        temp_next->m_next = last_to_move->m_next;
-        if (last_to_move->m_next)
+        if (pos == m_front)
         {
-            last_to_move->m_next->m_prev = temp_next;
-        }
-        else // last_to_move was last list object
-        {
-            other.m_back = temp_next;
-        }
+            m_front = first_to_move;
+            m_front->m_prev = temp_prev;
 
-        last_to_move->m_next = temp_prev->m_next;
-        if (!last_to_move->m_next)
-        {
-            m_back = last_to_move;
+            last_to_move->m_next = temp_next;
+            temp_next->m_prev = last_to_move;
         }
-
-        if (temp_prev->m_next)
+        else
         {
-            temp_prev->m_next->m_prev = last_to_move;
+            temp_prev->m_next = first_to_move;
+            first_to_move->m_prev = temp_prev;
+
+            last_to_move->m_next = temp_next;
+            temp_next->m_prev = last_to_move;
         }
 
-        temp_prev->m_next = first_to_move;
-        first_to_move->m_prev = temp_prev;
-
-        m_size += ctr;
-        other.m_size -= ctr;
+        m_size += dist;
+        other.m_size -= dist;
     }
 }
 
 template<typename T>
 void List<T>::splice(Const_Iterator pos, List<T>& other)
 {
-    if (&other != this && other.m_size > 0)
-    {
-        Node<T>* temp = static_cast<Node<T>*>(pos.m_current_node);
-        Node<T>* temp_next = static_cast<Node<T>*>(temp->m_next);
-
-        temp->m_next = other.m_front;
-        other.m_front->m_prev = temp;
-
-        if (temp_next)
-        {
-            temp_next->m_prev = other.m_back->m_prev;
-        }
-        else
-        {
-            m_back->m_prev = other.m_back->m_prev;
-        }
-        other.m_back->m_prev->m_next = temp_next;
-
-        m_size += other.m_size;
-
-        // cleanup other list
-        delete other.m_back;
-        other.m_front = nullptr;
-        other.m_back = nullptr;
-        other.m_size = 0;
-    }
+    transfer(pos, other, other.begin(), other.end());
 }
 
 template<typename T>
 void List<T>::splice(Const_Iterator pos, List<T>&& other)
 {
-    splice(pos, other);
+    transfer(pos, other, other.begin(), other.end());
 }
 
 template<typename T>
