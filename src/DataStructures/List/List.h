@@ -38,10 +38,7 @@ public:
 
     /**
      * @brief Implements Node template class with pointer to adjacent elements
-     *
-     * @tparam T type of data stored in Node
      */
-    template<typename T>
     class Node : NodeBase
     {
     public:
@@ -84,21 +81,21 @@ public:
         /**
          * @brief Function returns pointer to next Node object
          *
-         * @return Node<T>* pointer to value stored in Node
+         * @return Node* pointer to value stored in Node
          */
-        Node<T>* next() const
+        Node* next() const
         {
-            return static_cast<Node<T>*>(NodeBase::m_next);
+            return static_cast<Node*>(NodeBase::m_next);
         }
 
         /**
          * @brief Function returns pointer to previous Node object
          *
-         * @return Node<T>* pointer to value stored in Node
+         * @return Node* pointer to value stored in Node
          */
-        Node<T>* prev() const
+        Node* prev() const
         {
-            return static_cast<Node<T>*>(NodeBase::m_prev);
+            return static_cast<Node*>(NodeBase::m_prev);
         }
 
     private:
@@ -124,7 +121,7 @@ public:
      * @tparam IF_CONST if \p true generate class with const reference to underlying data type
      * @tparam T type of data stored in Node
      */
-    template<bool IF_CONST, typename T>
+    template<bool IF_CONST>
     class Basic_Iterator : NodeBase
     {
     public:
@@ -180,7 +177,7 @@ public:
          */
         Basic_Iterator operator++(int)
         {
-            Basic_Iterator<IF_CONST, T> Basic_Iterator = *this;
+            Basic_Iterator<IF_CONST> Basic_Iterator = *this;
             ++(*this);
             return Basic_Iterator;
         }
@@ -207,7 +204,7 @@ public:
          */
         Basic_Iterator operator--(int)
         {
-            Basic_Iterator<IF_CONST, T> Basic_Iterator = *this;
+            Basic_Iterator<IF_CONST> Basic_Iterator = *this;
             --(*this);
             return Basic_Iterator;
         }
@@ -220,7 +217,7 @@ public:
          * @retval true if Basic_Iterator objects are the same
          * @retval false if Basic_Iterator objects are different
          */
-        bool operator==(const Basic_Iterator<IF_CONST, T>& other)
+        bool operator==(const Basic_Iterator<IF_CONST>& other)
         {
             return m_current_node == other.m_current_node;
         }
@@ -233,7 +230,7 @@ public:
          * @retval true if Basic_Iterator objects are different
          * @retval false if Basic_Iterator objects are the same
          */
-        bool operator!=(const Basic_Iterator<IF_CONST, T>& other)
+        bool operator!=(const Basic_Iterator<IF_CONST>& other)
         {
             return !operator==(other);// m_current_node != other.m_current_node;
         }
@@ -248,7 +245,7 @@ public:
          */
         Basic_Iterator operator[](size_t index)
         {
-            Node<T>* temp{ static_cast<Node<T>*>(m_current_node) };
+            Node* temp{ static_cast<Node*>(m_current_node) };
 
             if (index >= 0)
             {
@@ -289,7 +286,7 @@ public:
          */
         iterator_type& operator*() const noexcept
         {
-            return static_cast<Node<T>*>(m_current_node)->value();
+            return static_cast<Node*>(m_current_node)->value();
         }
 
         /**
@@ -299,15 +296,15 @@ public:
          */
         T* operator->()
         {
-            return &static_cast<Node<T>*>(m_current_node)->value();
+            return &static_cast<Node*>(m_current_node)->value();
         }
 
         /**
          * @brief convert Basic_Iterator to Basic_Const_Iterator
          */
-        operator Basic_Iterator<true, T>()
+        operator Basic_Iterator<true>()
         {
-            return Basic_Iterator<true, T>(m_current_node);
+            return Basic_Iterator<true>(m_current_node);
         }
 
     private:
@@ -318,8 +315,8 @@ public:
         NodeBase* m_current_node{};
     };
 
-    using Const_Iterator = Basic_Iterator<true, T>;
-    using Iterator = Basic_Iterator<false, T>;
+    using Const_Iterator = Basic_Iterator<true>;
+    using Iterator = Basic_Iterator<false>;
 
     /**
      * @brief Construct a new List object
@@ -776,11 +773,11 @@ public:
      * @brief Function returns pointer to specific Node of List
      *
      * @param[in] index index of element
-     * @return Node<T>*
-     * @retval Node<T>* if index is valid
+     * @return Node*
+     * @retval Node* if index is valid
      * @retval nullptr if invalid index
      */
-    Node<T>* get(int index) const;
+    Node* get(int index) const;
 
     /**
      * @brief Function sets value of specifed Node of List
@@ -835,8 +832,8 @@ private:
             return Iterator(end());
         }
 
-        Node<T>* temp = static_cast<Node<T>*>(pos.m_current_node->m_prev);
-        Node<T>* to_remove = static_cast<Node<T>*>(temp->m_next);
+        Node* temp = static_cast<Node*>(pos.m_current_node->m_prev);
+        Node* to_remove = static_cast<Node*>(temp->m_next);
 
         temp->m_next = to_remove->m_next;
         temp->m_next->m_prev = temp;
@@ -874,9 +871,9 @@ private:
             return end().m_current_node->m_prev;
         }
 
-        Node<T>* temp = static_cast<Node<T>*>(pos.m_current_node->m_prev);
+        Node* temp = static_cast<Node*>(pos.m_current_node->m_prev);
 
-        Node<T>* newNode = new Node<T>(value);
+        Node* newNode = new Node(value);
         newNode->m_next = temp->m_next;
         newNode->m_prev = temp;
 
@@ -1124,12 +1121,12 @@ size_t List<T>::max_size() const noexcept
 template<typename T>
 void List<T>::clear()
 {
-    Node<T>* temp = static_cast<Node<T>*>(m_front);
+    Node* temp = static_cast<Node*>(m_front);
     while (m_front)
     {
         m_front = m_front->m_next;
         delete temp;
-        temp = static_cast<Node<T>*>(m_front);
+        temp = static_cast<Node*>(m_front);
     }
 
     m_size = 0;
@@ -1219,7 +1216,7 @@ void List<T>::push_front(T value)
 {
     init_node();
 
-    Node<T>* newNode = new Node<T>(value);
+    Node* newNode = new Node(value);
 
     if (!m_front)
     {
@@ -1245,7 +1242,7 @@ void List<T>::pop_front()
         return;
     }
 
-    Node<T>* temp = static_cast<Node<T>*>(m_front);
+    Node* temp = static_cast<Node*>(m_front);
     if (m_size == 1)
     {
         m_front = nullptr;
@@ -1265,7 +1262,7 @@ void List<T>::push_back(T value)
 {
     init_node();
 
-    Node<T>* newNode = new Node<T>(value);
+    Node* newNode = new Node(value);
 
     if (!m_size)
     {
@@ -1292,7 +1289,7 @@ void List<T>::pop_back()
         return;
     }
 
-    Node<T>* temp = static_cast<Node<T>*>(m_back);
+    Node* temp = static_cast<Node*>(m_back);
     if (m_size == 1)
     {
         m_front = nullptr;
@@ -1416,11 +1413,11 @@ void List<T>::transfer(Const_Iterator pos, List<T>& other, Const_Iterator first,
 {
     if (&other != this && other.m_size > 0)
     {
-        Node<T>* temp_prev = static_cast<Node<T>*>(pos.m_current_node->m_prev);
-        Node<T>* temp_next = static_cast<Node<T>*>(pos.m_current_node);
+        Node* temp_prev = static_cast<Node*>(pos.m_current_node->m_prev);
+        Node* temp_next = static_cast<Node*>(pos.m_current_node);
 
-        Node<T>* first_to_move = static_cast<Node<T>*>(first.m_current_node);
-        Node<T>* last_to_move = static_cast<Node<T>*>(last.m_current_node->m_prev);
+        Node* first_to_move = static_cast<Node*>(first.m_current_node);
+        Node* last_to_move = static_cast<Node*>(last.m_current_node->m_prev);
 
         size_t dist = distance(first, last);
 
@@ -1496,22 +1493,22 @@ void List<T>::splice(Const_Iterator pos, List<T>&& other, Const_Iterator first, 
 template<typename T>
 void List<T>::remove(const T& value)
 {
-    Node<T>* temp = static_cast<Node<T>*>(m_front);
-    Node<T>* next{};
+    Node* temp = static_cast<Node*>(m_front);
+    Node* next{};
     while (temp)
     {
         next = temp->next();
 
-        if (static_cast<Node<T>*>(m_front)->value() == value)
+        if (static_cast<Node*>(m_front)->value() == value)
         {
             pop_front();
-            temp = static_cast<Node<T>*>(m_front);
+            temp = static_cast<Node*>(m_front);
             continue;
         }
 
         if (next && next->value() == value)
         {
-            Node<T>* to_remove = temp->next();
+            Node* to_remove = temp->next();
             temp->m_next = to_remove->next();
             delete to_remove;
             m_size--;
@@ -1531,17 +1528,17 @@ void List<T>::remove(const T& value)
 template<typename T>
 void List<T>::reverse()
 {
-    Node<T>* temp = static_cast<Node<T>*>(m_front);
-    Node<T>* temp_back = static_cast<Node<T>*>(m_back->m_prev);
+    Node* temp = static_cast<Node*>(m_front);
+    Node* temp_back = static_cast<Node*>(m_back->m_prev);
     m_front = temp_back;
     temp_back = temp;
 
-    Node<T>* prev{};
-    Node<T>* next{};
+    Node* prev{};
+    Node* next{};
 
     for (int i = 0; i < m_size; i++)
     {
-        next = static_cast<Node<T>*>(temp->m_next);
+        next = static_cast<Node*>(temp->m_next);
         temp->m_next = prev;
         temp->m_prev = next;
 
@@ -1557,20 +1554,20 @@ void List<T>::reverse()
 template<typename T>
 void List<T>::unique()
 {
-    Node<T>* temp = static_cast<Node<T>*>(m_front);
-    Node<T>* prev{};
-    Node<T>* next{};
+    Node* temp = static_cast<Node*>(m_front);
+    Node* prev{};
+    Node* next{};
     while (temp)
     {
         prev = temp;
 
         while (prev)
         {
-            next = static_cast<Node<T>*>(prev->m_next);
+            next = static_cast<Node*>(prev->m_next);
 
             if (next && next->value() == temp->value() && next != m_back)
             {
-                Node<T>* to_remove = next;
+                Node* to_remove = next;
 
                 if (to_remove->m_next)
                 {
@@ -1590,32 +1587,32 @@ void List<T>::unique()
 
             if (prev)
             {
-                prev = static_cast<Node<T>*>(prev->m_next);
+                prev = static_cast<Node*>(prev->m_next);
             }
         }
 
-        temp = static_cast<Node<T>*>(temp->m_next);
+        temp = static_cast<Node*>(temp->m_next);
     }
 }
 
 template<typename T>
-List<T>::Node<T>* List<T>::get(int index) const
+typename List<T>::Node* List<T>::get(int index) const
 {
     if (index < 0 || index >= m_size)
     {
         return nullptr;
     }
 
-    Node<T>* temp{};
+    Node* temp{};
 
     constexpr int ver = 1;
     if (ver == 0)
     {
         // count nodes from front
-        temp = static_cast<Node<T>*>(m_front);
+        temp = static_cast<Node*>(m_front);
         for (size_t i = 0; i < index; i++)
         {
-            temp = static_cast<Node<T>*>(temp->m_next);
+            temp = static_cast<Node*>(temp->m_next);
         }
     }
     else if (ver == 1)
@@ -1623,28 +1620,28 @@ List<T>::Node<T>* List<T>::get(int index) const
         // optimize counting nodes from front or back
         if (index < m_size / 2)
         {
-            temp = static_cast<Node<T>*>(m_front);
+            temp = static_cast<Node*>(m_front);
             for (size_t i = 0; i < index; i++)
             {
-                temp = static_cast<Node<T>*>(temp->m_next);
+                temp = static_cast<Node*>(temp->m_next);
             }
         }
         else
         {
-            temp = static_cast<Node<T>*>(m_back->m_prev);
+            temp = static_cast<Node*>(m_back->m_prev);
             for (size_t i = m_size - 1; i > index; i--)
             {
-                temp = static_cast<Node<T>*>(temp->m_prev);
+                temp = static_cast<Node*>(temp->m_prev);
             }
         }
     }
     else
     {
         // count nodes from back
-        temp = static_cast<Node<T>*>(m_back->m_prev);
+        temp = static_cast<Node*>(m_back->m_prev);
         for (size_t i = m_size - 1; i > index; i--)
         {
-            temp = static_cast<Node<T>*>(temp->m_prev);
+            temp = static_cast<Node*>(temp->m_prev);
         }
     }
 
@@ -1654,7 +1651,7 @@ List<T>::Node<T>* List<T>::get(int index) const
 template<typename T>
 bool List<T>::set(int index, T value)
 {
-    Node<T>* temp = get(index);
+    Node* temp = get(index);
     if (temp)
     {
         temp->m_value = value;
