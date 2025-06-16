@@ -27,8 +27,8 @@ int main()
         auto temp = q1.front();
         if (temp)
         {
-            std::cout << temp->value() << ' ';
-            res = if_error(temp->value(), expected.begin()[i]);
+            std::cout << temp << ' ';
+            res = if_error(temp, expected.begin()[i]);
             q1.pop();
         }
     }
@@ -37,8 +37,8 @@ int main()
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
     Queue<int> q2 = Queue<int>({ 0,10,20 });
-    auto front = q2.front()->value();
-    auto back = q2.back()->value();
+    auto front = q2.front();
+    auto back = q2.back();
     res = 0;
     if (if_error(front, 0) || if_error(back, 20))
     {
@@ -49,8 +49,8 @@ int main()
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
     const Queue<int> q3 = Queue<int>({ 0,10,20 });
-    front = q3.front()->value();
-    back = q3.back()->value();
+    front = q3.front();
+    back = q3.back();
     res = 0;
     if (if_error(front, 0) || if_error(back, 20))
     {

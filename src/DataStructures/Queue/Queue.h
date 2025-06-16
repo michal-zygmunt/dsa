@@ -12,95 +12,31 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
+#include "../List/List.h"
+
 #include <initializer_list>
 #include <iostream>
+#include <utility>
 
  /**
-  * @brief Implements Queue class using Node with pointer to next element
+  * @brief Implements Queue class using List as underlaying data structore
   *
-  * @tparam T type of data stored in Queue Node
+  * @tparam T type of data stored in Queue
   */
 template<typename T>
 class Queue
 {
 public:
 
-    /**
-     * @brief Implements Node template class with pointer to next element
-     *
-     * @tparam T type of data stored in Node
-     */
-    template<typename T>
-    class Node
-    {
-    public:
-
-        /**
-         * @brief Construct a new Node object with initial value
-         *
-         * @param[in] value to store in Node object
-         */
-        Node(T value)
-            : m_value{ value }
-        {
-        }
-
-        /**
-         * @brief Destroy the Node object
-         */
-        ~Node()
-        {
-        }
-
-        /**
-         * @brief Function returns value stored in Node object
-         *
-         * @return T value stored in Node
-         */
-        T& value()
-        {
-            return m_value;
-        }
-
-        /**
-         * @brief Function returns value stored in Node object
-         *
-         * @return T value stored in Node
-         */
-        T value() const
-        {
-            return m_value;
-        }
-
-        /**
-         * @brief Function returns pointer to next Node object
-         *
-         * @return Node<T>* pointer to value stored in Node
-         */
-        Node<T>* next() const
-        {
-            return m_next;
-        }
-
-    private:
-
-        /**
-         * @brief Forward friend declaration of Queue
-         *
-         * @tparam T type of data stored in Node objects
-         */
-        template<typename T>
-        friend class Queue;
-
-        T m_value{};
-        Node<T>* m_next{};
-    };
+    using value_type = T;
+    using reference = T&;
+    using const_reference = const T&;
 
     /**
      * @brief Construct a new Queue object
      *
      */
-    Queue();
+    Queue() = default;
 
     /**
      * @brief Construct a new Queue object using value of type T
@@ -151,35 +87,35 @@ public:
     /**
      * @brief Destroy the Queue object
      */
-    ~Queue();
+    ~Queue() = default;
 
     /**
-     * @brief Function returns pointer to Queue first Node
+     * @brief Function returns pointer to Queue first object
      *
-     * @return Node<T>* pointer to Queue first Node
+     * @return T& reference to Queue first object
      */
-    Node<T>* front();
+    reference front();
 
     /**
-     * @brief Function returns pointer to Queue first Node
+     * @brief Function returns pointer to Queue first object
      *
-     * @return Node<T>* pointer to Queue first Node
+     * @return const T& const reference to Queue first object
      */
-    Node<T>* front() const;
+    const_reference front() const;
 
     /**
-     * @brief Function returns pointer to Queue last Node
+     * @brief Function returns pointer to Queue last object
      *
-     * @return Node<T>* pointer to Queue last Node
+     * @return T& reference to Queue last object
      */
-    Node<T>* back();
+    reference back();
 
     /**
-     * @brief Function returns pointer to Queue last Node
+     * @brief Function returns pointer to Queue last object
      *
-     * @return Node<T>* pointer to Queue last Node
+     * @return const T& const reference to Queue last object
      */
-    Node<T>* back() const;
+    const_reference back() const;
 
     /**
      * @brief Function checks if container has no elements
@@ -201,7 +137,14 @@ public:
      *
      * @param[in] value element of type T
      */
-    void push(T value);
+    void push(const_reference value);
+
+    /**
+     * @brief Function add new element at the end of Queue
+     *
+     * @param[in] value element of type T
+     */
+    void push(T&& value);
 
     /**
      * @brief Function add range of elements at the end of Queue
@@ -239,23 +182,14 @@ public:
     Queue<T>& operator+=(const std::initializer_list<T>& other);
 
 private:
-    Node<T>* m_front{};
-    Node<T>* m_back{};
-    size_t m_size{};
-};
 
-template<typename T>
-Queue<T>::Queue()
-{
-}
+    List<T> container{};
+};
 
 template<typename T>
 Queue<T>::Queue(T value)
 {
-    Node<T>* newNode = new Node<T>(value);
-    m_front = newNode;
-    m_back = newNode;
-    m_size++;
+    container.push_back(value);
 }
 
 template<typename T>
@@ -263,18 +197,19 @@ Queue<T>::Queue(const std::initializer_list<T>& il)
 {
     for (const auto& item : il)
     {
-        push(item);
+        container.push_back(item);
     }
 }
 
 template<typename T>
 Queue<T>::Queue(const Queue<T>& other)
 {
-    Queue<T>::Node<T>* temp = other.m_front;
-    while (temp)
+    if (other.size() >= 1)
     {
-        push(temp->value());
-        temp = temp->m_next;
+        for (const auto& item : other.container)
+        {
+            container.push_back(item);
+        }
     }
 }
 
@@ -283,16 +218,14 @@ Queue<T>& Queue<T>::operator=(const Queue<T>& other)
 {
     if (&other != this)
     {
-        while (m_front)
+        while (container.size())
         {
-            pop();
+            container.pop_front();
         }
 
-        Queue<T>::Node<T>* temp = other.m_front;
-        while (temp)
+        for (const auto& item : other.container)
         {
-            push(temp->value());
-            temp = temp->next();
+            container.push_back(item);
         }
     }
 
@@ -302,13 +235,7 @@ Queue<T>& Queue<T>::operator=(const Queue<T>& other)
 template<typename T>
 Queue<T>::Queue(Queue<T>&& other) noexcept
 {
-    m_front = other.m_front;
-    m_back = other.m_back;
-    m_size = other.m_size;
-
-    other.m_front = nullptr;
-    other.m_back = nullptr;
-    other.m_size = 0;
+    container = std::move(other.container);
 }
 
 template<typename T>
@@ -316,85 +243,58 @@ Queue<T>& Queue<T>::operator=(Queue<T>&& other) noexcept
 {
     if (&other != this)
     {
-        m_front = other.m_front;
-        m_back = other.m_back;
-        m_size = other.m_size;
-
-        other.m_front = nullptr;
-        other.m_back = nullptr;
-        other.m_size = 0;
+        container = std::move(other.container);
     }
 
     return *this;
 }
 
 template<typename T>
-Queue<T>::~Queue()
+typename Queue<T>::reference Queue<T>::front()
 {
-    Node<T>* temp = m_front;
-    while (m_front)
-    {
-        m_front = m_front->m_next;
-        delete temp;
-        temp = m_front;
-
-        m_size--;
-    }
+    return container.front();
 }
 
 template<typename T>
-Queue<T>::Node<T>* Queue<T>::front()
+typename Queue<T>::const_reference Queue<T>::front() const
 {
-    return m_front;
+    return container.front();
 }
 
 template<typename T>
-Queue<T>::Node<T>* Queue<T>::front() const
+typename Queue<T>::reference Queue<T>::back()
 {
-    return m_front;
+    return container.back();
 }
 
 template<typename T>
-Queue<T>::Node<T>* Queue<T>::back()
+typename Queue<T>::const_reference Queue<T>::back() const
 {
-    return m_back;
-}
-
-template<typename T>
-Queue<T>::Node<T>* Queue<T>::back() const
-{
-    return m_back;
+    return container.back();
 }
 
 template<typename T>
 bool Queue<T>::empty() const
 {
-    return m_size == 0;
+    return container.size() == 0;
 }
 
 template<typename T>
 size_t Queue<T>::size() const
 {
-    return m_size;
+    return container.size();
 }
 
 template<typename T>
-void Queue<T>::push(T value)
+void Queue<T>::push(const_reference value)
 {
-    Node<T>* newNode = new Node<T>(value);
+    container.push_back(value);
+}
 
-    if (!m_back)
-    {
-        m_front = newNode;
-        m_back = newNode;
-    }
-    else
-    {
-        m_back->m_next = newNode;
-        m_back = newNode;
-    }
-
-    m_size++;
+template<typename T>
+void Queue<T>::push(T&& value)
+{
+    container.push_back(std::move(value));
 }
 
 template<typename T>
@@ -409,19 +309,7 @@ void Queue<T>::push_range(const std::initializer_list<T>& il)
 template<typename T>
 void Queue<T>::pop()
 {
-    Node<T>* temp = m_front;
-
-    if (m_front)
-    {
-        m_front = m_front->m_next;
-        delete temp;
-        m_size--;
-    }
-
-    if (!m_size)
-    {
-        m_back = nullptr;
-    }
+    container.pop_front();
 }
 
 template<typename T>
@@ -429,61 +317,8 @@ void Queue<T>::swap(Queue<T>& other) noexcept
 {
     if (&other != this)
     {
-        /// @todo implement method as swap function
-
-        Queue<T> temp;
-        temp.m_front = m_front;
-        temp.m_back = m_back;
-        temp.m_size = m_size;
-
-        m_front = other.m_front;
-        m_back = other.m_back;
-        m_size = other.m_size;
-
-        other.m_front = temp.m_front;
-        other.m_back = temp.m_back;
-        other.m_size = temp.m_size;
-
-        temp.m_front = nullptr;
-        temp.m_back = nullptr;
-        temp.m_size = 0;
+        std::swap(container, other.container);
     }
-}
-
-/**
- * @brief Construct new object based on two Queue objects
- *
- * @tparam T type of data stored in Queue Node
- * @param[in] q1 input Queue
- * @param[in] q2 input Queue
- * @return Queue<T>
- */
-template<typename T>
-Queue<T> operator+(const Queue<T>& q1, const Queue<T>& q2)
-{
-    Queue<T> temp(q1);
-
-    Queue<T>::Node<T>* node = q2.front();
-    while (node)
-    {
-        temp.push(node->value());
-        node = node->next();
-    }
-
-    return temp;
-}
-
-template<typename T>
-Queue<T>& Queue<T>::operator+=(const Queue<T>& other)
-{
-    Node<T>* node = other.front();
-    while (node)
-    {
-        (*this).push(node->value());
-        node = node->next();
-    }
-
-    return *this;
 }
 
 template<typename T>
@@ -505,11 +340,12 @@ Queue<T>& Queue<T>::operator+=(const std::initializer_list<T>& il)
 template<typename T>
 std::ostream& operator<<(std::ostream& out, const Queue<T>& queue)
 {
-    Queue<T>::Node<T>* temp = queue.front();
-    while (temp)
+    Queue<T> temp{ queue };
+
+    while (temp.size())
     {
-        out << temp->value() << ' ';
-        temp = temp->next();
+        out << temp.front() << ' ';
+        temp.pop();
     }
 
     return out;
@@ -532,18 +368,18 @@ bool operator==(const Queue<T>& q1, const Queue<T>& q2)
         return false;
     }
 
-    Queue<T>::Node<T>* node_1 = q1.front();
-    Queue<T>::Node<T>* node_2 = q2.front();
+    Queue<T> temp_1{ q1 };
+    Queue<T> temp_2{ q2 };
 
-    while (node_1 && node_2)
+    while (temp_1.size() && temp_2.size())
     {
-        if (node_1->value() != node_2->value())
+        if (temp_1.front() != temp_2.front())
         {
             return false;
         }
 
-        node_1 = node_1->next();
-        node_2 = node_2->next();
+        temp_1.pop();
+        temp_2.pop();
     }
 
     return true;
@@ -577,18 +413,18 @@ bool operator!=(const Queue<T>& q1, const Queue<T>& q2)
 template<typename T>
 bool operator<(const Queue<T>& q1, const Queue<T>& q2)
 {
-    Queue<T>::Node<T>* node_1 = q1.front();
-    Queue<T>::Node<T>* node_2 = q2.front();
+    Queue<T> temp_1{ q1 };
+    Queue<T> temp_2{ q2 };
 
-    while (node_1 && node_2)
+    while (temp_1.size() && temp_2.size())
     {
-        if (node_1->value() >= node_2->value())
+        if (temp_1.front() >= temp_2.front())
         {
             return false;
         }
 
-        node_1 = node_1->next();
-        node_2 = node_2->next();
+        temp_1.pop();
+        temp_2.pop();
     }
 
     return true;

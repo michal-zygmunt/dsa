@@ -46,10 +46,10 @@ bool if_error(Queue<T> queue, const std::initializer_list<T>& test_values)
 
     for (int i = 0; i < test_values.size(); i++)
     {
-        bool not_eq = queue.front()->value() != test_values.begin()[i];
+        bool not_eq = queue.front() != test_values.begin()[i];
         if (not_eq )
         {
-            std::cout << "Comparison error! queue value " << queue.front()->value()
+            std::cout << "Comparison error! queue value " << queue.front()
                 << " not equal to " << test_values.begin()[i] << '\n';
             tests::failed++;
             return true;
@@ -62,7 +62,7 @@ bool if_error(Queue<T> queue, const std::initializer_list<T>& test_values)
 
 /**
  * @brief Function compares values of two objects
- * 
+ *
  * @tparam T type of compared objects
  * @param[in] a input object
  * @param[in] b input object

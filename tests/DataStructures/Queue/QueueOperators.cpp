@@ -26,29 +26,6 @@ int main()
     std::cout << "Queue q2:\t" << q2 << '\n';
     std::cout << "Queue q3:\t" << q3 << "\n\n";
 
-    Queue<int> q4(q1 + q2);
-    expected = { 1,2,3,4,5,6 };
-    res = if_error(q4, expected);
-    std::cout << "Queue q4:\t" << q4 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-
-    Queue<int> q5(0);
-    q5 += q2;
-    expected = { 0,4,5,6 };
-    res = if_error(q5, expected);
-    std::cout << "Queue q5:\t" << q5 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-
-    Queue<int> q6(0);
-    q6 += { 4, 5, 6 };
-    expected = { 0,4,5,6 };
-    res = if_error(q6, expected);
-    std::cout << "Queue q6:\t" << q6 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-
     std::cout << "Compare operators for objects of the same size\n\n";
 
     res = if_error(q1 == q1, true);

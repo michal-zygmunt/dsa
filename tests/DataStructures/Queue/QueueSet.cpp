@@ -20,7 +20,7 @@ int main()
     std::initializer_list<int> expected{ 50,10,20 };
 
     Queue<int> q1 = Queue<int>({ 0,10,20 });
-    q1.front()->value() = 50;
+    q1.front() = 50;
     res = if_error(q1, expected);
     std::cout << "Queue:\t\t" << q1 << '\n';
     std::cout << "Expected:\t" << expected << '\n';
