@@ -49,4 +49,14 @@
 		<DisplayString>{m_value}</DisplayString>
 	</Type>
 
+
+	<Type Name="Queue&lt;*&gt;">
+		<DisplayString Condition="container.m_front == 0xcccccccccccccccc">invalid</DisplayString>
+		<DisplayString Condition="container.m_size == 0">empty</DisplayString>
+		<DisplayString Condition="container.m_size != 0">non-empty</DisplayString>
+		<Expand>
+			<ExpandedItem>container</ExpandedItem>
+		</Expand>
+	</Type>
+
 </AutoVisualizer>
