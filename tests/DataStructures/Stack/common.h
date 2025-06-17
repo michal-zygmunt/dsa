@@ -46,10 +46,10 @@ bool if_error(Stack<T> stack, const std::initializer_list<T>& test_values)
 
     for (int i = 0; i < test_values.size(); i++)
     {
-        bool not_eq = stack.top()->value() != test_values.begin()[i];
+        bool not_eq = stack.top() != test_values.begin()[i];
         if (not_eq )
         {
-            std::cout << "Comparison error! Stack value " << stack.top()->value()
+            std::cout << "Comparison error! Stack value " << stack.top()
                 << " not equal to " << test_values.begin()[i] << '\n';
             tests::failed++;
             return true;

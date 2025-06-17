@@ -27,8 +27,8 @@ int main()
         auto temp = s1.top();
         if (temp)
         {
-            std::cout << temp->value() << ' ';
-            res = if_error(temp->value(), expected.begin()[i]);
+            std::cout << temp << ' ';
+            res = if_error(temp, expected.begin()[i]);
             s1.pop();
         }
     }
@@ -37,7 +37,7 @@ int main()
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
     Stack<int> s2 = Stack<int>({ 20, 10, 0 });
-    auto top = s2.top()->value();
+    auto top = s2.top();
     res = 0;
     if (if_error(top, expected.begin()[0]))
     {
@@ -48,7 +48,7 @@ int main()
     std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
 
     const Stack<int> s3 = Stack<int>({ 20, 10, 0 });
-    top = s3.top()->value();
+    top = s3.top();
     res = 0;
     if (if_error(top, expected.begin()[0]))
     {

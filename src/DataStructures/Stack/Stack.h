@@ -12,8 +12,11 @@
 #ifndef STACK_H
 #define STACK_H
 
+#include "../List/List.h"
+
 #include <initializer_list>
 #include <iostream>
+#include <utility>
 
  /**
   * @brief Implements Stack class using Node with pointer to next element
@@ -25,93 +28,15 @@ class Stack
 {
 public:
 
-    /**
-     * @brief Implements Node template class with pointer to next element
-     *
-     * @tparam T type of data stored in Node
-     */
-    template<typename T>
-    class Node
-    {
-    public:
-
-        /**
-         * @brief Construct a new Node object with initial value
-         *
-         * @param[in] value to store in Node object
-         */
-        Node(T value)
-            : m_value{ value }
-        {
-        }
-
-        /**
-         * @brief Destroy the Node object
-         */
-        ~Node()
-        {
-        }
-
-        /**
-         * @brief Function returns value stored in Node object
-         *
-         * @return T value stored in Node
-         */
-        T& value()
-        {
-            return m_value;
-        }
-
-        /**
-         * @brief Function returns value stored in Node object
-         *
-         * @return T value stored in Node
-         */
-        T value() const
-        {
-            return m_value;
-        }
-
-        /**
-         * @brief Function returns pointer to next Node object
-         *
-         * @return Node<T>* pointer to Node
-         */
-        Node<T>* next() const
-        {
-            return m_next;
-        }
-
-        /**
-         * @brief Function returns pointer to previous Node object
-         *
-         * @return Node<T>* pointer to Node
-         */
-        Node<T>* prev() const
-        {
-            return m_prev;
-        }
-
-    private:
-
-        /**
-         * @brief Forward friend declaration of Stack
-         *
-         * @tparam T type of data stored in Node objects
-         */
-        template<typename T>
-        friend class Stack;
-
-        T m_value{};
-        Node<T>* m_next{};
-        Node<T>* m_prev{};
-    };
+    using value_type = T;
+    using reference = T&;
+    using const_reference = const T&;
 
     /**
      * @brief Construct a new Stack object
      *
      */
-    Stack();
+    Stack() = default;
 
     /**
      * @brief Construct a new Stack object using value of type T
@@ -162,21 +87,21 @@ public:
     /**
      * @brief Destroy the Stack object
      */
-    ~Stack();
+    ~Stack() = default;
 
     /**
-     * @brief Function returns pointer to Stack top Node
+     * @brief Function returns pointer to Stack top element
      *
-     * @return Node<T>* pointer to Stack top Node
+     * @return T& reference to Stack top element
      */
-    Node<T>* top();
+    reference top();
 
     /**
-     * @brief Function returns pointer to Stack top Node
+     * @brief Function returns pointer to Stack top element
      *
-     * @return Node<T>* pointer to Stack top Node
+     * @return const T& const_reference to Stack top element
      */
-    Node<T>* top() const;
+    const_reference top() const;
 
     /**
      * @brief Function checks if container has no elements
@@ -219,83 +144,15 @@ public:
      */
     void swap(Stack<T>& other) noexcept;
 
-    /**
-     * @brief Function add range of elements at the top of Stack
-     *
-     * @param[in] other Stack to read elements from
-     * @return Stack<T>& reference to Stack
-     */
-    Stack<T>& operator+=(const Stack<T>& other);
-
-    /**
-    * @brief Function add range of elements at the top of Stack
-    *
-    * @param[in] other std::initializer_list to read elements from
-    * @return Stack<T>& reference to Stack
-    */
-    Stack<T>& operator+=(const std::initializer_list<T>& other);
-
-    /**
-     * @brief Construct new object based on two Stack objects
-     *
-     * @tparam T type of data stored in Stack Node
-     * @param[in] s1 input Stack
-     * @param[in] s2 input Stack
-     * @return Stack<T>
-     */
-    friend Stack<T> operator+(const Stack<T>& s1, const Stack<T>& s2)
-    {
-        Stack<T> temp(s1);
-
-        Stack<T>::Node<T>* node = s2.bottom();
-        while (node)
-        {
-            temp.push(node->value());
-            node = node->prev();
-        }
-
-        return temp;
-    }
-
 private:
 
-    /**
-     * @brief Function returns pointer to Stack bottom Node
-     *
-     * @return Node<T>* pointer to Stack bottom Node
-     */
-    Node<T>* bottom()
-    {
-        return m_bottom;
-    }
-
-    /**
-     * @brief Function returns pointer to Stack bottom Node
-     *
-     * @return Node<T>* pointer to Stack bottom Node
-     */
-    Node<T>* bottom() const
-    {
-        return m_bottom;
-    }
-
-    Node<T>* m_top{};
-    Node<T>* m_bottom{};
-    size_t m_size{};
+    List<T> container{};
 };
-
-template<typename T>
-Stack<T>::Stack()
-{
-}
 
 template<typename T>
 Stack<T>::Stack(T value)
 {
-    Node<T>* newNode = new Node<T>(value);
-    m_top = newNode;
-    m_bottom = newNode;
-    m_size++;
+    container.push_back(value);
 }
 
 template<typename T>
@@ -303,18 +160,19 @@ Stack<T>::Stack(const std::initializer_list<T>& il)
 {
     for (const auto& item : il)
     {
-        push(item);
+        container.push_back(item);
     }
 }
 
 template<typename T>
 Stack<T>::Stack(const Stack<T>& other)
 {
-    Stack<T>::Node<T>* temp = other.m_bottom;
-    while (temp)
+    if (other.size() >= 1)
     {
-        push(temp->value());
-        temp = temp->m_prev;
+        for (const auto& item : other.container)
+        {
+            container.push_back(item);
+        }
     }
 }
 
@@ -323,16 +181,14 @@ Stack<T>& Stack<T>::operator=(const Stack<T>& other)
 {
     if (&other != this)
     {
-        while (m_top)
+        while (container.size())
         {
-            pop();
+            container.pop_front();
         }
 
-        Stack<T>::Node<T>* temp = other.m_bottom;
-        while (temp)
+        for (const auto& item : other.container)
         {
-            push(temp->value());
-            temp = temp->prev();
+            container.push_back(item);
         }
     }
 
@@ -342,13 +198,7 @@ Stack<T>& Stack<T>::operator=(const Stack<T>& other)
 template<typename T>
 Stack<T>::Stack(Stack<T>&& other) noexcept
 {
-    m_top = other.m_top;
-    m_bottom = other.m_bottom;
-    m_size = other.m_size;
-
-    other.m_top = nullptr;
-    other.m_bottom = nullptr;
-    other.m_size = 0;
+    std::swap(container, other.container);
 }
 
 template<typename T>
@@ -356,74 +206,40 @@ Stack<T>& Stack<T>::operator=(Stack<T>&& other) noexcept
 {
     if (&other != this)
     {
-        m_top = other.m_top;
-        m_bottom = other.m_bottom;
-        m_size = other.m_size;
-
-        other.m_top = nullptr;
-        other.m_bottom = nullptr;
-        other.m_size = 0;
+        std::swap(container, other.container);
     }
 
     return *this;
 }
 
 template<typename T>
-Stack<T>::~Stack()
+typename Stack<T>::reference Stack<T>::top()
 {
-    Node<T>* temp = m_top;
-    while (m_top)
-    {
-        m_top = m_top->m_next;
-        delete temp;
-        temp = m_top;
-
-        m_size--;
-    }
+    return container.back();
 }
 
 template<typename T>
-Stack<T>::Node<T>* Stack<T>::top()
+typename Stack<T>::const_reference Stack<T>::top() const
 {
-    return m_top;
-}
-
-template<typename T>
-Stack<T>::Node<T>* Stack<T>::top() const
-{
-    return m_top;
+    return container.back();
 }
 
 template<typename T>
 bool Stack<T>::empty() const
 {
-    return m_size == 0;
+    return container.size() == 0;
 }
 
 template<typename T>
 size_t Stack<T>::size() const
 {
-    return m_size;
+    return container.size();
 }
 
 template<typename T>
 void Stack<T>::push(T value)
 {
-    Node<T>* newNode = new Node<T>(value);
-
-    if (!m_top)
-    {
-        m_top = newNode;
-        m_bottom = newNode;
-    }
-    else
-    {
-        newNode->m_next = m_top;
-        m_top->m_prev = newNode;
-        m_top = newNode;
-    }
-
-    m_size++;
+    container.push_back(value);
 }
 
 template<typename T>
@@ -438,23 +254,7 @@ void Stack<T>::push_range(const std::initializer_list<T>& il)
 template<typename T>
 void Stack<T>::pop()
 {
-    Node<T>* temp = m_top;
-
-    if (m_top)
-    {
-        m_top = m_top->m_next;
-        if (m_top)
-        {
-            m_top->m_prev = nullptr;
-        }
-        delete temp;
-        m_size--;
-    }
-
-    if (!m_size)
-    {
-        m_bottom = nullptr;
-    }
+    container.pop_back();
 }
 
 template<typename T>
@@ -462,46 +262,8 @@ void Stack<T>::swap(Stack<T>& other) noexcept
 {
     if (&other != this)
     {
-        /// @todo implement method as swap function
-
-        Stack<T> temp;
-        temp.m_top = m_top;
-        temp.m_bottom = m_bottom;
-        temp.m_size = m_size;
-
-        m_top = other.m_top;
-        m_bottom = other.m_bottom;
-        m_size = other.m_size;
-
-        other.m_top = temp.m_top;
-        other.m_bottom = temp.m_bottom;
-        other.m_size = temp.m_size;
-
-        temp.m_top = nullptr;
-        temp.m_bottom = nullptr;
-        temp.m_size = 0;
+        std::swap(container, other.container);
     }
-}
-
-template<typename T>
-Stack<T>& Stack<T>::operator+=(const Stack<T>& other)
-{
-    Node<T>* node = other.bottom();
-    while (node)
-    {
-        (*this).push(node->value());
-        node = node->prev();
-    }
-
-    return *this;
-}
-
-template<typename T>
-Stack<T>& Stack<T>::operator+=(const std::initializer_list<T>& il)
-{
-    push_range(il);
-
-    return *this;
 }
 
 /**
@@ -515,11 +277,12 @@ Stack<T>& Stack<T>::operator+=(const std::initializer_list<T>& il)
 template<typename T>
 std::ostream& operator<<(std::ostream& out, const Stack<T>& stack)
 {
-    Stack<T>::Node<T>* temp = stack.top();
-    while (temp)
+    Stack<T> temp{ stack };
+
+    while (temp.size())
     {
-        out << temp->value() << ' ';
-        temp = temp->next();
+        out << temp.top() << ' ';
+        temp.pop();
     }
 
     return out;
@@ -542,18 +305,18 @@ bool operator==(const Stack<T>& s1, const Stack<T>& s2)
         return false;
     }
 
-    Stack<T>::Node<T>* node_1 = s1.top();
-    Stack<T>::Node<T>* node_2 = s2.top();
+    Stack<T> temp_1{ s1 };
+    Stack<T> temp_2{ s2 };
 
-    while (node_1 && node_2)
+    while (temp_1.size() && temp_2.size())
     {
-        if (node_1->value() != node_2->value())
+        if (temp_1.top() != temp_2.top())
         {
             return false;
         }
 
-        node_1 = node_1->next();
-        node_2 = node_2->next();
+        temp_1.pop();
+        temp_2.pop();
     }
 
     return true;
@@ -587,18 +350,18 @@ bool operator!=(const Stack<T>& s1, const Stack<T>& s2)
 template<typename T>
 bool operator<(const Stack<T>& s1, const Stack<T>& s2)
 {
-    Stack<T>::Node<T>* node_1 = s1.top();
-    Stack<T>::Node<T>* node_2 = s2.top();
+    Stack<T> temp_1{ s1 };
+    Stack<T> temp_2{ s2 };
 
-    while (node_1 && node_2)
+    while (temp_1.size() && temp_2.size())
     {
-        if (node_1->value() >= node_2->value())
+        if (temp_1.top() >= temp_2.top())
         {
             return false;
         }
 
-        node_1 = node_1->next();
-        node_2 = node_2->next();
+        temp_1.pop();
+        temp_2.pop();
     }
 
     return true;

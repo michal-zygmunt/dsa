@@ -26,29 +26,6 @@ int main()
     std::cout << "Stack s2:\t" << s2 << '\n';
     std::cout << "Stack s3:\t" << s3 << "\n\n";
 
-    Stack<int> s4(s1 + s2);
-    expected = { 6,5,4,3,2,1 };
-    res = if_error(s4, expected);
-    std::cout << "Stack s4:\t" << s4 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-
-    Stack<int> s5(0);
-    s5 += s2;
-    expected = { 6,5,4,0 };
-    res = if_error(s5, expected);
-    std::cout << "Stack s5:\t" << s5 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-
-    Stack<int> s6(0);
-    s6 += { 4, 5, 6 };
-    expected = { 6,5,4,0 };
-    res = if_error(s6, expected);
-    std::cout << "Stack s6:\t" << s6 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-
     std::cout << "Compare operators for objects of the same size\n\n";
 
     res = if_error(s1 == s1, true);

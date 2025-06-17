@@ -20,7 +20,7 @@ int main()
     std::initializer_list<int> expected{ 50,10,0 };
 
     Stack<int> s1 = Stack<int>({ 0,10,20 });
-    s1.top()->value() = 50;
+    s1.top() = 50;
     res = if_error(s1, expected);
     std::cout << "Stack:\t\t" << s1 << '\n';
     std::cout << "Expected:\t" << expected << '\n';
