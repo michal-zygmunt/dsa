@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 include_directories("../../../src/DataStructures/Stack/")
+include_directories("../")
 
 add_executable(StackCtors StackCtors.cpp)
 add_test(NAME StackCtors COMMAND StackCtors)

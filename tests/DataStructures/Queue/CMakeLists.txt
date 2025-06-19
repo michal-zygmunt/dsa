@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 include_directories("../../../src/DataStructures/Queue/")
+include_directories("../")
 
 add_executable(QueueCtors QueueCtors.cpp)
 add_test(NAME QueueCtors COMMAND QueueCtors)

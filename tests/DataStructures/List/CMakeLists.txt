@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 include_directories("../../../src/DataStructures/List/")
+include_directories("../")
 
 add_executable(ListCtors ListCtors.cpp)
 add_test(NAME ListCtors COMMAND ListCtors)
