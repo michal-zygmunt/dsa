@@ -16,7 +16,6 @@ int main()
 {
     std::cout << "Start ListCtors test:\n";
 
-    bool res{};
     std::initializer_list<int> expected{ 0, 10, 20 };
 
     std::cout << "Default ctor\n";
@@ -24,33 +23,21 @@ int main()
     l1.push_front(20);
     l1.push_front(10);
     l1.push_front(0);
-    res = if_error(l1, expected);
-    std::cout << "List l1:\t" << l1 << '\n';
-    std::cout << "Expected:  \t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("List l1", l1, expected);
 
     std::cout << "Value ctor\n";
     List<int> l2(20);
     l2.push_front(10);
     l2.insert(l2.cbegin(), 0);
-    res = if_error(l2, expected);
-    std::cout << "List l2:\t" << l2 << '\n';
-    std::cout << "Expected:  \t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("List l2", l2, expected);
 
     std::cout << "Initializer list ctor\n";
     List<int> l3(expected);
-    res = if_error(l3, expected);
-    std::cout << "List l3:\t" << l3 << '\n';
-    std::cout << "Expected:  \t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("List l3", l3, expected);
 
     std::cout << "Copy ctor\n";
     List<int> l4{ l1 };
-    res = if_error(l4, expected);
-    std::cout << "List l4:\t" << l4 << '\n';
-    std::cout << "Expected:  \t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("List l4", l4, expected);
 
     std::cout << "Copy assignment ctor\n";
     List<int> l5;
@@ -60,25 +47,16 @@ int main()
     l5.push_front(2);
     l5.push_front(1);
     l5 = l1;
-    res = if_error(l5, expected);
-    std::cout << "List l5:\t" << l5 << '\n';
-    std::cout << "Expected:  \t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("List l5", l5, expected);
 
     std::cout << "Move ctor\n";
     List<int> l6 = std::move(List<int>(l1));
-    res = if_error(l6, expected);
-    std::cout << "List l6:\t" << l6 << '\n';
-    std::cout << "Expected:  \t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("List l6", l6, expected);
 
     std::cout << "Move assignment ctor\n";
     List<int> l7(0);
     l7 = std::move(List<int>(l1));
-    res = if_error(l7, expected);
-    std::cout << "List l7:\t" << l7 << '\n';
-    std::cout << "Expected:  \t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("List l7", l7, expected);
 
     return tests::failed;
 }

@@ -16,7 +16,6 @@ int main()
 {
     std::cout << "Start StackCtors test:\n";
 
-    bool res{};
     std::initializer_list<int> expected{ 20,10,0 };
 
     std::cout << "Default ctor\n";
@@ -24,33 +23,21 @@ int main()
     s1.push(0);
     s1.push(10);
     s1.push(20);
-    res = if_error(s1, expected);
-    std::cout << "Stack s1:\t" << s1 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Stack s1", s1, expected);
 
     std::cout << "Value ctor\n";
     Stack<int> s2(0);
     s2.push(10);
     s2.push(20);
-    res = if_error(s2, expected);
-    std::cout << "Stack s2:\t" << s2 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Stack s2", s2, expected);
 
     std::cout << "Initializer list ctor\n";
     Stack<int> s3({ 0, 10, 20 });
-    res = if_error(s3, expected);
-    std::cout << "Stack s3:\t" << s3 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Stack s3", s3, expected);
 
     std::cout << "Copy ctor\n";
     Stack<int> s4{ s1 };
-    res = if_error(s4, expected);
-    std::cout << "Stack s4:\t" << s4 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Stack s4", s4, expected);
 
     std::cout << "Copy assignment ctor\n";
     Stack<int> s5;
@@ -60,25 +47,16 @@ int main()
     s5.push(4);
     s5.push(5);
     s5 = s1;
-    res = if_error(s5, expected);
-    std::cout << "Stack s5:\t" << s5 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Stack s5", s5, expected);
 
     std::cout << "Move ctor\n";
-    Stack<int> l6 = std::move(Stack<int>(s1));
-    res = if_error(l6, expected);
-    std::cout << "Stack l6:\t" << l6 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    Stack<int> s6 = std::move(Stack<int>(s1));
+    tests::compare("Stack s6", s6, expected);
 
     std::cout << "Move assignment ctor\n";
-    Stack<int> l7(0);
-    l7 = std::move(Stack<int>(s1));
-    res = if_error(l7, expected);
-    std::cout << "Stack l7:\t" << l7 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    Stack<int> s7(0);
+    s7 = std::move(Stack<int>(s1));
+    tests::compare("Stack s7", s7, expected);
 
     return tests::failed;
 }

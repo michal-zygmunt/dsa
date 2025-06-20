@@ -16,30 +16,21 @@ int main()
 {
     std::cout << "Start QueueSet test:\n";
 
-    bool res{};
     std::initializer_list<int> expected{ 50,10,20 };
 
     Queue<int> q1 = Queue<int>({ 0,10,20 });
     q1.front() = 50;
-    res = if_error(q1, expected);
-    std::cout << "Queue:\t\t" << q1 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Queue q1", q1, expected);
 
     Queue<int> q2 = Queue<int>({ 0,10,20 });
     Queue<int> q3 = Queue<int>({ 50,10,20 });
     q2.swap(q3);
-    res = if_error(q2, expected);
-    std::cout << "Queue:\t\t" << q2 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Queue q2", q2, { 50, 10, 20 });
+    tests::compare("Queue q3", q3, { 0, 10, 20 });
 
     Queue<int> q4 = Queue<int>({ 50,10,20 });
     q4.swap(q4);
-    res = if_error(q4, expected);
-    std::cout << "Queue:\t\t" << q4 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Queue q4", q4, expected);
 
     return tests::failed;
 }

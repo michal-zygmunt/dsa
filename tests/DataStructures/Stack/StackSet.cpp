@@ -16,30 +16,21 @@ int main()
 {
     std::cout << "Start StackSet test:\n";
 
-    bool res{};
     std::initializer_list<int> expected{ 50,10,0 };
 
     Stack<int> s1 = Stack<int>({ 0,10,20 });
     s1.top() = 50;
-    res = if_error(s1, expected);
-    std::cout << "Stack:\t\t" << s1 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Stack s1", s1, expected);
 
     Stack<int> s2 = Stack<int>({ 0,10,20 });
     Stack<int> s3 = Stack<int>({ 0,10,50 });
     s2.swap(s3);
-    res = if_error(s2, expected);
-    std::cout << "Stack:\t\t" << s2 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Stack s2", s2, { 50,10,0 });
+    tests::compare("Stack s3", s3, { 20,10,0 });
 
     Stack<int> s4 = Stack<int>({ 0,10,50 });
     s4.swap(s4);
-    res = if_error(s4, expected);
-    std::cout << "Stack:\t\t" << s4 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Stack s4", s4, expected);
 
     return tests::failed;
 }

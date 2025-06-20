@@ -16,47 +16,22 @@ int main()
 {
     std::cout << "Start StackGet test:\n";
 
-    bool res{};
     std::initializer_list<int> expected{ 0,10,20 };
 
     Stack<int> s1 = Stack<int>({ 20, 10, 0 });
-    size_t s1_size = s1.size();
-    std::cout << "Stack s1:\t";
-    for (int i = 0; i < s1_size; i++)
-    {
-        auto temp = s1.top();
-        if (temp)
-        {
-            std::cout << temp << ' ';
-            res = if_error(temp, expected.begin()[i]);
-            s1.pop();
-        }
-    }
-    std::cout << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    auto top = s1.top();
+    tests::compare("Stack s1 top", top, expected.begin()[0]);
+    tests::compare("Stack s1", s1, expected);
 
     Stack<int> s2 = Stack<int>({ 20, 10, 0 });
-    auto top = s2.top();
-    res = 0;
-    if (if_error(top, expected.begin()[0]))
-    {
-        res = 1;
-    }
-    std::cout << "Stack s2 top: " << top << '\n';
-    std::cout << "Expected top: " << expected.begin()[0] << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    top = s2.top();
+    tests::compare("Stack s2 top", top, expected.begin()[0]);
+    tests::compare("Stack s2", s2, expected);
 
     const Stack<int> s3 = Stack<int>({ 20, 10, 0 });
     top = s3.top();
-    res = 0;
-    if (if_error(top, expected.begin()[0]))
-    {
-        res = 1;
-    }
-    std::cout << "Stack s3 top: " << top << '\n';
-    std::cout << "Expected top: " << expected.begin()[0] << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Stack s3 top", top, expected.begin()[0]);
+    tests::compare("Stack s3", s3, expected);
 
     return tests::failed;
 }

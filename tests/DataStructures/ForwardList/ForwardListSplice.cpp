@@ -16,7 +16,6 @@ int main()
 {
     std::cout << "Start ForwardListSplice test:\n";
 
-    bool res{};
     std::initializer_list<int> expected{};
     std::initializer_list<int> expected_1{ 1, 2, 3, 4, 5 };
     std::initializer_list<int> expected_2{ 10, 20, 30, 40, 50 };
@@ -28,44 +27,25 @@ int main()
     ForwardList<int> l2 = ForwardList<int>(expected_2);
     l1.splice_after(l1.begin(), l2);
     expected = { 1, 10, 20, 30, 40, 50, 2, 3, 4, 5 };
-    res = if_error(l1, expected);
-    std::cout << "ForwardList l1:\t" << l1 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l1", l1, expected);
     expected = {};
-    res = if_error(l2, expected);
-    std::cout << "ForwardList l2:\t" << l2 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l2", l2, expected);
 
     ForwardList<int> l3 = ForwardList<int>(expected_1);
     ForwardList<int> l4 = ForwardList<int>(expected_2);
     l3.splice_after(l3.begin()[3], l4);
     expected = { 1, 2, 3, 4, 10, 20, 30, 40, 50, 5 };
-    res = if_error(l3, expected);
-    std::cout << "ForwardList l3:\t" << l3 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l3", l3, expected);
     expected = {};
-    res = if_error(l4, expected);
-    std::cout << "ForwardList l4:\t" << l4 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l4", l4, expected);
 
     ForwardList<int> l5 = ForwardList<int>(expected_1);
     ForwardList<int> l6 = ForwardList<int>(expected_2);
     l5.splice_after(l5.begin()[l5.size() - 1], l6);
     expected = { 1, 2, 3, 4, 5, 10, 20, 30, 40, 50 };
-    res = if_error(l5, expected);
-    std::cout << "ForwardList l5:\t" << l5 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l5", l5, expected);
     expected = {};
-    res = if_error(l6, expected);
-    std::cout << "ForwardList l6:\t" << l6 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-
+    tests::compare("ForwardList l6", l6, expected);
 
     std::cout << "Testing moving empty list\n\n";
 
@@ -73,16 +53,9 @@ int main()
     ForwardList<int> l8;
     l7.splice_after(l7.begin()[l7.size() - 1], l8);
     expected = expected_1;
-    res = if_error(l7, expected);
-    std::cout << "ForwardList l7:\t" << l7 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l7", l7, expected);
     expected = {};
-    res = if_error(l8, expected);
-    std::cout << "ForwardList l8:\t" << l8 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-
+    tests::compare("ForwardList l8", l8, expected);
 
     std::cout << "Testing moving one element from other list\n\n";
 
@@ -90,129 +63,74 @@ int main()
     ForwardList<int> l10 = ForwardList<int>(expected_2);
     l9.splice_after(l9.begin(), l10, l10.begin());
     expected = { 1, 20, 2, 3, 4, 5 };
-    res = if_error(l9, expected);
-    std::cout << "ForwardList l9:\t" << l9 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l9", l9, expected);
     expected = { 10, 30, 40, 50 };
-    res = if_error(l10, expected);
-    std::cout << "ForwardList l10:\t" << l10 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l10", l10, expected);
 
     ForwardList<int> l11 = ForwardList<int>(expected_1);
     ForwardList<int> l12 = ForwardList<int>(expected_2);
     l11.splice_after(l11.begin(), l12, l12.begin()[2]);
     expected = { 1, 40, 2, 3, 4, 5 };
-    res = if_error(l11, expected);
-    std::cout << "ForwardList l11:\t" << l11 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l11", l11, expected);
     expected = { 10, 20, 30, 50 };
-    res = if_error(l12, expected);
-    std::cout << "ForwardList l12:\t" << l12 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l12", l12, expected);
 
     ForwardList<int> l13 = ForwardList<int>(expected_1);
     ForwardList<int> l14 = ForwardList<int>(expected_2);
     l13.splice_after(l13.begin(), l14, l14.begin()[l14.size() - 2]);
     expected = { 1, 50, 2, 3, 4, 5 };
-    res = if_error(l13, expected);
-    std::cout << "ForwardList l13:\t" << l13 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l13", l13, expected);
     expected = { 10, 20, 30, 40 };
-    res = if_error(l14, expected);
-    std::cout << "ForwardList l14:\t" << l14 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-
+    tests::compare("ForwardList l14", l14, expected);
 
     ForwardList<int> l15 = ForwardList<int>(expected_1);
     ForwardList<int> l16 = ForwardList<int>(expected_2);
     l15.splice_after(l15.begin()[3], l16, l16.begin());
     expected = { 1, 2, 3, 4, 20, 5 };
-    res = if_error(l15, expected);
-    std::cout << "ForwardList l15:\t" << l15 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l15", l15, expected);
     expected = { 10, 30, 40, 50 };
-    res = if_error(l16, expected);
-    std::cout << "ForwardList l16:\t" << l16 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l16", l16, expected);
 
     ForwardList<int> l17 = ForwardList<int>(expected_1);
     ForwardList<int> l18 = ForwardList<int>(expected_2);
     l17.splice_after(l17.begin()[3], l18, l18.begin()[2]);
     expected = { 1, 2, 3, 4, 40, 5 };
-    res = if_error(l17, expected);
-    std::cout << "ForwardList l17:\t" << l17 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l17", l17, expected);
     expected = { 10, 20, 30, 50 };
-    res = if_error(l18, expected);
-    std::cout << "ForwardList l18:\t" << l18 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l18", l18, expected);
 
     ForwardList<int> l19 = ForwardList<int>(expected_1);
     ForwardList<int> l20 = ForwardList<int>(expected_2);
     l19.splice_after(l19.begin()[3], l20, l20.begin()[l20.size() - 2]);
     expected = { 1, 2, 3, 4, 50, 5 };
-    res = if_error(l19, expected);
-    std::cout << "ForwardList l19:\t" << l19 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l19", l19, expected);
     expected = { 10, 20, 30, 40 };
-    res = if_error(l20, expected);
-    std::cout << "ForwardList l20:\t" << l20 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l20", l20, expected);
 
 
     ForwardList<int> l21 = ForwardList<int>(expected_1);
     ForwardList<int> l22 = ForwardList<int>(expected_2);
     l21.splice_after(l21.begin()[l21.size() - 1], l22, l22.begin());
     expected = { 1, 2, 3, 4, 5, 20 };
-    res = if_error(l21, expected);
-    std::cout << "ForwardList l21:\t" << l21 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l21", l21, expected);
     expected = { 10, 30, 40, 50 };
-    res = if_error(l22, expected);
-    std::cout << "ForwardList l22:\t" << l12 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l22", l22, expected);
 
     ForwardList<int> l23 = ForwardList<int>(expected_1);
     ForwardList<int> l24 = ForwardList<int>(expected_2);
     l23.splice_after(l23.begin()[l23.size() - 1], l24, l24.begin()[3]);
     expected = { 1, 2, 3, 4, 5, 50 };
-    res = if_error(l23, expected);
-    std::cout << "ForwardList l23:\t" << l23 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l23", l23, expected);
     expected = { 10, 20, 30, 40 };
-    res = if_error(l24, expected);
-    std::cout << "ForwardList l24:\t" << l24 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l24", l24, expected);
 
     ForwardList<int> l25 = ForwardList<int>(expected_1);
     ForwardList<int> l26 = ForwardList<int>(expected_2);
     l25.splice_after(l25.begin()[l25.size() - 1], l26, l26.begin()[l26.size() - 2]);
     expected = { 1, 2, 3, 4, 5, 50 };
-    res = if_error(l25, expected);
-    std::cout << "ForwardList l25:\t" << l25 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l25", l25, expected);
     expected = { 10, 20, 30, 40 };
-    res = if_error(l26, expected);
-    std::cout << "ForwardList l26:\t" << l26 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l26", l26, expected);
 
 
     std::cout << "Testing moving range of element from other list\n\n";
@@ -221,129 +139,75 @@ int main()
     ForwardList<int> l28 = ForwardList<int>(expected_2);
     l27.splice_after(l27.begin(), l28, l28.begin(), l28.begin()[1]);
     expected = { 1, 2, 3, 4, 5 };
-    res = if_error(l27, expected);
-    std::cout << "ForwardList l27:\t" << l27 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l27", l27, expected);
     expected = { 10, 20, 30, 40, 50 };
-    res = if_error(l28, expected);
-    std::cout << "ForwardList l28:\t" << l28 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l28", l28, expected);
 
     ForwardList<int> l29 = ForwardList<int>(expected_1);
     ForwardList<int> l30 = ForwardList<int>(expected_2);
     l29.splice_after(l29.begin(), l30, l30.begin()[1], l30.begin()[3]);
     expected = { 1, 30, 2, 3, 4, 5 };
-    res = if_error(l29, expected);
-    std::cout << "ForwardList l29:\t" << l29 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l29", l29, expected);
     expected = { 10, 20, 40, 50 };
-    res = if_error(l30, expected);
-    std::cout << "ForwardList l30:\t" << l30 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l30", l30, expected);
 
     ForwardList<int> l31 = ForwardList<int>(expected_1);
     ForwardList<int> l32 = ForwardList<int>(expected_2);
     l31.splice_after(l31.begin(), l32, l32.begin(), l32.begin()[l32.size() - 1]);
     expected = { 1, 20, 30, 40, 2, 3, 4, 5 };
-    res = if_error(l31, expected);
-    std::cout << "ForwardList l31:\t" << l31 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l31", l31, expected);
     expected = { 10, 50 };
-    res = if_error(l32, expected);
-    std::cout << "ForwardList l32:\t" << l32 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l32", l32, expected);
 
 
     ForwardList<int> l33 = ForwardList<int>(expected_1);
     ForwardList<int> l34 = ForwardList<int>(expected_2);
     l33.splice_after(l33.begin()[2], l34, l34.begin(), l34.begin()[1]);
     expected = { 1, 2, 3, 4, 5 };
-    res = if_error(l33, expected);
-    std::cout << "ForwardList l33:\t" << l33 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l33", l33, expected);
     expected = { 10, 20, 30, 40, 50 };
-    res = if_error(l34, expected);
-    std::cout << "ForwardList l34:\t" << l34 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l34", l34, expected);
 
     ForwardList<int> l35 = ForwardList<int>(expected_1);
     ForwardList<int> l36 = ForwardList<int>(expected_2);
     l35.splice_after(l35.begin()[2], l36, l36.begin()[1], l36.begin()[3]);
     expected = { 1, 2, 3, 30, 4, 5 };
-    res = if_error(l35, expected);
-    std::cout << "ForwardList l35:\t" << l35 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l35", l35, expected);
     expected = { 10, 20, 40, 50 };
-    res = if_error(l36, expected);
-    std::cout << "ForwardList l36:\t" << l36 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l36", l36, expected);
 
     ForwardList<int> l37 = ForwardList<int>(expected_1);
     ForwardList<int> l38 = ForwardList<int>(expected_2);
     l37.splice_after(l37.begin()[2], l38, l38.begin(), l38.begin()[l38.size() - 1]);
     expected = { 1, 2, 3, 20, 30, 40, 4, 5 };
-    res = if_error(l37, expected);
-    std::cout << "ForwardList l37:\t" << l37 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l37", l37, expected);
     expected = { 10, 50 };
-    res = if_error(l38, expected);
-    std::cout << "ForwardList l38:\t" << l38 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l38", l38, expected);
 
 
     ForwardList<int> l39 = ForwardList<int>(expected_1);
     ForwardList<int> l40 = ForwardList<int>(expected_2);
     l39.splice_after(l39.begin()[l39.size() - 1], l40, l40.begin(), l40.begin()[1]);
     expected = { 1, 2, 3, 4, 5 };
-    res = if_error(l39, expected);
-    std::cout << "ForwardList l39:\t" << l39 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l39", l39, expected);
     expected = { 10, 20, 30, 40, 50 };
-    res = if_error(l40, expected);
-    std::cout << "ForwardList l40:\t" << l40 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l40", l40, expected);
 
     ForwardList<int> l41 = ForwardList<int>(expected_1);
     ForwardList<int> l42 = ForwardList<int>(expected_2);
     l41.splice_after(l41.begin()[l41.size() - 1], l42, l42.begin()[1], l42.begin()[3]);
     expected = { 1, 2, 3, 4, 5, 30 };
-    res = if_error(l41, expected);
-    std::cout << "ForwardList l41:\t" << l41 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l41", l41, expected);
     expected = { 10, 20, 40, 50 };
-    res = if_error(l42, expected);
-    std::cout << "ForwardList l42:\t" << l42 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l42", l42, expected);
 
     ForwardList<int> l43 = ForwardList<int>(expected_1);
     ForwardList<int> l44 = ForwardList<int>(expected_2);
     l43.splice_after(l43.begin()[l43.size() - 1], l44, l44.begin(), l44.begin()[l44.size() - 1]);
     expected = { 1, 2, 3, 4, 5, 20, 30, 40 };
-    res = if_error(l43, expected);
-    std::cout << "ForwardList l43:\t" << l43 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l43", l43, expected);
     expected = { 10, 50 };
-    res = if_error(l44, expected);
-    std::cout << "ForwardList l44:\t" << l44 << '\n';
-    std::cout << "Expected:\t\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l44", l44, expected);
 
     return tests::failed;
 }

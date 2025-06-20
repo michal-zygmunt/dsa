@@ -16,9 +16,6 @@ int main()
 {
     std::cout << "Start StackOperators test:\n";
 
-    bool res{};
-    std::initializer_list<int> expected{};
-
     Stack<int> s1({ 1,2,3 });
     Stack<int> s2({ 4,5,6 });
     Stack<int> s3({ 1, 2, 3, 4 });
@@ -28,67 +25,31 @@ int main()
 
     std::cout << "Compare operators for objects of the same size\n\n";
 
-    res = if_error(s1 == s1, true);
-    std::cout << "Operator ==\t" << res << '\n';
-    std::cout << "Expected:\t" << false << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Operator ==", s1 == s1, true);
 
-    res = if_error(s1 != s2, true);
-    std::cout << "Operator !=\t" << res << '\n';
-    std::cout << "Expected:\t" << false << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Operator !=", s1 != s2, true);
 
-    res = if_error(s1 < s2, true);
-    std::cout << "Operator <\t" << res << '\n';
-    std::cout << "Expected:\t" << false << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Operator <", s1 < s2, true);
 
-    res = if_error(s2 > s1, true);
-    std::cout << "Operator >\t" << res << '\n';
-    std::cout << "Expected:\t" << false << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Operator >", s2 > s1, true);
 
-    res = if_error(s1 <= s2, true);
-    std::cout << "Operator <=\t" << res << '\n';
-    std::cout << "Expected:\t" << false << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Operator <=", s1 <= s2, true);
 
-    res = if_error(s2 >= s1, true);
-    std::cout << "Operator <=\t" << res << '\n';
-    std::cout << "Expected:\t" << false << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Operator <=", s2 >= s1, true);
 
     std::cout << "Compare operators for objects of different size\n\n";
 
-    res = if_error(s1 == s3, false);
-    std::cout << "Operator ==\t" << res << '\n';
-    std::cout << "Expected:\t" << false << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Operator ==", s1 == s3, false);
 
-    res = if_error(s1 != s3, true);
-    std::cout << "Operator !=\t" << res << '\n';
-    std::cout << "Expected:\t" << false << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Operator !=", s1 != s3, true);
 
-    res = if_error(s3 < s2, true);
-    std::cout << "Operator <\t" << res << '\n';
-    std::cout << "Expected:\t" << false << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Operator <", s3 < s2, true);
 
-    res = if_error(s3 > s1, true);
-    std::cout << "Operator >\t" << res << '\n';
-    std::cout << "Expected:\t" << false << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Operator >", s3 > s1, true);
 
-    res = if_error(s1 <= s3, true);
-    std::cout << "Operator <=\t" << res << '\n';
-    std::cout << "Expected:\t" << false << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Operator <=", s1 <= s3, true);
 
-    res = if_error(s2 >= s3, true);
-    std::cout << "Operator >=\t" << res << '\n';
-    std::cout << "Expected:\t" << false << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Operator >=", s2 >= s3, true);
 
     return tests::failed;
 }

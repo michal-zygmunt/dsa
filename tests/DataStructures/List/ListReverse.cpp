@@ -16,16 +16,11 @@ int main()
 {
     std::cout << "Start ListReverse test:\n";
 
-    bool res{};
     std::initializer_list<int> expected{ 50, 40, 30, 20, 10, 0 };
 
     List<int> l1 = List<int>({ 0, 10, 20, 30, 40, 50 });
     l1.reverse();
-
-    res = if_error(l1, expected);
-    std::cout << "List:\t\t" << l1 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("List l1", l1, expected);
 
     return tests::failed;
 }

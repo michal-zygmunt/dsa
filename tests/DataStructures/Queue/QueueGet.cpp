@@ -16,7 +16,6 @@ int main()
 {
     std::cout << "Start QueueGet test:\n";
 
-    bool res{};
     std::initializer_list<int> expected{ 0,10,20 };
 
     Queue<int> q1 = Queue<int>({ 0,10,20 });
@@ -28,37 +27,26 @@ int main()
         if (temp)
         {
             std::cout << temp << ' ';
-            res = if_error(temp, expected.begin()[i]);
+            tests::compare(temp, expected.begin()[i]);
             q1.pop();
         }
     }
     std::cout << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Queue q1", q1, expected);
 
     Queue<int> q2 = Queue<int>({ 0,10,20 });
     auto front = q2.front();
     auto back = q2.back();
-    res = 0;
-    if (if_error(front, 0) || if_error(back, 20))
-    {
-        res = 1;
-    }
+    tests::compare(front, 0) || tests::compare(back, 20);
     std::cout << "Queue q2 front: " << front << ", back: " << back << '\n';
-    std::cout << "Expected front: " << 0 << ", back: " << 20 << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Queue q2", q2, expected);
 
     const Queue<int> q3 = Queue<int>({ 0,10,20 });
     front = q3.front();
     back = q3.back();
-    res = 0;
-    if (if_error(front, 0) || if_error(back, 20))
-    {
-        res = 1;
-    }
+    tests::compare(front, 0) || tests::compare(back, 20);
     std::cout << "Queue q3 front: " << front << ", back: " << back << '\n';
-    std::cout << "Expected front: " << 0 << ", back: " << 20 << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("Queue q3", q3, expected);
 
     return tests::failed;
 }

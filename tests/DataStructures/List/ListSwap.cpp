@@ -16,7 +16,6 @@ int main()
 {
     std::cout << "Start ListSwap test:\n";
 
-    bool res{};
     std::initializer_list<int> expected{};
     std::initializer_list<int> expected_1{ 1, 2, 3, 4, 5 };
     std::initializer_list<int> expected_2{ 10, 20, 30, 40, 50 };
@@ -25,29 +24,17 @@ int main()
     List<int> l2 = List<int>(expected_2);
     l1.swap(l2);
     expected = expected_2;
-    res = if_error(l1, expected);
-    std::cout << "List l1:\t" << l1 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("List l1", l1, expected);
     expected = expected_1;
-    res = if_error(l2, expected);
-    std::cout << "List l2:\t" << l2 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("List l2", l2, expected);
 
     List<int> l3 = List<int>(expected_1);
     List<int> l4;
     l3.swap(l4);
     expected = { };
-    res = if_error(l3, expected);
-    std::cout << "List l3:\t" << l3 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("List l3", l3, expected);
     expected = expected_1;
-    res = if_error(l4, expected);
-    std::cout << "List l4:\t" << l4 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("List l4", l4, expected);
 
     return tests::failed;
 }

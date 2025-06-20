@@ -34,10 +34,7 @@ int main()
         std::cout << val << '\n';
     }
     expected = { 100, 110, 120 };
-    res = if_error(l1, expected);
-    std::cout << "ForwardList l1:\t" << l1 << '\n';
-    std::cout << "Expected:  \t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l1", l1, expected);
 
     std::cout << "Auto iterator\n";
     ForwardList<int> l2{ 0, 25, 50 };
@@ -49,10 +46,7 @@ int main()
         std::cout << val << '\n';
     }
     expected = { 100, 125, 150 };
-    res = if_error(l2, expected);
-    std::cout << "ForwardList l2:\t" << l2 << '\n';
-    std::cout << "Expected:  \t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l2", l2, expected);
 
     std::cout << "Explicit Const iterator\n";
     ForwardList<int> l3{ 0, 10, 20 };
@@ -65,10 +59,7 @@ int main()
         std::cout << val << '\n';
     }
     expected = { 0, 10, 20 };
-    res = if_error(l3, expected);
-    std::cout << "ForwardList l3:\t" << l3 << '\n';
-    std::cout << "Expected:  \t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l3", l3, expected);
 
     std::cout << "Auto Const iterator\n";
     ForwardList<int> l4{ 0, 25, 50 };
@@ -81,20 +72,17 @@ int main()
         std::cout << val << '\n';
     }
     expected = { 0, 25, 50 };
-    res = if_error(l4, expected);
-    std::cout << "ForwardList l4:\t" << l4 << '\n';
-    std::cout << "Expected:  \t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l4", l4, expected);
 
     // Check iterator of one element
     ForwardList<int> l5 = ForwardList<int>(0);
     auto it = l5.insert_after(l5.cbegin(), 10);
     int val = *it;
     int expected_val = 10;
-    res = if_error(val, expected_val);
-    std::cout << "ForwardList l5:\t" << val << '\n';
-    std::cout << "Expected:\t" << expected_val << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    //res = if_error(val, expected_val);
+    tests::compare("ForwardList l5 it", val, expected_val);
+    expected = { 0, 10 };
+    tests::compare("ForwardList l5", l5, expected);
 
     // Check iterator after inserting 0 elements
     ForwardList<int> l6 = ForwardList<int>(50);
@@ -103,10 +91,11 @@ int main()
     it = l6.insert_after(l6.cbegin(), 0, 5);
     val = *it;
     expected_val = 30;
-    res = if_error(val, expected_val);
-    std::cout << "ForwardList l6:\t" << val << '\n';
-    std::cout << "Expected:\t" << expected_val << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    //res = if_error(val, expected_val);
+    tests::compare("ForwardList l6 it", val, expected_val);
+    expected = { 30, 40, 50 };
+    tests::compare("ForwardList l6", l6, expected);
+
 
     // Range based loop
     expected = { 10, 20, 30, 40, 50 };
@@ -117,7 +106,7 @@ int main()
     for (auto i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = if_error(i, *(il_it++));
+        res = tests::compare(i, *(il_it++));
         std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     }
     std::cout << '\n';
@@ -125,7 +114,7 @@ int main()
     for (auto& i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = if_error(i, *(il_it++));
+        res = tests::compare(i, *(il_it++));
         std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     }
     std::cout << '\n';
@@ -133,7 +122,7 @@ int main()
     for (const auto i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = if_error(i, *(il_it++));
+        res = tests::compare(i, *(il_it++));
         std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     }
     std::cout << '\n';
@@ -141,7 +130,7 @@ int main()
     for (const auto& i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = if_error(i, *(il_it++));
+        res = tests::compare(i, *(il_it++));
         std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     }
     std::cout << '\n';
@@ -154,7 +143,7 @@ int main()
     for (auto i : l8)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = if_error(i, *(il_it++));
+        res = tests::compare(i, *(il_it++));
         std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     }
     std::cout << '\n';
@@ -162,7 +151,7 @@ int main()
     for (auto& i : l8)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = if_error(i, *(il_it++));
+        res = tests::compare(i, *(il_it++));
         std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     }
     std::cout << '\n';
@@ -170,7 +159,7 @@ int main()
     for (const auto i : l8)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = if_error(i, *(il_it++));
+        res = tests::compare(i, *(il_it++));
         std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     }
     std::cout << '\n';
@@ -178,7 +167,7 @@ int main()
     for (const auto& i : l8)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = if_error(i, *(il_it++));
+        res = tests::compare(i, *(il_it++));
         std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     }
     std::cout << '\n';
@@ -187,10 +176,7 @@ int main()
     ForwardList<int> l9 = ForwardList<int>{ 10, 20, 30, 40, 50 };
     std::fill(l9.begin(), l9.end(), 10);
     expected = { 10, 10, 10, 10, 10 };
-    res = if_error(l9, expected);
-    std::cout << "ForwardList l9:\t" << l9 << '\n';
-    std::cout << "Expected:  \t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l9", l9, expected);
 
     // check const_iterator for const object
     ForwardList<int> l10 = ForwardList<int>{ 10, 20, 30 };
@@ -217,15 +203,15 @@ int main()
     ForwardList<int> l12 = ForwardList<int>{ 10, 20, 30 };
     auto cit = l12.cbegin();
     std::cout << *cit << ' ';
-    res = if_error(*cit, 10);
+    res = tests::compare(*cit, 10);
     std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     cit++;
     std::cout << *cit << ' ';
-    res = if_error(*cit, 20);
+    res = tests::compare(*cit, 20);
     std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     cit++;
     std::cout << *cit << ' ';
-    res = if_error(*cit, 30);
+    res = tests::compare(*cit, 30);
     std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     cit++;
 

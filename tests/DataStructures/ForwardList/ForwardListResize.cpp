@@ -16,78 +16,50 @@ int main()
 {
     std::cout << "Start ForwardListResize test:\n";
 
-    bool res{};
     std::initializer_list<int> expected{};
 
     ForwardList<int> l1 = ForwardList<int>({ 1, 2, 3, 4, 5 });
     l1.resize(3);
     expected = { 1, 2, 3 };
-    res = if_error(l1, expected);
-    std::cout << "ForwardList l1:\t" << l1 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l1", l1, expected);
 
     ForwardList<int> l2 = ForwardList<int>({ 1, 2, 3, 4, 5 });
     l2.resize(5);
     expected = { 1, 2, 3, 4, 5 };
-    res = if_error(l2, expected);
-    std::cout << "ForwardList l2:\t" << l2 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l2", l2, expected);
 
     ForwardList<int> l3 = ForwardList<int>({ 1, 2, 3, 4, 5 });
     l3.resize(8);
     expected = { 1, 2, 3, 4, 5, 0, 0, 0 };
-    res = if_error(l3, expected);
-    std::cout << "ForwardList l3:\t" << l3 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l3", l3, expected);
 
     ForwardList<int> l4;
     l4.resize(5);
     expected = { 0, 0, 0, 0, 0 };
-    res = if_error(l4, expected);
-    std::cout << "ForwardList l4:\t" << l4 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l4", l4, expected);
 
     ForwardList<int> l5 = ForwardList<int>({ 1, 2, 3, 4, 5 });
     l5.resize(3, 10);
     expected = { 1, 2, 3 };
-    res = if_error(l5, expected);
-    std::cout << "ForwardList l5:\t" << l5 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l5", l5, expected);
 
     ForwardList<int> l6 = ForwardList<int>({ 1, 2, 3, 4, 5 });
     l6.resize(5, 10);
     expected = { 1, 2, 3, 4, 5 };
-    res = if_error(l6, expected);
-    std::cout << "ForwardList l6:\t" << l6 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l6", l6, expected);
 
     ForwardList<int> l7 = ForwardList<int>({ 1, 2, 3, 4, 5 });
     l7.resize(8, 10);
     expected = { 1, 2, 3, 4, 5, 10, 10, 10 };
-    res = if_error(l7, expected);
-    std::cout << "ForwardList l7:\t" << l7 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l7", l7, expected);
 
     ForwardList<int> l8;
     l8.resize(5, 10);
     expected = { 10, 10, 10, 10, 10 };
-    res = if_error(l8, expected);
-    std::cout << "ForwardList l8:\t" << l8 << '\n';
-    std::cout << "Expected:\t" << expected << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("ForwardList l8", l8, expected);
 
     ForwardList<int> l9;
-    res = if_error(l9.max_size(), UINTMAX_MAX);
-    std::cout << "max_size():\t" << l9.max_size() << '\n';
-    std::cout << "Expected:\t" << UINTMAX_MAX << '\n';
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare("max_size()", l9.max_size(), UINTMAX_MAX);
 
     return tests::failed;
 }
