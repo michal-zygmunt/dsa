@@ -50,12 +50,14 @@ int main()
     tests::compare("Queue q5", q5, expected);
 
     std::cout << "Move ctor\n";
-    Queue<int> q6 = std::move(Queue<int>(q1));
+    Queue<int> temp_1(q1);
+    Queue<int> q6 = std::move(temp_1);
     tests::compare("Queue q6", q6, expected);
 
     std::cout << "Move assignment ctor\n";
+    Queue<int> temp_2(q1);
     Queue<int> q7(0);
-    q7 = std::move(Queue<int>(q1));
+    q7 = std::move(temp_2);
     tests::compare("Queue q7", q7, expected);
 
     return tests::failed;

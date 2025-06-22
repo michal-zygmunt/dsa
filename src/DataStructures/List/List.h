@@ -18,13 +18,18 @@
 #include <iterator>
 #include <limits>
 
+template<typename T>
+class List;
 
- /**
-  * @brief Implements List using Node with pointer to adjacent
-  *        element as internal base
-  *
-  * @tparam T type of data stored in List Node
-  */
+template<typename T>
+List<T> operator+(const List<T>& l1, const List<T>& l2);
+
+/**
+ * @brief Implements List using Node with pointer to adjacent
+ *        element as internal base
+ *
+ * @tparam T type of data stored in List Node
+ */
 template<typename T>
 class List
 {
@@ -106,10 +111,7 @@ public:
 
         /**
          * @brief Forward friend declaration of List
-         *
-         * @tparam T type of data stored in Node objects
          */
-        template<typename T>
         friend class List;
 
         T m_value{};
@@ -319,7 +321,9 @@ public:
 
     private:
 
-        template<typename T>
+        /**
+         * @brief Forward friend declaration of List
+         */
         friend class List;
 
         NodeBase* m_current_node{};
@@ -756,7 +760,6 @@ public:
      * @param[in] other List to read elements from
      * @return List<T>&
      */
-    template<typename T>
     List<T>& operator+=(const List<T>& other)
     {
         for (auto it = other.cbegin(); it != other.cend(); ++it)
@@ -773,7 +776,6 @@ public:
      * @param[in] other List to read elements from
      * @return List<T>&
      */
-    template<typename T>
     List<T>& operator+=(const std::initializer_list<T> il)
     {
         for (const auto& item : il)
@@ -807,8 +809,10 @@ public:
 
 private:
 
-    template<typename T>
-    friend List<T> operator+(const List<T>& l1, const List<T>& l2);
+    /**
+     * @brief Forward friend declaration of List operator+
+     */
+    friend List<T> operator+<>(const List<T>& l1, const List<T>& l2);
 
     /**
      * @brief Function add end node located just after last user created data

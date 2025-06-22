@@ -50,12 +50,14 @@ int main()
     tests::compare("Stack s5", s5, expected);
 
     std::cout << "Move ctor\n";
-    Stack<int> s6 = std::move(Stack<int>(s1));
+    Stack<int> temp_1(s1);
+    Stack<int> s6 = std::move(temp_1);
     tests::compare("Stack s6", s6, expected);
 
     std::cout << "Move assignment ctor\n";
+    Stack<int> temp_2(s1);
     Stack<int> s7(0);
-    s7 = std::move(Stack<int>(s1));
+    s7 = std::move(temp_2);
     tests::compare("Stack s7", s7, expected);
 
     return tests::failed;

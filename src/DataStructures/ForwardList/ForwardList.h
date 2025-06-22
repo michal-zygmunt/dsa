@@ -18,12 +18,18 @@
 #include <iterator>
 #include <limits>
 
- /**
-  * @brief Implements ForwardList using Node with pointer to next element
-  *        as internal base
-  *
-  * @tparam T type of data stored in ForwardList Node
-  */
+template<typename T>
+class ForwardList;
+
+template<typename T>
+ForwardList<T> operator+(const ForwardList<T>& l1, const ForwardList<T>& l2);
+
+/**
+ * @brief Implements ForwardList using Node with pointer to next element
+ *        as internal base
+ *
+ * @tparam T type of data stored in ForwardList Node
+ */
 template<typename T>
 class ForwardList
 {
@@ -94,10 +100,7 @@ public:
 
         /**
          * @brief Forward friend declaration of ForwardList
-         *
-         * @tparam T type of data stored in Node objects
          */
-        template<typename T>
         friend class ForwardList;
 
         T m_value{};
@@ -266,7 +269,9 @@ public:
 
     private:
 
-        template<typename T>
+        /**
+         * @brief Forward friend declaration of ForwardList
+         */
         friend class ForwardList;
 
         NodeBase* m_current_node{};
@@ -645,7 +650,6 @@ public:
      * @param[in] other ForwardList to read elements from
      * @return ForwardList<T>&
      */
-    template<typename T>
     ForwardList<T>& operator+=(const ForwardList<T>& other)
     {
         auto before_last = find_iter_before_last();
@@ -665,7 +669,6 @@ public:
      * @param[in] other ForwardList to read elements from
      * @return ForwardList<T>&
      */
-    template<typename T>
     ForwardList<T>& operator+=(const std::initializer_list<T> il)
     {
         auto before_last = find_iter_before_last();
@@ -735,8 +738,10 @@ public:
 
 private:
 
-    template<typename T>
-    friend ForwardList<T> operator+(const ForwardList<T>& l1, const ForwardList<T>& l2);
+    /**
+     * @brief Forward friend declaration of ForwardList operator+
+     */
+    friend ForwardList<T> operator+<>(const ForwardList<T>& l1, const ForwardList<T>& l2);
 
     /**
      * @brief Function initialize ForwardList pointer located just before user added data

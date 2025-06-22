@@ -50,12 +50,14 @@ int main()
     tests::compare("ForwardList l5", l5, expected);
 
     std::cout << "Move ctor\n";
-    ForwardList<int> l6 = std::move(ForwardList<int>(l1));
+    ForwardList<int> temp_1(l1);
+    ForwardList<int> l6 = std::move(temp_1);
     tests::compare("ForwardList l6", l6, expected);
 
     std::cout << "Move assignment ctor\n";
+    ForwardList<int> temp_2(l1);
     ForwardList<int> l7(0);
-    l7 = std::move(ForwardList<int>(l1));
+    l7 = std::move(temp_2);
     tests::compare("ForwardList l7", l7, expected);
 
     return tests::failed;

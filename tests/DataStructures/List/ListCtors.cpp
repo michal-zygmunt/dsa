@@ -50,12 +50,14 @@ int main()
     tests::compare("List l5", l5, expected);
 
     std::cout << "Move ctor\n";
-    List<int> l6 = std::move(List<int>(l1));
+    List<int> temp_1(l1);
+    List<int> l6 = std::move(temp_1);
     tests::compare("List l6", l6, expected);
 
     std::cout << "Move assignment ctor\n";
+    List<int> temp_2(l1);
     List<int> l7(0);
-    l7 = std::move(List<int>(l1));
+    l7 = std::move(temp_2);
     tests::compare("List l7", l7, expected);
 
     return tests::failed;
