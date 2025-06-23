@@ -7,20 +7,20 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include_directories("../../../src/DataStructures/Stack/")
 include_directories("../")
 
-add_executable(StackCtors StackCtors.cpp)
-add_test(NAME StackCtors COMMAND StackCtors)
+add_executable(StackCtorsTest StackCtorsTest.cpp)
+add_test(NAME StackCtorsTest COMMAND StackCtorsTest)
 
-add_executable(StackGrow StackGrow.cpp)
-add_test(NAME StackGrow COMMAND StackGrow)
+add_executable(StackGrowTest StackGrowTest.cpp)
+add_test(NAME StackGrowTest COMMAND StackGrowTest)
 
-add_executable(StackShrink StackShrink.cpp)
-add_test(NAME StackShrink COMMAND StackShrink)
+add_executable(StackShrinkTest StackShrinkTest.cpp)
+add_test(NAME StackShrinkTest COMMAND StackShrinkTest)
 
-add_executable(StackGet StackGet.cpp)
-add_test(NAME StackGet COMMAND StackGet)
+add_executable(StackGetTest StackGetTest.cpp)
+add_test(NAME StackGetTest COMMAND StackGetTest)
 
-add_executable(StackSet StackSet.cpp)
-add_test(NAME StackSet COMMAND StackSet)
+add_executable(StackSetTest StackSetTest.cpp)
+add_test(NAME StackSetTest COMMAND StackSetTest)
 
-add_executable(StackOperators StackOperators.cpp)
-add_test(NAME StackOperators COMMAND StackOperators)
+add_executable(StackOperatorsTest StackOperatorsTest.cpp)
+add_test(NAME StackOperatorsTest COMMAND StackOperatorsTest)

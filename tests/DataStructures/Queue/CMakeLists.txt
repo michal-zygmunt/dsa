@@ -7,20 +7,20 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include_directories("../../../src/DataStructures/Queue/")
 include_directories("../")
 
-add_executable(QueueCtors QueueCtors.cpp)
-add_test(NAME QueueCtors COMMAND QueueCtors)
+add_executable(QueueCtorsTest QueueCtorsTest.cpp)
+add_test(NAME QueueCtorsTest COMMAND QueueCtorsTest)
 
-add_executable(QueueGrow QueueGrow.cpp)
-add_test(NAME QueueGrow COMMAND QueueGrow)
+add_executable(QueueGrowTest QueueGrowTest.cpp)
+add_test(NAME QueueGrowTest COMMAND QueueGrowTest)
 
-add_executable(QueueShrink QueueShrink.cpp)
-add_test(NAME QueueShrink COMMAND QueueShrink)
+add_executable(QueueShrinkTest QueueShrinkTest.cpp)
+add_test(NAME QueueShrinkTest COMMAND QueueShrinkTest)
 
-add_executable(QueueGet QueueGet.cpp)
-add_test(NAME QueueGet COMMAND QueueGet)
+add_executable(QueueGetTest QueueGetTest.cpp)
+add_test(NAME QueueGetTest COMMAND QueueGetTest)
 
-add_executable(QueueSet QueueSet.cpp)
-add_test(NAME QueueSet COMMAND QueueSet)
+add_executable(QueueSetTest QueueSetTest.cpp)
+add_test(NAME QueueSetTest COMMAND QueueSetTest)
 
-add_executable(QueueOperators QueueOperators.cpp)
-add_test(NAME QueueOperators COMMAND QueueOperators)
+add_executable(QueueOperatorsTest QueueOperatorsTest.cpp)
+add_test(NAME QueueOperatorsTest COMMAND QueueOperatorsTest)

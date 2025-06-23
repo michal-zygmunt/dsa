@@ -7,41 +7,41 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include_directories("../../../src/DataStructures/ForwardList/")
 include_directories("../")
 
-add_executable(ForwardListCtors ForwardListCtors.cpp)
-add_test(NAME ForwardListCtors COMMAND ForwardListCtors)
+add_executable(ForwardListCtorsTest ForwardListCtorsTest.cpp)
+add_test(NAME ForwardListCtorsTest COMMAND ForwardListCtorsTest)
 
-add_executable(ForwardListGrow ForwardListGrow.cpp)
-add_test(NAME ForwardListGrow COMMAND ForwardListGrow)
+add_executable(ForwardListGrowTest ForwardListGrowTest.cpp)
+add_test(NAME ForwardListGrowTest COMMAND ForwardListGrowTest)
 
-add_executable(ForwardListShrink ForwardListShrink.cpp)
-add_test(NAME ForwardListShrink COMMAND ForwardListShrink)
+add_executable(ForwardListShrinkTest ForwardListShrinkTest.cpp)
+add_test(NAME ForwardListShrinkTest COMMAND ForwardListShrinkTest)
 
-add_executable(ForwardListGet ForwardListGet.cpp)
-add_test(NAME ForwardListGet COMMAND ForwardListGet)
+add_executable(ForwardListGetTest ForwardListGetTest.cpp)
+add_test(NAME ForwardListGetTest COMMAND ForwardListGetTest)
 
-add_executable(ForwardListSet ForwardListSet.cpp)
-add_test(NAME ForwardListSet COMMAND ForwardListSet)
+add_executable(ForwardListSetTest ForwardListSetTest.cpp)
+add_test(NAME ForwardListSetTest COMMAND ForwardListSetTest)
 
-add_executable(ForwardListReverse ForwardListReverse.cpp)
-add_test(NAME ForwardListReverse COMMAND ForwardListReverse)
+add_executable(ForwardListReverseTest ForwardListReverseTest.cpp)
+add_test(NAME ForwardListReverseTest COMMAND ForwardListReverseTest)
 
-add_executable(ForwardListOperators ForwardListOperators.cpp)
-add_test(NAME ForwardListOperators COMMAND ForwardListOperators)
+add_executable(ForwardListOperatorsTest ForwardListOperatorsTest.cpp)
+add_test(NAME ForwardListOperatorsTest COMMAND ForwardListOperatorsTest)
 
-add_executable(ForwardListSwap ForwardListSwap.cpp)
-add_test(NAME ForwardListSwap COMMAND ForwardListSwap)
+add_executable(ForwardListSwapTest ForwardListSwapTest.cpp)
+add_test(NAME ForwardListSwapTest COMMAND ForwardListSwapTest)
 
-add_executable(ForwardListMerge ForwardListMerge.cpp)
-add_test(NAME ForwardListMerge COMMAND ForwardListMerge)
+add_executable(ForwardListMergeTest ForwardListMergeTest.cpp)
+add_test(NAME ForwardListMergeTest COMMAND ForwardListMergeTest)
 
-add_executable(ForwardListResize ForwardListResize.cpp)
-add_test(NAME ForwardListResize COMMAND ForwardListResize)
+add_executable(ForwardListResizeTest ForwardListResizeTest.cpp)
+add_test(NAME ForwardListResizeTest COMMAND ForwardListResizeTest)
 
-add_executable(ForwardListUnique ForwardListUnique.cpp)
-add_test(NAME ForwardListUnique COMMAND ForwardListUnique)
+add_executable(ForwardListUniqueTest ForwardListUniqueTest.cpp)
+add_test(NAME ForwardListUniqueTest COMMAND ForwardListUniqueTest)
 
-add_executable(ForwardListSplice ForwardListSplice.cpp)
-add_test(NAME ForwardListSplice COMMAND ForwardListSplice)
+add_executable(ForwardListSpliceTest ForwardListSpliceTest.cpp)
+add_test(NAME ForwardListSpliceTest COMMAND ForwardListSpliceTest)
 
-add_executable(ForwardListItors ForwardListItors.cpp)
-add_test(NAME ForwardListItors COMMAND ForwardListItors)
+add_executable(ForwardListItorsTest ForwardListItorsTest.cpp)
+add_test(NAME ForwardListItorsTest COMMAND ForwardListItorsTest)

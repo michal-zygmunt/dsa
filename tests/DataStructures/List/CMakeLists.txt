@@ -7,41 +7,41 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include_directories("../../../src/DataStructures/List/")
 include_directories("../")
 
-add_executable(ListCtors ListCtors.cpp)
-add_test(NAME ListCtors COMMAND ListCtors)
+add_executable(ListCtorsTest ListCtorsTest.cpp)
+add_test(NAME ListCtorsTest COMMAND ListCtorsTest)
 
-add_executable(ListGrow ListGrow.cpp)
-add_test(NAME ListGrow COMMAND ListGrow)
+add_executable(ListGrowTest ListGrowTest.cpp)
+add_test(NAME ListGrowTest COMMAND ListGrowTest)
 
-add_executable(ListShrink ListShrink.cpp)
-add_test(NAME ListShrink COMMAND ListShrink)
+add_executable(ListShrinkTest ListShrinkTest.cpp)
+add_test(NAME ListShrinkTest COMMAND ListShrinkTest)
 
-add_executable(ListGet ListGet.cpp)
-add_test(NAME ListGet COMMAND ListGet)
+add_executable(ListGetTest ListGetTest.cpp)
+add_test(NAME ListGetTest COMMAND ListGetTest)
 
-add_executable(ListSet ListSet.cpp)
-add_test(NAME ListSet COMMAND ListSet)
+add_executable(ListSetTest ListSetTest.cpp)
+add_test(NAME ListSetTest COMMAND ListSetTest)
 
-add_executable(ListReverse ListReverse.cpp)
-add_test(NAME ListReverse COMMAND ListReverse)
+add_executable(ListReverseTest ListReverseTest.cpp)
+add_test(NAME ListReverseTest COMMAND ListReverseTest)
 
-add_executable(ListOperators ListOperators.cpp)
-add_test(NAME ListOperators COMMAND ListOperators)
+add_executable(ListOperatorsTest ListOperatorsTest.cpp)
+add_test(NAME ListOperatorsTest COMMAND ListOperatorsTest)
 
-add_executable(ListSwap ListSwap.cpp)
-add_test(NAME ListSwap COMMAND ListSwap)
+add_executable(ListSwapTest ListSwapTest.cpp)
+add_test(NAME ListSwapTest COMMAND ListSwapTest)
 
-add_executable(ListMerge ListMerge.cpp)
-add_test(NAME ListMerge COMMAND ListMerge)
+add_executable(ListMergeTest ListMergeTest.cpp)
+add_test(NAME ListMergeTest COMMAND ListMergeTest)
 
-add_executable(ListResize ListResize.cpp)
-add_test(NAME ListResize COMMAND ListResize)
+add_executable(ListResizeTest ListResizeTest.cpp)
+add_test(NAME ListResizeTest COMMAND ListResizeTest)
 
-add_executable(ListUnique ListUnique.cpp)
-add_test(NAME ListUnique COMMAND ListUnique)
+add_executable(ListUniqueTest ListUniqueTest.cpp)
+add_test(NAME ListUniqueTest COMMAND ListUniqueTest)
 
-add_executable(ListSplice ListSplice.cpp)
-add_test(NAME ListSplice COMMAND ListSplice)
+add_executable(ListSpliceTest ListSpliceTest.cpp)
+add_test(NAME ListSpliceTest COMMAND ListSpliceTest)
 
-add_executable(ListItors ListItors.cpp)
-add_test(NAME ListItors COMMAND ListItors)
+add_executable(ListItorsTest ListItorsTest.cpp)
+add_test(NAME ListItorsTest COMMAND ListItorsTest)
