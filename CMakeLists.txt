@@ -12,9 +12,27 @@ endif()
 project (dsa LANGUAGES CXX)
 
 option(CODE_TESTING "Enable code testing" ON)
+option(CODE_COVERAGE "Enable coverage reporting" ON)
 
 if(CODE_TESTING)
 	message(STATUS "Code testing enabled")
+
+	if(CODE_COVERAGE)
+		if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+
+			if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT MATCHES "MSVC")
+				message(STATUS "Building with code coverage flags for Clang-MSVC")
+			
+				add_compile_options(-fprofile-instr-generate -fcoverage-mapping)
+				add_link_options(-fprofile-instr-generate)
+			endif()
+
+		else()
+			message(WARNING "Code coverage only supported with Clang-MSVC")
+		endif()
+	endif()
+
+	
 	include (CTest)
 	add_subdirectory(tests)
 endif()
