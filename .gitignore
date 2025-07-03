@@ -362,5 +362,11 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+# vscode configuration
+.vscode
+
+# doxygen doc folder
+docs
+
 # coverage folder
 coverage
