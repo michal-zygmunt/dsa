@@ -1,7 +1,7 @@
 ﻿# CMakeList.txt : CMake project for data-structures-and-algorithms, include source and define
 # project specific logic here.
 #
-cmake_minimum_required (VERSION 3.12)
+cmake_minimum_required (VERSION 3.27)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -11,8 +11,27 @@ endif()
 
 project (dsa LANGUAGES CXX)
 
+option(DOCS_ENABLED "Enable documentation generation" ON)
 option(CODE_TESTING "Enable code testing" ON)
 option(CODE_COVERAGE "Enable coverage reporting" ON)
+
+
+if(DOCS_ENABLED)
+	message(STATUS "Documentation generation enabled")
+	
+	find_package(Doxygen REQUIRED dot)
+
+	if(Doxygen_FOUND)
+		doxygen_add_docs(dsa_docs
+		ALL USE_STAMP_FILE
+		COMMENT "Generating documentation with custom Doxyfile and dot"
+		CONFIG_FILE ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
+	else()
+		message(WARNING "Doxygen and GraphViz required for code generation")
+	endif()
+
+endif()
+
 
 if(CODE_TESTING)
 	message(STATUS "Code testing enabled")
