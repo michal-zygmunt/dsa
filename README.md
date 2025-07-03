@@ -1,11 +1,20 @@
-# Data Structures and Algorithms
+# DSA - Data Structures and Algorithms
 
-Repository with data structures and algorithms implemented
-in C++.
+Educational project that aims to recreate selected data structures
+and algorithms from C++ Standard Template Library as a means to better
+understand STL internal logic, design choices, impact on performance
+and usability.
 
-## Implemented Data Structures
-- Forward List
-- List
-- Stack
-- Queue
+It is desired to provide cross-platform, vendor-independent library
+with documentation, unit tests and code coverage reports.
+
+## Implemented Containers
+
+### Sequence containers
+- \ref ForwardList
+- \ref List
+
+### Container Adaptors
+- \ref Stack
+- \ref Queue
 
