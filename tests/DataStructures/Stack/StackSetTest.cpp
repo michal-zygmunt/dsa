@@ -18,17 +18,17 @@ int main()
 
     std::initializer_list<int> expected{ 50,10,0 };
 
-    Stack<int> s1 = Stack<int>({ 0,10,20 });
+    dsa::Stack<int> s1 = dsa::Stack<int>({ 0,10,20 });
     s1.top() = 50;
     tests::compare("Stack s1", s1, expected);
 
-    Stack<int> s2 = Stack<int>({ 0,10,20 });
-    Stack<int> s3 = Stack<int>({ 0,10,50 });
+    dsa::Stack<int> s2 = dsa::Stack<int>({ 0,10,20 });
+    dsa::Stack<int> s3 = dsa::Stack<int>({ 0,10,50 });
     s2.swap(s3);
     tests::compare("Stack s2", s2, { 50,10,0 });
     tests::compare("Stack s3", s3, { 20,10,0 });
 
-    Stack<int> s4 = Stack<int>({ 0,10,50 });
+    dsa::Stack<int> s4 = dsa::Stack<int>({ 0,10,50 });
     s4.swap(s4);
     tests::compare("Stack s4", s4, expected);
 

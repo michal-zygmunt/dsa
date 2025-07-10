@@ -20,16 +20,16 @@ int main()
     std::initializer_list<int> expected_1{ 1, 2, 3, 4, 5 };
     std::initializer_list<int> expected_2{ 10, 20, 30, 40, 50 };
 
-    ForwardList<int> l1 = ForwardList<int>(expected_1);
-    ForwardList<int> l2 = ForwardList<int>(expected_2);
+    dsa::ForwardList<int> l1 = dsa::ForwardList<int>(expected_1);
+    dsa::ForwardList<int> l2 = dsa::ForwardList<int>(expected_2);
     l1.swap(l2);
     expected = expected_2;
     tests::compare("ForwardList l1", l1, expected);
     expected = expected_1;
     tests::compare("ForwardList l2", l2, expected);
 
-    ForwardList<int> l3 = ForwardList<int>(expected_1);
-    ForwardList<int> l4;
+    dsa::ForwardList<int> l3 = dsa::ForwardList<int>(expected_1);
+    dsa::ForwardList<int> l4;
     l3.swap(l4);
     expected = { };
     tests::compare("ForwardList l3", l3, expected);

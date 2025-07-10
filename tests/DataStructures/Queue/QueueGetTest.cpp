@@ -18,7 +18,7 @@ int main()
 
     std::initializer_list<int> expected{ 0,10,20 };
 
-    Queue<int> q1 = Queue<int>({ 0,10,20 });
+    dsa::Queue<int> q1 = dsa::Queue<int>({ 0,10,20 });
     size_t q1_size = q1.size();
     std::cout << "Queue q1:\t";
     for (int i = 0; i < q1_size; i++)
@@ -34,14 +34,14 @@ int main()
     std::cout << '\n';
     tests::compare("Queue q1", q1, expected);
 
-    Queue<int> q2 = Queue<int>({ 0,10,20 });
+    dsa::Queue<int> q2 = dsa::Queue<int>({ 0,10,20 });
     auto front = q2.front();
     auto back = q2.back();
     tests::compare(front, 0) || tests::compare(back, 20);
     std::cout << "Queue q2 front: " << front << ", back: " << back << '\n';
     tests::compare("Queue q2", q2, expected);
 
-    const Queue<int> q3 = Queue<int>({ 0,10,20 });
+    const dsa::Queue<int> q3 = dsa::Queue<int>({ 0,10,20 });
     front = q3.front();
     back = q3.back();
     tests::compare(front, 0) || tests::compare(back, 20);

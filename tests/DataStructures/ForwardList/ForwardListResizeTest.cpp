@@ -18,47 +18,47 @@ int main()
 
     std::initializer_list<int> expected{};
 
-    ForwardList<int> l1 = ForwardList<int>({ 1, 2, 3, 4, 5 });
+    dsa::ForwardList<int> l1 = dsa::ForwardList<int>({ 1, 2, 3, 4, 5 });
     l1.resize(3);
     expected = { 1, 2, 3 };
     tests::compare("ForwardList l1", l1, expected);
 
-    ForwardList<int> l2 = ForwardList<int>({ 1, 2, 3, 4, 5 });
+    dsa::ForwardList<int> l2 = dsa::ForwardList<int>({ 1, 2, 3, 4, 5 });
     l2.resize(5);
     expected = { 1, 2, 3, 4, 5 };
     tests::compare("ForwardList l2", l2, expected);
 
-    ForwardList<int> l3 = ForwardList<int>({ 1, 2, 3, 4, 5 });
+    dsa::ForwardList<int> l3 = dsa::ForwardList<int>({ 1, 2, 3, 4, 5 });
     l3.resize(8);
     expected = { 1, 2, 3, 4, 5, 0, 0, 0 };
     tests::compare("ForwardList l3", l3, expected);
 
-    ForwardList<int> l4;
+    dsa::ForwardList<int> l4;
     l4.resize(5);
     expected = { 0, 0, 0, 0, 0 };
     tests::compare("ForwardList l4", l4, expected);
 
-    ForwardList<int> l5 = ForwardList<int>({ 1, 2, 3, 4, 5 });
+    dsa::ForwardList<int> l5 = dsa::ForwardList<int>({ 1, 2, 3, 4, 5 });
     l5.resize(3, 10);
     expected = { 1, 2, 3 };
     tests::compare("ForwardList l5", l5, expected);
 
-    ForwardList<int> l6 = ForwardList<int>({ 1, 2, 3, 4, 5 });
+    dsa::ForwardList<int> l6 = dsa::ForwardList<int>({ 1, 2, 3, 4, 5 });
     l6.resize(5, 10);
     expected = { 1, 2, 3, 4, 5 };
     tests::compare("ForwardList l6", l6, expected);
 
-    ForwardList<int> l7 = ForwardList<int>({ 1, 2, 3, 4, 5 });
+    dsa::ForwardList<int> l7 = dsa::ForwardList<int>({ 1, 2, 3, 4, 5 });
     l7.resize(8, 10);
     expected = { 1, 2, 3, 4, 5, 10, 10, 10 };
     tests::compare("ForwardList l7", l7, expected);
 
-    ForwardList<int> l8;
+    dsa::ForwardList<int> l8;
     l8.resize(5, 10);
     expected = { 10, 10, 10, 10, 10 };
     tests::compare("ForwardList l8", l8, expected);
 
-    ForwardList<int> l9;
+    dsa::ForwardList<int> l9;
     tests::compare("max_size()", l9.max_size(), UINTMAX_MAX);
 
     return tests::failed;

@@ -19,23 +19,23 @@ int main()
 
     std::initializer_list<int> expected{};
 
-    List<int> l1({ 1,2,3 });
-    List<int> l2({ 4,5,6 });
-    List<int> l3({ 1, 2, 3, 4 });
+    dsa::List<int> l1({ 1,2,3 });
+    dsa::List<int> l2({ 4,5,6 });
+    dsa::List<int> l3({ 1, 2, 3, 4 });
     std::cout << "List l1:\t" << l1 << '\n';
     std::cout << "List l2:\t" << l2 << '\n';
     std::cout << "List l3:\t" << l3 << "\n\n";
 
-    List<int> l4(l1 + l2);
+    dsa::List<int> l4(l1 + l2);
     expected = { 1,2,3,4,5,6 };
     tests::compare("ForwardList l4", l4, expected);
 
-    List<int> l5(0);
+    dsa::List<int> l5(0);
     l5 += l2;
     expected = { 0,4,5,6 };
     tests::compare("ForwardList l5", l5, expected);
 
-    List<int> l6(0);
+    dsa::List<int> l6(0);
     l6 += { 4, 5, 6 };
     expected = { 0,4,5,6 };
     tests::compare("ForwardList l6", l6, expected);

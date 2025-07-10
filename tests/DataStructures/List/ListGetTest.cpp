@@ -18,7 +18,7 @@ int main()
 
     std::initializer_list<int> expected{};
 
-    List<int> l1 = List<int>({ 0, 10, 20 });
+    dsa::List<int> l1 = dsa::List<int>({ 0, 10, 20 });
     // Try reading some nodes with invalid indexes
     expected = { 0, 10, 20 };
     auto indexes = { -1, 0, 1, 2, 100 };
@@ -32,7 +32,7 @@ int main()
     }
     tests::compare("List l1", l1, expected);
 
-    List<int> l2 = List<int>({ 20, 10, 0 });
+    dsa::List<int> l2 = dsa::List<int>({ 20, 10, 0 });
     expected = { 20, 10, 0 };
     for (int i = 0; i < indexes.size(); i++)
     {

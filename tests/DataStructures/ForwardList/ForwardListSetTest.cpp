@@ -18,7 +18,7 @@ int main()
 
     std::initializer_list<int> expected{ 0, 50, 20 };
 
-    ForwardList<int> l1 = ForwardList<int>({ 0, 10, 20 });
+    dsa::ForwardList<int> l1 = dsa::ForwardList<int>({ 0, 10, 20 });
     // Try setting values for nodes with invalid indexes
     constexpr int new_value{ 50 };
     l1.set(-1, new_value);
@@ -26,12 +26,12 @@ int main()
     l1.set(100, new_value);
     tests::compare("ForwardList l1", l1, expected);
 
-    ForwardList<int> l2 = ForwardList<int>({ 0, 10, 20 });
+    dsa::ForwardList<int> l2 = dsa::ForwardList<int>({ 0, 10, 20 });
     l2.assign(4, 1);
     expected = { 1, 1, 1, 1 };
     tests::compare("ForwardList l2", l2, expected);
 
-    ForwardList<int> l3 = ForwardList<int>({ 0, 10, 20 });
+    dsa::ForwardList<int> l3 = dsa::ForwardList<int>({ 0, 10, 20 });
     expected = { 1, 2, 3, 4 };
     l3.assign(expected);
     tests::compare("ForwardList l3", l3, expected);

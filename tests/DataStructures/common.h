@@ -58,7 +58,7 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    bool if_error(ForwardList<T> fl, const std::initializer_list<T>& test_values)
+    bool if_error(dsa::ForwardList<T> fl, const std::initializer_list<T>& test_values)
     {
         if (if_error(fl.size(), test_values.size()))
         {
@@ -88,7 +88,7 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    bool if_error(List<T> ll, const std::initializer_list<T>& test_values)
+    bool if_error(dsa::List<T> ll, const std::initializer_list<T>& test_values)
     {
         if (if_error(ll.size(), test_values.size()))
         {
@@ -118,7 +118,7 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    bool if_error(Queue<T> queue, const std::initializer_list<T>& test_values)
+    bool if_error(dsa::Queue<T> queue, const std::initializer_list<T>& test_values)
     {
         if (if_error(queue.size(), test_values.size()))
         {
@@ -148,7 +148,7 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    bool if_error(Stack<T> stack, const std::initializer_list<T>& test_values)
+    bool if_error(dsa::Stack<T> stack, const std::initializer_list<T>& test_values)
     {
         if (if_error(stack.size(), test_values.size()))
         {
@@ -188,7 +188,7 @@ namespace tests
 
     /**
      * @brief Function compares content of two containers
-     * 
+     *
      * @tparam T input container
      * @tparam U type of data stored in initializer list
      * @param[in] container_name container name to print
@@ -206,7 +206,7 @@ namespace tests
 
     /**
      * @brief Function compares two values
-     * 
+     *
      * @tparam T type of compared objects
      * @param container_name container name to print
      * @param[in] a input value

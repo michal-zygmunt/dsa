@@ -12,7 +12,7 @@
 -->
 
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
-	<Type Name="ForwardList&lt;*&gt;">
+	<Type Name="dsa::ForwardList&lt;*&gt;">
 		<DisplayString Condition="m_front == 0xcccccccccccccccc">invalid</DisplayString>
 		<DisplayString>size = {m_size}</DisplayString>
 		<Expand>
@@ -25,12 +25,12 @@
 		</Expand>
 	</Type>
 
-	<Type Name="ForwardList&lt;*&gt;::Node">
+	<Type Name="dsa::ForwardList&lt;*&gt;::Node">
 		<DisplayString>{m_value}</DisplayString>
 	</Type>
 
 
-	<Type Name="List&lt;*&gt;">
+	<Type Name="dsa::List&lt;*&gt;">
 		<DisplayString Condition="m_front == 0xcccccccccccccccc">invalid</DisplayString>
 		<DisplayString>size = {m_size}</DisplayString>
 		<Expand>
@@ -43,12 +43,12 @@
 		</Expand>
 	</Type>
 
-	<Type Name="List&lt;*&gt;::Node">
+	<Type Name="dsa::List&lt;*&gt;::Node">
 		<DisplayString>{m_value}</DisplayString>
 	</Type>
 
 
-	<Type Name="Queue&lt;*&gt;">
+	<Type Name="dsa::Queue&lt;*&gt;">
 		<DisplayString Condition="container.m_front == 0xcccccccccccccccc">invalid</DisplayString>
 		<DisplayString>size = {container.m_size}</DisplayString>
 		<Expand>
@@ -57,7 +57,7 @@
 	</Type>
 
 
-	<Type Name="Stack&lt;*&gt;">
+	<Type Name="dsa::Stack&lt;*&gt;">
 		<DisplayString Condition="container.m_front == 0xcccccccccccccccc">invalid</DisplayString>
 		<DisplayString>size = {container.m_size}</DisplayString>
 		<Expand>

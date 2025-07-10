@@ -18,7 +18,7 @@ int main()
 
     std::initializer_list<int> expected{};
 
-    ForwardList<int> l1 = ForwardList<int>({ 0, 10, 20 });
+    dsa::ForwardList<int> l1 = dsa::ForwardList<int>({ 0, 10, 20 });
     // Try reading some nodes with invalid indexes
     expected = { 0, 10, 20 };
     auto indexes = { -1, 0, 1, 2, 100 };
@@ -32,7 +32,7 @@ int main()
     }
     tests::compare("ForwardList l1", l1, expected);
 
-    ForwardList<int> l2 = ForwardList<int>({ 20, 10, 0 });
+    dsa::ForwardList<int> l2 = dsa::ForwardList<int>({ 20, 10, 0 });
     expected = { 20, 10, 0 };
     for (int i = 0; i < indexes.size(); i++)
     {

@@ -18,13 +18,13 @@ int main()
 
     std::initializer_list<int> expected{ 10, 20, 30, 40 };
 
-    Queue<int> q1 = Queue<int>(10);
+    dsa::Queue<int> q1 = dsa::Queue<int>(10);
     q1.push(20);
     q1.push(30);
     q1.push(40);
     tests::compare("Queue q1", q1, expected);
 
-    Queue<int> q2 = Queue<int>(10);
+    dsa::Queue<int> q2 = dsa::Queue<int>(10);
     q2.push_range({ 20, 30, 40 });
     tests::compare("Queue q2", q2, expected);
 

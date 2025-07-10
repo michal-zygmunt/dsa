@@ -18,7 +18,7 @@ int main()
 
     std::initializer_list<int> expected{ -10, 0, 0, 2, 10, 20, 4, 30, 40 };
 
-    ForwardList<int> l1 = ForwardList<int>(10);
+    dsa::ForwardList<int> l1 = dsa::ForwardList<int>(10);
     auto it = l1.insert_after(l1.cbegin(), 20);
     l1.insert_after(it, { 30, 40 });
     l1.push_front(0);
@@ -32,7 +32,7 @@ int main()
     }
     tests::compare("ForwardList l1", l1, expected);
 
-    ForwardList<int> l2 = ForwardList<int>(50);
+    dsa::ForwardList<int> l2 = dsa::ForwardList<int>(50);
     l2.push_front(40);
     l2.push_front(30);
     l2.push_front(20);
@@ -41,7 +41,7 @@ int main()
     expected = { 10, 5, 5, 5, 5, 5, 20, 30, 40, 50 };
     tests::compare("ForwardList l2", l2, expected);
 
-    ForwardList<int> l3 = ForwardList<int>(50);
+    dsa::ForwardList<int> l3 = dsa::ForwardList<int>(50);
     l3.push_front(40);
     l3.push_front(30);
     l3.push_front(10);
@@ -51,7 +51,7 @@ int main()
     expected = { 10, 20, 1, 2, 3, 30, 40, 50, 60 };
     tests::compare("ForwardList l3", l3, expected);
 
-    ForwardList<int> l4;
+    dsa::ForwardList<int> l4;
     l4.push_front(40);
     l4.push_front(30);
     l4.push_front(10);
@@ -59,7 +59,7 @@ int main()
     expected = { 10, 20, 30, 40 };
     tests::compare("ForwardList l4", l4, expected);
 
-    ForwardList<int> l5;
+    dsa::ForwardList<int> l5;
     l5.insert_after(l5.before_begin(), 40);
     l5.insert_after(l5.before_begin(), 30);
     l5.insert_after(l5.cbefore_begin(), 20);
@@ -67,7 +67,7 @@ int main()
     expected = { 10, 20, 30, 40 };
     tests::compare("ForwardList l5", l5, expected);
 
-    ForwardList<int> l6{ 40 };
+    dsa::ForwardList<int> l6{ 40 };
     l6.insert_after(l6.before_begin(), 30);
     l6.insert_after(l6.before_begin(), 20);
     l6.insert_after(l6.before_begin(), 10);

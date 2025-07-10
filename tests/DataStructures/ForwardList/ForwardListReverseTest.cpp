@@ -18,7 +18,7 @@ int main()
 
     std::initializer_list<int> expected{ 50, 40, 30, 20, 10, 0 };
 
-    ForwardList<int> l1 = ForwardList<int>({ 0, 10, 20, 30, 40, 50 });
+    dsa::ForwardList<int> l1 = dsa::ForwardList<int>({ 0, 10, 20, 30, 40, 50 });
     l1.reverse();
     tests::compare("ForwardList l1", l1, expected);
 

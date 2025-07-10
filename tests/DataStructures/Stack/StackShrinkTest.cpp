@@ -20,27 +20,27 @@ int main()
 
     std::initializer_list<int> expected{};
 
-    Stack<int> s1 = Stack<int>({ 0,10,20,30,40,50 });
+    dsa::Stack<int> s1 = dsa::Stack<int>({ 0,10,20,30,40,50 });
     s1.pop();
     s1.pop();
     expected = { 30,20,10,0 };
     tests::compare("Stack s1", s1, expected);
 
-    Stack<int> s2 = Stack<int>({ 0,10,20 });
+    dsa::Stack<int> s2 = dsa::Stack<int>({ 0,10,20 });
     s2.pop();
     s2.pop();
     s2.pop();
     expected = std::initializer_list<int>{ };
     tests::compare("Stack s2", s2, expected);
 
-    Stack<int> s3 = Stack<int>({ 0,10,20 });
+    dsa::Stack<int> s3 = dsa::Stack<int>({ 0,10,20 });
     tests::compare("s3.size()", s3.size(), static_cast<size_t>(3));
 
-    Stack<int> s4 = Stack<int>();
+    dsa::Stack<int> s4 = dsa::Stack<int>();
     s4.pop();
     tests::compare("s4.size()", s4.size(), static_cast<size_t>(0));
 
-    Stack<int> s5;
+    dsa::Stack<int> s5;
     tests::compare("s5.size()", s5.size(), static_cast<size_t>(0));
 
     return tests::failed;

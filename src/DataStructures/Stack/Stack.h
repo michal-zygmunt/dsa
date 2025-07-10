@@ -18,401 +18,405 @@
 #include <iostream>
 #include <utility>
 
- /**
-  * @brief Implements Stack class using Node with pointer to next element
-  *
-  * @tparam T type of data stored in Stack Node
-  */
-template<typename T>
-class Stack
+namespace dsa
 {
-public:
-
-    using value_type = T;
-    using reference = T&;
-    using const_reference = const T&;
 
     /**
-     * @brief Construct a new Stack object
+     * @brief Implements Stack class using Node with pointer to next element
      *
+     * @tparam T type of data stored in Stack Node
      */
-    Stack() = default;
-
-    /**
-     * @brief Construct a new Stack object using value of type T
-     *
-     * @param[in] value of type T
-     */
-    Stack(T value);
-
-    /**
-     * @brief Construct a new Stack object using initializer list
-     *
-     * @param[in] il initializer list of values of type T
-     */
-    Stack(const std::initializer_list<T>& il);
-
-    /**
-     * @brief Construct a new Stack object using copy constructor
-     *
-     * @param[in] other Stack object of type T
-     */
-    Stack(const Stack<T>& other);
-
-    /**
-     * @brief Constructs Stack using copy assignment
-     *
-     * @param[in] other Stack object of type T
-     * @return Stack& reference to Stack object
-     */
-    Stack& operator=(const Stack<T>& other);
-
-    /**
-     * @brief Construct a new Stack object using move constructor
-     * @details Content of other object will be taken by constructed object
-     *
-     * @param[in,out] other Stack object of type T
-     */
-    Stack(Stack<T>&& other) noexcept;
-
-    /**
-     * @brief Assign Stack object using move assignment
-     * @details Content of other object will be taken by constructed object
-     *
-     * @param[in,out] other Stack object of type T
-     * @return Stack& reference to Stack object
-     */
-    Stack& operator=(Stack<T>&& other) noexcept;
-
-    /**
-     * @brief Destroy the Stack object
-     */
-    ~Stack() = default;
-
-    /**
-     * @brief Function returns pointer to Stack top element
-     *
-     * @return T& reference to Stack top element
-     */
-    reference top();
-
-    /**
-     * @brief Function returns pointer to Stack top element
-     *
-     * @return const T& const_reference to Stack top element
-     */
-    const_reference top() const;
-
-    /**
-     * @brief Function checks if container has no elements
-     *
-     * @retval true if container is empty
-     * @retval false if container is not empty
-     */
-    bool empty() const;
-
-    /**
-     * @brief Function returns Stack size
-     *
-     * @return size_t number of elements in container
-     */
-    size_t size() const;
-
-    /**
-     * @brief Function add new element at the top of Stack
-     *
-     * @param[in] value element of type T
-     */
-    void push(T value);
-
-    /**
-     * @brief Function add range of elements at the top of Stack
-     *
-     * @param[in] il range of std::initializer_list elements of type T
-     */
-    void push_range(const std::initializer_list<T>& il);
-
-    /**
-     * @brief Function removes the top element of Stack
-     */
-    void pop();
-
-    /**
-     * @brief Function swaps content of two Stack objects
-     *
-     * @param[in,out] other object to swap content with
-     */
-    void swap(Stack<T>& other) noexcept;
-
-private:
-
-    List<T> container{};
-};
-
-template<typename T>
-Stack<T>::Stack(T value)
-{
-    container.push_back(value);
-}
-
-template<typename T>
-Stack<T>::Stack(const std::initializer_list<T>& il)
-{
-    for (const auto& item : il)
+    template<typename T>
+    class Stack
     {
-        container.push_back(item);
+    public:
+
+        using value_type = T;
+        using reference = T&;
+        using const_reference = const T&;
+
+        /**
+         * @brief Construct a new Stack object
+         *
+         */
+        Stack() = default;
+
+        /**
+         * @brief Construct a new Stack object using value of type T
+         *
+         * @param[in] value of type T
+         */
+        Stack(T value);
+
+        /**
+         * @brief Construct a new Stack object using initializer list
+         *
+         * @param[in] il initializer list of values of type T
+         */
+        Stack(const std::initializer_list<T>& il);
+
+        /**
+         * @brief Construct a new Stack object using copy constructor
+         *
+         * @param[in] other Stack object of type T
+         */
+        Stack(const Stack<T>& other);
+
+        /**
+         * @brief Constructs Stack using copy assignment
+         *
+         * @param[in] other Stack object of type T
+         * @return Stack& reference to Stack object
+         */
+        Stack& operator=(const Stack<T>& other);
+
+        /**
+         * @brief Construct a new Stack object using move constructor
+         * @details Content of other object will be taken by constructed object
+         *
+         * @param[in,out] other Stack object of type T
+         */
+        Stack(Stack<T>&& other) noexcept;
+
+        /**
+         * @brief Assign Stack object using move assignment
+         * @details Content of other object will be taken by constructed object
+         *
+         * @param[in,out] other Stack object of type T
+         * @return Stack& reference to Stack object
+         */
+        Stack& operator=(Stack<T>&& other) noexcept;
+
+        /**
+         * @brief Destroy the Stack object
+         */
+        ~Stack() = default;
+
+        /**
+         * @brief Function returns pointer to Stack top element
+         *
+         * @return T& reference to Stack top element
+         */
+        reference top();
+
+        /**
+         * @brief Function returns pointer to Stack top element
+         *
+         * @return const T& const_reference to Stack top element
+         */
+        const_reference top() const;
+
+        /**
+         * @brief Function checks if container has no elements
+         *
+         * @retval true if container is empty
+         * @retval false if container is not empty
+         */
+        bool empty() const;
+
+        /**
+         * @brief Function returns Stack size
+         *
+         * @return size_t number of elements in container
+         */
+        size_t size() const;
+
+        /**
+         * @brief Function add new element at the top of Stack
+         *
+         * @param[in] value element of type T
+         */
+        void push(T value);
+
+        /**
+         * @brief Function add range of elements at the top of Stack
+         *
+         * @param[in] il range of std::initializer_list elements of type T
+         */
+        void push_range(const std::initializer_list<T>& il);
+
+        /**
+         * @brief Function removes the top element of Stack
+         */
+        void pop();
+
+        /**
+         * @brief Function swaps content of two Stack objects
+         *
+         * @param[in,out] other object to swap content with
+         */
+        void swap(Stack<T>& other) noexcept;
+
+    private:
+
+        List<T> container{};
+    };
+
+    template<typename T>
+    Stack<T>::Stack(T value)
+    {
+        container.push_back(value);
     }
-}
 
-template<typename T>
-Stack<T>::Stack(const Stack<T>& other)
-{
-    if (other.size() >= 1)
+    template<typename T>
+    Stack<T>::Stack(const std::initializer_list<T>& il)
     {
-        for (const auto& item : other.container)
-        {
-            container.push_back(item);
-        }
-    }
-}
-
-template<typename T>
-Stack<T>& Stack<T>::operator=(const Stack<T>& other)
-{
-    if (&other != this)
-    {
-        while (container.size())
-        {
-            container.pop_front();
-        }
-
-        for (const auto& item : other.container)
+        for (const auto& item : il)
         {
             container.push_back(item);
         }
     }
 
-    return *this;
-}
+    template<typename T>
+    Stack<T>::Stack(const Stack<T>& other)
+    {
+        if (other.size() >= 1)
+        {
+            for (const auto& item : other.container)
+            {
+                container.push_back(item);
+            }
+        }
+    }
 
-template<typename T>
-Stack<T>::Stack(Stack<T>&& other) noexcept
-{
-    std::swap(container, other.container);
-}
+    template<typename T>
+    Stack<T>& Stack<T>::operator=(const Stack<T>& other)
+    {
+        if (&other != this)
+        {
+            while (container.size())
+            {
+                container.pop_front();
+            }
 
-template<typename T>
-Stack<T>& Stack<T>::operator=(Stack<T>&& other) noexcept
-{
-    if (&other != this)
+            for (const auto& item : other.container)
+            {
+                container.push_back(item);
+            }
+        }
+
+        return *this;
+    }
+
+    template<typename T>
+    Stack<T>::Stack(Stack<T>&& other) noexcept
     {
         std::swap(container, other.container);
     }
 
-    return *this;
-}
-
-template<typename T>
-typename Stack<T>::reference Stack<T>::top()
-{
-    return container.back();
-}
-
-template<typename T>
-typename Stack<T>::const_reference Stack<T>::top() const
-{
-    return container.back();
-}
-
-template<typename T>
-bool Stack<T>::empty() const
-{
-    return container.size() == 0;
-}
-
-template<typename T>
-size_t Stack<T>::size() const
-{
-    return container.size();
-}
-
-template<typename T>
-void Stack<T>::push(T value)
-{
-    container.push_back(value);
-}
-
-template<typename T>
-void Stack<T>::push_range(const std::initializer_list<T>& il)
-{
-    for (const auto& item : il)
+    template<typename T>
+    Stack<T>& Stack<T>::operator=(Stack<T>&& other) noexcept
     {
-        push(item);
-    }
-}
+        if (&other != this)
+        {
+            std::swap(container, other.container);
+        }
 
-template<typename T>
-void Stack<T>::pop()
-{
-    container.pop_back();
-}
-
-template<typename T>
-void Stack<T>::swap(Stack<T>& other) noexcept
-{
-    if (&other != this)
-    {
-        std::swap(container, other.container);
-    }
-}
-
-/**
- * @brief Overloads operator to print all elements of Stack
- *
- * @tparam T type of initializer list elements
- * @param[in,out] out reference to output stream
- * @param[in] stack Stack to print
- * @return std::ostream& reference to std::ostream
- */
-template<typename T>
-std::ostream& operator<<(std::ostream& out, const Stack<T>& stack)
-{
-    Stack<T> temp{ stack };
-
-    while (temp.size())
-    {
-        out << temp.top() << ' ';
-        temp.pop();
+        return *this;
     }
 
-    return out;
-}
-
-/**
- * @brief The relational operator compares two Stack objects
- *
- * @tparam T type of data stored in Stack
- * @param[in] s1 input container
- * @param[in] s2 input container
- * @retval true if containers are equal
- * @retval false if containers are not equal
- */
-template<typename T>
-bool operator==(const Stack<T>& s1, const Stack<T>& s2)
-{
-    if (s1.size() != s2.size())
+    template<typename T>
+    typename Stack<T>::reference Stack<T>::top()
     {
-        return false;
+        return container.back();
     }
 
-    Stack<T> temp_1{ s1 };
-    Stack<T> temp_2{ s2 };
-
-    while (temp_1.size() && temp_2.size())
+    template<typename T>
+    typename Stack<T>::const_reference Stack<T>::top() const
     {
-        if (temp_1.top() != temp_2.top())
+        return container.back();
+    }
+
+    template<typename T>
+    bool Stack<T>::empty() const
+    {
+        return container.size() == 0;
+    }
+
+    template<typename T>
+    size_t Stack<T>::size() const
+    {
+        return container.size();
+    }
+
+    template<typename T>
+    void Stack<T>::push(T value)
+    {
+        container.push_back(value);
+    }
+
+    template<typename T>
+    void Stack<T>::push_range(const std::initializer_list<T>& il)
+    {
+        for (const auto& item : il)
+        {
+            push(item);
+        }
+    }
+
+    template<typename T>
+    void Stack<T>::pop()
+    {
+        container.pop_back();
+    }
+
+    template<typename T>
+    void Stack<T>::swap(Stack<T>& other) noexcept
+    {
+        if (&other != this)
+        {
+            std::swap(container, other.container);
+        }
+    }
+
+    /**
+     * @brief Overloads operator to print all elements of Stack
+     *
+     * @tparam T type of initializer list elements
+     * @param[in,out] out reference to output stream
+     * @param[in] stack Stack to print
+     * @return std::ostream& reference to std::ostream
+     */
+    template<typename T>
+    std::ostream& operator<<(std::ostream& out, const Stack<T>& stack)
+    {
+        Stack<T> temp{ stack };
+
+        while (temp.size())
+        {
+            out << temp.top() << ' ';
+            temp.pop();
+        }
+
+        return out;
+    }
+
+    /**
+     * @brief The relational operator compares two Stack objects
+     *
+     * @tparam T type of data stored in Stack
+     * @param[in] s1 input container
+     * @param[in] s2 input container
+     * @retval true if containers are equal
+     * @retval false if containers are not equal
+     */
+    template<typename T>
+    bool operator==(const Stack<T>& s1, const Stack<T>& s2)
+    {
+        if (s1.size() != s2.size())
         {
             return false;
         }
 
-        temp_1.pop();
-        temp_2.pop();
-    }
+        Stack<T> temp_1{ s1 };
+        Stack<T> temp_2{ s2 };
 
-    return true;
-}
-
-/**
- * @brief The relational operator compares two Stack objects
- *
- * @tparam T type of data stored in Stack
- * @param[in] s1 input container
- * @param[in] s2 input container
- * @retval true if containers are not equal
- * @retval false if containers are equal
- */
-template<typename T>
-bool operator!=(const Stack<T>& s1, const Stack<T>& s2)
-{
-    return !(operator==(s1, s2));
-}
-
-/**
- * @brief The relational operator compares two Stack objects
- *
- * @tparam T type of data stored in Stack
- * @param[in] s1 input container
- * @param[in] s2 input container
- * @retval true if the content of \p s1 are lexicographically
- *         less than the content of \p s2
- * @retval false otherwise
- */
-template<typename T>
-bool operator<(const Stack<T>& s1, const Stack<T>& s2)
-{
-    Stack<T> temp_1{ s1 };
-    Stack<T> temp_2{ s2 };
-
-    while (temp_1.size() && temp_2.size())
-    {
-        if (temp_1.top() >= temp_2.top())
+        while (temp_1.size() && temp_2.size())
         {
-            return false;
+            if (temp_1.top() != temp_2.top())
+            {
+                return false;
+            }
+
+            temp_1.pop();
+            temp_2.pop();
         }
 
-        temp_1.pop();
-        temp_2.pop();
+        return true;
     }
 
-    return true;
-}
+    /**
+     * @brief The relational operator compares two Stack objects
+     *
+     * @tparam T type of data stored in Stack
+     * @param[in] s1 input container
+     * @param[in] s2 input container
+     * @retval true if containers are not equal
+     * @retval false if containers are equal
+     */
+    template<typename T>
+    bool operator!=(const Stack<T>& s1, const Stack<T>& s2)
+    {
+        return !(operator==(s1, s2));
+    }
 
-/**
- * @brief The relational operator compares two Stack objects
- *
- * @tparam T type of data stored in Stack
- * @param[in] s1 input container
- * @param[in] s2 input container
- * @retval true if the content of \p s1 are lexicographically
- *         greater than the content of \p s2
- * @retval false otherwise
- */
-template<typename T>
-bool operator>(const Stack<T>& s1, const Stack<T>& s2)
-{
-    return operator<(s2, s1);
-}
+    /**
+     * @brief The relational operator compares two Stack objects
+     *
+     * @tparam T type of data stored in Stack
+     * @param[in] s1 input container
+     * @param[in] s2 input container
+     * @retval true if the content of \p s1 are lexicographically
+     *         less than the content of \p s2
+     * @retval false otherwise
+     */
+    template<typename T>
+    bool operator<(const Stack<T>& s1, const Stack<T>& s2)
+    {
+        Stack<T> temp_1{ s1 };
+        Stack<T> temp_2{ s2 };
 
-/**
- * @brief The relational operator compares two Stack objects
- *
- * @tparam T type of data stored in Stack
- * @param[in] s1 input container
- * @param[in] s2 input container
- * @retval true if the content of \p s1 are lexicographically
- *         less or equal than the content of \p s2
- * @retval false otherwise
- */
-template<typename T>
-bool operator<=(const Stack<T>& s1, const Stack<T>& s2)
-{
-    return !(operator>(s1, s2));
-}
+        while (temp_1.size() && temp_2.size())
+        {
+            if (temp_1.top() >= temp_2.top())
+            {
+                return false;
+            }
 
-/**
- * @brief The relational operator compares two Stack objects
- *
- * @tparam T type of data stored in Stack
- * @param[in] s1 input container
- * @param[in] s2 input container
- * @retval true if the content of \p s1 are lexicographically
- *         greater or equal than the content of \p s2
- * @retval false otherwise
- */
-template<typename T>
-bool operator>=(const Stack<T>& s1, const Stack<T>& s2)
-{
-    return !(operator<(s1, s2));
-}
+            temp_1.pop();
+            temp_2.pop();
+        }
 
+        return true;
+    }
+
+    /**
+     * @brief The relational operator compares two Stack objects
+     *
+     * @tparam T type of data stored in Stack
+     * @param[in] s1 input container
+     * @param[in] s2 input container
+     * @retval true if the content of \p s1 are lexicographically
+     *         greater than the content of \p s2
+     * @retval false otherwise
+     */
+    template<typename T>
+    bool operator>(const Stack<T>& s1, const Stack<T>& s2)
+    {
+        return operator<(s2, s1);
+    }
+
+    /**
+     * @brief The relational operator compares two Stack objects
+     *
+     * @tparam T type of data stored in Stack
+     * @param[in] s1 input container
+     * @param[in] s2 input container
+     * @retval true if the content of \p s1 are lexicographically
+     *         less or equal than the content of \p s2
+     * @retval false otherwise
+     */
+    template<typename T>
+    bool operator<=(const Stack<T>& s1, const Stack<T>& s2)
+    {
+        return !(operator>(s1, s2));
+    }
+
+    /**
+     * @brief The relational operator compares two Stack objects
+     *
+     * @tparam T type of data stored in Stack
+     * @param[in] s1 input container
+     * @param[in] s2 input container
+     * @retval true if the content of \p s1 are lexicographically
+     *         greater or equal than the content of \p s2
+     * @retval false otherwise
+     */
+    template<typename T>
+    bool operator>=(const Stack<T>& s1, const Stack<T>& s2)
+    {
+        return !(operator<(s1, s2));
+    }
+
+}
 #endif // !STACK_H

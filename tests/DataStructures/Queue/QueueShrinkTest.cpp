@@ -20,27 +20,27 @@ int main()
 
     std::initializer_list<int> expected{};
 
-    Queue<int> q1 = Queue<int>({ 0,10,20,30,40,50 });
+    dsa::Queue<int> q1 = dsa::Queue<int>({ 0,10,20,30,40,50 });
     q1.pop();
     q1.pop();
     expected = { 20,30,40,50 };
     tests::compare("Queue q1", q1, expected);
 
-    Queue<int> q2 = Queue<int>({ 0,10,20 });
+    dsa::Queue<int> q2 = dsa::Queue<int>({ 0,10,20 });
     q2.pop();
     q2.pop();
     q2.pop();
     expected = std::initializer_list<int>{ };
     tests::compare("Queue q2", q2, expected);
 
-    Queue<int> q3 = Queue<int>({ 0,10,20 });
+    dsa::Queue<int> q3 = dsa::Queue<int>({ 0,10,20 });
     tests::compare("q3.size()", q3.size(), static_cast<size_t>(3));
 
-    Queue<int> q4 = Queue<int>();
+    dsa::Queue<int> q4 = dsa::Queue<int>();
     q4.pop();
     tests::compare("q4.size()", q4.size(), static_cast<size_t>(0));
 
-    Queue<int> q5;
+    dsa::Queue<int> q5;
     tests::compare("q5.empty()", q5.empty(), true);
 
     return tests::failed;

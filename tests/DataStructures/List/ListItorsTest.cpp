@@ -25,8 +25,8 @@ int main()
     std::initializer_list<int> expected{};
 
     std::cout << "Explicit iterator\n";
-    List<int> l1{ 0, 10, 20 };
-    for (List<int>::iterator it = l1.begin(); it != l1.end(); it++)
+    dsa::List<int> l1{ 0, 10, 20 };
+    for (dsa::List<int>::iterator it = l1.begin(); it != l1.end(); it++)
     {
         auto& val = *it;
         std::cout << val << '\t';
@@ -37,7 +37,7 @@ int main()
     tests::compare("List l1", l1, expected);
 
     std::cout << "Auto iterator\n";
-    List<int> l2{ 0, 25, 50 };
+    dsa::List<int> l2{ 0, 25, 50 };
     for (auto it = l2.begin(); it != l2.end(); it++)
     {
         auto& val = *it;
@@ -49,8 +49,8 @@ int main()
     tests::compare("List l2", l2, expected);
 
     std::cout << "Explicit Const iterator\n";
-    List<int> l3{ 0, 10, 20 };
-    for (List<int>::const_iterator it = l3.cbegin(); it != l3.cend(); it++)
+    dsa::List<int> l3{ 0, 10, 20 };
+    for (dsa::List<int>::const_iterator it = l3.cbegin(); it != l3.cend(); it++)
     {
         //auto& val = *it; // reference generate compilation error
         auto val = *it;
@@ -62,7 +62,7 @@ int main()
     tests::compare("List l3", l3, expected);
 
     std::cout << "Auto Const iterator\n";
-    List<int> l4{ 0, 25, 50 };
+    dsa::List<int> l4{ 0, 25, 50 };
     for (auto it = l4.cbegin(); it != l4.cend(); it++)
     {
         //auto& val = *it; // reference generate compilation error
@@ -75,7 +75,7 @@ int main()
     tests::compare("List l4", l4, expected);
 
     // Check iterator of one element
-    List<int> l5 = List<int>(0);
+    dsa::List<int> l5 = dsa::List<int>(0);
     auto it = l5.insert(l5.cbegin(), 10);
     int val = *it;
     int expected_val = 10;
@@ -84,7 +84,7 @@ int main()
     tests::compare("List l5", l5, expected);
 
     // Check iterator after inserting 0 elements
-    List<int> l6 = List<int>(50);
+    dsa::List<int> l6 = dsa::List<int>(50);
     l6.push_front(40);
     l6.push_front(30);
     it = l6.insert(l6.cbegin(), 0, 5);
@@ -97,7 +97,7 @@ int main()
     // Range based loop
     expected = { 10, 20, 30, 40, 50 };
     std::initializer_list<int>::iterator il_it;
-    List<int> l7 = List<int>{ 10, 20, 30, 40, 50 };
+    dsa::List<int> l7 = dsa::List<int>{ 10, 20, 30, 40, 50 };
     std::cout << "List l7 vs std::initializer_list:\n";
     il_it = expected.begin();
     for (auto i : l7)
@@ -134,7 +134,7 @@ int main()
 
     // Compare elements based on range loops
     expected = { 10, 20, 30, 40, 50 };
-    const List<int> l8 = List<int>{ 10, 20, 30, 40, 50 };
+    const dsa::List<int> l8 = dsa::List<int>{ 10, 20, 30, 40, 50 };
     std::cout << "List l8 vs std::initializer_list:\n";
     il_it = expected.begin();
     for (auto i : l8)
@@ -170,13 +170,13 @@ int main()
     std::cout << '\n';
 
     // std library operation on custom iterators
-    List<int> l9 = List<int>{ 10, 20, 30, 40, 50 };
+    dsa::List<int> l9 = dsa::List<int>{ 10, 20, 30, 40, 50 };
     std::fill(l9.begin(), l9.end(), 10);
     expected = { 10, 10, 10, 10, 10 };
     tests::compare("List l9", l9, expected);
 
     // check const_iterator for const object
-    List<int> l10 = List<int>{ 10, 20, 30 };
+    dsa::List<int> l10 = dsa::List<int>{ 10, 20, 30 };
     auto iter10b = l10.begin();
     *iter10b = 1;
     auto citer10b = l10.cbegin();
@@ -186,7 +186,7 @@ int main()
     auto citer10e = l10.cend();
     //*citer10e = 1; // compilation error
 
-    const List<int> l11 = List<int>{ 10, 20, 30 };
+    const dsa::List<int> l11 = dsa::List<int>{ 10, 20, 30 };
     auto iter11b = l11.begin();
     //*iter11b = 1; // compilation error
     auto citer11b = l11.cbegin();
@@ -197,7 +197,7 @@ int main()
     //*citer11e = 1; // compilation error
 
     // Increment iterator
-    List<int> l12 = List<int>{ 10, 20, 30 };
+    dsa::List<int> l12 = dsa::List<int>{ 10, 20, 30 };
     std::cout << "List l12:\t" << l12 << '\n';
     auto it_12 = l12.begin();
     std::cout << *it_12 << ' ';
@@ -214,7 +214,7 @@ int main()
     it_12++;
 
     // Increment const_iterator
-    List<int> l13 = List<int>{ 10, 20, 30 };
+    dsa::List<int> l13 = dsa::List<int>{ 10, 20, 30 };
     std::cout << "List l13:\t" << l13 << '\n';
     auto cit_13 = l13.cbegin();
     std::cout << *cit_13 << ' ';
@@ -231,7 +231,7 @@ int main()
     cit_13++;
 
     // Decrement iterator
-    List<int> l14 = List<int>{ 10, 20, 30 };
+    dsa::List<int> l14 = dsa::List<int>{ 10, 20, 30 };
     std::cout << "List l14:\t" << l14 << '\n';
     auto it_14 = l14.end();
     it_14--;
@@ -249,7 +249,7 @@ int main()
     --it_14;
 
     // Decrement const_iterator
-    List<int> l15 = List<int>{ 10, 20, 30 };
+    dsa::List<int> l15 = dsa::List<int>{ 10, 20, 30 };
     std::cout << "List l15:\t" << l15 << '\n';
     auto cit_15 = l15.cend();
     cit_15--;

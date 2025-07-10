@@ -19,28 +19,28 @@ int main()
     std::initializer_list<int> expected{ 0, 10, 20 };
 
     std::cout << "Default ctor\n";
-    ForwardList<int> l1;
+    dsa::ForwardList<int> l1;
     l1.push_front(20);
     l1.push_front(10);
     l1.push_front(0);
     tests::compare("ForwardList l1", l1, expected);
 
     std::cout << "Value ctor\n";
-    ForwardList<int> l2(20);
+    dsa::ForwardList<int> l2(20);
     l2.push_front(0);
     l2.insert_after(l2.cbegin(), 10);
     tests::compare("ForwardList l2", l2, expected);
 
     std::cout << "Initializer list ctor\n";
-    ForwardList<int> l3(expected);
+    dsa::ForwardList<int> l3(expected);
     tests::compare("ForwardList l3", l3, expected);
 
     std::cout << "Copy ctor\n";
-    ForwardList<int> l4{ l1 };
+    dsa::ForwardList<int> l4{ l1 };
     tests::compare("ForwardList l4", l4, expected);
 
     std::cout << "Copy assignment ctor\n";
-    ForwardList<int> l5;
+    dsa::ForwardList<int> l5;
     l5.push_front(5);
     l5.push_front(4);
     l5.push_front(3);
@@ -50,13 +50,13 @@ int main()
     tests::compare("ForwardList l5", l5, expected);
 
     std::cout << "Move ctor\n";
-    ForwardList<int> temp_1(l1);
-    ForwardList<int> l6 = std::move(temp_1);
+    dsa::ForwardList<int> temp_1(l1);
+    dsa::ForwardList<int> l6 = std::move(temp_1);
     tests::compare("ForwardList l6", l6, expected);
 
     std::cout << "Move assignment ctor\n";
-    ForwardList<int> temp_2(l1);
-    ForwardList<int> l7(0);
+    dsa::ForwardList<int> temp_2(l1);
+    dsa::ForwardList<int> l7(0);
     l7 = std::move(temp_2);
     tests::compare("ForwardList l7", l7, expected);
 

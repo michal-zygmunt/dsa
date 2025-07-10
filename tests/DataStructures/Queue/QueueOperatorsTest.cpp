@@ -16,9 +16,9 @@ int main()
 {
     std::cout << "Start QueueOperators test:\n";
 
-    Queue<int> q1({ 1,2,3 });
-    Queue<int> q2({ 4,5,6 });
-    Queue<int> q3({ 1, 2, 3, 4 });
+    dsa::Queue<int> q1({ 1,2,3 });
+    dsa::Queue<int> q2({ 4,5,6 });
+    dsa::Queue<int> q3({ 1, 2, 3, 4 });
     std::cout << "Queue q1:\t" << q1 << '\n';
     std::cout << "Queue q2:\t" << q2 << '\n';
     std::cout << "Queue q3:\t" << q3 << "\n\n";

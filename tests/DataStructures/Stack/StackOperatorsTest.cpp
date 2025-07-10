@@ -16,9 +16,9 @@ int main()
 {
     std::cout << "Start StackOperators test:\n";
 
-    Stack<int> s1({ 1,2,3 });
-    Stack<int> s2({ 4,5,6 });
-    Stack<int> s3({ 1, 2, 3, 4 });
+    dsa::Stack<int> s1({ 1,2,3 });
+    dsa::Stack<int> s2({ 4,5,6 });
+    dsa::Stack<int> s3({ 1, 2, 3, 4 });
     std::cout << "Stack s1:\t" << s1 << '\n';
     std::cout << "Stack s2:\t" << s2 << '\n';
     std::cout << "Stack s3:\t" << s3 << "\n\n";

@@ -18,17 +18,17 @@ int main()
 
     std::initializer_list<int> expected{ 0,10,20 };
 
-    Stack<int> s1 = Stack<int>({ 20, 10, 0 });
+    dsa::Stack<int> s1 = dsa::Stack<int>({ 20, 10, 0 });
     auto top = s1.top();
     tests::compare("Stack s1 top", top, expected.begin()[0]);
     tests::compare("Stack s1", s1, expected);
 
-    Stack<int> s2 = Stack<int>({ 20, 10, 0 });
+    dsa::Stack<int> s2 = dsa::Stack<int>({ 20, 10, 0 });
     top = s2.top();
     tests::compare("Stack s2 top", top, expected.begin()[0]);
     tests::compare("Stack s2", s2, expected);
 
-    const Stack<int> s3 = Stack<int>({ 20, 10, 0 });
+    const dsa::Stack<int> s3 = dsa::Stack<int>({ 20, 10, 0 });
     top = s3.top();
     tests::compare("Stack s3 top", top, expected.begin()[0]);
     tests::compare("Stack s3", s3, expected);
