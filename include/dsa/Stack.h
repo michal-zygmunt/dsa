@@ -12,7 +12,7 @@
 #ifndef STACK_H
 #define STACK_H
 
-#include "../List/List.h"
+#include "List.h"
 
 #include <initializer_list>
 #include <iostream>

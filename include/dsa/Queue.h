@@ -12,7 +12,7 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#include "../List/List.h"
+#include "List.h"
 
 #include <initializer_list>
 #include <iostream>

@@ -4,8 +4,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-include_directories("../../../src/DataStructures/ForwardList/")
-include_directories("../")
+include_directories(${CMAKE_SOURCE_DIR}/include/)
+include_directories(${CMAKE_SOURCE_DIR}/tests/)
 
 add_executable(ForwardListCtorsTest ForwardListCtorsTest.cpp)
 add_test(NAME ForwardListCtorsTest COMMAND ForwardListCtorsTest)
