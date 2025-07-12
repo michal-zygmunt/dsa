@@ -11,6 +11,11 @@ endif()
 
 project (dsa LANGUAGES CXX)
 
+# library interface for templates
+add_library(dsa INTERFACE)
+target_include_directories(dsa INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+
 option(DOCS_ENABLED "Enable documentation generation" ON)
 option(CODE_TESTING "Enable code testing" ON)
 option(CODE_COVERAGE "Enable coverage reporting" ON)
