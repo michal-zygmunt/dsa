@@ -12,10 +12,10 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include "ForwardList.h"
-#include "List.h"
-#include "Queue.h"
-#include "Stack.h"
+#include "dsa/ForwardList.h"
+#include "dsa/List.h"
+#include "dsa/Queue.h"
+#include "dsa/Stack.h"
 
 #include <initializer_list>
 #include <iostream>

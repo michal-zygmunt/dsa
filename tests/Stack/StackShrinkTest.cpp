@@ -10,7 +10,7 @@
  */
 
 #include "common.h"
-#include "Stack.h"
+#include "dsa/Stack.h"
 
 #include <initializer_list>
 

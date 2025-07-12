@@ -1,5 +1,5 @@
 
-include_directories(${CMAKE_SOURCE_DIR}/include/dsa)
+include_directories(${CMAKE_SOURCE_DIR}/include/)
 
 add_subdirectory("ForwardList")
 add_subdirectory("List")

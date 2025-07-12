@@ -10,7 +10,7 @@
  */
 
 #include "common.h"
-#include "Queue.h"
+#include "dsa/Queue.h"
 
 #include <initializer_list>
 
