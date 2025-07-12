@@ -1,43 +1,55 @@
-project(test_forward_list LANGUAGES CXX)
 
 include_directories(${CMAKE_SOURCE_DIR}/include/)
 include_directories(${CMAKE_SOURCE_DIR}/tests/)
 
 add_executable(ForwardListCtorsTest ForwardListCtorsTest.cpp)
+target_link_libraries(ForwardListCtorsTest PRIVATE dsa_testing)
 add_test(NAME ForwardListCtorsTest COMMAND ForwardListCtorsTest)
 
 add_executable(ForwardListGrowTest ForwardListGrowTest.cpp)
+target_link_libraries(ForwardListGrowTest PRIVATE dsa_testing)
 add_test(NAME ForwardListGrowTest COMMAND ForwardListGrowTest)
 
 add_executable(ForwardListShrinkTest ForwardListShrinkTest.cpp)
+target_link_libraries(ForwardListShrinkTest PRIVATE dsa_testing)
 add_test(NAME ForwardListShrinkTest COMMAND ForwardListShrinkTest)
 
 add_executable(ForwardListGetTest ForwardListGetTest.cpp)
+target_link_libraries(ForwardListGetTest PRIVATE dsa_testing)
 add_test(NAME ForwardListGetTest COMMAND ForwardListGetTest)
 
 add_executable(ForwardListSetTest ForwardListSetTest.cpp)
+target_link_libraries(ForwardListSetTest PRIVATE dsa_testing)
 add_test(NAME ForwardListSetTest COMMAND ForwardListSetTest)
 
 add_executable(ForwardListReverseTest ForwardListReverseTest.cpp)
+target_link_libraries(ForwardListReverseTest PRIVATE dsa_testing)
 add_test(NAME ForwardListReverseTest COMMAND ForwardListReverseTest)
 
 add_executable(ForwardListOperatorsTest ForwardListOperatorsTest.cpp)
+target_link_libraries(ForwardListOperatorsTest PRIVATE dsa_testing)
 add_test(NAME ForwardListOperatorsTest COMMAND ForwardListOperatorsTest)
 
 add_executable(ForwardListSwapTest ForwardListSwapTest.cpp)
+target_link_libraries(ForwardListSwapTest PRIVATE dsa_testing)
 add_test(NAME ForwardListSwapTest COMMAND ForwardListSwapTest)
 
 add_executable(ForwardListMergeTest ForwardListMergeTest.cpp)
+target_link_libraries(ForwardListMergeTest PRIVATE dsa_testing)
 add_test(NAME ForwardListMergeTest COMMAND ForwardListMergeTest)
 
 add_executable(ForwardListResizeTest ForwardListResizeTest.cpp)
+target_link_libraries(ForwardListResizeTest PRIVATE dsa_testing)
 add_test(NAME ForwardListResizeTest COMMAND ForwardListResizeTest)
 
 add_executable(ForwardListUniqueTest ForwardListUniqueTest.cpp)
+target_link_libraries(ForwardListUniqueTest PRIVATE dsa_testing)
 add_test(NAME ForwardListUniqueTest COMMAND ForwardListUniqueTest)
 
 add_executable(ForwardListSpliceTest ForwardListSpliceTest.cpp)
+target_link_libraries(ForwardListSpliceTest PRIVATE dsa_testing)
 add_test(NAME ForwardListSpliceTest COMMAND ForwardListSpliceTest)
 
 add_executable(ForwardListItorsTest ForwardListItorsTest.cpp)
+target_link_libraries(ForwardListItorsTest PRIVATE dsa_testing)
 add_test(NAME ForwardListItorsTest COMMAND ForwardListItorsTest)

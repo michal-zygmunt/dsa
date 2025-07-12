@@ -19,6 +19,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_library(dsa INTERFACE)
 target_include_directories(dsa INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+# library interface for tests
+add_library(dsa_testing INTERFACE)
+target_link_libraries(dsa_testing INTERFACE dsa)
 
 option(DOCS_ENABLED "Enable documentation generation" ON)
 option(CODE_TESTING "Enable code testing" ON)
