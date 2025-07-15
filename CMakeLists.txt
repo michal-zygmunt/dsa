@@ -23,10 +23,39 @@ target_include_directories(dsa INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_library(dsa_testing INTERFACE)
 target_link_libraries(dsa_testing INTERFACE dsa)
 
+
+option(ENABLE_WARNINGS "Enable strict compiler checks for tests" OFF)
 option(DOCS_ENABLED "Enable documentation generation" ON)
 option(CODE_TESTING "Enable code testing" ON)
 option(CODE_COVERAGE "Enable coverage reporting" ON)
 
+
+if(ENABLE_WARNINGS)
+	message(STATUS "Strict compiler flags option enabled")
+
+	if(MSVC) # MSVC / MS Clang
+		message(STATUS "Using strict MSVC / MSVC-Clang flags")
+		target_compile_options(dsa_testing INTERFACE
+			/W4
+			/sdl
+			/GS
+			#/WX
+			/RTC1 # /RTCs /RTSu
+			/diagnostics:column
+			/diagnostics:caret
+			/utf-8
+		)
+		# MSVC specific flags
+		if(MSVC AND NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+			target_compile_options(dsa_testing INTERFACE
+				/permissive-
+				/Zc:__cplusplus
+				/Zc:preprocessor
+				/MP
+			)
+		endif()
+	endif()
+endif()
 
 if(DOCS_ENABLED)
 	message(STATUS "Documentation generation enabled")
