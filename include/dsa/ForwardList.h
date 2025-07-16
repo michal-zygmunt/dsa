@@ -692,15 +692,15 @@ namespace dsa
          * @retval Node* if index is valid
          * @retval nullptr if invalid index
          */
-        Node* get(int index) const
+        Node* get(size_t index) const
         {
-            if (index < 0 || index > m_size)
+            if (index > m_size)
             {
                 return nullptr;
             }
 
             Node* temp = static_cast<Node*>(m_front->m_next);
-            for (int i = 0; i < index; i++)
+            for (size_t i = 0; i < index; i++)
             {
                 temp = static_cast<Node*>(temp->m_next);
             }
@@ -717,7 +717,7 @@ namespace dsa
          * @retval true if value of Node was overwritten
          * @retval false if invalid index
          */
-        bool set(int index, T value)
+        bool set(size_t index, T value)
         {
             Node* temp = get(index);
             if (temp)
@@ -1481,7 +1481,7 @@ namespace dsa
         Node* prev{};
         Node* next{};
 
-        for (int i = 0; i < m_size; i++)
+        for (size_t i = 0; i < m_size; i++)
         {
             next = static_cast<Node*>(temp->m_next);
             temp->m_next = prev;

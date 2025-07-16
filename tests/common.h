@@ -66,7 +66,7 @@ namespace tests
             return true;
         }
 
-        for (int i = 0; i < test_values.size(); i++)
+        for (size_t i = 0; i < test_values.size(); i++)
         {
             if (if_error(fl.front(), test_values.begin()[i]))
             {
@@ -96,7 +96,7 @@ namespace tests
             return true;
         }
 
-        for (int i = 0; i < test_values.size(); i++)
+        for (size_t i = 0; i < test_values.size(); i++)
         {
             if (if_error(ll.front(), test_values.begin()[i]))
             {
@@ -126,7 +126,7 @@ namespace tests
             return true;
         }
 
-        for (int i = 0; i < test_values.size(); i++)
+        for (size_t i = 0; i < test_values.size(); i++)
         {
             if (if_error(queue.front(), test_values.begin()[i]))
             {
@@ -156,7 +156,7 @@ namespace tests
             return true;
         }
 
-        for (int i = 0; i < test_values.size(); i++)
+        for (size_t i = 0; i < test_values.size(); i++)
         {
             if (if_error(stack.top(), test_values.begin()[i]))
             {

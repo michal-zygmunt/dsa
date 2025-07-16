@@ -25,7 +25,7 @@ int main()
     l1.push_front(-10);
     // Try inserting nodes at invalid indexes
     auto indexes = { -1, 0, 4, 2, 100 };
-    for (int i = 0; i < indexes.size(); i++)
+    for (size_t i = 0; i < indexes.size(); i++)
     {
         int idx_val = indexes.begin()[i];
         l1.insert_after(l1.cbegin()[idx_val], idx_val);

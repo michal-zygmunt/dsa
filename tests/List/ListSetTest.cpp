@@ -21,7 +21,7 @@ int main()
     dsa::List<int> l1 = dsa::List<int>({ 0, 10, 20 });
     // Try setting values for nodes with invalid indexes
     constexpr int new_value{ 50 };
-    l1.set(-1, new_value);
+    l1.set(static_cast<size_t>(-1), new_value);
     l1.set(1, new_value);
     l1.set(100, new_value);
     tests::compare("List l1", l1, expected);

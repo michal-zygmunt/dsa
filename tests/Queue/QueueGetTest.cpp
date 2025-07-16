@@ -21,7 +21,7 @@ int main()
     dsa::Queue<int> q1 = dsa::Queue<int>({ 0,10,20 });
     size_t q1_size = q1.size();
     std::cout << "Queue q1:\t";
-    for (int i = 0; i < q1_size; i++)
+    for (size_t i = 0; i < q1_size; i++)
     {
         auto temp = q1.front();
         if (temp)

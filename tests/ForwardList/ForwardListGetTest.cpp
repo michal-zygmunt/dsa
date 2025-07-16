@@ -22,7 +22,7 @@ int main()
     // Try reading some nodes with invalid indexes
     expected = { 0, 10, 20 };
     auto indexes = { -1, 0, 1, 2, 100 };
-    for (int i = 0; i < indexes.size(); i++)
+    for (size_t i = 0; i < indexes.size(); i++)
     {
         auto temp = l1.get(i);
         if (temp)
@@ -34,7 +34,7 @@ int main()
 
     dsa::ForwardList<int> l2 = dsa::ForwardList<int>({ 20, 10, 0 });
     expected = { 20, 10, 0 };
-    for (int i = 0; i < indexes.size(); i++)
+    for (size_t i = 0; i < indexes.size(); i++)
     {
         auto temp = l2.get(i);
         if (temp)
