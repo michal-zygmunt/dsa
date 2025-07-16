@@ -1627,8 +1627,11 @@ namespace dsa
 
         Node* temp{};
 
-        constexpr int ver = 1;
-        if (ver == 0)
+        // select list end to look for selected index
+        enum Mode { FRONT, BACK, AUTO };
+
+        Mode mode = AUTO;
+        if (mode == FRONT)
         {
             // count nodes from front
             temp = static_cast<Node*>(m_front);
@@ -1637,7 +1640,16 @@ namespace dsa
                 temp = static_cast<Node*>(temp->m_next);
             }
         }
-        else if (ver == 1)
+        else if (mode == BACK)
+        {
+            // count nodes from back
+            temp = static_cast<Node*>(m_back->m_prev);
+            for (size_t i = m_size - 1; i > index; i--)
+            {
+                temp = static_cast<Node*>(temp->m_prev);
+            }
+        }
+        else // mode == AUTO
         {
             // optimize counting nodes from front or back
             if (index < m_size / 2)
@@ -1655,15 +1667,6 @@ namespace dsa
                 {
                     temp = static_cast<Node*>(temp->m_prev);
                 }
-            }
-        }
-        else
-        {
-            // count nodes from back
-            temp = static_cast<Node*>(m_back->m_prev);
-            for (size_t i = m_size - 1; i > index; i--)
-            {
-                temp = static_cast<Node*>(temp->m_prev);
             }
         }
 
