@@ -12,26 +12,22 @@
 #include "common.h"
 #include "dsa/Stack.h"
 
-#include <initializer_list>
-
 int main()
 {
     std::cout << "Start StackShrink test:\n";
 
-    std::initializer_list<int> expected{};
-
     dsa::Stack<int> s1 = dsa::Stack<int>({ 0,10,20,30,40,50 });
     s1.pop();
     s1.pop();
-    expected = { 30,20,10,0 };
-    tests::compare("Stack s1", s1, expected);
+    std::initializer_list<int> expected_1 = { 30,20,10,0 };
+    tests::compare("Stack s1", s1, expected_1);
 
     dsa::Stack<int> s2 = dsa::Stack<int>({ 0,10,20 });
     s2.pop();
     s2.pop();
     s2.pop();
-    expected = std::initializer_list<int>{ };
-    tests::compare("Stack s2", s2, expected);
+    std::initializer_list<int> expected_2 = std::initializer_list<int>{ };
+    tests::compare("Stack s2", s2, expected_2);
 
     dsa::Stack<int> s3 = dsa::Stack<int>({ 0,10,20 });
     tests::compare("s3.size()", s3.size(), static_cast<size_t>(3));

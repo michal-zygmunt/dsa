@@ -12,26 +12,22 @@
 #include "common.h"
 #include "dsa/Queue.h"
 
-#include <initializer_list>
-
 int main()
 {
     std::cout << "Start QueueShrink test:\n";
 
-    std::initializer_list<int> expected{};
-
     dsa::Queue<int> q1 = dsa::Queue<int>({ 0,10,20,30,40,50 });
     q1.pop();
     q1.pop();
-    expected = { 20,30,40,50 };
-    tests::compare("Queue q1", q1, expected);
+    std::initializer_list<int> expected_1 = { 20,30,40,50 };
+    tests::compare("Queue q1", q1, expected_1);
 
     dsa::Queue<int> q2 = dsa::Queue<int>({ 0,10,20 });
     q2.pop();
     q2.pop();
     q2.pop();
-    expected = std::initializer_list<int>{ };
-    tests::compare("Queue q2", q2, expected);
+    std::initializer_list<int> expected_2 = std::initializer_list<int>{ };
+    tests::compare("Queue q2", q2, expected_2);
 
     dsa::Queue<int> q3 = dsa::Queue<int>({ 0,10,20 });
     tests::compare("q3.size()", q3.size(), static_cast<size_t>(3));

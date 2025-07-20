@@ -16,33 +16,31 @@ int main()
 {
     std::cout << "Start ForwardListGet test:\n";
 
-    std::initializer_list<int> expected{};
-
     dsa::ForwardList<int> l1 = dsa::ForwardList<int>({ 0, 10, 20 });
     // Try reading some nodes with invalid indexes
-    expected = { 0, 10, 20 };
+    std::initializer_list<int> expected_1 = { 0, 10, 20 };
     auto indexes = { -1, 0, 1, 2, 100 };
     for (size_t i = 0; i < indexes.size(); i++)
     {
         auto temp = l1.get(i);
         if (temp)
         {
-            tests::compare(temp->value(), expected.begin()[i]);
+            tests::compare(temp->value(), expected_1.begin()[i]);
         }
     }
-    tests::compare("ForwardList l1", l1, expected);
+    tests::compare("ForwardList l1", l1, expected_1);
 
     dsa::ForwardList<int> l2 = dsa::ForwardList<int>({ 20, 10, 0 });
-    expected = { 20, 10, 0 };
+    std::initializer_list<int> expected_2 = { 20, 10, 0 };
     for (size_t i = 0; i < indexes.size(); i++)
     {
         auto temp = l2.get(i);
         if (temp)
         {
-            tests::compare(temp->value(), expected.begin()[i]);
+            tests::compare(temp->value(), expected_2.begin()[i]);
         }
     }
-    tests::compare("ForwardList l2", l2, expected);
+    tests::compare("ForwardList l2", l2, expected_2);
 
     return tests::failed;
 }

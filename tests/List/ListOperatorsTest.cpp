@@ -9,15 +9,12 @@
  * https://opensource.org/license/mit
  */
 
-
 #include "common.h"
 #include "dsa/List.h"
 
 int main()
 {
     std::cout << "Start ListOperators test:\n";
-
-    std::initializer_list<int> expected{};
 
     dsa::List<int> l1({ 1,2,3 });
     dsa::List<int> l2({ 4,5,6 });
@@ -27,18 +24,18 @@ int main()
     std::cout << "List l3:\t" << l3 << "\n\n";
 
     dsa::List<int> l4(l1 + l2);
-    expected = { 1,2,3,4,5,6 };
-    tests::compare("ForwardList l4", l4, expected);
+    std::initializer_list<int> expected_4 = { 1,2,3,4,5,6 };
+    tests::compare("ForwardList l4", l4, expected_4);
 
     dsa::List<int> l5(0);
     l5 += l2;
-    expected = { 0,4,5,6 };
-    tests::compare("ForwardList l5", l5, expected);
+    std::initializer_list<int> expected_5 = { 0,4,5,6 };
+    tests::compare("ForwardList l5", l5, expected_5);
 
     dsa::List<int> l6(0);
     l6 += { 4, 5, 6 };
-    expected = { 0,4,5,6 };
-    tests::compare("ForwardList l6", l6, expected);
+    std::initializer_list<int> expected_6 = { 0,4,5,6 };
+    tests::compare("ForwardList l6", l6, expected_6);
 
     std::cout << "Compare operators for objects of the same size\n\n";
 

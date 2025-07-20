@@ -12,17 +12,11 @@
 #include "common.h"
 #include "dsa/ForwardList.h"
 
-#include <cstdint>
-#include <type_traits>
-#include <typeinfo>
-#include <xutility>
-
 int main()
 {
     std::cout << "Start ForwardListItors test:\n";
 
     bool res{};
-    std::initializer_list<int> expected{};
 
     std::cout << "Explicit iterator\n";
     dsa::ForwardList<int> l1{ 0, 10, 20 };
@@ -33,8 +27,8 @@ int main()
         val += 100;
         std::cout << val << '\n';
     }
-    expected = { 100, 110, 120 };
-    tests::compare("ForwardList l1", l1, expected);
+    std::initializer_list<int> expected_1 = { 100, 110, 120 };
+    tests::compare("ForwardList l1", l1, expected_1);
 
     std::cout << "Auto iterator\n";
     dsa::ForwardList<int> l2{ 0, 25, 50 };
@@ -45,8 +39,8 @@ int main()
         val += 100;
         std::cout << val << '\n';
     }
-    expected = { 100, 125, 150 };
-    tests::compare("ForwardList l2", l2, expected);
+    std::initializer_list<int> expected_2 = { 100, 125, 150 };
+    tests::compare("ForwardList l2", l2, expected_2);
 
     std::cout << "Explicit Const iterator\n";
     dsa::ForwardList<int> l3{ 0, 10, 20 };
@@ -58,8 +52,8 @@ int main()
         val += 100;
         std::cout << val << '\n';
     }
-    expected = { 0, 10, 20 };
-    tests::compare("ForwardList l3", l3, expected);
+    std::initializer_list<int> expected_3 = { 0, 10, 20 };
+    tests::compare("ForwardList l3", l3, expected_3);
 
     std::cout << "Auto Const iterator\n";
     dsa::ForwardList<int> l4{ 0, 25, 50 };
@@ -71,8 +65,8 @@ int main()
         val += 100;
         std::cout << val << '\n';
     }
-    expected = { 0, 25, 50 };
-    tests::compare("ForwardList l4", l4, expected);
+    std::initializer_list<int> expected_4 = { 0, 25, 50 };
+    tests::compare("ForwardList l4", l4, expected_4);
 
     // Check iterator of one element
     dsa::ForwardList<int> l5 = dsa::ForwardList<int>(0);
@@ -81,8 +75,8 @@ int main()
     int expected_val = 10;
     //res = if_error(val, expected_val);
     tests::compare("ForwardList l5 it", val, expected_val);
-    expected = { 0, 10 };
-    tests::compare("ForwardList l5", l5, expected);
+    std::initializer_list<int> expected_5 = { 0, 10 };
+    tests::compare("ForwardList l5", l5, expected_5);
 
     // Check iterator after inserting 0 elements
     dsa::ForwardList<int> l6 = dsa::ForwardList<int>(50);
@@ -93,16 +87,16 @@ int main()
     expected_val = 30;
     //res = if_error(val, expected_val);
     tests::compare("ForwardList l6 it", val, expected_val);
-    expected = { 30, 40, 50 };
-    tests::compare("ForwardList l6", l6, expected);
+    std::initializer_list<int> expected_6 = { 30, 40, 50 };
+    tests::compare("ForwardList l6", l6, expected_6);
 
 
     // Range based loop
-    expected = { 10, 20, 30, 40, 50 };
+    std::initializer_list<int> expected_7 = { 10, 20, 30, 40, 50 };
     std::initializer_list<int>::iterator il_it;
     dsa::ForwardList<int> l7 = dsa::ForwardList<int>{ 10, 20, 30, 40, 50 };
     std::cout << "ForwardList l7 vs std::initializer_list:\n";
-    il_it = expected.begin();
+    il_it = expected_7.begin();
     for (auto i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
@@ -110,7 +104,7 @@ int main()
         std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     }
     std::cout << '\n';
-    il_it = expected.begin();
+    il_it = expected_7.begin();
     for (auto& i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
@@ -118,7 +112,7 @@ int main()
         std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     }
     std::cout << '\n';
-    il_it = expected.begin();
+    il_it = expected_7.begin();
     for (const auto i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
@@ -126,7 +120,7 @@ int main()
         std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     }
     std::cout << '\n';
-    il_it = expected.begin();
+    il_it = expected_7.begin();
     for (const auto& i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
@@ -136,10 +130,10 @@ int main()
     std::cout << '\n';
 
     // Compare elements based on range loops
-    expected = { 10, 20, 30, 40, 50 };
+    std::initializer_list<int> expected_8 = { 10, 20, 30, 40, 50 };
     const dsa::ForwardList<int> l8 = dsa::ForwardList<int>{ 10, 20, 30, 40, 50 };
     std::cout << "ForwardList l8 vs std::initializer_list:\n";
-    il_it = expected.begin();
+    il_it = expected_8.begin();
     for (auto i : l8)
     {
         std::cout << i << ' ' << *il_it << ' ';
@@ -147,7 +141,7 @@ int main()
         std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     }
     std::cout << '\n';
-    il_it = expected.begin();
+    il_it = expected_8.begin();
     for (auto& i : l8)
     {
         std::cout << i << ' ' << *il_it << ' ';
@@ -155,7 +149,7 @@ int main()
         std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     }
     std::cout << '\n';
-    il_it = expected.begin();
+    il_it = expected_8.begin();
     for (const auto i : l8)
     {
         std::cout << i << ' ' << *il_it << ' ';
@@ -163,7 +157,7 @@ int main()
         std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
     }
     std::cout << '\n';
-    il_it = expected.begin();
+    il_it = expected_8.begin();
     for (const auto& i : l8)
     {
         std::cout << i << ' ' << *il_it << ' ';
@@ -175,8 +169,8 @@ int main()
     // std library operation on custom iterators
     dsa::ForwardList<int> l9 = dsa::ForwardList<int>{ 10, 20, 30, 40, 50 };
     std::fill(l9.begin(), l9.end(), 10);
-    expected = { 10, 10, 10, 10, 10 };
-    tests::compare("ForwardList l9", l9, expected);
+    std::initializer_list<int> expected_9 = { 10, 10, 10, 10, 10 };
+    tests::compare("ForwardList l9", l9, expected_9);
 
     // check const_iterator for const object
     dsa::ForwardList<int> l10 = dsa::ForwardList<int>{ 10, 20, 30 };

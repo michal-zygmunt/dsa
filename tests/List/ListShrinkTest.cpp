@@ -16,8 +16,6 @@ int main()
 {
     std::cout << "Start ListShrink test:\n";
 
-    std::initializer_list<int> expected{};
-
     dsa::List<int> l1 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
     l1.erase(l1.begin()[l1.size() - 1]);
     l1.pop_front();
@@ -26,19 +24,19 @@ int main()
     {
         l1.erase(l1.begin()[i]);
     }
-    expected = { 20, 40 };
-    tests::compare("List l1", l1, expected);
+    std::initializer_list<int> expected_1 = { 20, 40 };
+    tests::compare("List l1", l1, expected_1);
 
     dsa::List<int> l2 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
     l2.erase(l2.begin()[1], l2.begin()[3]);
-    expected = { 0, 30, 40, 50 };
-    tests::compare("List l2", l2, expected);
+    std::initializer_list<int> expected_2 = { 0, 30, 40, 50 };
+    tests::compare("List l2", l2, expected_2);
 
     dsa::List<int> l3 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
     l3.erase(l3.begin()[1]);
     l3.erase(l3.begin()[1], l3.begin()[3]);
-    expected = { 0, 40, 50 };
-    tests::compare("List l3", l3, expected);
+    std::initializer_list<int> expected_3 = { 0, 40, 50 };
+    tests::compare("List l3", l3, expected_3);
 
     return tests::failed;
 }

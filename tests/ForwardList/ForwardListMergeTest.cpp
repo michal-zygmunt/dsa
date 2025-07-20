@@ -16,25 +16,24 @@ int main()
 {
     std::cout << "Start ForwardListMerge test:\n";
 
-    std::initializer_list<int> expected{};
-    std::initializer_list<int> expected_1{ 1, 2, 3, 4, 5 };
-    std::initializer_list<int> expected_2{ 10, 20, 30, 40, 50 };
+    std::initializer_list<int> il_1{ 1, 2, 3, 4, 5 };
+    std::initializer_list<int> il_2{ 10, 20, 30, 40, 50 };
 
-    dsa::ForwardList<int> l1 = dsa::ForwardList<int>(expected_1);
-    dsa::ForwardList<int> l2 = dsa::ForwardList<int>(expected_2);
+    dsa::ForwardList<int> l1 = dsa::ForwardList<int>(il_1);
+    dsa::ForwardList<int> l2 = dsa::ForwardList<int>(il_2);
     l1.merge(l2);
-    expected = { 1, 2, 3, 4, 5, 10, 20, 30, 40, 50 };
-    tests::compare("ForwardList l1", l1, expected);
-    expected = {};
-    tests::compare("ForwardList l2", l2, expected);
+    std::initializer_list<int> expected_1 = { 1, 2, 3, 4, 5, 10, 20, 30, 40, 50 };
+    tests::compare("ForwardList l1", l1, expected_1);
+    std::initializer_list<int> expected_2 = {};
+    tests::compare("ForwardList l2", l2, expected_2);
 
-    dsa::ForwardList<int> l3 = dsa::ForwardList<int>(expected_1);
+    dsa::ForwardList<int> l3 = dsa::ForwardList<int>(il_1);
     dsa::ForwardList<int> l4;
     l4.merge(l3);
-    expected = { };
-    tests::compare("ForwardList l3", l3, expected);
-    expected = expected_1;
-    tests::compare("ForwardList l4", l4, expected);
+    std::initializer_list<int> expected_3 = { };
+    tests::compare("ForwardList l3", l3, expected_3);
+    std::initializer_list<int> expected_4 = il_1;
+    tests::compare("ForwardList l4", l4, expected_4);
 
     return tests::failed;
 }
