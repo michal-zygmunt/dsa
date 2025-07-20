@@ -54,6 +54,42 @@ if(ENABLE_WARNINGS)
 				/MP
 			)
 		endif()
+	elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+		message(STATUS "Using strict GCC flags")
+		target_compile_options(dsa_testing INTERFACE
+			-Wall
+			-Wextra
+			-Wpedantic
+			#-Werror
+			-Wconversion
+			-Wsign-conversion
+			-Wshadow
+			-Wformat=2
+			-Wnon-virtual-dtor
+			-Wold-style-cast
+			-Wcast-align
+			-Wuseless-cast
+			-Wduplicated-cond
+			-Wduplicated-branches 
+			-fdiagnostics-color=always
+			-pipe
+		)
+
+		target_link_options(dsa_testing INTERFACE
+			-Wl,--as-needed
+			-Wl,--no-undefined
+		)
+
+		# additional security flags
+		target_compile_options(dsa_testing INTERFACE
+			-fstack-protector-strong
+			-D_FORTIFY_SOURCE=2
+			-fPIC
+		)
+		target_link_options(dsa_testing INTERFACE
+			-Wl,-z,relro
+			-Wl,-z,now
+		)
 	endif()
 endif()
 
