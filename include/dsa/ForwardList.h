@@ -180,9 +180,9 @@ namespace dsa
              */
             ForwardListIterator operator++(int)
             {
-                ForwardListIterator<IF_CONST> ForwardListIterator = *this;
+                ForwardListIterator iterator = *this;
                 ++(*this);
-                return ForwardListIterator;
+                return iterator;
             }
 
             /**

@@ -192,9 +192,9 @@ namespace dsa
              */
             ListIterator operator++(int)
             {
-                ListIterator<IF_CONST> ListIterator = *this;
+                ListIterator iterator = *this;
                 ++(*this);
-                return ListIterator;
+                return iterator;
             }
 
             /**
@@ -219,9 +219,9 @@ namespace dsa
              */
             ListIterator operator--(int)
             {
-                ListIterator<IF_CONST> ListIterator = *this;
+                ListIterator iterator = *this;
                 --(*this);
-                return ListIterator;
+                return iterator;
             }
 
             /**
