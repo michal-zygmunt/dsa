@@ -262,32 +262,15 @@ namespace dsa
             {
                 Node* temp{ static_cast<Node*>(m_current_node) };
 
-                if (index >= 0)
+                for (size_t i = 0; i < index; i++)
                 {
-                    for (size_t i = 0; i < index; i++)
+                    if (temp->m_next)
                     {
-                        if (temp->m_next)
-                        {
-                            temp = temp->next();
-                        }
-                        else
-                        {
-                            return nullptr;
-                        }
+                        temp = temp->next();
                     }
-                }
-                else
-                {
-                    for (size_t i = 0; i < index; i++)
+                    else
                     {
-                        if (temp->m_prev)
-                        {
-                            temp = temp->prev();
-                        }
-                        else
-                        {
-                            return nullptr;
-                        }
+                        return nullptr;
                     }
                 }
 
@@ -1620,7 +1603,7 @@ namespace dsa
     template<typename T>
     typename List<T>::Node* List<T>::get(size_t index) const
     {
-        if (index < 0 || index >= m_size)
+        if (index >= m_size)
         {
             return nullptr;
         }

@@ -17,18 +17,18 @@ int main()
     std::cout << "Start ForwardListGrow test:\n";
 
     dsa::ForwardList<int> l1 = dsa::ForwardList<int>(10);
-    std::initializer_list<int> expected_1{ -10, 0, 0, 2, 10, 20, 4, 30, 40 };
     auto it = l1.insert_after(l1.cbegin(), 20);
     l1.insert_after(it, { 30, 40 });
     l1.push_front(0);
     l1.push_front(-10);
     // Try inserting nodes at invalid indexes
-    auto indexes = { -1, 0, 4, 2, 100 };
+    auto indexes = { 0, 4, 2, 100 };
     for (size_t i = 0; i < indexes.size(); i++)
     {
         int idx_val = indexes.begin()[i];
-        l1.insert_after(l1.cbegin()[idx_val], idx_val);
+        l1.insert_after(l1.cbegin()[static_cast<size_t>(idx_val)], idx_val);
     }
+    std::initializer_list<int> expected_1{ -10, 0, 0, 2, 10, 20, 4, 30, 40 };
     tests::compare("ForwardList l1", l1, expected_1);
 
     dsa::ForwardList<int> l2 = dsa::ForwardList<int>(50);

@@ -22,7 +22,7 @@ int main()
     auto indexes = { 100, 5, 2, 0, -1 };
     for (const auto& i : indexes)
     {
-        l1.erase_after(l1.begin()[i]);
+        l1.erase_after(l1.begin()[static_cast<size_t>(i)]);
     }
     std::initializer_list<int> expected_1 = { 10, 30 };
     tests::compare("ForwardList l1", l1, expected_1);

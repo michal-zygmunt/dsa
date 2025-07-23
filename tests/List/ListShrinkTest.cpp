@@ -22,7 +22,7 @@ int main()
     auto indexes = { 100, 5, 2, 0, -1 };
     for (const auto& i : indexes)
     {
-        l1.erase(l1.begin()[i]);
+        l1.erase(l1.begin()[static_cast<size_t>(i)]);
     }
     std::initializer_list<int> expected_1 = { 20, 40 };
     tests::compare("List l1", l1, expected_1);

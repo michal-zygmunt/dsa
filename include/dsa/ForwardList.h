@@ -221,21 +221,17 @@ namespace dsa
              */
             ForwardListIterator operator[](size_t index)
             {
-                Node* temp{};
-                if (index >= 0)
-                {
-                    temp = static_cast<Node*>(m_current_node);
+                Node* temp{ static_cast<Node*>(m_current_node) };
 
-                    for (size_t i = 0; i < index; i++)
+                for (size_t i = 0; i < index; i++)
+                {
+                    if (temp->m_next)
                     {
-                        if (temp->m_next)
-                        {
-                            temp = temp->next();
-                        }
-                        else
-                        {
-                            return nullptr;
-                        }
+                        temp = temp->next();
+                    }
+                    else
+                    {
+                        return nullptr;
                     }
                 }
 

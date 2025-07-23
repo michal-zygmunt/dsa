@@ -26,7 +26,7 @@ int main()
     for (size_t i = 0; i < indexes.size(); i++)
     {
         int idx_val = indexes.begin()[i];
-        l1.insert(l1.cbegin()[idx_val], idx_val);
+        l1.insert(l1.cbegin()[static_cast<size_t>(idx_val)], idx_val);
     }
     std::initializer_list<int> expected_1 = { 0, -10, 2, 0, 10, 4, 20, 30, 40 };
     tests::compare("List l1", l1, expected_1);
