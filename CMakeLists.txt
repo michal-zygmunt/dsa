@@ -54,8 +54,7 @@ if(ENABLE_WARNINGS)
 				/MP
 			)
 		endif()
-	elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-		message(STATUS "Using strict GCC flags")
+	else() # GCC / Clang
 		target_compile_options(dsa_testing INTERFACE
 			-Wall
 			-Wextra
@@ -68,12 +67,27 @@ if(ENABLE_WARNINGS)
 			-Wnon-virtual-dtor
 			-Wold-style-cast
 			-Wcast-align
-			-Wuseless-cast
-			-Wduplicated-cond
-			-Wduplicated-branches 
-			-fdiagnostics-color=always
 			-pipe
 		)
+		# GCC specific flags
+		if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+			message(STATUS "Using strict GNU flags")
+			target_compile_options(dsa_testing INTERFACE
+				-Wuseless-cast
+				-Wduplicated-cond
+				-Wduplicated-branches 
+				-fdiagnostics-color=always
+			)
+		# Clang specific flags
+		else(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+			message(STATUS "Using strict Clang flags")
+			target_compile_options(dsa_testing INTERFACE
+				-Wunreachable-code
+				-Wimplicit-fallthrough
+				-Wmissing-declarations
+				-fcolor-diagnostics
+			)
+		endif()
 
 		target_link_options(dsa_testing INTERFACE
 			-Wl,--as-needed
