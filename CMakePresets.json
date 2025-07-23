@@ -175,6 +175,62 @@
       }
     },
     {
+      "name": "linux-base-clang",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "linux-x64-debug-clang",
+      "displayName": "Linux x64 Debug Clang",
+      "inherits": "linux-base-clang",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "linux-x64-release-clang",
+      "displayName": "Linux x64 Release Clang",
+      "inherits": "linux-x64-debug-clang",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "linux-x86-debug-clang",
+      "displayName": "Linux x86 Debug Clang",
+      "inherits": "linux-base-clang",
+      "architecture": {
+        "value": "x86",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "linux-x86-release-clang",
+      "displayName": "Linux x86 Release Clang",
+      "inherits": "linux-x86-debug-clang",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
       "name": "macos-debug",
       "displayName": "macOS Debug",
       "generator": "Ninja",
