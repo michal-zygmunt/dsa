@@ -24,7 +24,7 @@ add_library(dsa_testing INTERFACE)
 target_link_libraries(dsa_testing INTERFACE dsa)
 
 
-option(ENABLE_WARNINGS "Enable strict compiler checks for tests" OFF)
+option(ENABLE_WARNINGS "Enable strict compiler flags" ON)
 option(DOCS_ENABLED "Enable documentation generation" ON)
 option(CODE_TESTING "Enable code testing" ON)
 option(CODE_COVERAGE "Enable coverage reporting" ON)
