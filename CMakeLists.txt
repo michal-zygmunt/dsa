@@ -39,7 +39,7 @@ if(ENABLE_WARNINGS)
 			/W4
 			/sdl
 			/GS
-			#/WX
+			/WX
 			/RTC1 # /RTCs /RTSu
 			/diagnostics:column
 			/diagnostics:caret
@@ -59,7 +59,7 @@ if(ENABLE_WARNINGS)
 			-Wall
 			-Wextra
 			-Wpedantic
-			#-Werror
+			-Werror
 			-Wconversion
 			-Wsign-conversion
 			-Wshadow
