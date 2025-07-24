@@ -4,7 +4,7 @@
  * @author Michal Zygmunt
  *
  * @copyright Copyright (c) 2025 Michal Zygmunt
- * @license Distributed under the MIT License.
+ * This project is distributed under the MIT License.
  * See accompanying LICENSE.txt file or obtain copy at
  * https://opensource.org/license/mit
  */
