@@ -44,6 +44,10 @@ namespace dsa
         struct NodeBase
         {
             virtual ~NodeBase() = default;
+
+            /**
+             * @brief Pointer to next node
+             */
             NodeBase* m_next{};
         };
 
@@ -116,19 +120,53 @@ namespace dsa
          * Template variable \p IF_CONST control whether reference
          * or const reference is returned to underlying data type
          *
-         * @tparam IF_CONST if \p true generate class with const reference to underlying data type
+         * @tparam IF_CONST if \p true generate iterator with const reference to underlying data type
          */
         template<bool IF_CONST>
         class ForwardListIterator : NodeBase
         {
         public:
 
+            /**
+             * @brief Alias for iterator type
+             *
+             * @tparam IF_CONST if \p true generate iterator with const reference to underlying data type
+             * @tparam T data type
+             */
             using iterator_type = typename std::conditional<IF_CONST, const T, T>::type;
 
+            /**
+             * @brief Alias for forward iterator tag, define iterator direction
+             *
+             * Used by STL to define iterator features.
+             * Forward iterator allows iteration only in forward direction.
+             */
             using iterator_category = std::forward_iterator_tag;
+
+            /**
+             * @brief Alias for pointer difference type
+             *
+             * Used by STL to define distance between two pointers
+             */
             using difference_type = std::ptrdiff_t;
+
+            /**
+             * @brief Alias for data type used by iterator
+             *
+             * @tparam T iterated element type
+             */
             using value_type = T;
+
+            /**
+             * @brief Alias for pointer to data type used by iterator
+             *
+             * @tparam T* pointer to data type
+             */
             using pointer = T*;
+
+            /**
+             * @brief Alias for reference to type used by iterator
+             */
             using reference = iterator_type&;
 
             /**
@@ -276,12 +314,49 @@ namespace dsa
             NodeBase* m_current_node{};
         };
 
+        /**
+         * @brief Alias for data type used in class
+         *
+         * @tparam T data type
+         */
         using value_type = T;
+
+        /**
+         * @brief Alias for pointer to data type used in class
+         *
+         * @tparam T* pointer to data type
+         */
         using pointer = T*;
+
+        /**
+         * @brief Alias for const pointer to data type used in class
+         *
+         * @tparam T* pointer to data type
+         */
         using const_pointer = const T*;
+
+        /**
+         * @brief Alias for reference to data type used in class
+         *
+         * @tparam T& reference to data type
+         */
         using reference = T&;
+
+        /**
+         * @brief Alias for const reference to data type used in class
+         *
+         * @tparam T& const reference to data type
+         */
         using const_reference = const T&;
+
+        /**
+         * @brief Alias for const iterator to data type used in class
+         */
         using const_iterator = ForwardListIterator<true>;
+
+        /**
+         * @brief Alias for iterator to data type used in class
+         */
         using iterator = ForwardListIterator<false>;
 
         /**
@@ -457,8 +532,8 @@ namespace dsa
          *
          * @param[in] pos const_iterator to insert element after
          * @param[in] value element of type T to be inserted after \p pos
-         * @return pointer to inserted element
-         * @retval iterator to inserted element
+         * @return pointer to ForwardList element
+         * @retval iterator to inserted \p value
          * @retval pos if no element was inserted
          */
         iterator insert_after(const_iterator pos, const_reference value);
@@ -469,7 +544,7 @@ namespace dsa
          * @param[in] pos const_iterator to insert element after
          * @param[in] count number of elements to insert after \p pos
          * @param[in] value element of type T to be inserted
-         * @return pointer to the last inserted element
+         * @return pointer to ForwardList element
          * @retval iterator pointer to last inserted element
          * @retval pos if no element was inserted
          */
@@ -479,12 +554,12 @@ namespace dsa
          * @brief Function inserts new Node after specified ForwardList const_iterator
          *
          * @param[in] pos const_iterator to insert element after
-         * @param[in] std::initializer_list to insert after \p pos
+         * @param[in] il initializer_list with elements to insert after \p pos
          * @return pointer to the last inserted element
          * @retval iterator to last inserted element
          * @retval pos if no element was inserted
          */
-        iterator insert_after(const_iterator pos, std::initializer_list<T> init_list);
+        iterator insert_after(const_iterator pos, std::initializer_list<T> il);
 
         /// @todo add emplace_after
 
@@ -665,7 +740,7 @@ namespace dsa
         /**
          * @brief push_back elements of another ForwardList to base container
          *
-         * @param[in] other ForwardList to read elements from
+         * @param[in] il initializer_list to read elements from
          * @return ForwardList<T>&
          */
         ForwardList<T>& operator+=(const std::initializer_list<T> il)
@@ -1133,7 +1208,7 @@ namespace dsa
     }
 
     template<typename T>
-    typename ForwardList<T>::iterator ForwardList<T>::insert_after(const_iterator pos, std::initializer_list<T> init_list)
+    typename ForwardList<T>::iterator ForwardList<T>::insert_after(const_iterator pos, std::initializer_list<T> il)
     {
         if (!if_valid_iterator(pos))
         {
@@ -1141,9 +1216,9 @@ namespace dsa
         }
 
         iterator it{ pos.m_current_node };
-        for (size_t i = 0; i < init_list.size(); i++)
+        for (size_t i = 0; i < il.size(); i++)
         {
-            it = insert_element_after(it, init_list.begin()[i]);
+            it = insert_element_after(it, il.begin()[i]);
         }
 
         return it;

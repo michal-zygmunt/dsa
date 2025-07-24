@@ -31,8 +31,25 @@ namespace dsa
     {
     public:
 
+        /**
+         * @brief Alias for data type used in class
+         *
+         * @tparam T data type
+         */
         using value_type = T;
+
+        /**
+         * @brief Alias for reference to data type used in class
+         *
+         * @tparam T& reference to data type
+         */
         using reference = T&;
+
+        /**
+         * @brief Alias for const reference to data type used in class
+         *
+         * @tparam T& const reference to data type
+         */
         using const_reference = const T&;
 
         /**

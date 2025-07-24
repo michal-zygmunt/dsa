@@ -44,7 +44,15 @@ namespace dsa
         struct NodeBase
         {
             virtual ~NodeBase() = default;
+
+            /**
+             * @brief Pointer to next node
+             */
             NodeBase* m_next{};
+
+            /**
+             * @brief Pointer to previous node
+             */
             NodeBase* m_prev{};
         };
 
@@ -127,7 +135,7 @@ namespace dsa
          * Template variable \p IF_CONST control whether reference
          * or const reference is returned to underlying data type
          *
-         * @tparam IF_CONST if \p true generate class with const reference to underlying data type
+         * @tparam IF_CONST if \p true generate iterator with const reference to underlying data type
          * @tparam T type of data stored in Node
          */
         template<bool IF_CONST>
@@ -135,12 +143,46 @@ namespace dsa
         {
         public:
 
+            /**
+             * @brief Alias for iterator type
+             *
+             * @tparam IF_CONST if \p true generate iterator with const reference to underlying data type
+             * @tparam T data type
+             */
             using iterator_type = typename std::conditional<IF_CONST, const T, T>::type;
 
+            /**
+             * @brief Alias for bidirectional iterator tag, define iterator direction
+             *
+             * Used by STL to define iterator features.
+             * Bidirectional iterator allows iteration forward and backward directions.
+             */
             using iterator_category = std::bidirectional_iterator_tag;
+
+            /**
+             * @brief Alias for pointer difference type
+             *
+             * Used by STL to define distance between two pointers
+             */
             using difference_type = std::ptrdiff_t;
+
+            /**
+             * @brief Alias for data type used by iterator
+             *
+             * @tparam T iterated element type
+             */
             using value_type = T;
+
+            /**
+             * @brief Alias for pointer to data type used by iterator
+             *
+             * @tparam T* pointer to data type
+             */
             using pointer = T*;
+
+            /**
+             * @brief Alias for reference to type used by iterator
+             */
             using reference = iterator_type&;
 
             /**
@@ -315,12 +357,49 @@ namespace dsa
             NodeBase* m_current_node{};
         };
 
+        /**
+         * @brief Alias for data type used in class
+         *
+         * @tparam T data type
+         */
         using value_type = T;
+
+        /**
+         * @brief Alias for pointer to data type used in class
+         *
+         * @tparam T* pointer to data type
+         */
         using pointer = T*;
+
+        /**
+         * @brief Alias for const pointer to data type used in class
+         *
+         * @tparam T* pointer to data type
+         */
         using const_pointer = const T*;
+
+        /**
+         * @brief Alias for reference to data type used in class
+         *
+         * @tparam T& reference to data type
+         */
         using reference = T&;
+
+        /**
+         * @brief Alias for const reference to data type used in class
+         *
+         * @tparam T& const reference to data type
+         */
         using const_reference = const T&;
+
+        /**
+         * @brief Alias for const iterator to data type used in class
+         */
         using const_iterator = ListIterator<true>;
+
+        /**
+         * @brief Alias for iterator to data type used in class
+         */
         using iterator = ListIterator<false>;
 
         /**
@@ -506,11 +585,11 @@ namespace dsa
         /**
          * @brief Function inserts new Node before specified \p pos
          *
-         * @param[in] \p pos const_iterator to insert element before
+         * @param[in] pos const_iterator to insert element before
          * @param[in] value element of type T to be inserted before \p pos
-         * @return iterator to list element
-         * @retval iterator to inserted element
-         * @retval iterator to \p pos if no element is inserted
+         * @return pointer to List element
+         * @retval iterator to inserted \p value
+         * @retval pos if no element was inserted
          */
         iterator insert(const_iterator pos, const_reference value);
 
@@ -520,9 +599,9 @@ namespace dsa
          * @param[in] pos const_iterator to insert element before
          * @param[in] count number of elements to insert before \p pos
          * @param[in] value element of type T to be inserted
-         * @return iterator to list element
-         * @retval iterator to first inserted element
-         * @retval iterator to \p pos if no element is inserted
+         * @return pointer to List element
+         * @retval iterator to inserted \p value
+         * @retval pos if no element was inserted
          */
         iterator insert(const_iterator pos, size_t count, const_reference value);
 
@@ -530,21 +609,21 @@ namespace dsa
          * @brief Function inserts new Node before specified \p pos
          *
          * @param[in] pos const_iterator to insert element before
-         * @param[in] std::initializer_list to insert before \p pos
-         * @return iterator to list element
+         * @param[in] il initializer_list with elements to insert before \p pos
+         * @return pointer to List element
          * @retval iterator to first inserted element
-         * @retval iterator to \p pos if no element is inserted
+         * @retval pos if no element was inserted
          */
-        iterator insert(const_iterator pos, std::initializer_list<T> init_list);
+        iterator insert(const_iterator pos, std::initializer_list<T> il);
 
         /// @todo add insert_range
 
         /// @todo add emplace
 
         /**
-        * @brief Function erases Node object at specified \pos
+        * @brief Function erases Node object at specified \p pos
         *
-        * @param[in] \p pos iterator to element to erase
+        * @param[in] pos iterator to element to erase
         * @return iterator following erased element
         * @retval iterator to element following \p pos
         * @retval begin iterator if \p pos was first element prior to removal
@@ -553,9 +632,9 @@ namespace dsa
         iterator erase(iterator pos);
 
         /**
-        * @brief Function erases Node object at specified \pos
+        * @brief Function erases Node object at specified \p pos
         *
-        * @param[in] \p pos iterator to element to erase
+        * @param[in] pos iterator to element to erase
         * @return iterator following erased element
         * @retval iterator to element following \p pos
         * @retval begin iterator if \p pos was first element prior to removal
@@ -571,7 +650,7 @@ namespace dsa
          * @return iterator following last erased element
          * @retval iterator to \p last
          * @retval end iterator if \p last was end element prior to removal
-         * @retval last iterator if \p first to \last is empty range
+         * @retval last iterator if \p first to p\ last is empty range
          */
         iterator erase(iterator first, iterator last);
 
@@ -583,7 +662,7 @@ namespace dsa
          * @return iterator following last erased element
          * @retval iterator to \p last
          * @retval end iterator if \p last was end element prior to removal
-         * @retval last iterator if \p first to \last is empty range
+         * @retval last iterator if \p first to \p last is empty range
          */
         iterator erase(const_iterator first, const_iterator last);
 
@@ -759,7 +838,7 @@ namespace dsa
         /**
          * @brief push_back elements of another List to base container
          *
-         * @param[in] other List to read elements from
+         * @param[in] il initializer_list to read elements from
          * @return List<T>&
          */
         List<T>& operator+=(const std::initializer_list<T> il)
@@ -1164,7 +1243,7 @@ namespace dsa
     }
 
     template<typename T>
-    typename List<T>::iterator List<T>::insert(const_iterator pos, std::initializer_list<T> init_list)
+    typename List<T>::iterator List<T>::insert(const_iterator pos, std::initializer_list<T> il)
     {
         iterator it(pos.m_current_node);
 
@@ -1173,10 +1252,10 @@ namespace dsa
             return nullptr;
         }
 
-        size_t list_size = init_list.size();
+        size_t list_size = il.size();
         for (size_t i = 0; i < list_size; i++)
         {
-            it = insert_element_before(it, init_list.begin()[list_size - 1 - i]);
+            it = insert_element_before(it, il.begin()[list_size - 1 - i]);
         }
 
         return it;
