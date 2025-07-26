@@ -60,11 +60,12 @@ def detect_tools(verbose : bool) -> bool:
         sys.exit("Clang tools not found! Make sure clang tools are added to system path.")
 
     # running script on Windows require wsl to use Linux tools
-    if(platform.system() == "Windows" and check_if_app_exists("wsl", verbose=verbose)):
-        print("WSL found!")
-        use_wsl = True
-    else:
-        sys.exit("WSL not found! Generating coverage reports require use of Linux tools. Make sure WSL was set up.")
+    if(platform.system() == "Windows"):
+        if(check_if_app_exists("wsl", verbose=verbose)):
+            print("WSL found!")
+            use_wsl = True
+        else:
+            sys.exit("WSL not found! Generating coverage reports require use of Linux tools. Make sure WSL was set up.")
     
     # Linux native tools required to generate report
     if(check_if_app_exists("lcov", use_wsl=use_wsl, verbose=verbose)):
@@ -91,7 +92,16 @@ def find_files(file_pattern : str, extension : str, start_path="."):
 
 
 def find_test_apps(start_path=".", verbose = False) -> list:
-    test_apps = find_files("test", "*.exe", start_path)
+    if(platform.system() == "Windows"):
+        test_apps = find_files("test", "*.exe", start_path)
+    else:
+        files_list = find_files("test", "*", start_path)
+        
+        test_apps = []
+        for file in files_list:
+            if (file.is_file() and os.access(file, os.X_OK)):
+                test_apps.append(file)
+    
     log(verbose, test_apps)
 
     if not test_apps:

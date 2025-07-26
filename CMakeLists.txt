@@ -128,20 +128,19 @@ if(CODE_TESTING)
 	message(STATUS "Code testing enabled")
 
 	if(CODE_COVERAGE)
-		if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-
-			if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT MATCHES "MSVC")
-				message(STATUS "Building with code coverage flags for Clang-MSVC")
-			
-				add_compile_options(-fprofile-instr-generate -fcoverage-mapping)
-				add_link_options(-fprofile-instr-generate)
-			endif()
-
+		if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+			message(STATUS "Building with code coverage flags for Clang")
+			target_compile_options(dsa_testing INTERFACE
+				-fprofile-instr-generate
+				-fcoverage-mapping
+			)
+			target_link_options(dsa_testing INTERFACE
+				-fprofile-instr-generate
+			)
 		else()
-			message(WARNING "Code coverage only supported with Clang-MSVC")
+			message(WARNING "Code coverage only supported with Clang")
 		endif()
 	endif()
-
 	
 	include (CTest)
 	add_subdirectory(tests)
