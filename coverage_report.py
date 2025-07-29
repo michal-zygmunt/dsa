@@ -27,11 +27,17 @@ def log(if_print : bool, data : any):
 
 
 def abs_path_in_wsl(path : str, verbose = False):
+    
     wsl_prefix_path = "/mnt/"
-    tokens = path.split(':')
-    line = (wsl_prefix_path + str(tokens[0]).lower() + str(tokens[1])).replace("\\", '/')
+
+    # Windows based path,
+    # wsl uses lower case letters for windows path
+    if ':' in path:
+        tokens = path.split(':')
+        path = (wsl_prefix_path + str(tokens[0]).lower() + str(tokens[1])).replace("\\", '/')
+
     log(verbose, tokens)
-    return line
+    return path
 
 
 def check_if_app_exists(executable_name : str, use_wsl = False, verbose = False) -> bool:
@@ -86,6 +92,12 @@ def clean_artifacts(start_path="."):
     for f in Path(start_path).rglob("*.lcov"):
         f.unlink()
 
+    # TODO clean gcc coverage data when test apps are compiled by Python routine
+    # for f in Path(start_path).rglob("*.gcno"):
+    #     f.unlink()
+
+    for f in Path(start_path).rglob("*.gcda"):
+        f.unlink()
 
 def find_files(file_pattern : str, extension : str, start_path="."):
     return [file for file in Path(start_path).rglob(extension) if file_pattern.lower() in file.stem.lower()]
@@ -110,16 +122,19 @@ def find_test_apps(start_path=".", verbose = False) -> list:
     return test_apps
 
 
-def generate_profraw(applications):
+def run_test_apps(applications, compiler : str):
     for app in applications:
         print(f"Starting test: {app}")
 
-        # use individual names for profraw files
-        profraw = app.with_suffix(".profraw").name
         env = os.environ.copy()
-        env["LLVM_PROFILE_FILE"] = profraw
+        if compiler.lower() == "clang":
+            # use individual names for profraw files
+            profraw = app.with_suffix(".profraw").name
+            env = os.environ.copy()
+            env["LLVM_PROFILE_FILE"] = profraw
 
-        # generate profraw files near binaries
+        # run test apps to generate instrumentation data for coverage report
+        # profraw files for clang are generated near app executable
         subprocess.run(str(app), cwd=Path(app).parent, env=env, check=True)
 
 
@@ -150,7 +165,8 @@ def generate_lcov(applications, start_path=".", verbose = False):
             subprocess.run(args, check=True, stdout=output_file)
 
 
-def generate_info(start_path, coverage_report_dir : str, coverage_report_name : str, use_wsl = False, verbose = False):
+def generate_info_clang(start_path, coverage_report_dir : str, coverage_report_name : str,
+                        use_wsl = False, verbose = False):
     print(f"Merge .lcov into .info")
 
     lcov_files = find_files("test", "*.lcov", start_path)
@@ -162,24 +178,62 @@ def generate_info(start_path, coverage_report_dir : str, coverage_report_name : 
 
     if use_wsl:
         args.insert(0, "wsl")
-        if ':' in output_file:
-            output_file = abs_path_in_wsl(output_file)
+        output_file = abs_path_in_wsl(output_file)
 
     for file in Path(start_path).rglob("*.lcov"):
         if "test" in file.stem.lower():
-
             line = str(Path(file).as_posix())
-
             # convert absolute Windows path to wsl
-            if use_wsl and ':' in line:
+            if use_wsl:
                 line = abs_path_in_wsl(line)
+            args += ["-a"] + [line]    
 
-            args += ["-a"] + [line]
-    
-
-    args += ["-o", output_file]
+    args += ["--output-file", output_file]
     log(verbose, args)
     subprocess.run(args, check=True)
+
+
+def generate_info_gcc(start_path, coverage_report_dir : str, coverage_report_name : str,
+                      use_wsl = False, verbose = False):
+
+    print(f"Merge .gcda and .gcno into .info")
+
+    gcda_files = find_files("test", "*.gcda", start_path)
+    if not gcda_files:
+        sys.exit("No .gcda files found!")
+
+    gcno_files = find_files("test", "*.gcda", start_path)
+    if not gcno_files:
+        sys.exit("No .gcno files found!")
+    
+    output_file = os.path.join(coverage_report_dir, coverage_report_name)
+
+    if use_wsl:
+        args.insert(0, "wsl")
+        output_file = abs_path_in_wsl(output_file)
+    
+    args = ["lcov", "--function-coverage", "--branch-coverage",
+            "--capture", "--directory", start_path,
+            "--no-external", "--output-file", output_file,
+            # NOTE compiling with gcc -O1 flag prevents mismatch exception tag error for lcov
+            # and following line can be disabled
+            "--ignore-errors", "mismatch"
+            ]
+    log(verbose, args)
+    subprocess.run(args, check=True)
+
+
+def generate_info(start_path, compiler : str, coverage_report_dir : str, coverage_report_name : str,
+                  use_wsl = False, verbose = False):
+    
+    if compiler == "clang":
+        generate_info_clang(start_path, coverage_report_dir, coverage_report_name, use_wsl, verbose)
+
+    elif compiler == "gcc":
+        generate_info_gcc(start_path, coverage_report_dir, coverage_report_name, use_wsl, verbose)
+
+    else:
+        sys.exit(f"Unexpected compiler: {compiler}. Exiting!")
 
     # if wsl is used, file paths in info file needs to be prepended with /mnt/ prefix
     # and os separators needs to be updated for genhtml
@@ -197,10 +251,12 @@ def generate_info(start_path, coverage_report_dir : str, coverage_report_name : 
                     line = sf + abs_path
                     log(verbose, line)
 
-                output_file.write(line)        
+                output_file.write(line)
 
 
 def generate_html_report(coverage_report_dir : str, coverage_report_name : str, use_wsl = False, verbose = False):
+
+    print(f"Generate html report")
 
     input_file = os.path.join(coverage_report_dir, coverage_report_name)
     output_dir = os.path.join(coverage_report_dir)
@@ -208,10 +264,8 @@ def generate_html_report(coverage_report_dir : str, coverage_report_name : str, 
 
     if use_wsl:
         args.insert(0, "wsl")
-        if ':' in input_file:
-            input_file = abs_path_in_wsl(input_file)
-        if ':' in output_dir:
-            output_dir = abs_path_in_wsl(output_dir)
+        input_file = abs_path_in_wsl(input_file)
+        output_dir = abs_path_in_wsl(output_dir)
 
     args += [f"{input_file}", f"--output-directory={output_dir}"]
 
@@ -239,10 +293,11 @@ def generate_coverage_md(start_path, coverage_report_dir) -> None:
 
 def get_user_args():
 
+    default_c = "clang"
     default_i = '.'
     default_o = os.path.join("docs", "coverage")
     default_n = "coverage.info"
-    default_v = False
+    default_v = True
 
     parser = argparse.ArgumentParser(prog="Coverage Report",
                                      description="Python script runs test application to generate code coverage" +
@@ -250,6 +305,9 @@ def get_user_args():
                                      " and have 'test' frase in name for automatic discovery." +
                                      " Depending on used flags, report can contain code coverage of branches,"
                                      " functions and lines.")
+    parser.add_argument("-c", "--compiler", type=str,
+                        help=f"Compilator used to generate code coverage data. Supported options 'clang', 'gcc'. " +
+                        f"Default: '{default_c}'", default=default_c)
     parser.add_argument("-i", "--root_dir", type=Path,
                         help=f"Root path for test discovery and coverage report generation. Default: script directory",
                         default=default_i)
@@ -265,6 +323,9 @@ def get_user_args():
     args = parser.parse_args()
 
     log(args.verbose, args)
+
+    if args.compiler.lower() != "clang" and args.compiler.lower() != "gcc":
+        sys.exit(f"Unknown compiler {args.compiler}!")
 
     args.root_dir = os.path.abspath(args.root_dir)
     args.coverage_report_dir = os.path.abspath(args.coverage_report_dir)
@@ -288,15 +349,20 @@ def main():
     test_apps = find_test_apps(args.root_dir, verbose=args.verbose)
 
     clean_artifacts()
+
+    # generate .profraw for clang coverage and .gcno for gcc coverage
+    run_test_apps(test_apps, args.compiler)
+
+    if args.compiler == "clang":
+        generate_profdata(start_path=args.root_dir, verbose=args.verbose)
+        generate_lcov(test_apps, start_path=args.root_dir)
+
+    generate_info(start_path=args.root_dir, compiler=args.compiler, coverage_report_dir=args.coverage_report_dir,
+                    coverage_report_name=args.coverage_report_name, use_wsl=use_wsl, verbose=args.verbose)
     
-    generate_profraw(test_apps)
-    generate_profdata(start_path=args.root_dir, verbose=args.verbose)
-    generate_lcov(test_apps, start_path=args.root_dir)
-    generate_info(start_path=args.root_dir,
-                  coverage_report_dir=args.coverage_report_dir, coverage_report_name=args.coverage_report_name,
-                  use_wsl=use_wsl, verbose=args.verbose)
-    generate_html_report(coverage_report_dir=args.coverage_report_dir, coverage_report_name=args.coverage_report_name,
-                         use_wsl=use_wsl, verbose=args.verbose)
+    generate_html_report(coverage_report_dir=args.coverage_report_dir,
+                            coverage_report_name=args.coverage_report_name, use_wsl=use_wsl, verbose=args.verbose)
+
     generate_coverage_md(start_path=args.root_dir, coverage_report_dir=args.coverage_report_dir)
 
 if __name__ == "__main__":
