@@ -137,8 +137,22 @@ if(CODE_TESTING)
 			target_link_options(dsa_testing INTERFACE
 				-fprofile-instr-generate
 			)
+		elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+			message(STATUS "Building with code coverage flags for GCC")
+			target_compile_options(dsa_testing INTERFACE
+				-coverage # -fprofile-arcs -ftest-coverage
+				-fprofile-abs-path
+				-fno-inline
+				-fno-elide-constructors
+				-O0
+				#-O1 # flag prevents mismatch exception tag error when generating report with lcov
+				-g
+			)
+			target_link_options(dsa_testing INTERFACE
+				-coverage # -fprofile-arcs -ftest-coverage
+			)
 		else()
-			message(WARNING "Code coverage only supported with Clang")
+			message(WARNING "Code coverage only supported with Clang and GCC")
 		endif()
 	endif()
 	
