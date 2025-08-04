@@ -259,13 +259,13 @@ namespace dsa
              */
             ForwardListIterator operator[](size_t index)
             {
-                Node* temp{ static_cast<Node*>(m_current_node) };
+                NodeBase* temp{ m_current_node };
 
                 for (size_t i = 0; i < index; i++)
                 {
                     if (temp->m_next)
                     {
-                        temp = temp->next();
+                        temp = temp->m_next;
                     }
                     else
                     {
@@ -823,7 +823,10 @@ namespace dsa
          */
         void init_node()
         {
-            m_front = new NodeBase;
+            if (!m_front)
+            {
+                m_front = new NodeBase;
+            }
         }
 
         /**
@@ -861,8 +864,8 @@ namespace dsa
                 return nullptr;
             }
 
-            Node* temp = static_cast<Node*>(pos.m_current_node);
-            Node* to_remove = static_cast<Node*>(temp->m_next);
+            NodeBase* temp{ pos.m_current_node };
+            NodeBase* to_remove{ temp->m_next };
 
             temp->m_next = to_remove->m_next;
             delete to_remove;
@@ -887,7 +890,7 @@ namespace dsa
                 return nullptr;
             }
 
-            Node* temp = static_cast<Node*>(pos.m_current_node);
+            NodeBase* temp{ pos.m_current_node };
 
             Node* newNode = new Node(value);
             newNode->m_next = temp->m_next;
@@ -1000,10 +1003,7 @@ namespace dsa
     template<typename T>
     ForwardList<T>& ForwardList<T>::operator=(const ForwardList<T>& other)
     {
-        if (!m_front)
-        {
-            init_node();
-        }
+        init_node();
 
         if (&other != this)
         {
@@ -1033,10 +1033,8 @@ namespace dsa
     {
         if (&other != this)
         {
-            if (!m_front)
-            {
-                init_node();
-            }
+            clear();
+            init_node();
 
             m_front->m_next = other.m_front->m_next;
             m_size = other.m_size;
@@ -1053,7 +1051,6 @@ namespace dsa
     {
         clear();
 
-        m_front = nullptr;
         delete m_front;
     }
 
@@ -1172,7 +1169,7 @@ namespace dsa
         if (m_front && m_front->m_next)
         {
             Node* temp = static_cast<Node*>(m_front->m_next);
-            while (m_front->m_next)
+            while (temp)
             {
                 m_front->m_next = temp->next();
                 delete temp;
@@ -1303,10 +1300,7 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::resize(size_t count, const_reference value)
     {
-        if (!m_front)
-        {
-            init_node();
-        }
+        init_node();
 
         if (count == m_size)
         {
@@ -1347,18 +1341,17 @@ namespace dsa
     {
         if (&other != this)
         {
-            ForwardList<T> temp;
-            temp.m_front = m_front;
-            temp.m_size = m_size;
+            NodeBase* temp_front{ m_front };
+            size_t temp_size{ m_size };
 
             m_front = other.m_front;
             m_size = other.m_size;
 
-            other.m_front = temp.m_front;
-            other.m_size = temp.m_size;
+            other.m_front = temp_front;
+            other.m_size = temp_size;
 
-            temp.m_front = nullptr;
-            temp.m_size = 0;
+            temp_front = nullptr;
+            temp_size = 0;
         }
     }
 
@@ -1443,16 +1436,16 @@ namespace dsa
                 return;
             }
 
-            Node* temp_prev = static_cast<Node*>(pos.m_current_node);     // to append to
-            Node* temp_next = static_cast<Node*>(first.m_current_node);   // does not move
+            NodeBase* temp_prev{ pos.m_current_node };     // to append to
+            NodeBase* temp_next{ first.m_current_node };   // does not move
 
-            Node* first_to_move = static_cast<Node*>(temp_next->m_next);
-            Node* last_to_move = temp_next;
+            NodeBase* first_to_move{ temp_next->m_next };
+            NodeBase* last_to_move{ temp_next };
             for (size_t i = 0; i < dist; i++)
             {
                 if (last_to_move)
                 {
-                    last_to_move = static_cast<Node*>(last_to_move->m_next);
+                    last_to_move = last_to_move->m_next;
                 }
             }
 
