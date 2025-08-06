@@ -302,13 +302,13 @@ namespace dsa
              */
             ListIterator operator[](size_t index)
             {
-                Node* temp{ static_cast<Node*>(m_current_node) };
+                NodeBase* temp{ m_current_node };
 
                 for (size_t i = 0; i < index; i++)
                 {
                     if (temp->m_next)
                     {
-                        temp = temp->next();
+                        temp = temp->m_next;
                     }
                     else
                     {
@@ -916,8 +916,8 @@ namespace dsa
                 return iterator(end());
             }
 
-            Node* temp = static_cast<Node*>(pos.m_current_node->m_prev);
-            Node* to_remove = static_cast<Node*>(temp->m_next);
+            NodeBase* temp{ pos.m_current_node->m_prev };
+            NodeBase* to_remove{ temp->m_next };
 
             temp->m_next = to_remove->m_next;
             temp->m_next->m_prev = temp;
@@ -955,7 +955,7 @@ namespace dsa
                 return end().m_current_node->m_prev;
             }
 
-            Node* temp = static_cast<Node*>(pos.m_current_node->m_prev);
+            NodeBase* temp{ pos.m_current_node->m_prev };
 
             Node* newNode = new Node(value);
             newNode->m_next = temp->m_next;
@@ -1084,12 +1084,15 @@ namespace dsa
     {
         if (&other != this)
         {
+            clear();
+            NodeBase* temp = m_back;
+
             m_front = other.m_front;
             m_back = other.m_back;
             m_size = other.m_size;
 
             other.m_front = nullptr;
-            other.m_back = nullptr;
+            other.m_back = temp;
             other.m_size = 0;
         }
 
@@ -1100,6 +1103,11 @@ namespace dsa
     List<T>::~List()
     {
         clear();
+
+        if (m_back)
+        {
+            delete m_back;
+        }
     }
 
     template<typename T>
@@ -1205,17 +1213,20 @@ namespace dsa
     template<typename T>
     void List<T>::clear()
     {
-        Node* temp = static_cast<Node*>(m_front);
-        while (m_front)
+        if (m_front && m_front->m_next)
         {
-            m_front = m_front->m_next;
-            delete temp;
-            temp = static_cast<Node*>(m_front);
-        }
+            NodeBase* temp{ m_front };
+            while (temp->m_next)
+            {
+                m_front->m_prev = nullptr;
+                m_front = temp->m_next;
+                delete temp;
+                temp = m_front;
+            }
 
-        m_size = 0;
-        m_front = nullptr;
-        m_back = nullptr;
+            m_size = 0;
+            m_back->m_prev = nullptr;
+        }
     }
 
     template<typename T>
@@ -1326,11 +1337,11 @@ namespace dsa
             return;
         }
 
-        Node* temp = static_cast<Node*>(m_front);
+        NodeBase* temp{ m_front };
         if (m_size == 1)
         {
             m_front = nullptr;
-            m_back = nullptr;
+            m_back->m_prev = nullptr;
         }
         else
         {
@@ -1373,16 +1384,17 @@ namespace dsa
             return;
         }
 
-        Node* temp = static_cast<Node*>(m_back);
+        NodeBase* temp{ m_back->m_prev };
         if (m_size == 1)
         {
+            // temp is m_front
             m_front = nullptr;
-            m_back = nullptr;
+            m_back->m_prev = nullptr;
         }
         else
         {
-            m_back = temp->m_prev;
-            m_back->m_next = nullptr;
+            m_back->m_prev = temp->m_prev;
+            temp->m_prev->m_next = m_back;
         }
 
         delete temp;
@@ -1427,22 +1439,21 @@ namespace dsa
     {
         if (&other != this)
         {
-            List<T> temp;
-            temp.m_front = m_front;
-            temp.m_back = m_back;
-            temp.m_size = m_size;
+            NodeBase* temp_front{ m_front };
+            NodeBase* temp_back{ m_back };
+            size_t temp_size{ m_size };
 
             m_front = other.m_front;
             m_back = other.m_back;
             m_size = other.m_size;
 
-            other.m_front = temp.m_front;
-            other.m_back = temp.m_back;
-            other.m_size = temp.m_size;
+            other.m_front = temp_front;
+            other.m_back = temp_back;
+            other.m_size = temp_size;
 
-            temp.m_front = nullptr;
-            temp.m_back = nullptr;
-            temp.m_size = 0;
+            temp_front = nullptr;
+            temp_back = nullptr;
+            temp_size = 0;
         }
     }
 
@@ -1497,11 +1508,11 @@ namespace dsa
     {
         if (&other != this && other.m_size > 0)
         {
-            Node* temp_prev = static_cast<Node*>(pos.m_current_node->m_prev);
-            Node* temp_next = static_cast<Node*>(pos.m_current_node);
+            NodeBase* temp_prev{ pos.m_current_node->m_prev };
+            NodeBase* temp_next{ pos.m_current_node };
 
-            Node* first_to_move = static_cast<Node*>(first.m_current_node);
-            Node* last_to_move = static_cast<Node*>(last.m_current_node->m_prev);
+            NodeBase* first_to_move{ first.m_current_node };
+            NodeBase* last_to_move{ last.m_current_node->m_prev };
 
             size_t dist = distance(first, last);
 
@@ -1577,52 +1588,51 @@ namespace dsa
     template<typename T>
     void List<T>::remove(const_reference value)
     {
-        Node* temp = static_cast<Node*>(m_front);
-        Node* next{};
+        NodeBase* temp{ m_front };
+        NodeBase* next{};
         while (temp)
         {
-            next = temp->next();
+            next = temp->m_next;
+            if (!next)
+            {
+                return;
+            }
 
             if (static_cast<Node*>(m_front)->value() == value)
             {
                 pop_front();
-                temp = static_cast<Node*>(m_front);
+                temp = m_front;
                 continue;
             }
 
-            if (next && next->value() == value)
+            if (next && next != m_back && next->m_next != nullptr && static_cast<Node*>(next)->value() == value)
             {
-                Node* to_remove = temp->next();
-                temp->m_next = to_remove->next();
+                NodeBase* to_remove = temp->m_next;
+                temp->m_next = to_remove->m_next;
+                to_remove->m_next->m_prev = temp;
                 delete to_remove;
                 m_size--;
                 continue;
             }
 
-            temp = temp->next();
-        }
-
-        if (m_size == 0)
-        {
-            m_front = nullptr;
-            m_back = nullptr;
+            temp = temp->m_next;
         }
     }
 
     template<typename T>
     void List<T>::reverse()
     {
-        Node* temp = static_cast<Node*>(m_front);
-        Node* temp_back = static_cast<Node*>(m_back->m_prev);
+        NodeBase* temp{ m_front };
+        NodeBase* temp_back{ m_back->m_prev };
         m_front = temp_back;
         temp_back = temp;
 
-        Node* prev{};
-        Node* next{};
+        NodeBase* prev{};
+        NodeBase* next{};
 
         for (size_t i = 0; i < m_size; i++)
         {
-            next = static_cast<Node*>(temp->m_next);
+            next = temp->m_next;
             temp->m_next = prev;
             temp->m_prev = next;
 
@@ -1638,20 +1648,20 @@ namespace dsa
     template<typename T>
     void List<T>::unique()
     {
-        Node* temp = static_cast<Node*>(m_front);
-        Node* prev{};
-        Node* next{};
+        NodeBase* temp{ m_front };
+        NodeBase* prev{};
+        NodeBase* next{};
         while (temp)
         {
             prev = temp;
 
-            while (prev)
+            while (prev->m_next)
             {
-                next = static_cast<Node*>(prev->m_next);
+                next = prev->m_next;
 
-                if (next && next->value() == temp->value() && next != m_back)
+                if (next != m_back && static_cast<Node*>(next)->value() == static_cast<Node*>(temp)->value())
                 {
-                    Node* to_remove = next;
+                    NodeBase* to_remove = next;
 
                     if (to_remove->m_next)
                     {
@@ -1671,11 +1681,11 @@ namespace dsa
 
                 if (prev)
                 {
-                    prev = static_cast<Node*>(prev->m_next);
+                    prev = prev->m_next;
                 }
             }
 
-            temp = static_cast<Node*>(temp->m_next);
+            temp = temp->m_next;
         }
     }
 
@@ -1747,8 +1757,6 @@ namespace dsa
 
         return false;
     }
-
-
 
     /**
      * @brief Construct new object based on two List objects
