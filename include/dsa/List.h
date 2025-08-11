@@ -59,7 +59,7 @@ namespace dsa
         /**
          * @brief Implements Node template class with pointer to adjacent elements
          */
-        class Node : NodeBase
+        class Node : public NodeBase
         {
         public:
 
@@ -96,26 +96,6 @@ namespace dsa
             T value() const
             {
                 return m_value;
-            }
-
-            /**
-             * @brief Function returns pointer to next Node object
-             *
-             * @return Node* pointer to value stored in Node
-             */
-            Node* next() const
-            {
-                return static_cast<Node*>(NodeBase::m_next);
-            }
-
-            /**
-             * @brief Function returns pointer to previous Node object
-             *
-             * @return Node* pointer to value stored in Node
-             */
-            Node* prev() const
-            {
-                return static_cast<Node*>(NodeBase::m_prev);
             }
 
         private:
@@ -324,9 +304,13 @@ namespace dsa
              *
              * @return T& reference or const reference to data stored in Node
              */
-            reference operator*() const noexcept
+            reference operator*() const
             {
-                return static_cast<Node*>(m_current_node)->value();
+                if (Node* node = dynamic_cast<Node*>(m_current_node))
+                {
+                    return node->value();
+                }
+                throw std::runtime_error("Invalid iterator dereference");
             }
 
             /**
@@ -336,7 +320,11 @@ namespace dsa
              */
             pointer operator->()
             {
-                return &static_cast<Node*>(m_current_node)->value();
+                if (Node* node = dynamic_cast<Node*>(m_current_node))
+                {
+                    return &node->value();
+                }
+                throw std::runtime_error("Invalid iterator pointer");
             }
 
             /**
@@ -1598,21 +1586,28 @@ namespace dsa
                 return;
             }
 
-            if (static_cast<Node*>(m_front)->value() == value)
+            if (Node* node = dynamic_cast<Node*>(m_front))
             {
-                pop_front();
-                temp = m_front;
-                continue;
+                if (node->value() == value)
+                {
+                    pop_front();
+                    temp = m_front;
+                    continue;
+                }
             }
 
-            if (next && next != m_back && next->m_next != nullptr && static_cast<Node*>(next)->value() == value)
+            if (next && next != m_back && next->m_next != nullptr)
             {
-                NodeBase* to_remove = temp->m_next;
-                temp->m_next = to_remove->m_next;
-                to_remove->m_next->m_prev = temp;
-                delete to_remove;
-                m_size--;
-                continue;
+                Node* node = dynamic_cast<Node*>(next);
+                if (node->value() == value)
+                {
+                    NodeBase* to_remove = temp->m_next;
+                    temp->m_next = to_remove->m_next;
+                    to_remove->m_next->m_prev = temp;
+                    delete to_remove;
+                    m_size--;
+                    continue;
+                }
             }
 
             temp = temp->m_next;
@@ -1659,24 +1654,29 @@ namespace dsa
             {
                 next = prev->m_next;
 
-                if (next != m_back && static_cast<Node*>(next)->value() == static_cast<Node*>(temp)->value())
+                Node* node_next = dynamic_cast<Node*>(next);
+                Node* node_temp = dynamic_cast<Node*>(temp);
+                if (next != m_back && node_next && node_temp)
                 {
-                    NodeBase* to_remove = next;
-
-                    if (to_remove->m_next)
+                    if (node_next->value() == node_temp->value())
                     {
-                        to_remove->m_next->m_prev = prev;
-                    }
-                    else // temp was last node
-                    {
-                        m_back = prev;
-                    }
+                        NodeBase* to_remove = next;
 
-                    prev->m_next = to_remove->m_next;
+                        if (to_remove->m_next)
+                        {
+                            to_remove->m_next->m_prev = prev;
+                        }
+                        else // temp was last node
+                        {
+                            m_back = prev;
+                        }
 
-                    delete to_remove;
-                    m_size--;
-                    continue;
+                        prev->m_next = to_remove->m_next;
+
+                        delete to_remove;
+                        m_size--;
+                        continue;
+                    }
                 }
 
                 if (prev)
@@ -1697,7 +1697,7 @@ namespace dsa
             return nullptr;
         }
 
-        Node* temp{};
+        NodeBase* temp{};
 
         // select list end to look for selected index
         enum Mode { FRONT, BACK, AUTO };
@@ -1706,19 +1706,19 @@ namespace dsa
         if (mode == FRONT)
         {
             // count nodes from front
-            temp = static_cast<Node*>(m_front);
+            temp = m_front;
             for (size_t i = 0; i < index; i++)
             {
-                temp = static_cast<Node*>(temp->m_next);
+                temp = temp->m_next;
             }
         }
         else if (mode == BACK)
         {
             // count nodes from back
-            temp = static_cast<Node*>(m_back->m_prev);
+            temp = m_back->m_prev;
             for (size_t i = m_size - 1; i > index; i--)
             {
-                temp = static_cast<Node*>(temp->m_prev);
+                temp = temp->m_prev;
             }
         }
         else // mode == AUTO
@@ -1726,23 +1726,23 @@ namespace dsa
             // optimize counting nodes from front or back
             if (index < m_size / 2)
             {
-                temp = static_cast<Node*>(m_front);
+                temp = m_front;
                 for (size_t i = 0; i < index; i++)
                 {
-                    temp = static_cast<Node*>(temp->m_next);
+                    temp = temp->m_next;
                 }
             }
             else
             {
-                temp = static_cast<Node*>(m_back->m_prev);
+                temp = m_back->m_prev;
                 for (size_t i = m_size - 1; i > index; i--)
                 {
-                    temp = static_cast<Node*>(temp->m_prev);
+                    temp = temp->m_prev;
                 }
             }
         }
 
-        return temp;
+        return dynamic_cast<Node*>(temp);
     }
 
     template<typename T>
