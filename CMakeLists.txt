@@ -3,12 +3,6 @@
 #
 cmake_minimum_required (VERSION 3.27)
 
-# Enable Hot Reload for MSVC compilers if supported.
-if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
-endif()
-
 project (dsa LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -25,9 +19,25 @@ target_link_libraries(dsa_testing INTERFACE dsa)
 
 
 option(ENABLE_WARNINGS "Enable strict compiler flags" ON)
+option(ENABLE_SANITIZERS "Enable sanitizers ASan/UBSan" ON)
 option(DOCS_ENABLED "Enable documentation generation" ON)
 option(CODE_TESTING "Enable code testing" ON)
 option(CODE_COVERAGE "Enable coverage reporting" ON)
+
+
+if(MSVC AND NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT ENABLE_SANITIZERS)
+	message(STATUS "Hot Reload for MSVC compiler enabled")
+	# Enable Hot Reload for MSVC compilers if supported:
+	# - MSVC-Clang compiler ABI is incompatible
+	# - /ZI and /fsanitize=address options are incompatible, flag conflict generate error code D8016
+	if (POLICY CMP0141)
+	  cmake_policy(SET CMP0141 NEW)
+	  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT 
+		"$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,"
+		"$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>"
+	  )
+	endif()
+endif()
 
 
 if(ENABLE_WARNINGS)
@@ -106,6 +116,44 @@ if(ENABLE_WARNINGS)
 		)
 	endif()
 endif()
+
+
+if(ENABLE_SANITIZERS)
+	message(STATUS "Sanitizers option enabled")
+	if(MSVC)
+		# MSVC specific flags
+		if(MSVC AND NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+			# MSVC feature
+			target_compile_options(dsa_testing INTERFACE
+				/fsanitize=address
+			)
+			# require MSVC-Clang installation
+			find_program(CLANGXX_PATH clang++)
+			if(CLANGXX_PATH)
+			target_compile_options(dsa_testing INTERFACE
+				/fsanitize=fuzzer
+			)
+			endif()
+
+			if(CLANGXX_PATH)
+				message(STATUS "Using ASan / Fuzzer sanitizer MSVC / MSVC-Clang")
+			else()
+				message(STATUS "Using ASan sanitizer MSVC")
+			endif()
+		else()
+			message(STATUS "Using sanitizer for MSVC-Clang not supported")
+			# MSVC installer do not provide clang_rt.asan_dynamic-x86_64.lib and clang_rt.asan_dynamic-x86_64.dll
+		endif()
+	else()
+		message(STATUS "Using ASan / UBSan sanitizer Clang / GCC")
+		target_compile_options(dsa_testing INTERFACE
+			-fsanitize=address,undefined
+			-fno-omit-frame-pointer)
+		target_link_options(dsa_testing INTERFACE
+			-fsanitize=address,undefined)
+	endif()
+endif()
+
 
 if(DOCS_ENABLED)
 	message(STATUS "Documentation generation enabled")
