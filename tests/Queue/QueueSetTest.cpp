@@ -12,6 +12,9 @@
 #include "common.h"
 #include "dsa/Queue.h"
 
+#include <initializer_list>
+#include <iostream>
+
 int main()
 {
     std::cout << "Start QueueSet test:\n";

@@ -12,6 +12,8 @@
 #include "common.h"
 #include "dsa/Queue.h"
 
+#include <iostream>
+
 int main()
 {
     std::cout << "Start QueueOperators test:\n";
