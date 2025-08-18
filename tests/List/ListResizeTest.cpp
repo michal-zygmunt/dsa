@@ -13,6 +13,8 @@
 #include "dsa/List.h"
 
 #include <cstdint>
+#include <initializer_list>
+#include <iostream>
 
 int main()
 {

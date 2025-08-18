@@ -12,6 +12,10 @@
 #include "common.h"
 #include "dsa/List.h"
 
+#include <initializer_list>
+#include <iostream>
+#include <utility>
+
 int main()
 {
     std::cout << "Start ListCtors test:\n";
