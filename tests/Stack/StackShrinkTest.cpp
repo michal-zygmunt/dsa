@@ -12,6 +12,10 @@
 #include "common.h"
 #include "dsa/Stack.h"
 
+#include <cstddef>
+#include <initializer_list>
+#include <iostream>
+
 int main()
 {
     std::cout << "Start StackShrink test:\n";

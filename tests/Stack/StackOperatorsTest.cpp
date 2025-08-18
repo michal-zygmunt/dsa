@@ -12,6 +12,8 @@
 #include "common.h"
 #include "dsa/Stack.h"
 
+#include <iostream>
+
 int main()
 {
     std::cout << "Start StackOperators test:\n";
