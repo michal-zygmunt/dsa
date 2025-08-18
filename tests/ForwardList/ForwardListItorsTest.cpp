@@ -12,6 +12,10 @@
 #include "common.h"
 #include "dsa/ForwardList.h"
 
+#include <algorithm>
+#include <initializer_list>
+#include <iostream>
+
 int main()
 {
     std::cout << "Start ForwardListItors test:\n";

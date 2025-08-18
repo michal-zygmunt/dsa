@@ -13,6 +13,8 @@
 #include "dsa/ForwardList.h"
 
 #include <cstdint>
+#include <initializer_list>
+#include <iostream>
 
 int main()
 {
