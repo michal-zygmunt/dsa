@@ -33,6 +33,23 @@ if(ENABLE_CLANG_TIDY)
 	
 	if(CLANG_TIDY_EXE)
 		message(STATUS "clang-tidy found " ${CLANG_TIDY_EXE})
+		set(CMAKE_CXX_CLANG_TIDY
+			"${CLANG_TIDY_EXE}"
+			"--config-file=${CMAKE_SOURCE_DIR}/.clang-tidy"
+		)
+	else()
+		message(WARNING "clang-tidy not found")
+	endif()
+endif()
+
+
+if(ENABLE_CLANG_TIDY)
+	message(STATUS "Static analysis with clang-tidy option enabled")
+
+	find_program(CLANG_TIDY_EXE NAMES clang-tidy)
+	
+	if(CLANG_TIDY_EXE)
+		message(STATUS "clang-tidy found " ${CLANG_TIDY_EXE})
 		if(MSVC)
 			# /EHs standard c++ stack unwinding, catches c++ exceptions when using catch(...) syntax.
 			# /EHc functions declared as extern c never throw a c++ exception.
