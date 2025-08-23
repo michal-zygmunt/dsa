@@ -16,7 +16,7 @@
 #include <iostream>
 #include <utility>
 
-int main()
+int main() // NOLINT(modernize-use-trailing-return-type)
 {
     std::cout << "Start QueueCtors test:\n";
 

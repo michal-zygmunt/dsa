@@ -14,7 +14,7 @@
 
 #include <iostream>
 
-int main()
+int main() // NOLINT(modernize-use-trailing-return-type)
 {
     std::cout << "Start QueueOperators test:\n";
 
