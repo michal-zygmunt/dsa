@@ -18,6 +18,9 @@
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
+    // tests are based on hardcoded magic numbers for comparison of container content
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
     std::cout << "Start ListGet test:\n";
 
     dsa::List<int> l1 = dsa::List<int>({ 0, 10, 20 });
@@ -47,4 +50,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("List l2", l2, expected_2);
 
     return tests::failed;
+
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }

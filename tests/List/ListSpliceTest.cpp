@@ -17,6 +17,9 @@
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
+    // tests are based on hardcoded magic numbers for comparison of container content
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
     std::cout << "Start ListSplice test:\n";
 
     std::initializer_list<int> il_1{ 1, 2, 3, 4, 5 };
@@ -214,4 +217,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("List l44", l44, expected_44);
 
     return tests::failed;
+
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }

@@ -18,6 +18,9 @@
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
+    // tests are based on hardcoded magic numbers for comparison of container content
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
     std::cout << "Start ListItors test:\n";
 
     bool res{};
@@ -265,4 +268,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     --cit_15;
 
     return tests::failed;
+
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }
