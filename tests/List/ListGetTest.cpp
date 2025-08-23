@@ -16,7 +16,7 @@
 #include <initializer_list>
 #include <iostream>
 
-int main()
+int main() // NOLINT(modernize-use-trailing-return-type)
 {
     std::cout << "Start ListGet test:\n";
 
