@@ -18,6 +18,9 @@
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
+    // tests are based on hardcoded magic numbers for comparison of container content
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
     std::cout << "Start StackShrink test:\n";
 
     dsa::Stack<int> s1 = dsa::Stack<int>({ 0,10,20,30,40,50 });
@@ -44,4 +47,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("s5.size()", s5.size(), static_cast<size_t>(0));
 
     return tests::failed;
+
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }

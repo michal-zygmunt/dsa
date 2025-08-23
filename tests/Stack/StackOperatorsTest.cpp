@@ -16,6 +16,9 @@
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
+    // tests are based on hardcoded magic numbers for comparison of container content
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
     std::cout << "Start StackOperators test:\n";
 
     dsa::Stack<int> s1({ 1,2,3 });
@@ -54,4 +57,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("Operator >=", s2 >= s3, true);
 
     return tests::failed;
+
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }

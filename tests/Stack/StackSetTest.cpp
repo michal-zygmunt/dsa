@@ -17,6 +17,9 @@
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
+    // tests are based on hardcoded magic numbers for comparison of container content
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
     std::cout << "Start StackSet test:\n";
 
     std::initializer_list<int> expected{ 50,10,0 };
@@ -36,4 +39,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("Stack s4", s4, expected);
 
     return tests::failed;
+
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }
