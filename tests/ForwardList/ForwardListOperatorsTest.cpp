@@ -17,6 +17,9 @@
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
+    // tests are based on hardcoded magic numbers for comparison of container content
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
     std::cout << "Start ForwardListOperators test:\n";
 
     dsa::ForwardList<int> l1({ 1,2,3 });
@@ -69,4 +72,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("Operator >=", l2 >= l3, true);
 
     return tests::failed;
+
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }

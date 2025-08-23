@@ -18,6 +18,9 @@
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
+    // tests are based on hardcoded magic numbers for comparison of container content
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
     std::cout << "Start ForwardListSet test:\n";
 
     dsa::ForwardList<int> l1 = dsa::ForwardList<int>({ 0, 10, 20 });
@@ -40,4 +43,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("ForwardList l3", l3, expected_3);
 
     return tests::failed;
+
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }
