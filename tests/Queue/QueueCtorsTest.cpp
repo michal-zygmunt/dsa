@@ -18,6 +18,9 @@
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
+    // tests are based on hardcoded magic numbers for comparison of container content
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+
     std::cout << "Start QueueCtors test:\n";
 
     std::initializer_list<int> expected{ 0,10,20 };
@@ -65,4 +68,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("Queue q7", q7, expected);
 
     return tests::failed;
+
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }
