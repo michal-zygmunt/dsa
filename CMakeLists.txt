@@ -20,9 +20,36 @@ target_link_libraries(dsa_testing INTERFACE dsa)
 
 option(ENABLE_WARNINGS "Enable strict compiler flags" ON)
 option(ENABLE_SANITIZERS "Enable sanitizers ASan/UBSan" ON)
+option(ENABLE_CLANG_TIDY "Enable clang-tidy static code analysis" OFF)
 option(DOCS_ENABLED "Enable documentation generation" ON)
 option(CODE_TESTING "Enable code testing" ON)
 option(CODE_COVERAGE "Enable coverage reporting" ON)
+
+
+if(ENABLE_CLANG_TIDY)
+	message(STATUS "Static analysis with clang-tidy option enabled")
+
+	find_program(CLANG_TIDY_EXE NAMES clang-tidy)
+	
+	if(CLANG_TIDY_EXE)
+		message(STATUS "clang-tidy found " ${CLANG_TIDY_EXE})
+		if(MSVC)
+			# /EHs standard c++ stack unwinding, catches c++ exceptions when using catch(...) syntax.
+			# /EHc functions declared as extern c never throw a c++ exception.
+			# option prevents clang-tools error "cannot use 'throw' with exceptions disabled"
+			set(CLANG_TIDY_EXTRA_ARGS "--extra-arg=/EHsc")
+		else()
+			set(CLANG_TIDY_EXTRA_ARGS "")
+		endif()
+		set(CMAKE_CXX_CLANG_TIDY
+			"${CLANG_TIDY_EXE}"
+			"--config-file=${CMAKE_SOURCE_DIR}/.clang-tidy"
+			${CLANG_TIDY_EXTRA_ARGS}
+		)
+	else()
+		message(WARNING "clang-tidy not found")
+	endif()
+endif()
 
 
 if(MSVC AND NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT ENABLE_SANITIZERS)
@@ -82,11 +109,17 @@ if(ENABLE_WARNINGS)
 		# GCC specific flags
 		if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 			message(STATUS "Using strict GNU flags")
+			set (target_options -fdiagnostics-color=always)
+				# prevents generation of clang-diagnostic-unknown-warning-option
+			if(NOT ENABLE_CLANG_TIDY)
+			list(APPEND target_options
+					-Wuseless-cast
+					-Wduplicated-cond
+					-Wduplicated-branches 
+			)
+			endif()
 			target_compile_options(dsa_testing INTERFACE
-				-Wuseless-cast
-				-Wduplicated-cond
-				-Wduplicated-branches 
-				-fdiagnostics-color=always
+				${target_options}
 			)
 		# Clang specific flags
 		else(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -187,14 +220,20 @@ if(CODE_TESTING)
 			)
 		elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 			message(STATUS "Building with code coverage flags for GCC")
-			target_compile_options(dsa_testing INTERFACE
+			set(target_options
 				-coverage # -fprofile-arcs -ftest-coverage
-				-fprofile-abs-path
 				-fno-inline
 				-fno-elide-constructors
 				-O0
 				#-O1 # flag prevents mismatch exception tag error when generating report with lcov
 				-g
+			)
+			# prevents generation of clang-diagnostic-error
+			if(NOT ENABLE_CLANG_TIDY)
+				list(APPEND target_options -fprofile-abs-path)
+			endif()
+			target_compile_options(dsa_testing INTERFACE
+				${target_options}
 			)
 			target_link_options(dsa_testing INTERFACE
 				-coverage # -fprofile-arcs -ftest-coverage
