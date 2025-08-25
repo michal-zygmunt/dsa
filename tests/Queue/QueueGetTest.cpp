@@ -31,7 +31,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     for (size_t i = 0; i < q1_size; i++)
     {
         auto temp = q1.front();
-        if (temp)
+        if (static_cast<bool>(temp))
         {
             std::cout << temp << ' ';
             tests::compare(temp, expected.begin()[i]);
