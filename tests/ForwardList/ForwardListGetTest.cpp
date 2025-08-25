@@ -29,8 +29,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     auto indexes = { -1, 0, 1, 2, 100 };
     for (size_t i = 0; i < indexes.size(); i++)
     {
-        auto temp = l1.get(i);
-        if (temp)
+        auto* temp = l1.get(i);
+        if (static_cast<bool>(temp))
         {
             tests::compare(temp->value(), expected_1.begin()[i]);
         }
@@ -41,8 +41,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     std::initializer_list<int> expected_2 = { 20, 10, 0 };
     for (size_t i = 0; i < indexes.size(); i++)
     {
-        auto temp = l2.get(i);
-        if (temp)
+        auto* temp = l2.get(i);
+        if (static_cast<bool>(temp))
         {
             tests::compare(temp->value(), expected_2.begin()[i]);
         }
