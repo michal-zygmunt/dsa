@@ -22,10 +22,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start ListReverse test:\n";
 
-    dsa::List<int> l1 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
-    l1.reverse();
-    std::initializer_list<int> expected_1 = { 50, 40, 30, 20, 10, 0 };
-    tests::compare("List l1", l1, expected_1);
+    dsa::List<int> list1 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
+    list1.reverse();
+    std::initializer_list<int> expected1 = { 50, 40, 30, 20, 10, 0 };
+    tests::compare("List1", list1, expected1);
 
     return tests::failed;
 

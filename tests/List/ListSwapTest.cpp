@@ -25,21 +25,21 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     std::initializer_list<int> il_1{ 1, 2, 3, 4, 5 };
     std::initializer_list<int> il_2{ 10, 20, 30, 40, 50 };
 
-    dsa::List<int> l1 = dsa::List<int>(il_1);
-    dsa::List<int> l2 = dsa::List<int>(il_2);
-    l1.swap(l2);
-    std::initializer_list<int> expected_1 = { 10, 20, 30, 40, 50 };
-    tests::compare("List l1", l1, expected_1);
-    std::initializer_list<int> expected_2 = { 1, 2, 3, 4, 5 };
-    tests::compare("List l2", l2, expected_2);
+    dsa::List<int> list1 = dsa::List<int>(il_1);
+    dsa::List<int> list2 = dsa::List<int>(il_2);
+    list1.swap(list2);
+    std::initializer_list<int> expected1 = { 10, 20, 30, 40, 50 };
+    tests::compare("List1", list1, expected1);
+    std::initializer_list<int> expected2 = { 1, 2, 3, 4, 5 };
+    tests::compare("List2", list2, expected2);
 
-    dsa::List<int> l3 = dsa::List<int>(il_1);
-    dsa::List<int> l4;
-    l3.swap(l4);
-    std::initializer_list<int> expected_3 = { };
-    tests::compare("List l3", l3, expected_3);
-    std::initializer_list<int> expected_4 = { 1, 2, 3, 4, 5 };
-    tests::compare("List l4", l4, expected_4);
+    dsa::List<int> list3 = dsa::List<int>(il_1);
+    dsa::List<int> list4;
+    list3.swap(list4);
+    std::initializer_list<int> expected3 = { };
+    tests::compare("List3", list3, expected3);
+    std::initializer_list<int> expected4 = { 1, 2, 3, 4, 5 };
+    tests::compare("List4", list4, expected4);
 
     return tests::failed;
 

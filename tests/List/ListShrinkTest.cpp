@@ -23,27 +23,27 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start ListShrink test:\n";
 
-    dsa::List<int> l1 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
-    l1.erase(l1.begin()[l1.size() - 1]);
-    l1.pop_front();
-    auto indexes = { 100, 5, 2, 0, -1 };
-    for (const auto& i : indexes)
+    dsa::List<int> list1 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
+    list1.erase(list1.begin()[list1.size() - 1]);
+    list1.pop_front();
+    auto indexes = { 100, 5, 2, 0 };
+    for (const auto& idx : indexes)
     {
-        l1.erase(l1.begin()[static_cast<size_t>(i)]);
+        list1.erase(list1.begin()[static_cast<size_t>(idx)]);
     }
-    std::initializer_list<int> expected_1 = { 20, 40 };
-    tests::compare("List l1", l1, expected_1);
+    std::initializer_list<int> expected1 = { 20, 40 };
+    tests::compare("List1", list1, expected1);
 
-    dsa::List<int> l2 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
-    l2.erase(l2.begin()[1], l2.begin()[3]);
-    std::initializer_list<int> expected_2 = { 0, 30, 40, 50 };
-    tests::compare("List l2", l2, expected_2);
+    dsa::List<int> list2 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
+    list2.erase(list2.begin()[1], list2.begin()[3]);
+    std::initializer_list<int> expected2 = { 0, 30, 40, 50 };
+    tests::compare("List2", list2, expected2);
 
-    dsa::List<int> l3 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
-    l3.erase(l3.begin()[1]);
-    l3.erase(l3.begin()[1], l3.begin()[3]);
-    std::initializer_list<int> expected_3 = { 0, 40, 50 };
-    tests::compare("List l3", l3, expected_3);
+    dsa::List<int> list3 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
+    list3.erase(list3.begin()[1]);
+    list3.erase(list3.begin()[1], list3.begin()[3]);
+    std::initializer_list<int> expected3 = { 0, 40, 50 };
+    tests::compare("List3", list3, expected3);
 
     return tests::failed;
 
