@@ -23,8 +23,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start ListItors test:\n";
 
-    bool res{};
-
     std::cout << "Explicit iterator\n";
     dsa::List<int> l1{ 0, 10, 20 };
     for (dsa::List<int>::iterator it = l1.begin(); it != l1.end(); it++)
@@ -97,39 +95,35 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     // Range based loop
     std::initializer_list<int> expected_7 = { 10, 20, 30, 40, 50 };
-    std::initializer_list<int>::iterator il_it;
+    std::initializer_list<int>::iterator il_it{};
     dsa::List<int> l7 = dsa::List<int>{ 10, 20, 30, 40, 50 };
     std::cout << "List l7 vs std::initializer_list:\n";
     il_it = expected_7.begin();
     for (auto i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+        tests::compare(i, *(il_it++));
     }
     std::cout << '\n';
     il_it = expected_7.begin();
     for (auto& i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+        tests::compare(i, *(il_it++));
     }
     std::cout << '\n';
     il_it = expected_7.begin();
     for (const auto i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+        tests::compare(i, *(il_it++));
     }
     std::cout << '\n';
     il_it = expected_7.begin();
     for (const auto& i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+        tests::compare(i, *(il_it++));
     }
     std::cout << '\n';
 
@@ -141,32 +135,28 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     for (auto i : l8)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
-    }
-    std::cout << '\n';
-    il_it = expected_8.begin();
-    for (auto& i : l8)
-    {
-        std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
-    }
-    std::cout << '\n';
-    il_it = expected_8.begin();
-    for (const auto i : l8)
-    {
-        std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+        tests::compare(i, *(il_it++));
     }
     std::cout << '\n';
     il_it = expected_8.begin();
     for (const auto& i : l8)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+        tests::compare(i, *(il_it++));
+    }
+    std::cout << '\n';
+    il_it = expected_8.begin();
+    for (const auto i : l8)
+    {
+        std::cout << i << ' ' << *il_it << ' ';
+        tests::compare(i, *(il_it++));
+    }
+    std::cout << '\n';
+    il_it = expected_8.begin();
+    for (const auto& i : l8)
+    {
+        std::cout << i << ' ' << *il_it << ' ';
+        tests::compare(i, *(il_it++));
     }
     std::cout << '\n';
 
@@ -202,16 +192,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     std::cout << "List l12:\t" << l12 << '\n';
     auto it_12 = l12.begin();
     std::cout << *it_12 << ' ';
-    res = tests::compare(*it_12, 10);
-    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    tests::compare(*it_12, 10);
     it_12++;
     std::cout << *it_12 << ' ';
-    res = tests::compare(*it_12, 20);
-    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    tests::compare(*it_12, 20);
     it_12++;
     std::cout << *it_12 << ' ';
-    res = tests::compare(*it_12, 30);
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare(*it_12, 30);
     it_12++;
 
     // Increment const_iterator
@@ -219,16 +206,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     std::cout << "List l13:\t" << l13 << '\n';
     auto cit_13 = l13.cbegin();
     std::cout << *cit_13 << ' ';
-    res = tests::compare(*cit_13, 10);
-    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    tests::compare(*cit_13, 10);
     cit_13++;
     std::cout << *cit_13 << ' ';
-    res = tests::compare(*cit_13, 20);
-    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    tests::compare(*cit_13, 20);
     cit_13++;
     std::cout << *cit_13 << ' ';
-    res = tests::compare(*cit_13, 30);
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare(*cit_13, 30);
     cit_13++;
 
     // Decrement iterator
@@ -237,16 +221,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     auto it_14 = l14.end();
     it_14--;
     std::cout << *it_14 << ' ';
-    res = tests::compare(*it_14, 30);
-    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    tests::compare(*it_14, 30);
     --it_14;
     std::cout << *it_14 << ' ';
-    res = tests::compare(*it_14, 20);
-    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    tests::compare(*it_14, 20);
     --it_14;
     std::cout << *it_14 << ' ';
-    res = tests::compare(*it_14, 10);
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare(*it_14, 10);
     --it_14;
 
     // Decrement const_iterator
@@ -255,16 +236,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     auto cit_15 = l15.cend();
     cit_15--;
     std::cout << *cit_15 << ' ';
-    res = tests::compare(*cit_15, 30);
-    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    tests::compare(*cit_15, 30);
     --cit_15;
     std::cout << *cit_15 << ' ';
-    res = tests::compare(*cit_15, 20);
-    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    tests::compare(*cit_15, 20);
     --cit_15;
     std::cout << *cit_15 << ' ';
-    res = tests::compare(*cit_15, 10);
-    std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    tests::compare(*cit_15, 10);
     --cit_15;
 
     return tests::failed;
