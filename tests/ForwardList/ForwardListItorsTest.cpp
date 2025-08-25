@@ -24,173 +24,173 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     std::cout << "Start ForwardListItors test:\n";
 
     std::cout << "Explicit iterator\n";
-    dsa::ForwardList<int> l1{ 0, 10, 20 };
-    for (dsa::ForwardList<int>::iterator it = l1.begin(); it != l1.end(); it++)
+    dsa::ForwardList<int> list1{ 0, 10, 20 };
+    for (dsa::ForwardList<int>::iterator iterator = list1.begin(); iterator != list1.end(); iterator++)
     {
-        auto& val = *it;
+        auto& val = *iterator;
         std::cout << val << '\t';
         val += 100;
         std::cout << val << '\n';
     }
-    std::initializer_list<int> expected_1 = { 100, 110, 120 };
-    tests::compare("ForwardList l1", l1, expected_1);
+    std::initializer_list<int> expected1 = { 100, 110, 120 };
+    tests::compare("ForwardList1", list1, expected1);
 
     std::cout << "Auto iterator\n";
-    dsa::ForwardList<int> l2{ 0, 25, 50 };
-    for (auto it = l2.begin(); it != l2.end(); it++)
+    dsa::ForwardList<int> list2{ 0, 25, 50 };
+    for (auto iterator = list2.begin(); iterator != list2.end(); iterator++)
     {
-        auto& val = *it;
+        auto& val = *iterator;
         std::cout << val << '\t';
         val += 100;
         std::cout << val << '\n';
     }
-    std::initializer_list<int> expected_2 = { 100, 125, 150 };
-    tests::compare("ForwardList l2", l2, expected_2);
+    std::initializer_list<int> expected2 = { 100, 125, 150 };
+    tests::compare("ForwardList2", list2, expected2);
 
     std::cout << "Explicit Const iterator\n";
-    dsa::ForwardList<int> l3{ 0, 10, 20 };
-    for (dsa::ForwardList<int>::const_iterator it = l3.cbegin(); it != l3.cend(); it++)
+    dsa::ForwardList<int> list3{ 0, 10, 20 };
+    for (dsa::ForwardList<int>::const_iterator iterator = list3.cbegin(); iterator != list3.cend(); iterator++)
     {
-        //auto& val = *it; // reference generate compilation error
-        auto val = *it;
+        //auto& val = *iterator; // reference generate compilation error
+        auto val = *iterator;
         std::cout << val << '\t';
         val += 100;
         std::cout << val << '\n';
     }
-    std::initializer_list<int> expected_3 = { 0, 10, 20 };
-    tests::compare("ForwardList l3", l3, expected_3);
+    std::initializer_list<int> expected3 = { 0, 10, 20 };
+    tests::compare("ForwardList3", list3, expected3);
 
     std::cout << "Auto Const iterator\n";
-    dsa::ForwardList<int> l4{ 0, 25, 50 };
-    for (auto it = l4.cbegin(); it != l4.cend(); it++)
+    dsa::ForwardList<int> list4{ 0, 25, 50 };
+    for (auto iterator = list4.cbegin(); iterator != list4.cend(); iterator++)
     {
-        //auto& val = *it; // reference generate compilation error
-        auto val = *it;
+        //auto& val = *iterator; // reference generate compilation error
+        auto val = *iterator;
         std::cout << val << '\t';
         val += 100;
         std::cout << val << '\n';
     }
-    std::initializer_list<int> expected_4 = { 0, 25, 50 };
-    tests::compare("ForwardList l4", l4, expected_4);
+    std::initializer_list<int> expected4 = { 0, 25, 50 };
+    tests::compare("ForwardList4", list4, expected4);
 
     // Check iterator of one element
-    dsa::ForwardList<int> l5 = dsa::ForwardList<int>(0);
-    auto it = l5.insert_after(l5.cbegin(), 10);
-    int val = *it;
-    int expected_val = 10;
-    tests::compare("ForwardList l5 it", val, expected_val);
-    std::initializer_list<int> expected_5 = { 0, 10 };
-    tests::compare("ForwardList l5", l5, expected_5);
+    dsa::ForwardList<int> list5 = dsa::ForwardList<int>(0);
+    auto iterator = list5.insert_after(list5.cbegin(), 10);
+    int val = *iterator;
+    int expectedval = 10;
+    tests::compare("ForwardList5 iterator", val, expectedval);
+    std::initializer_list<int> expected5 = { 0, 10 };
+    tests::compare("ForwardList5", list5, expected5);
 
     // Check iterator after inserting 0 elements
-    dsa::ForwardList<int> l6 = dsa::ForwardList<int>(50);
-    l6.push_front(40);
-    l6.push_front(30);
-    it = l6.insert_after(l6.cbegin(), 0, 5);
-    val = *it;
-    expected_val = 30;
-    tests::compare("ForwardList l6 it", val, expected_val);
-    std::initializer_list<int> expected_6 = { 30, 40, 50 };
-    tests::compare("ForwardList l6", l6, expected_6);
+    dsa::ForwardList<int> list6 = dsa::ForwardList<int>(50);
+    list6.push_front(40);
+    list6.push_front(30);
+    iterator = list6.insert_after(list6.cbegin(), 0, 5);
+    val = *iterator;
+    expectedval = 30;
+    tests::compare("ForwardList6 iterator", val, expectedval);
+    std::initializer_list<int> expected6 = { 30, 40, 50 };
+    tests::compare("ForwardList6", list6, expected6);
 
 
     // Range based loop
-    std::initializer_list<int> expected_7 = { 10, 20, 30, 40, 50 };
-    std::initializer_list<int>::iterator il_it{};
-    dsa::ForwardList<int> l7 = dsa::ForwardList<int>{ 10, 20, 30, 40, 50 };
-    std::cout << "ForwardList l7 vs std::initializer_list:\n";
-    il_it = expected_7.begin();
-    for (auto i : l7)
+    std::initializer_list<int> expected7 = { 10, 20, 30, 40, 50 };
+    std::initializer_list<int>::iterator il_iterator{};
+    dsa::ForwardList<int> list7 = dsa::ForwardList<int>{ 10, 20, 30, 40, 50 };
+    std::cout << "ForwardList7 vs std::initializer_list:\n";
+    il_iterator = expected7.begin();
+    for (auto item : list7)
     {
-        std::cout << i << ' ' << *il_it << ' ';
-        tests::compare(i, *(il_it++));
+        std::cout << item << ' ' << *il_iterator << ' ';
+        tests::compare(item, *(il_iterator++));
     }
     std::cout << '\n';
-    il_it = expected_7.begin();
-    for (auto& i : l7)
+    il_iterator = expected7.begin();
+    for (auto& item : list7)
     {
-        std::cout << i << ' ' << *il_it << ' ';
-        tests::compare(i, *(il_it++));
+        std::cout << item << ' ' << *il_iterator << ' ';
+        tests::compare(item, *(il_iterator++));
     }
     std::cout << '\n';
-    il_it = expected_7.begin();
-    for (const auto i : l7)
+    il_iterator = expected7.begin();
+    for (const auto item : list7)
     {
-        std::cout << i << ' ' << *il_it << ' ';
-        tests::compare(i, *(il_it++));
+        std::cout << item << ' ' << *il_iterator << ' ';
+        tests::compare(item, *(il_iterator++));
     }
     std::cout << '\n';
-    il_it = expected_7.begin();
-    for (const auto& i : l7)
+    il_iterator = expected7.begin();
+    for (const auto& item : list7)
     {
-        std::cout << i << ' ' << *il_it << ' ';
-        tests::compare(i, *(il_it++));
+        std::cout << item << ' ' << *il_iterator << ' ';
+        tests::compare(item, *(il_iterator++));
     }
     std::cout << '\n';
 
     // Compare elements based on range loops
-    std::initializer_list<int> expected_8 = { 10, 20, 30, 40, 50 };
-    const dsa::ForwardList<int> l8 = dsa::ForwardList<int>{ 10, 20, 30, 40, 50 };
-    std::cout << "ForwardList l8 vs std::initializer_list:\n";
-    il_it = expected_8.begin();
-    for (auto i : l8)
+    std::initializer_list<int> expected8 = { 10, 20, 30, 40, 50 };
+    const dsa::ForwardList<int> list8 = dsa::ForwardList<int>{ 10, 20, 30, 40, 50 };
+    std::cout << "ForwardList8 vs std::initializer_list:\n";
+    il_iterator = expected8.begin();
+    for (const auto& item : list8)
     {
-        std::cout << i << ' ' << *il_it << ' ';
-        tests::compare(i, *(il_it++));
+        std::cout << item << ' ' << *il_iterator << ' ';
+        tests::compare(item, *(il_iterator++));
     }
     std::cout << '\n';
-    il_it = expected_8.begin();
-    for (const auto& i : l8)
+    il_iterator = expected8.begin();
+    for (const auto& item : list8)
     {
-        std::cout << i << ' ' << *il_it << ' ';
-        tests::compare(i, *(il_it++));
+        std::cout << item << ' ' << *il_iterator << ' ';
+        tests::compare(item, *(il_iterator++));
     }
     std::cout << '\n';
-    il_it = expected_8.begin();
-    for (const auto i : l8)
+    il_iterator = expected8.begin();
+    for (const auto& item : list8)
     {
-        std::cout << i << ' ' << *il_it << ' ';
-        tests::compare(i, *(il_it++));
+        std::cout << item << ' ' << *il_iterator << ' ';
+        tests::compare(item, *(il_iterator++));
     }
     std::cout << '\n';
-    il_it = expected_8.begin();
-    for (const auto& i : l8)
+    il_iterator = expected8.begin();
+    for (const auto& item : list8)
     {
-        std::cout << i << ' ' << *il_it << ' ';
-        tests::compare(i, *(il_it++));
+        std::cout << item << ' ' << *il_iterator << ' ';
+        tests::compare(item, *(il_iterator++));
     }
     std::cout << '\n';
 
     // std library operation on custom iterators
-    dsa::ForwardList<int> l9 = dsa::ForwardList<int>{ 10, 20, 30, 40, 50 };
-    std::fill(l9.begin(), l9.end(), 10);
-    std::initializer_list<int> expected_9 = { 10, 10, 10, 10, 10 };
-    tests::compare("ForwardList l9", l9, expected_9);
+    dsa::ForwardList<int> list9 = dsa::ForwardList<int>{ 10, 20, 30, 40, 50 };
+    std::fill(list9.begin(), list9.end(), 10);
+    std::initializer_list<int> expected9 = { 10, 10, 10, 10, 10 };
+    tests::compare("ForwardList9", list9, expected9);
 
     // check const_iterator for const object
-    dsa::ForwardList<int> l10 = dsa::ForwardList<int>{ 10, 20, 30 };
-    auto iter10b = l10.begin();
+    dsa::ForwardList<int> list10 = dsa::ForwardList<int>{ 10, 20, 30 };
+    auto iter10b = list10.begin();
     *iter10b = 1;
-    auto citer10b = l10.cbegin();
+    auto citer10b = list10.cbegin();
     //*citer10b = 1; // compilation error
-    auto iter10e = l10.end();
+    auto iter10e = list10.end();
     //*iter10e = 1; // runtime error, assignment to memory outside list
-    auto citer10e = l10.cend();
+    auto citer10e = list10.cend();
     //*citer10e = 1; // compilation error
 
-    const dsa::ForwardList<int> l11 = dsa::ForwardList<int>{ 10, 20, 30 };
-    auto iter11b = l11.begin();
+    const dsa::ForwardList<int> list11 = dsa::ForwardList<int>{ 10, 20, 30 };
+    auto iter11b = list11.begin();
     //*iter11b = 1; // compilation error
-    auto citer11b = l11.cbegin();
+    auto citer11b = list11.cbegin();
     //*citer11b = 1; // compilation error
-    auto iter11e = l11.end();
+    auto iter11e = list11.end();
     //*iter11e = 1; // compilation error
-    auto citer11e = l11.cend();
+    auto citer11e = list11.cend();
     //*citer11e = 1; // compilation error
 
     // Iterate over const_iterator
-    dsa::ForwardList<int> l12 = dsa::ForwardList<int>{ 10, 20, 30 };
-    auto cit = l12.cbegin();
+    dsa::ForwardList<int> list12 = dsa::ForwardList<int>{ 10, 20, 30 };
+    auto cit = list12.cbegin();
     std::cout << *cit << ' ';
     tests::compare(*cit, 10);
     cit++;

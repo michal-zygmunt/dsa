@@ -23,31 +23,31 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start ForwardListGet test:\n";
 
-    dsa::ForwardList<int> l1 = dsa::ForwardList<int>({ 0, 10, 20 });
+    dsa::ForwardList<int> list1 = dsa::ForwardList<int>({ 0, 10, 20 });
     // Try reading some nodes with invalid indexes
-    std::initializer_list<int> expected_1 = { 0, 10, 20 };
+    std::initializer_list<int> expected1 = { 0, 10, 20 };
     auto indexes = { -1, 0, 1, 2, 100 };
     for (size_t i = 0; i < indexes.size(); i++)
     {
-        auto* temp = l1.get(i);
+        auto* temp = list1.get(i);
         if (static_cast<bool>(temp))
         {
-            tests::compare(temp->value(), expected_1.begin()[i]);
+            tests::compare(temp->value(), expected1.begin()[i]);
         }
     }
-    tests::compare("ForwardList l1", l1, expected_1);
+    tests::compare("ForwardList1", list1, expected1);
 
-    dsa::ForwardList<int> l2 = dsa::ForwardList<int>({ 20, 10, 0 });
-    std::initializer_list<int> expected_2 = { 20, 10, 0 };
+    dsa::ForwardList<int> list2 = dsa::ForwardList<int>({ 20, 10, 0 });
+    std::initializer_list<int> expected2 = { 20, 10, 0 };
     for (size_t i = 0; i < indexes.size(); i++)
     {
-        auto* temp = l2.get(i);
+        auto* temp = list2.get(i);
         if (static_cast<bool>(temp))
         {
-            tests::compare(temp->value(), expected_2.begin()[i]);
+            tests::compare(temp->value(), expected2.begin()[i]);
         }
     }
-    tests::compare("ForwardList l2", l2, expected_2);
+    tests::compare("ForwardList2", list2, expected2);
 
     return tests::failed;
 

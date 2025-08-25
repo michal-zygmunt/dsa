@@ -22,54 +22,54 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start ForwardListOperators test:\n";
 
-    dsa::ForwardList<int> l1({ 1,2,3 });
-    dsa::ForwardList<int> l2({ 4,5,6 });
-    dsa::ForwardList<int> l3({ 1, 2, 3, 4 });
-    std::cout << "ForwardList l1:\t" << l1 << '\n';
-    std::cout << "ForwardList l2:\t" << l2 << '\n';
-    std::cout << "ForwardList l3:\t" << l3 << "\n\n";
+    dsa::ForwardList<int> list1({ 1,2,3 });
+    dsa::ForwardList<int> list2({ 4,5,6 });
+    dsa::ForwardList<int> list3({ 1, 2, 3, 4 });
+    std::cout << "ForwardList1:\t" << list1 << '\n';
+    std::cout << "ForwardList2:\t" << list2 << '\n';
+    std::cout << "ForwardList3:\t" << list3 << "\n\n";
 
-    dsa::ForwardList<int> l4(l1 + l2);
-    std::initializer_list<int> expected_4 = { 1,2,3,4,5,6 };
-    tests::compare("ForwardList l4", l4, expected_4);
+    dsa::ForwardList<int> list4(list1 + list2);
+    std::initializer_list<int> expected4 = { 1,2,3,4,5,6 };
+    tests::compare("ForwardList4", list4, expected4);
 
-    dsa::ForwardList<int> l5(0);
-    l5 += l2;
-    std::initializer_list<int> expected_5 = { 0,4,5,6 };
-    tests::compare("ForwardList l5", l5, expected_5);
+    dsa::ForwardList<int> list5(0);
+    list5 += list2;
+    std::initializer_list<int> expected5 = { 0,4,5,6 };
+    tests::compare("ForwardList5", list5, expected5);
 
-    dsa::ForwardList<int> l6(0);
-    l6 += { 4, 5, 6 };
-    std::initializer_list<int> expected_6 = { 0,4,5,6 };
-    tests::compare("ForwardList l6", l6, expected_6);
+    dsa::ForwardList<int> list6(0);
+    list6 += { 4, 5, 6 };
+    std::initializer_list<int> expected6 = { 0,4,5,6 };
+    tests::compare("ForwardList6", list6, expected6);
 
     std::cout << "Compare operators for objects of the same size\n\n";
 
-    tests::compare("Operator ==", l1 == l1, true);
+    tests::compare("Operator ==", list1 == list1, true);
 
-    tests::compare("Operator !=", l1 != l2, true);
+    tests::compare("Operator !=", list1 != list2, true);
 
-    tests::compare("Operator <", l1 < l2, true);
+    tests::compare("Operator <", list1 < list2, true);
 
-    tests::compare("Operator >", l2 > l1, true);
+    tests::compare("Operator >", list2 > list1, true);
 
-    tests::compare("Operator <=", l1 <= l2, true);
+    tests::compare("Operator <=", list1 <= list2, true);
 
-    tests::compare("Operator <=", l2 >= l1, true);
+    tests::compare("Operator <=", list2 >= list1, true);
 
     std::cout << "Compare operators for objects of different size\n\n";
 
-    tests::compare("Operator ==", l1 == l3, false);
+    tests::compare("Operator ==", list1 == list3, false);
 
-    tests::compare("Operator !=", l1 != l3, true);
+    tests::compare("Operator !=", list1 != list3, true);
 
-    tests::compare("Operator <", l3 < l2, true);
+    tests::compare("Operator <", list3 < list2, true);
 
-    tests::compare("Operator >", l3 > l1, false);
+    tests::compare("Operator >", list3 > list1, false);
 
-    tests::compare("Operator <=", l1 <= l3, true);
+    tests::compare("Operator <=", list1 <= list3, true);
 
-    tests::compare("Operator >=", l2 >= l3, true);
+    tests::compare("Operator >=", list2 >= list3, true);
 
     return tests::failed;
 
