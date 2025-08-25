@@ -23,8 +23,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start ForwardListItors test:\n";
 
-    bool res{};
-
     std::cout << "Explicit iterator\n";
     dsa::ForwardList<int> l1{ 0, 10, 20 };
     for (dsa::ForwardList<int>::iterator it = l1.begin(); it != l1.end(); it++)
@@ -80,7 +78,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     auto it = l5.insert_after(l5.cbegin(), 10);
     int val = *it;
     int expected_val = 10;
-    //res = if_error(val, expected_val);
     tests::compare("ForwardList l5 it", val, expected_val);
     std::initializer_list<int> expected_5 = { 0, 10 };
     tests::compare("ForwardList l5", l5, expected_5);
@@ -92,7 +89,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     it = l6.insert_after(l6.cbegin(), 0, 5);
     val = *it;
     expected_val = 30;
-    //res = if_error(val, expected_val);
     tests::compare("ForwardList l6 it", val, expected_val);
     std::initializer_list<int> expected_6 = { 30, 40, 50 };
     tests::compare("ForwardList l6", l6, expected_6);
@@ -100,39 +96,35 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     // Range based loop
     std::initializer_list<int> expected_7 = { 10, 20, 30, 40, 50 };
-    std::initializer_list<int>::iterator il_it;
+    std::initializer_list<int>::iterator il_it{};
     dsa::ForwardList<int> l7 = dsa::ForwardList<int>{ 10, 20, 30, 40, 50 };
     std::cout << "ForwardList l7 vs std::initializer_list:\n";
     il_it = expected_7.begin();
     for (auto i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+        tests::compare(i, *(il_it++));
     }
     std::cout << '\n';
     il_it = expected_7.begin();
     for (auto& i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+        tests::compare(i, *(il_it++));
     }
     std::cout << '\n';
     il_it = expected_7.begin();
     for (const auto i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+        tests::compare(i, *(il_it++));
     }
     std::cout << '\n';
     il_it = expected_7.begin();
     for (const auto& i : l7)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+        tests::compare(i, *(il_it++));
     }
     std::cout << '\n';
 
@@ -144,32 +136,28 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     for (auto i : l8)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
-    }
-    std::cout << '\n';
-    il_it = expected_8.begin();
-    for (auto& i : l8)
-    {
-        std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
-    }
-    std::cout << '\n';
-    il_it = expected_8.begin();
-    for (const auto i : l8)
-    {
-        std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+        tests::compare(i, *(il_it++));
     }
     std::cout << '\n';
     il_it = expected_8.begin();
     for (const auto& i : l8)
     {
         std::cout << i << ' ' << *il_it << ' ';
-        res = tests::compare(i, *(il_it++));
-        std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+        tests::compare(i, *(il_it++));
+    }
+    std::cout << '\n';
+    il_it = expected_8.begin();
+    for (const auto i : l8)
+    {
+        std::cout << i << ' ' << *il_it << ' ';
+        tests::compare(i, *(il_it++));
+    }
+    std::cout << '\n';
+    il_it = expected_8.begin();
+    for (const auto& i : l8)
+    {
+        std::cout << i << ' ' << *il_it << ' ';
+        tests::compare(i, *(il_it++));
     }
     std::cout << '\n';
 
@@ -204,16 +192,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     dsa::ForwardList<int> l12 = dsa::ForwardList<int>{ 10, 20, 30 };
     auto cit = l12.cbegin();
     std::cout << *cit << ' ';
-    res = tests::compare(*cit, 10);
-    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    tests::compare(*cit, 10);
     cit++;
     std::cout << *cit << ' ';
-    res = tests::compare(*cit, 20);
-    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    tests::compare(*cit, 20);
     cit++;
     std::cout << *cit << ' ';
-    res = tests::compare(*cit, 30);
-    std::cout << (res == 0 ? "PASS" : "FAIL") << '\n';
+    tests::compare(*cit, 30);
     cit++;
 
     return tests::failed;
