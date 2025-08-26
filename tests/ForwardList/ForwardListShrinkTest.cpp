@@ -31,41 +31,41 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     {
         list1.erase_after(list1.begin()[static_cast<size_t>(item)]);
     }
-    std::initializer_list<int> expected1 = { 10, 30 };
+    const std::initializer_list<int> expected1 = { 10, 30 };
     tests::compare("ForwardList1", list1, expected1);
 
     dsa::ForwardList<int> list2 = dsa::ForwardList<int>({ 0, 10, 20, 30, 40, 50 });
     list2.erase_after(list2.begin()[1], list2.begin()[3]);
-    std::initializer_list<int> expected2 = { 0, 10, 30, 40, 50 };
+    const std::initializer_list<int> expected2 = { 0, 10, 30, 40, 50 };
     tests::compare("ForwardList2", list2, expected2);
 
     dsa::ForwardList<int> list3 = dsa::ForwardList<int>({ 0, 10, 20, 30, 40, 50 });
     list3.erase_after(list3.begin()[1]);
     list3.erase_after(list3.begin()[1], list3.begin()[3]);
-    std::initializer_list<int> expected3 = { 0, 10, 40, 50 };
+    const std::initializer_list<int> expected3 = { 0, 10, 40, 50 };
     tests::compare("ForwardList3", list3, expected3);
 
     dsa::ForwardList<int> list4 = dsa::ForwardList<int>({ 0, 10, 20, 30, 40, 50 });
     list4.erase_after(list4.begin()[1]);
     list4.erase_after(list4.begin()[1], list4.begin()[4]);
-    std::initializer_list<int> expected4 = { 0, 10, 50 };
+    const std::initializer_list<int> expected4 = { 0, 10, 50 };
     tests::compare("ForwardList4", list4, expected4);
 
     dsa::ForwardList<int> list5 = dsa::ForwardList<int>({ 0, 10, 0, 0, 40, 0 });
     list5.remove(0);
-    std::initializer_list<int> expected5 = { 10, 40 };
+    const std::initializer_list<int> expected5 = { 10, 40 };
     tests::compare("ForwardList5", list5, expected5);
 
     dsa::ForwardList<int> list6 = dsa::ForwardList<int>({ 0, 0, 0, 0, 0, 0 });
     list6.remove(0);
-    std::initializer_list<int> expected6 = { };
+    const std::initializer_list<int> expected6 = { };
     tests::compare("ForwardList6", list6, expected6);
 
     dsa::ForwardList<int> list7 = dsa::ForwardList<int>({ 0 });
     tests::compare(list7.empty(), false);
     list7.clear();
     tests::compare(list7.empty(), true);
-    std::initializer_list<int> expected7 = { };
+    const std::initializer_list<int> expected7 = { };
     tests::compare("ForwardList7", list7, expected7);
 
     dsa::ForwardList<int> list8 = dsa::ForwardList<int>({ 10, 20, 30 });
@@ -73,7 +73,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     list8.pop_front();
     list8.pop_front();
     list8.pop_front();
-    std::initializer_list<int> expected8 = { };
+    const std::initializer_list<int> expected8 = { };
     tests::compare("ForwardList8", list8, expected8);
 
     return tests::failed;
