@@ -32,10 +32,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     auto indexes = { -1, 0, 4, 2, 100 };
     for (size_t i = 0; i < indexes.size(); i++)
     {
-        int idx_val = indexes.begin()[i];
+        const int idx_val = indexes.begin()[i];
         list1.insert(list1.cbegin()[static_cast<size_t>(idx_val)], idx_val);
     }
-    std::initializer_list<int> expected1 = { 0, -10, 2, 0, 10, 4, 20, 30, 40 };
+    const std::initializer_list<int> expected1 = { 0, -10, 2, 0, 10, 4, 20, 30, 40 };
     tests::compare("List1", list1, expected1);
 
     dsa::List<int> list2 = dsa::List<int>(50);
@@ -44,7 +44,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     list2.push_front(20);
     list2.push_front(10);
     list2.insert(list2.cbegin(), 5, 5);
-    std::initializer_list<int> expected2 = { 5, 5, 5, 5, 5, 10, 20, 30, 40, 50 };
+    const std::initializer_list<int> expected2 = { 5, 5, 5, 5, 5, 10, 20, 30, 40, 50 };
     tests::compare("List2", list2, expected2);
 
     dsa::List<int> list3 = dsa::List<int>(50);
@@ -54,7 +54,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     iterator = list3.insert(list3.cbegin(), 10);
     list3.insert(iterator, { 1, 2, 3 });
     list3.insert(list3.cbegin()[list3.size() - 1], 60);
-    std::initializer_list<int> expected3 = { 1, 2, 3, 10, 20, 30, 40, 60, 50 };
+    const std::initializer_list<int> expected3 = { 1, 2, 3, 10, 20, 30, 40, 60, 50 };
     tests::compare("List3", list3, expected3);
 
     dsa::List<int> list4;
@@ -62,17 +62,17 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     list4.push_back(30);
     list4.push_back(40);
     iterator = list4.insert(list4.cbegin(), 10);
-    std::initializer_list<int> expected4 = { 10, 20, 30, 40 };
+    const std::initializer_list<int> expected4 = { 10, 20, 30, 40 };
     tests::compare("List4", list4, expected4);
 
     dsa::List<int> list5{ 10, 20, 30 };
     list5.insert(list5.end(), 40);
-    std::initializer_list<int> expected5 = { 10, 20, 30, 40 };
+    const std::initializer_list<int> expected5 = { 10, 20, 30, 40 };
     tests::compare("List5", list5, expected5);
 
     dsa::List<int> list6{ 10, 20, 30 };
     list6.insert(list6.end(), { 40, 50, 60 });
-    std::initializer_list<int> expected6 = { 10, 20, 30, 40, 50, 60 };
+    const std::initializer_list<int> expected6 = { 10, 20, 30, 40, 50, 60 };
     tests::compare("List6", list6, expected6);
 
     return tests::failed;

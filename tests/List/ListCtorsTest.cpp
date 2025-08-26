@@ -23,7 +23,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start ListCtors test:\n";
 
-    std::initializer_list<int> expected{ 0, 10, 20 };
+    const std::initializer_list<int> expected{ 0, 10, 20 };
 
     std::cout << "Default ctor\n";
     dsa::List<int> list1;
@@ -39,11 +39,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("List2", list2, expected);
 
     std::cout << "Initializer list ctor\n";
-    dsa::List<int> list3(expected);
+    const dsa::List<int> list3(expected);
     tests::compare("List3", list3, expected);
 
     std::cout << "Copy ctor\n";
-    dsa::List<int> list4{ list1 };
+    const dsa::List<int> list4{ list1 };
     tests::compare("List4", list4, expected);
 
     std::cout << "Copy assignment ctor\n";
@@ -58,7 +58,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Move ctor\n";
     dsa::List<int> temp_1(list1);
-    dsa::List<int> list6 = std::move(temp_1);
+    const dsa::List<int> list6 = std::move(temp_1);
     tests::compare("List6", list6, expected);
 
     std::cout << "Move assignment ctor\n";

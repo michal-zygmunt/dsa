@@ -24,7 +24,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     dsa::List<int> list1 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
     list1.reverse();
-    std::initializer_list<int> expected1 = { 50, 40, 30, 20, 10, 0 };
+    const std::initializer_list<int> expected1 = { 50, 40, 30, 20, 10, 0 };
     tests::compare("List1", list1, expected1);
 
     return tests::failed;

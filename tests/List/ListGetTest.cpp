@@ -23,9 +23,9 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start ListGet test:\n";
 
-    dsa::List<int> list1 = dsa::List<int>({ 0, 10, 20 });
+    const dsa::List<int> list1 = dsa::List<int>({ 0, 10, 20 });
     // Try reading some nodes with invalid indexes
-    std::initializer_list<int> expected1 = { 0, 10, 20 };
+    const std::initializer_list<int> expected1 = { 0, 10, 20 };
     auto indexes = { -1, 0, 1, 2, 100 };
     for (size_t i = 0; i < indexes.size(); i++)
     {
@@ -37,8 +37,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     }
     tests::compare("List1", list1, expected1);
 
-    dsa::List<int> list2 = dsa::List<int>({ 20, 10, 0 });
-    std::initializer_list<int> expected2 = { 20, 10, 0 };
+    const dsa::List<int> list2 = dsa::List<int>({ 20, 10, 0 });
+    const std::initializer_list<int> expected2 = { 20, 10, 0 };
     for (size_t i = 0; i < indexes.size(); i++)
     {
         auto* temp = list2.get(i);

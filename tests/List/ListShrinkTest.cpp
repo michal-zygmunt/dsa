@@ -31,18 +31,18 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     {
         list1.erase(list1.begin()[static_cast<size_t>(idx)]);
     }
-    std::initializer_list<int> expected1 = { 20, 40 };
+    const std::initializer_list<int> expected1 = { 20, 40 };
     tests::compare("List1", list1, expected1);
 
     dsa::List<int> list2 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
     list2.erase(list2.begin()[1], list2.begin()[3]);
-    std::initializer_list<int> expected2 = { 0, 30, 40, 50 };
+    const std::initializer_list<int> expected2 = { 0, 30, 40, 50 };
     tests::compare("List2", list2, expected2);
 
     dsa::List<int> list3 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
     list3.erase(list3.begin()[1]);
     list3.erase(list3.begin()[1], list3.begin()[3]);
-    std::initializer_list<int> expected3 = { 0, 40, 50 };
+    const std::initializer_list<int> expected3 = { 0, 40, 50 };
     tests::compare("List3", list3, expected3);
 
     return tests::failed;

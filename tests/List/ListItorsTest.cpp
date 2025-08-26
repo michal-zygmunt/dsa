@@ -32,7 +32,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         val += 100;
         std::cout << val << '\n';
     }
-    std::initializer_list<int> expected1 = { 100, 110, 120 };
+    const std::initializer_list<int> expected1 = { 100, 110, 120 };
     tests::compare("List1", list1, expected1);
 
     std::cout << "Auto iterator\n";
@@ -44,11 +44,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         val += 100;
         std::cout << val << '\n';
     }
-    std::initializer_list<int> expected2 = { 100, 125, 150 };
+    const std::initializer_list<int> expected2 = { 100, 125, 150 };
     tests::compare("List2", list2, expected2);
 
     std::cout << "Explicit Const iterator\n";
-    dsa::List<int> list3{ 0, 10, 20 };
+    const dsa::List<int> list3{ 0, 10, 20 };
     for (dsa::List<int>::const_iterator iterator = list3.cbegin(); iterator != list3.cend(); iterator++)
     {
         //auto& val = *iterator; // reference generate compilation error
@@ -57,11 +57,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         val += 100;
         std::cout << val << '\n';
     }
-    std::initializer_list<int> expected3 = { 0, 10, 20 };
+    const std::initializer_list<int> expected3 = { 0, 10, 20 };
     tests::compare("List3", list3, expected3);
 
     std::cout << "Auto Const iterator\n";
-    dsa::List<int> list4{ 0, 25, 50 };
+    const dsa::List<int> list4{ 0, 25, 50 };
     for (auto iterator = list4.cbegin(); iterator != list4.cend(); iterator++)
     {
         //auto& val = *iterator; // reference generate compilation error
@@ -70,7 +70,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         val += 100;
         std::cout << val << '\n';
     }
-    std::initializer_list<int> expected4 = { 0, 25, 50 };
+    const std::initializer_list<int> expected4 = { 0, 25, 50 };
     tests::compare("List4", list4, expected4);
 
     // Check iterator of one element
@@ -79,7 +79,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     int val = *iterator;
     int expectedval = 10;
     tests::compare("List5 iterator", val, expectedval);
-    std::initializer_list<int> expected5 = { 10, 0 };
+    const std::initializer_list<int> expected5 = { 10, 0 };
     tests::compare("List5", list5, expected5);
 
     // Check iterator after inserting 0 elements
@@ -90,13 +90,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     val = *iterator;
     expectedval = 30;
     tests::compare("List6 iterator", val, expectedval);
-    std::initializer_list<int> expected6 = { 30, 40, 50 };
+    const std::initializer_list<int> expected6 = { 30, 40, 50 };
     tests::compare("List6", list6, expected6);
 
     // Range based loop
-    std::initializer_list<int> expected7 = { 10, 20, 30, 40, 50 };
+    const std::initializer_list<int> expected7 = { 10, 20, 30, 40, 50 };
     std::initializer_list<int>::iterator il_iterator{};
-    dsa::List<int> list7 = dsa::List<int>{ 10, 20, 30, 40, 50 };
+    const dsa::List<int> list7 = dsa::List<int>{ 10, 20, 30, 40, 50 };
     std::cout << "List7 vs std::initializer_list:\n";
     il_iterator = expected7.begin();
     for (const auto& item : list7)
@@ -128,7 +128,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     std::cout << '\n';
 
     // Compare elements based on range loops
-    std::initializer_list<int> expected8 = { 10, 20, 30, 40, 50 };
+    const std::initializer_list<int> expected8 = { 10, 20, 30, 40, 50 };
     const dsa::List<int> list8 = dsa::List<int>{ 10, 20, 30, 40, 50 };
     std::cout << "List8 vs std::initializer_list:\n";
     il_iterator = expected8.begin();
@@ -163,7 +163,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     // std library operation on custom iterators
     dsa::List<int> list9 = dsa::List<int>{ 10, 20, 30, 40, 50 };
     std::fill(list9.begin(), list9.end(), 10);
-    std::initializer_list<int> expected9 = { 10, 10, 10, 10, 10 };
+    const std::initializer_list<int> expected9 = { 10, 10, 10, 10, 10 };
     tests::compare("List9", list9, expected9);
 
     // check const_iterator for const object
@@ -202,7 +202,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     it_12++;
 
     // Increment const_iterator
-    dsa::List<int> list13 = dsa::List<int>{ 10, 20, 30 };
+    const dsa::List<int> list13 = dsa::List<int>{ 10, 20, 30 };
     std::cout << "List13:\t" << list13 << '\n';
     auto cit_13 = list13.cbegin();
     std::cout << *cit_13 << ' ';
@@ -231,7 +231,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     --it_14;
 
     // Decrement const_iterator
-    dsa::List<int> list15 = dsa::List<int>{ 10, 20, 30 };
+    const dsa::List<int> list15 = dsa::List<int>{ 10, 20, 30 };
     std::cout << "List15:\t" << list15 << '\n';
     auto cit_15 = list15.cend();
     cit_15--;

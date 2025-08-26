@@ -29,16 +29,16 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     list1.set(static_cast<size_t>(-1), new_value);
     list1.set(1, new_value);
     list1.set(100, new_value);
-    std::initializer_list<int> expected1{ 0, 50, 20 };
+    const std::initializer_list<int> expected1{ 0, 50, 20 };
     tests::compare("List1", list1, expected1);
 
     dsa::List<int> list2 = dsa::List<int>({ 0, 10, 20 });
     list2.assign(4, 1);
-    std::initializer_list<int> expected2 = { 1, 1, 1, 1 };
+    const std::initializer_list<int> expected2 = { 1, 1, 1, 1 };
     tests::compare("List2", list2, expected2);
 
     dsa::List<int> list3 = dsa::List<int>({ 0, 10, 20 });
-    std::initializer_list<int> expected3 = { 1, 2, 3, 4 };
+    const std::initializer_list<int> expected3 = { 1, 2, 3, 4 };
     list3.assign(expected3);
     tests::compare("List3", list3, expected3);
 
