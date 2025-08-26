@@ -22,7 +22,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start QueueSet test:\n";
 
-    std::initializer_list<int> expected{ 50,10,20 };
+    const std::initializer_list<int> expected{ 50,10,20 };
 
     dsa::Queue<int> queue1 = dsa::Queue<int>({ 0,10,20 });
     queue1.front() = 50;

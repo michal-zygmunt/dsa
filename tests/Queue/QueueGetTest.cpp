@@ -23,10 +23,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start QueueGet test:\n";
 
-    std::initializer_list<int> expected{ 0,10,20 };
+    const std::initializer_list<int> expected{ 0,10,20 };
 
     dsa::Queue<int> queue1 = dsa::Queue<int>({ 0,10,20 });
-    size_t q1_size = queue1.size();
+    const size_t q1_size = queue1.size();
     std::cout << "Queue1:\t";
     for (size_t i = 0; i < q1_size; i++)
     {

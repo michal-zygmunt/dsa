@@ -23,7 +23,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start QueueCtors test:\n";
 
-    std::initializer_list<int> expected{ 0,10,20 };
+    const std::initializer_list<int> expected{ 0,10,20 };
 
     std::cout << "Default ctor\n";
     dsa::Queue<int> queue1;
@@ -39,11 +39,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("Queue2", queue2, expected);
 
     std::cout << "Initializer list ctor\n";
-    dsa::Queue<int> queue3(expected);
+    const dsa::Queue<int> queue3(expected);
     tests::compare("Queue3", queue3, expected);
 
     std::cout << "Copy ctor\n";
-    dsa::Queue<int> queue4{ queue1 };
+    const dsa::Queue<int> queue4{ queue1 };
     tests::compare("Queue4", queue4, expected);
 
     std::cout << "Copy assignment ctor\n";
@@ -58,7 +58,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Move ctor\n";
     dsa::Queue<int> temp_1(queue1);
-    dsa::Queue<int> queue6 = std::move(temp_1);
+    const dsa::Queue<int> queue6 = std::move(temp_1);
     tests::compare("Queue6", queue6, expected);
 
     std::cout << "Move assignment ctor\n";

@@ -21,9 +21,9 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start QueueOperators test:\n";
 
-    dsa::Queue<int> queue1({ 1,2,3 });
-    dsa::Queue<int> queue2({ 4,5,6 });
-    dsa::Queue<int> queue3({ 1, 2, 3, 4 });
+    const dsa::Queue<int> queue1({ 1,2,3 });
+    const dsa::Queue<int> queue2({ 4,5,6 });
+    const dsa::Queue<int> queue3({ 1, 2, 3, 4 });
     std::cout << "Queue1:\t" << queue1 << '\n';
     std::cout << "Queue2:\t" << queue2 << '\n';
     std::cout << "Queue3:\t" << queue3 << "\n\n";

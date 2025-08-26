@@ -22,7 +22,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start QueueGrow test:\n";
 
-    std::initializer_list<int> expected{ 10, 20, 30, 40 };
+    const std::initializer_list<int> expected{ 10, 20, 30, 40 };
 
     dsa::Queue<int> queue1 = dsa::Queue<int>(10);
     queue1.push(20);
