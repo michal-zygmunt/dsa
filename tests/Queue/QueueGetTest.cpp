@@ -25,35 +25,35 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::initializer_list<int> expected{ 0,10,20 };
 
-    dsa::Queue<int> q1 = dsa::Queue<int>({ 0,10,20 });
-    size_t q1_size = q1.size();
-    std::cout << "Queue q1:\t";
+    dsa::Queue<int> queue1 = dsa::Queue<int>({ 0,10,20 });
+    size_t q1_size = queue1.size();
+    std::cout << "Queue1:\t";
     for (size_t i = 0; i < q1_size; i++)
     {
-        auto temp = q1.front();
+        auto temp = queue1.front();
         if (static_cast<bool>(temp))
         {
             std::cout << temp << ' ';
             tests::compare(temp, expected.begin()[i]);
-            q1.pop();
+            queue1.pop();
         }
     }
     std::cout << '\n';
-    tests::compare("Queue q1", q1, expected);
+    tests::compare("Queue1", queue1, expected);
 
-    dsa::Queue<int> q2 = dsa::Queue<int>({ 0,10,20 });
-    auto front = q2.front();
-    auto back = q2.back();
+    dsa::Queue<int> queue2 = dsa::Queue<int>({ 0,10,20 });
+    auto front = queue2.front();
+    auto back = queue2.back();
     tests::compare(front, 0) || tests::compare(back, 20);
-    std::cout << "Queue q2 front: " << front << ", back: " << back << '\n';
-    tests::compare("Queue q2", q2, expected);
+    std::cout << "Queue2 front: " << front << ", back: " << back << '\n';
+    tests::compare("Queue2", queue2, expected);
 
-    const dsa::Queue<int> q3 = dsa::Queue<int>({ 0,10,20 });
-    front = q3.front();
-    back = q3.back();
+    const dsa::Queue<int> queue3 = dsa::Queue<int>({ 0,10,20 });
+    front = queue3.front();
+    back = queue3.back();
     tests::compare(front, 0) || tests::compare(back, 20);
-    std::cout << "Queue q3 front: " << front << ", back: " << back << '\n';
-    tests::compare("Queue q3", q3, expected);
+    std::cout << "Queue3 front: " << front << ", back: " << back << '\n';
+    tests::compare("Queue3", queue3, expected);
 
     return tests::failed;
 

@@ -21,40 +21,40 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start QueueOperators test:\n";
 
-    dsa::Queue<int> q1({ 1,2,3 });
-    dsa::Queue<int> q2({ 4,5,6 });
-    dsa::Queue<int> q3({ 1, 2, 3, 4 });
-    std::cout << "Queue q1:\t" << q1 << '\n';
-    std::cout << "Queue q2:\t" << q2 << '\n';
-    std::cout << "Queue q3:\t" << q3 << "\n\n";
+    dsa::Queue<int> queue1({ 1,2,3 });
+    dsa::Queue<int> queue2({ 4,5,6 });
+    dsa::Queue<int> queue3({ 1, 2, 3, 4 });
+    std::cout << "Queue1:\t" << queue1 << '\n';
+    std::cout << "Queue2:\t" << queue2 << '\n';
+    std::cout << "Queue3:\t" << queue3 << "\n\n";
 
     std::cout << "Compare operators for objects of the same size\n\n";
 
-    tests::compare("Operator ==", q1 == q1, true);
+    tests::compare("Operator ==", queue1 == queue1, true);
 
-    tests::compare("Operator !=", q1 != q2, true);
+    tests::compare("Operator !=", queue1 != queue2, true);
 
-    tests::compare("Operator <", q1 < q2, true);
+    tests::compare("Operator <", queue1 < queue2, true);
 
-    tests::compare("Operator >", q2 > q1, true);
+    tests::compare("Operator >", queue2 > queue1, true);
 
-    tests::compare("Operator <=", q1 <= q2, true);
+    tests::compare("Operator <=", queue1 <= queue2, true);
 
-    tests::compare("Operator <=", q2 >= q1, true);
+    tests::compare("Operator <=", queue2 >= queue1, true);
 
     std::cout << "Compare operators for objects of different size\n\n";
 
-    tests::compare("Operator == ", q1 == q3, false);
+    tests::compare("Operator == ", queue1 == queue3, false);
 
-    tests::compare("Operator !=", q1 != q3, true);
+    tests::compare("Operator !=", queue1 != queue3, true);
 
-    tests::compare("Operator <", q3 < q2, true);
+    tests::compare("Operator <", queue3 < queue2, true);
 
-    tests::compare("Operator >", q3 > q1, false);
+    tests::compare("Operator >", queue3 > queue1, false);
 
-    tests::compare("Operator <=", q1 <= q3, true);
+    tests::compare("Operator <=", queue1 <= queue3, true);
 
-    tests::compare("Operator >=", q2 >= q3, true);
+    tests::compare("Operator >=", queue2 >= queue3, true);
 
     return tests::failed;
 

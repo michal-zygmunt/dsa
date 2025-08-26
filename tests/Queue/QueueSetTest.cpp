@@ -24,19 +24,19 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::initializer_list<int> expected{ 50,10,20 };
 
-    dsa::Queue<int> q1 = dsa::Queue<int>({ 0,10,20 });
-    q1.front() = 50;
-    tests::compare("Queue q1", q1, expected);
+    dsa::Queue<int> queue1 = dsa::Queue<int>({ 0,10,20 });
+    queue1.front() = 50;
+    tests::compare("Queue1", queue1, expected);
 
-    dsa::Queue<int> q2 = dsa::Queue<int>({ 0,10,20 });
-    dsa::Queue<int> q3 = dsa::Queue<int>({ 50,10,20 });
-    q2.swap(q3);
-    tests::compare("Queue q2", q2, { 50, 10, 20 });
-    tests::compare("Queue q3", q3, { 0, 10, 20 });
+    dsa::Queue<int> queue2 = dsa::Queue<int>({ 0,10,20 });
+    dsa::Queue<int> queue3 = dsa::Queue<int>({ 50,10,20 });
+    queue2.swap(queue3);
+    tests::compare("Queue2", queue2, { 50, 10, 20 });
+    tests::compare("Queue3", queue3, { 0, 10, 20 });
 
-    dsa::Queue<int> q4 = dsa::Queue<int>({ 50,10,20 });
-    q4.swap(q4);
-    tests::compare("Queue q4", q4, expected);
+    dsa::Queue<int> queue4 = dsa::Queue<int>({ 50,10,20 });
+    queue4.swap(queue4);
+    tests::compare("Queue4", queue4, expected);
 
     return tests::failed;
 

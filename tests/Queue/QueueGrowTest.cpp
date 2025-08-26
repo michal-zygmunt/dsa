@@ -24,15 +24,15 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::initializer_list<int> expected{ 10, 20, 30, 40 };
 
-    dsa::Queue<int> q1 = dsa::Queue<int>(10);
-    q1.push(20);
-    q1.push(30);
-    q1.push(40);
-    tests::compare("Queue q1", q1, expected);
+    dsa::Queue<int> queue1 = dsa::Queue<int>(10);
+    queue1.push(20);
+    queue1.push(30);
+    queue1.push(40);
+    tests::compare("Queue1", queue1, expected);
 
-    dsa::Queue<int> q2 = dsa::Queue<int>(10);
-    q2.push_range({ 20, 30, 40 });
-    tests::compare("Queue q2", q2, expected);
+    dsa::Queue<int> queue2 = dsa::Queue<int>(10);
+    queue2.push_range({ 20, 30, 40 });
+    tests::compare("Queue2", queue2, expected);
 
     return tests::failed;
 
