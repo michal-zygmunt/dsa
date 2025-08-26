@@ -45,6 +45,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Compare operators for objects of the same size\n\n";
 
+    // intentional self-comparison, an object should be equal to itself
+    // NOLINTNEXTLINE(misc-redundant-expression)
     tests::compare("Operator ==", list1 == list1, true);
 
     tests::compare("Operator !=", list1 != list2, true);
