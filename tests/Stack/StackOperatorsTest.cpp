@@ -21,9 +21,9 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start StackOperators test:\n";
 
-    dsa::Stack<int> stack1({ 1,2,3 });
-    dsa::Stack<int> stack2({ 4,5,6 });
-    dsa::Stack<int> stack3({ 1, 2, 3, 4 });
+    const dsa::Stack<int> stack1({ 1,2,3 });
+    const dsa::Stack<int> stack2({ 4,5,6 });
+    const dsa::Stack<int> stack3({ 1, 2, 3, 4 });
     std::cout << "Stack1:\t" << stack1 << '\n';
     std::cout << "Stack2:\t" << stack2 << '\n';
     std::cout << "Stack3:\t" << stack3 << "\n\n";

@@ -22,7 +22,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start StackGrow test:\n";
 
-    std::initializer_list<int> expected{ 10, 20, 30, 40 };
+    const std::initializer_list<int> expected{ 10, 20, 30, 40 };
 
     dsa::Stack<int> stack1 = dsa::Stack<int>(40);
     stack1.push(30);

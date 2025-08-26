@@ -22,7 +22,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start StackSet test:\n";
 
-    std::initializer_list<int> expected{ 50,10,0 };
+    const std::initializer_list<int> expected{ 50,10,0 };
 
     dsa::Stack<int> stack1 = dsa::Stack<int>({ 0,10,20 });
     stack1.top() = 50;

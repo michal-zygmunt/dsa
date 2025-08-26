@@ -23,7 +23,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start StackCtors test:\n";
 
-    std::initializer_list<int> expected{ 20,10,0 };
+    const std::initializer_list<int> expected{ 20,10,0 };
 
     std::cout << "Default ctor\n";
     dsa::Stack<int> stack1;
@@ -39,11 +39,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("Stack2", stack2, expected);
 
     std::cout << "Initializer list ctor\n";
-    dsa::Stack<int> stack3({ 0, 10, 20 });
+    const dsa::Stack<int> stack3({ 0, 10, 20 });
     tests::compare("Stack3", stack3, expected);
 
     std::cout << "Copy ctor\n";
-    dsa::Stack<int> stack4{ stack1 };
+    const dsa::Stack<int> stack4{ stack1 };
     tests::compare("Stack4", stack4, expected);
 
     std::cout << "Copy assignment ctor\n";
@@ -58,7 +58,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Move ctor\n";
     dsa::Stack<int> temp_1(stack1);
-    dsa::Stack<int> stack6 = std::move(temp_1);
+    const dsa::Stack<int> stack6 = std::move(temp_1);
     tests::compare("Stack6", stack6, expected);
 
     std::cout << "Move assignment ctor\n";
