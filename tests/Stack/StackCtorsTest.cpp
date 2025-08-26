@@ -26,46 +26,46 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     std::initializer_list<int> expected{ 20,10,0 };
 
     std::cout << "Default ctor\n";
-    dsa::Stack<int> s1;
-    s1.push(0);
-    s1.push(10);
-    s1.push(20);
-    tests::compare("Stack s1", s1, expected);
+    dsa::Stack<int> stack1;
+    stack1.push(0);
+    stack1.push(10);
+    stack1.push(20);
+    tests::compare("Stack1", stack1, expected);
 
     std::cout << "Value ctor\n";
-    dsa::Stack<int> s2(0);
-    s2.push(10);
-    s2.push(20);
-    tests::compare("Stack s2", s2, expected);
+    dsa::Stack<int> stack2(0);
+    stack2.push(10);
+    stack2.push(20);
+    tests::compare("Stack2", stack2, expected);
 
     std::cout << "Initializer list ctor\n";
-    dsa::Stack<int> s3({ 0, 10, 20 });
-    tests::compare("Stack s3", s3, expected);
+    dsa::Stack<int> stack3({ 0, 10, 20 });
+    tests::compare("Stack3", stack3, expected);
 
     std::cout << "Copy ctor\n";
-    dsa::Stack<int> s4{ s1 };
-    tests::compare("Stack s4", s4, expected);
+    dsa::Stack<int> stack4{ stack1 };
+    tests::compare("Stack4", stack4, expected);
 
     std::cout << "Copy assignment ctor\n";
-    dsa::Stack<int> s5;
-    s5.push(1);
-    s5.push(2);
-    s5.push(3);
-    s5.push(4);
-    s5.push(5);
-    s5 = s1;
-    tests::compare("Stack s5", s5, expected);
+    dsa::Stack<int> stack5;
+    stack5.push(1);
+    stack5.push(2);
+    stack5.push(3);
+    stack5.push(4);
+    stack5.push(5);
+    stack5 = stack1;
+    tests::compare("Stack5", stack5, expected);
 
     std::cout << "Move ctor\n";
-    dsa::Stack<int> temp_1(s1);
-    dsa::Stack<int> s6 = std::move(temp_1);
-    tests::compare("Stack s6", s6, expected);
+    dsa::Stack<int> temp_1(stack1);
+    dsa::Stack<int> stack6 = std::move(temp_1);
+    tests::compare("Stack6", stack6, expected);
 
     std::cout << "Move assignment ctor\n";
-    dsa::Stack<int> temp_2(s1);
-    dsa::Stack<int> s7(0);
-    s7 = std::move(temp_2);
-    tests::compare("Stack s7", s7, expected);
+    dsa::Stack<int> temp_2(stack1);
+    dsa::Stack<int> stack7(0);
+    stack7 = std::move(temp_2);
+    tests::compare("Stack7", stack7, expected);
 
     return tests::failed;
 

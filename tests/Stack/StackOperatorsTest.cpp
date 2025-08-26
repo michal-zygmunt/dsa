@@ -21,40 +21,40 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start StackOperators test:\n";
 
-    dsa::Stack<int> s1({ 1,2,3 });
-    dsa::Stack<int> s2({ 4,5,6 });
-    dsa::Stack<int> s3({ 1, 2, 3, 4 });
-    std::cout << "Stack s1:\t" << s1 << '\n';
-    std::cout << "Stack s2:\t" << s2 << '\n';
-    std::cout << "Stack s3:\t" << s3 << "\n\n";
+    dsa::Stack<int> stack1({ 1,2,3 });
+    dsa::Stack<int> stack2({ 4,5,6 });
+    dsa::Stack<int> stack3({ 1, 2, 3, 4 });
+    std::cout << "Stack1:\t" << stack1 << '\n';
+    std::cout << "Stack2:\t" << stack2 << '\n';
+    std::cout << "Stack3:\t" << stack3 << "\n\n";
 
     std::cout << "Compare operators for objects of the same size\n\n";
 
-    tests::compare("Operator ==", s1 == s1, true);
+    tests::compare("Operator ==", stack1 == stack1, true);
 
-    tests::compare("Operator !=", s1 != s2, true);
+    tests::compare("Operator !=", stack1 != stack2, true);
 
-    tests::compare("Operator <", s1 < s2, true);
+    tests::compare("Operator <", stack1 < stack2, true);
 
-    tests::compare("Operator >", s2 > s1, true);
+    tests::compare("Operator >", stack2 > stack1, true);
 
-    tests::compare("Operator <=", s1 <= s2, true);
+    tests::compare("Operator <=", stack1 <= stack2, true);
 
-    tests::compare("Operator <=", s2 >= s1, true);
+    tests::compare("Operator <=", stack2 >= stack1, true);
 
     std::cout << "Compare operators for objects of different size\n\n";
 
-    tests::compare("Operator ==", s1 == s3, false);
+    tests::compare("Operator ==", stack1 == stack3, false);
 
-    tests::compare("Operator !=", s1 != s3, true);
+    tests::compare("Operator !=", stack1 != stack3, true);
 
-    tests::compare("Operator <", s3 < s2, true);
+    tests::compare("Operator <", stack3 < stack2, true);
 
-    tests::compare("Operator >", s3 > s1, true);
+    tests::compare("Operator >", stack3 > stack1, true);
 
-    tests::compare("Operator <=", s1 <= s3, true);
+    tests::compare("Operator <=", stack1 <= stack3, true);
 
-    tests::compare("Operator >=", s2 >= s3, true);
+    tests::compare("Operator >=", stack2 >= stack3, true);
 
     return tests::failed;
 
