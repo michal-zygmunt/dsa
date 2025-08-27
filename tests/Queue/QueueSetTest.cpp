@@ -14,6 +14,7 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -24,9 +25,22 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     const std::initializer_list<int> expected{ 50,10,20 };
 
-    dsa::Queue<int> queue1 = dsa::Queue<int>({ 0,10,20 });
-    queue1.front() = 50;
-    tests::compare("Queue1", queue1, expected);
+    try
+    {
+        dsa::Queue<int> queue1 = dsa::Queue<int>({ 0,10,20 });
+        queue1.front() = 50;
+        tests::compare("Queue1", queue1, expected);
+    }
+    catch (const std::runtime_error& exception)
+    {
+        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
+        return 1;
+    }
+    catch (...)
+    {
+        std::cerr << "Unhandled unknown exception\n";
+        return 1;
+    }
 
     dsa::Queue<int> queue2 = dsa::Queue<int>({ 0,10,20 });
     dsa::Queue<int> queue3 = dsa::Queue<int>({ 50,10,20 });
