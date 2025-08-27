@@ -14,6 +14,7 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -33,10 +34,23 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     const std::initializer_list<int> expected4 = { 1,2,3,4,5,6 };
     tests::compare("ForwardList4", list4, expected4);
 
-    dsa::ForwardList<int> list5(0);
-    list5 += list2;
-    const std::initializer_list<int> expected5 = { 0,4,5,6 };
-    tests::compare("ForwardList5", list5, expected5);
+    try
+    {
+        dsa::ForwardList<int> list5(0);
+        list5 += list2;
+        const std::initializer_list<int> expected5 = { 0,4,5,6 };
+        tests::compare("ForwardList5", list5, expected5);
+    }
+    catch (const std::runtime_error& exception)
+    {
+        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
+        return 1;
+    }
+    catch (...)
+    {
+        std::cerr << "Unhandled unknown exception\n";
+        return 1;
+    }
 
     dsa::ForwardList<int> list6(0);
     list6 += { 4, 5, 6 };

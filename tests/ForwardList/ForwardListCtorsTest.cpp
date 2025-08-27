@@ -14,6 +14,7 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <stdexcept>
 #include <utility>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -42,30 +43,45 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     const dsa::ForwardList<int> list3(expected);
     tests::compare("ForwardList3", list3, expected);
 
-    std::cout << "Copy ctor\n";
-    const dsa::ForwardList<int> list4{ list1 };
-    tests::compare("ForwardList4", list4, expected);
+    try
+    {
+        std::cout << "Copy ctor\n";
+        // intentionally make a copy to test copy constructor
+        // NOLINTNEXTLINE(performance-unnecessary-copy-initialization)
+        const dsa::ForwardList<int> list4{ list1 };
+        tests::compare("ForwardList4", list4, expected);
 
-    std::cout << "Copy assignment ctor\n";
-    dsa::ForwardList<int> list5;
-    list5.push_front(5);
-    list5.push_front(4);
-    list5.push_front(3);
-    list5.push_front(2);
-    list5.push_front(1);
-    list5 = list1;
-    tests::compare("ForwardList5", list5, expected);
+        std::cout << "Copy assignment ctor\n";
+        dsa::ForwardList<int> list5;
+        list5.push_front(5);
+        list5.push_front(4);
+        list5.push_front(3);
+        list5.push_front(2);
+        list5.push_front(1);
+        list5 = list1;
+        tests::compare("ForwardList5", list5, expected);
 
-    std::cout << "Move ctor\n";
-    dsa::ForwardList<int> temp_1(list1);
-    const dsa::ForwardList<int> list6 = std::move(temp_1);
-    tests::compare("ForwardList6", list6, expected);
+        std::cout << "Move ctor\n";
+        dsa::ForwardList<int> temp_1(list1);
+        const dsa::ForwardList<int> list6 = std::move(temp_1);
+        tests::compare("ForwardList6", list6, expected);
 
-    std::cout << "Move assignment ctor\n";
-    dsa::ForwardList<int> temp_2(list1);
-    dsa::ForwardList<int> list7(0);
-    list7 = std::move(temp_2);
-    tests::compare("ForwardList7", list7, expected);
+        std::cout << "Move assignment ctor\n";
+        dsa::ForwardList<int> temp_2(list1);
+        dsa::ForwardList<int> list7(0);
+        list7 = std::move(temp_2);
+        tests::compare("ForwardList7", list7, expected);
+    }
+    catch (const std::runtime_error& exception)
+    {
+        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
+        return 1;
+    }
+    catch (...)
+    {
+        std::cerr << "Unhandled unknown exception\n";
+        return 1;
+    }
 
     return tests::failed;
 
