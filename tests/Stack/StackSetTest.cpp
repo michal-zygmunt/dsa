@@ -14,6 +14,7 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -24,9 +25,22 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     const std::initializer_list<int> expected{ 50,10,0 };
 
-    dsa::Stack<int> stack1 = dsa::Stack<int>({ 0,10,20 });
-    stack1.top() = 50;
-    tests::compare("Stack1", stack1, expected);
+    try
+    {
+        dsa::Stack<int> stack1 = dsa::Stack<int>({ 0,10,20 });
+        stack1.top() = 50;
+        tests::compare("Stack1", stack1, expected);
+    }
+    catch (const std::runtime_error& exception)
+    {
+        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
+        return 1;
+    }
+    catch (...)
+    {
+        std::cerr << "Unhandled unknown exception\n";
+        return 1;
+    }
 
     dsa::Stack<int> stack2 = dsa::Stack<int>({ 0,10,20 });
     dsa::Stack<int> stack3 = dsa::Stack<int>({ 0,10,50 });

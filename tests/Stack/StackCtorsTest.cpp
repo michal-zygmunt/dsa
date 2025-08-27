@@ -14,6 +14,7 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <stdexcept>
 #include <utility>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -42,30 +43,45 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     const dsa::Stack<int> stack3({ 0, 10, 20 });
     tests::compare("Stack3", stack3, expected);
 
-    std::cout << "Copy ctor\n";
-    const dsa::Stack<int> stack4{ stack1 };
-    tests::compare("Stack4", stack4, expected);
+    try
+    {
+        std::cout << "Copy ctor\n";
+        // intentionally make a copy to test copy constructor
+        // NOLINTNEXTLINE(performance-unnecessary-copy-initialization)
+        const dsa::Stack<int> stack4{ stack1 };
+        tests::compare("Stack4", stack4, expected);
 
-    std::cout << "Copy assignment ctor\n";
-    dsa::Stack<int> stack5;
-    stack5.push(1);
-    stack5.push(2);
-    stack5.push(3);
-    stack5.push(4);
-    stack5.push(5);
-    stack5 = stack1;
-    tests::compare("Stack5", stack5, expected);
+        std::cout << "Copy assignment ctor\n";
+        dsa::Stack<int> stack5;
+        stack5.push(1);
+        stack5.push(2);
+        stack5.push(3);
+        stack5.push(4);
+        stack5.push(5);
+        stack5 = stack1;
+        tests::compare("Stack5", stack5, expected);
 
-    std::cout << "Move ctor\n";
-    dsa::Stack<int> temp_1(stack1);
-    const dsa::Stack<int> stack6 = std::move(temp_1);
-    tests::compare("Stack6", stack6, expected);
+        std::cout << "Move ctor\n";
+        dsa::Stack<int> temp_1(stack1);
+        const dsa::Stack<int> stack6 = std::move(temp_1);
+        tests::compare("Stack6", stack6, expected);
 
-    std::cout << "Move assignment ctor\n";
-    dsa::Stack<int> temp_2(stack1);
-    dsa::Stack<int> stack7(0);
-    stack7 = std::move(temp_2);
-    tests::compare("Stack7", stack7, expected);
+        std::cout << "Move assignment ctor\n";
+        dsa::Stack<int> temp_2(stack1);
+        dsa::Stack<int> stack7(0);
+        stack7 = std::move(temp_2);
+        tests::compare("Stack7", stack7, expected);
+    }
+    catch (const std::runtime_error& exception)
+    {
+        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
+        return 1;
+    }
+    catch (...)
+    {
+        std::cerr << "Unhandled unknown exception\n";
+        return 1;
+    }
 
     return tests::failed;
 
