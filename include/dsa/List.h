@@ -41,9 +41,15 @@ namespace dsa
         /**
          * @brief Struct implements base pointer used by List
          */
-        struct NodeBase
+        class NodeBase
         {
+        public:
+
             virtual ~NodeBase() = default;
+
+        private:
+
+            friend class List<T>;
 
             /**
              * @brief Pointer to next node
