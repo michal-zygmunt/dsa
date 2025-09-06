@@ -39,7 +39,7 @@ namespace tests
     template<typename T>
     bool if_error(T a, T b)
     {
-        bool res = a != b ? true : false;
+        const bool res = a != b ? true : false;
         if (res)
         {
             std::cout << "Comparison error! Value " << a << " not equal to " << b << '\n';
@@ -200,7 +200,7 @@ namespace tests
     {
         std::cout << container_name << ':' << '\t' << container << '\n';
         std::cout << "Expected:  \t" << expected << '\n';
-        bool res = if_error(container, expected);
+        const bool res = if_error(container, expected);
         std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     }
 
@@ -217,7 +217,7 @@ namespace tests
     {
         std::cout << container_name << ':' << '\t' << a << '\n';
         std::cout << "Expected:  \t" << b << '\n';
-        bool res = if_error(a, b);
+        const bool res = if_error(a, b);
         std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     }
 
