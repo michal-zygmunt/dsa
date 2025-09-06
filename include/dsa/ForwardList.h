@@ -209,7 +209,7 @@ namespace dsa
              */
             ForwardListIterator operator++(int)
             {
-                ForwardListIterator iterator = *this;
+                const ForwardListIterator iterator = *this;
                 ++(*this);
                 return iterator;
             }
@@ -1246,8 +1246,8 @@ namespace dsa
             return nullptr;
         }
 
-        iterator it(first.m_current_node);
-        size_t dist = distance(first, last);
+        const iterator it(first.m_current_node);
+        const size_t dist = distance(first, last);
         for (size_t i = 0; i < dist - 1; i++)
         {
             erase_element_after(it);
@@ -1432,7 +1432,7 @@ namespace dsa
     {
         if (&other != this && other.m_size > 0)
         {
-            size_t dist = distance(first, last) - 1;
+            const size_t dist = distance(first, last) - 1;
 
             if (first == last || !dist)
             {
