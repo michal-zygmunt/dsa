@@ -17,6 +17,7 @@
 #include <iostream>
 #include <iterator>
 #include <limits>
+#include <utility>
 
 namespace dsa
 {
@@ -1027,7 +1028,7 @@ namespace dsa
     template<typename T>
     ForwardList<T>::ForwardList(ForwardList<T>&& other) noexcept
     {
-        operator=(other);
+        operator=(std::move(other));
     }
 
     template<typename T>
