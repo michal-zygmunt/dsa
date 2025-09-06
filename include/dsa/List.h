@@ -214,7 +214,7 @@ namespace dsa
              */
             ListIterator operator++(int)
             {
-                ListIterator iterator = *this;
+                const ListIterator iterator = *this;
                 ++(*this);
                 return iterator;
             }
@@ -241,7 +241,7 @@ namespace dsa
              */
             ListIterator operator--(int)
             {
-                ListIterator iterator = *this;
+                const ListIterator iterator = *this;
                 --(*this);
                 return iterator;
             }
@@ -1251,7 +1251,7 @@ namespace dsa
             return nullptr;
         }
 
-        size_t list_size = il.size();
+        const size_t list_size = il.size();
         for (size_t i = 0; i < list_size; i++)
         {
             it = insert_element_before(it, il.begin()[list_size - 1 - i]);
@@ -1279,7 +1279,7 @@ namespace dsa
             return nullptr;
         }
 
-        size_t dist = distance(first, last);
+        const size_t dist = distance(first, last);
         if (!dist)
         {
             return last;
@@ -1502,7 +1502,7 @@ namespace dsa
             NodeBase* first_to_move{ first.m_current_node };
             NodeBase* last_to_move{ last.m_current_node->m_prev };
 
-            size_t dist = distance(first, last);
+            const size_t dist = distance(first, last);
 
             if (first == other.begin())
             {
@@ -1702,7 +1702,15 @@ namespace dsa
         // select list end to look for selected index
         enum Mode { FRONT, BACK, AUTO };
 
-        Mode mode = AUTO;
+#ifdef _MSC_VER
+        // clang-tidy recommends the variable as const
+        // but MSVC generates C4127 'conditional expression is constant' error
+        // NOLINTNEXTLINE(misc-const-correctness)
+        Mode mode = Mode::AUTO;
+#else
+        const Mode mode = Mode::AUTO;
+#endif // !_MSC_VER
+
         if (mode == FRONT)
         {
             // count nodes from front
