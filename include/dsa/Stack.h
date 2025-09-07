@@ -201,7 +201,7 @@ namespace dsa
     {
         if (&other != this)
         {
-            while (container.size())
+            while (!container.empty())
             {
                 container.pop_front();
             }
@@ -299,7 +299,7 @@ namespace dsa
     {
         Stack<T> temp{ stack };
 
-        while (temp.size())
+        while (!temp.empty())
         {
             out << temp.top() << ' ';
             temp.pop();
@@ -328,7 +328,7 @@ namespace dsa
         Stack<T> temp_1{ stack1 };
         Stack<T> temp_2{ stack2 };
 
-        while (temp_1.size() && temp_2.size())
+        while (!temp_1.empty() && !temp_2.empty())
         {
             if (temp_1.top() != temp_2.top())
             {
@@ -373,7 +373,7 @@ namespace dsa
         Stack<T> temp_1{ stack1 };
         Stack<T> temp_2{ stack2 };
 
-        while (temp_1.size() && temp_2.size())
+        while (!temp_1.empty() && !temp_2.empty())
         {
             if (temp_1.top() >= temp_2.top())
             {
