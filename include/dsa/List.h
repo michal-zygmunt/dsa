@@ -886,7 +886,7 @@ namespace dsa
          */
         void init_node()
         {
-            if (!m_back)
+            if (m_back == nullptr)
             {
                 m_back = new NodeBase;
             }
@@ -1105,7 +1105,7 @@ namespace dsa
     {
         clear();
 
-        if (m_back)
+        if (m_back != nullptr)
         {
             delete m_back;
         }
@@ -1293,7 +1293,7 @@ namespace dsa
         }
 
         const size_t dist = distance(first, last);
-        if (!dist)
+        if (dist == 0)
         {
             return last;
         }
@@ -1314,7 +1314,7 @@ namespace dsa
 
         Node* newNode = new Node(value);
 
-        if (!m_front)
+        if (m_front == nullptr)
         {
             m_front = newNode;
             m_front->m_next = m_back;
@@ -1333,7 +1333,7 @@ namespace dsa
     template<typename T>
     void List<T>::pop_front()
     {
-        if (!m_front)
+        if (m_front == nullptr)
         {
             return;
         }
@@ -1360,7 +1360,7 @@ namespace dsa
 
         Node* newNode = new Node(value);
 
-        if (!m_size)
+        if (m_size == 0)
         {
             m_front = newNode;
             m_front->m_next = m_back;
@@ -1463,7 +1463,7 @@ namespace dsa
     {
         if (&other != this)
         {
-            if (m_size)
+            if (m_size != 0)
             {
                 m_back->m_prev->m_next = other.m_front;
                 other.m_front->m_prev = m_back->m_prev;
@@ -1594,7 +1594,7 @@ namespace dsa
         while (temp)
         {
             next = temp->m_next;
-            if (!next)
+            if (next == nullptr)
             {
                 return;
             }
