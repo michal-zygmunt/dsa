@@ -68,9 +68,9 @@ namespace dsa
         /**
          * @brief Construct a new Stack object using initializer list
          *
-         * @param[in] il initializer list of values of type T
+         * @param[in] init_list initializer list of values of type T
          */
-        Stack(const std::initializer_list<T>& il);
+        Stack(const std::initializer_list<T>& init_list);
 
         /**
          * @brief Construct a new Stack object using copy constructor
@@ -148,9 +148,9 @@ namespace dsa
         /**
          * @brief Function add range of elements at the top of Stack
          *
-         * @param[in] il range of std::initializer_list elements of type T
+         * @param[in] init_list range of std::initializer_list elements of type T
          */
-        void push_range(const std::initializer_list<T>& il);
+        void push_range(const std::initializer_list<T>& init_list);
 
         /**
          * @brief Function removes the top element of Stack
@@ -176,9 +176,9 @@ namespace dsa
     }
 
     template<typename T>
-    Stack<T>::Stack(const std::initializer_list<T>& il)
+    Stack<T>::Stack(const std::initializer_list<T>& init_list)
     {
-        for (const auto& item : il)
+        for (const auto& item : init_list)
         {
             container.push_back(item);
         }
@@ -263,9 +263,9 @@ namespace dsa
     }
 
     template<typename T>
-    void Stack<T>::push_range(const std::initializer_list<T>& il)
+    void Stack<T>::push_range(const std::initializer_list<T>& init_list)
     {
-        for (const auto& item : il)
+        for (const auto& item : init_list)
         {
             push(item);
         }
@@ -312,21 +312,21 @@ namespace dsa
      * @brief The relational operator compares two Stack objects
      *
      * @tparam T type of data stored in Stack
-     * @param[in] s1 input container
-     * @param[in] s2 input container
+     * @param[in] stack1 input container
+     * @param[in] stack2 input container
      * @retval true if containers are equal
      * @retval false if containers are not equal
      */
     template<typename T>
-    bool operator==(const Stack<T>& s1, const Stack<T>& s2)
+    bool operator==(const Stack<T>& stack1, const Stack<T>& stack2)
     {
-        if (s1.size() != s2.size())
+        if (stack1.size() != stack2.size())
         {
             return false;
         }
 
-        Stack<T> temp_1{ s1 };
-        Stack<T> temp_2{ s2 };
+        Stack<T> temp_1{ stack1 };
+        Stack<T> temp_2{ stack2 };
 
         while (temp_1.size() && temp_2.size())
         {
@@ -346,32 +346,32 @@ namespace dsa
      * @brief The relational operator compares two Stack objects
      *
      * @tparam T type of data stored in Stack
-     * @param[in] s1 input container
-     * @param[in] s2 input container
+     * @param[in] stack1 input container
+     * @param[in] stack2 input container
      * @retval true if containers are not equal
      * @retval false if containers are equal
      */
     template<typename T>
-    bool operator!=(const Stack<T>& s1, const Stack<T>& s2)
+    bool operator!=(const Stack<T>& stack1, const Stack<T>& stack2)
     {
-        return !(operator==(s1, s2));
+        return !(operator==(stack1, stack2));
     }
 
     /**
      * @brief The relational operator compares two Stack objects
      *
      * @tparam T type of data stored in Stack
-     * @param[in] s1 input container
-     * @param[in] s2 input container
-     * @retval true if the content of \p s1 are lexicographically
-     *         less than the content of \p s2
+     * @param[in] stack1 input container
+     * @param[in] stack2 input container
+     * @retval true if the content of \p stack1 are lexicographically
+     *         less than the content of \p stack2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<(const Stack<T>& s1, const Stack<T>& s2)
+    bool operator<(const Stack<T>& stack1, const Stack<T>& stack2)
     {
-        Stack<T> temp_1{ s1 };
-        Stack<T> temp_2{ s2 };
+        Stack<T> temp_1{ stack1 };
+        Stack<T> temp_2{ stack2 };
 
         while (temp_1.size() && temp_2.size())
         {
@@ -391,48 +391,48 @@ namespace dsa
      * @brief The relational operator compares two Stack objects
      *
      * @tparam T type of data stored in Stack
-     * @param[in] s1 input container
-     * @param[in] s2 input container
-     * @retval true if the content of \p s1 are lexicographically
-     *         greater than the content of \p s2
+     * @param[in] stack1 input container
+     * @param[in] stack2 input container
+     * @retval true if the content of \p stack1 are lexicographically
+     *         greater than the content of \p stack2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>(const Stack<T>& s1, const Stack<T>& s2)
+    bool operator>(const Stack<T>& stack1, const Stack<T>& stack2)
     {
-        return operator<(s2, s1);
+        return operator<(stack2, stack1);
     }
 
     /**
      * @brief The relational operator compares two Stack objects
      *
      * @tparam T type of data stored in Stack
-     * @param[in] s1 input container
-     * @param[in] s2 input container
-     * @retval true if the content of \p s1 are lexicographically
-     *         less or equal than the content of \p s2
+     * @param[in] stack1 input container
+     * @param[in] stack2 input container
+     * @retval true if the content of \p stack1 are lexicographically
+     *         less or equal than the content of \p stack2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<=(const Stack<T>& s1, const Stack<T>& s2)
+    bool operator<=(const Stack<T>& stack1, const Stack<T>& stack2)
     {
-        return !(operator>(s1, s2));
+        return !(operator>(stack1, stack2));
     }
 
     /**
      * @brief The relational operator compares two Stack objects
      *
      * @tparam T type of data stored in Stack
-     * @param[in] s1 input container
-     * @param[in] s2 input container
+     * @param[in] stack1 input container
+     * @param[in] stack2 input container
      * @retval true if the content of \p s1 are lexicographically
      *         greater or equal than the content of \p s2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>=(const Stack<T>& s1, const Stack<T>& s2)
+    bool operator>=(const Stack<T>& stack1, const Stack<T>& stack2)
     {
-        return !(operator<(s1, s2));
+        return !(operator<(stack1, stack2));
     }
 
 }
