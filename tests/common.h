@@ -39,7 +39,7 @@ namespace tests
     template<typename T>
     bool if_error(T val1, T val2)
     {
-        const bool res = val1 != val2 ? true : false;
+        const bool res = val1 != val2;
         if (res)
         {
             std::cout << "Comparison error! Value " << val1 << " not equal to " << val2 << '\n';
