@@ -26,7 +26,7 @@ namespace dsa
     class ForwardList;
 
     template<typename T>
-    ForwardList<T> operator+(const ForwardList<T>& l1, const ForwardList<T>& l2);
+    ForwardList<T> operator+(const ForwardList<T>& list1, const ForwardList<T>& list2);
 
     /**
      * @brief Implements ForwardList using Node with pointer to next element
@@ -559,12 +559,12 @@ namespace dsa
          * @brief Function inserts new Node after specified ForwardList const_iterator
          *
          * @param[in] pos const_iterator to insert element after
-         * @param[in] il initializer_list with elements to insert after \p pos
+         * @param[in] init_list initializer_list with elements to insert after \p pos
          * @return pointer to the last inserted element
          * @retval iterator to last inserted element
          * @retval pos if no element was inserted
          */
-        iterator insert_after(const_iterator pos, std::initializer_list<T> il);
+        iterator insert_after(const_iterator pos, std::initializer_list<T> init_list);
 
         /// @todo add emplace_after
 
@@ -664,20 +664,20 @@ namespace dsa
          *
          * @param[in] pos const_iterator after which content of other container will be inserted
          * @param[in,out] other container to take elements from
-         * @param[in] it const_iterator after which elements of \p other will be taken
+         * @param[in] iter const_iterator after which elements of \p other will be taken
          * @details Content of other object will be taken by constructed object
          */
-        void splice_after(const_iterator pos, ForwardList<T>& other, const_iterator it);
+        void splice_after(const_iterator pos, ForwardList<T>& other, const_iterator iter);
 
         /**
          * @brief Function moves elements from other ForwardList object
          *
          * @param[in] pos const_iterator after which content of other container will be inserted
          * @param[in,out] other container to take elements from
-         * @param[in] it const_iterator after which elements of \p other will be taken
+         * @param[in] iter const_iterator after which elements of \p other will be taken
          * @details Content of other object will be taken by constructed object
          */
-        void splice_after(const_iterator pos, ForwardList<T>&& other, const_iterator it);
+        void splice_after(const_iterator pos, ForwardList<T>&& other, const_iterator iter);
 
         /**
          * @brief Function moves elements from other ForwardList object
@@ -745,14 +745,14 @@ namespace dsa
         /**
          * @brief push elements of another ForwardList to base container back
          *
-         * @param[in] il initializer_list to read elements from
+         * @param[in] init_list initializer_list to read elements from
          * @return ForwardList<T>&
          */
-        ForwardList<T>& operator+=(const std::initializer_list<T> il)
+        ForwardList<T>& operator+=(const std::initializer_list<T> init_list)
         {
             auto before_last = find_iter_before_last();
 
-            for (const auto& item : il)
+            for (const auto& item : init_list)
             {
                 before_last = insert_after(before_last, item);
             }
@@ -822,9 +822,16 @@ namespace dsa
     private:
 
         /**
-         * @brief Forward friend declaration of ForwardList operator+
+         * @brief Construct new object based on two ForwardList objects
+         *
+         * Forward friend declaration of ForwardList operator+
+         *
+         * @tparam T type of data stored in ForwardList Node
+         * @param[in] list1 input ForwardList
+         * @param[in] list2 input ForwardList
+         * @return ForwardList<T> with content of two input lists
          */
-        friend ForwardList<T> operator+<>(const ForwardList<T>& l1, const ForwardList<T>& l2);
+        friend ForwardList<T> operator+<>(const ForwardList<T>& list1, const ForwardList<T>& list2);
 
         /**
          * @brief Function initialize ForwardList pointer located just before user added data
@@ -851,13 +858,13 @@ namespace dsa
                 temp = temp->m_next;
             }
 
-            auto it = iterator(temp);
-            if (!it.m_current_node)
+            auto iter = iterator(temp);
+            if (!iter.m_current_node)
             {
-                it = before_begin();
+                iter = before_begin();
             }
 
-            return it;
+            return iter;
         }
 
         /**
@@ -948,10 +955,10 @@ namespace dsa
          *
          * @param[in] pos const_iterator after which content of other container will be inserted
          * @param[in,out] other container to take elements from
-         * @param[in] it const_iterator after which elements of \p other will be taken
+         * @param[in] iter const_iterator after which elements of \p other will be taken
          * @details Content of other object will be taken by constructed object
          */
-        void transfer(const_iterator pos, ForwardList<T>& other, const_iterator it);
+        void transfer(const_iterator pos, ForwardList<T>& other, const_iterator iter);
 
         /**
          * @brief Function moves elements from other ForwardList object
@@ -990,10 +997,10 @@ namespace dsa
     {
         init_node();
 
-        auto it = before_begin();
+        auto iter = before_begin();
         for (const auto& item : init_list)
         {
-            it = insert_after(it, item);
+            iter = insert_after(iter, item);
         }
     }
 
@@ -1002,10 +1009,10 @@ namespace dsa
     {
         init_node();
 
-        auto it = before_begin();
+        auto iter = before_begin();
         for (const auto& item : other)
         {
-            it = insert_after(it, item);
+            iter = insert_after(iter, item);
         }
     }
 
@@ -1021,10 +1028,10 @@ namespace dsa
                 pop_front();
             }
 
-            auto it = before_begin();
+            auto iter = before_begin();
             for (const auto& item : other)
             {
-                it = insert_after(it, item);
+                iter = insert_after(iter, item);
             }
         }
 
@@ -1071,10 +1078,10 @@ namespace dsa
             pop_front();
         }
 
-        auto it = before_begin();
+        auto iter = before_begin();
         for (size_t i = 0; i < count; i++)
         {
-            it = insert_after(it, value);
+            iter = insert_after(iter, value);
         }
     }
 
@@ -1086,10 +1093,10 @@ namespace dsa
             pop_front();
         }
 
-        auto it = before_begin();
+        auto iter = before_begin();
         for (const auto& item : init_list)
         {
-            it = insert_after(it, item);
+            iter = insert_after(iter, item);
         }
     }
 
@@ -1204,30 +1211,30 @@ namespace dsa
             return nullptr;
         }
 
-        iterator it{ pos.m_current_node };
+        iterator iter{ pos.m_current_node };
         for (size_t i = 0; i < count; i++)
         {
-            it = insert_element_after(it, value);
+            iter = insert_element_after(iter, value);
         }
 
-        return it;
+        return iter;
     }
 
     template<typename T>
-    typename ForwardList<T>::iterator ForwardList<T>::insert_after(const_iterator pos, std::initializer_list<T> il)
+    typename ForwardList<T>::iterator ForwardList<T>::insert_after(const_iterator pos, std::initializer_list<T> init_list)
     {
         if (!if_valid_iterator(pos))
         {
             return nullptr;
         }
 
-        iterator it{ pos.m_current_node };
-        for (size_t i = 0; i < il.size(); i++)
+        iterator iter{ pos.m_current_node };
+        for (size_t i = 0; i < init_list.size(); i++)
         {
-            it = insert_element_after(it, il.begin()[i]);
+            iter = insert_element_after(iter, init_list.begin()[i]);
         }
 
-        return it;
+        return iter;
     }
 
     template<typename T>
@@ -1238,10 +1245,10 @@ namespace dsa
             return nullptr;
         }
 
-        iterator it{ pos.m_current_node };
-        it = erase_element_after(it);
+        iterator iter{ pos.m_current_node };
+        iter = erase_element_after(iter);
 
-        return it;
+        return iter;
     }
 
     template<typename T>
@@ -1252,14 +1259,14 @@ namespace dsa
             return nullptr;
         }
 
-        const iterator it(first.m_current_node);
+        const iterator iter(first.m_current_node);
         const size_t dist = distance(first, last);
         for (size_t i = 0; i < dist - 1; i++)
         {
-            erase_element_after(it);
+            erase_element_after(iter);
         }
 
-        return it.m_next;
+        return iter.m_next;
     }
 
     template<typename T>
@@ -1318,29 +1325,29 @@ namespace dsa
 
         if (m_size > count)
         {
-            auto it = begin();
+            auto iter = begin();
             for (size_t i = 0; i < count - 1; i++)
             {
-                ++it;
+                ++iter;
             }
 
             while (m_size > count)
             {
-                erase_after(it);
+                erase_after(iter);
             }
         }
 
         if (m_size < count)
         {
-            auto it = find_iter_before_last();
-            if (it != before_begin())
+            auto iter = find_iter_before_last();
+            if (iter != before_begin())
             {
-                ++it;
+                ++iter;
             }
 
             while (m_size < count)
             {
-                it = insert_after(it, value);
+                iter = insert_after(iter, value);
             }
         }
     }
@@ -1371,11 +1378,11 @@ namespace dsa
         {
             if (m_size)
             {
-                auto it = find_iter_before_last();
-                NodeBase* last{ it.m_current_node->m_next };
+                auto iter = find_iter_before_last();
+                NodeBase* last{ iter.m_current_node->m_next };
 
-                it = other.find_iter_before_last();
-                NodeBase* other_last{ it.m_current_node->m_next };
+                iter = other.find_iter_before_last();
+                NodeBase* other_last{ iter.m_current_node->m_next };
 
                 last->m_next = other.m_front->m_next;
                 last = other_last;
@@ -1412,12 +1419,12 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::transfer(const_iterator pos, ForwardList<T>& other, const_iterator it)
+    void ForwardList<T>::transfer(const_iterator pos, ForwardList<T>& other, const_iterator iter)
     {
         if (&other != this && other.m_size > 0)
         {
             NodeBase* temp_prev{ pos.m_current_node };  // to append to
-            NodeBase* temp_next{ it.m_current_node };   // does not move
+            NodeBase* temp_next{ iter.m_current_node };   // does not move
 
             NodeBase* to_move{ temp_next->m_next };
 
@@ -1483,15 +1490,15 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>& other, const_iterator it)
+    void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>& other, const_iterator iter)
     {
-        transfer(pos, other, it);
+        transfer(pos, other, iter);
     }
 
     template<typename T>
-    void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>&& other, const_iterator it)
+    void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>&& other, const_iterator iter)
     {
-        transfer(pos, other, it);
+        transfer(pos, other, iter);
     }
 
     template<typename T>
@@ -1537,8 +1544,8 @@ namespace dsa
     {
         NodeBase* temp{ m_front->m_next };
 
-        auto it = find_iter_before_last();
-        NodeBase* last{ it.m_current_node->m_next };
+        auto iter = find_iter_before_last();
+        NodeBase* last{ iter.m_current_node->m_next };
 
         m_front->m_next = last;
         last = temp;
@@ -1598,20 +1605,20 @@ namespace dsa
      * @brief Construct new object based on two ForwardList objects
      *
      * @tparam T type of data stored in ForwardList Node
-     * @param[in] l1 input ForwardList
-     * @param[in] l2 input ForwardList
-     * @return ForwardList<T>
+     * @param[in] list1 input ForwardList
+     * @param[in] list2 input ForwardList
+     * @return ForwardList<T> with content of two input lists
      */
     template<typename T>
-    ForwardList<T> operator+(const ForwardList<T>& l1, const ForwardList<T>& l2)
+    ForwardList<T> operator+(const ForwardList<T>& list1, const ForwardList<T>& list2)
     {
-        ForwardList<T> temp(l1);
+        ForwardList<T> temp(list1);
         auto before_last = temp.find_iter_before_last();
         ++before_last;
 
-        for (auto it = l2.cbegin(); it != l2.cend(); ++it)
+        for (auto iter = list2.cbegin(); iter != list2.cend(); ++iter)
         {
-            T value = *it;
+            T value = *iter;
             before_last = temp.insert_after(before_last, value);
         }
 
@@ -1623,18 +1630,18 @@ namespace dsa
      *
      * @tparam T type of initializer list elements
      * @param[in,out] out reference to output stream
-     * @param[in] ll ForwardList to print
+     * @param[in] list ForwardList to print
      * @return std::ostream&
      */
     template<typename T>
-    std::ostream& operator<<(std::ostream& out, const ForwardList<T>& ll)
+    std::ostream& operator<<(std::ostream& out, const ForwardList<T>& list)
     {
-        if (ll.empty())
+        if (list.empty())
         {
             return out;
         }
 
-        for (auto it = ll.cbegin(); it != ll.cend(); ++it)
+        for (auto it = list.cbegin(); it != list.cend(); ++it)
         {
             T value = *it;
             out << value << ' ';
@@ -1647,31 +1654,31 @@ namespace dsa
      * @brief The relational operator compares two ForwardList objects
      *
      * @tparam T type of data stored in ForwardList
-     * @param[in] l1 input container
-     * @param[in] l2 input container
+     * @param[in] list1 input container
+     * @param[in] list2 input container
      * @retval true if containers are equal
      * @retval false if containers are not equal
      */
     template<typename T>
-    bool operator==(const ForwardList<T>& l1, const ForwardList<T>& l2)
+    bool operator==(const ForwardList<T>& list1, const ForwardList<T>& list2)
     {
-        if (l1.size() != l2.size())
+        if (list1.size() != list2.size())
         {
             return false;
         }
 
-        auto l1_it = l1.cbegin();
-        auto l2_it = l2.cbegin();
+        auto list1_iter = list1.cbegin();
+        auto list2_iter = list2.cbegin();
 
-        while (l1_it != l1.cend() && l2_it != l2.cend())
+        while (list1_iter != list1.cend() && list2_iter != list2.cend())
         {
-            if (*l1_it != *l2_it)
+            if (*list1_iter != *list2_iter)
             {
                 return false;
             }
 
-            l1_it++;
-            l2_it++;
+            list1_iter++;
+            list2_iter++;
         }
 
         return true;
@@ -1681,42 +1688,42 @@ namespace dsa
      * @brief The relational operator compares two ForwardList objects
      *
      * @tparam T type of data stored in ForwardList
-     * @param[in] l1 input container
-     * @param[in] l2 input container
+     * @param[in] list1 input container
+     * @param[in] list2 input container
      * @retval true if containers are not equal
      * @retval false if containers are equal
      */
     template<typename T>
-    bool operator!=(const ForwardList<T>& l1, const ForwardList<T>& l2)
+    bool operator!=(const ForwardList<T>& list1, const ForwardList<T>& list2)
     {
-        return !(operator==(l1, l2));
+        return !(operator==(list1, list2));
     }
 
     /**
      * @brief The relational operator compares two ForwardList objects
      *
      * @tparam T type of data stored in ForwardList
-     * @param[in] l1 input container
-     * @param[in] l2 input container
-     * @retval true if the content of \p l1 are lexicographically
-     *         less than the content of \p l2
+     * @param[in] list1 input container
+     * @param[in] list2 input container
+     * @retval true if the content of \p list1 are lexicographically
+     *         less than the content of \p list2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<(const ForwardList<T>& l1, const ForwardList<T>& l2)
+    bool operator<(const ForwardList<T>& list1, const ForwardList<T>& list2)
     {
-        auto l1_it = l1.cbegin();
-        auto l2_it = l2.cbegin();
+        auto list1_iter = list1.cbegin();
+        auto list2_iter = list2.cbegin();
 
-        while (l1_it != l1.cend() && l2_it != l2.cend())
+        while (list1_iter != list1.cend() && list2_iter != list2.cend())
         {
-            if (*l1_it >= *l2_it)
+            if (*list1_iter >= *list2_iter)
             {
                 return false;
             }
 
-            l1_it++;
-            l2_it++;
+            list1_iter++;
+            list2_iter++;
         }
 
         return true;
@@ -1726,48 +1733,48 @@ namespace dsa
      * @brief The relational operator compares two ForwardList objects
      *
      * @tparam T type of data stored in ForwardList
-     * @param[in] l1 input container
-     * @param[in] l2 input container
-     * @retval true if the content of \p l1 are lexicographically
-     *         greater than the content of \p l2
+     * @param[in] list1 input container
+     * @param[in] list2 input container
+     * @retval true if the content of \p list1 are lexicographically
+     *         greater than the content of \p list2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>(const ForwardList<T>& l1, const ForwardList<T>& l2)
+    bool operator>(const ForwardList<T>& list1, const ForwardList<T>& list2)
     {
-        return operator<(l2, l1);
+        return operator<(list2, list1);
     }
 
     /**
      * @brief The relational operator compares two ForwardList objects
      *
      * @tparam T type of data stored in ForwardList
-     * @param[in] l1 input container
-     * @param[in] l2 input container
-     * @retval true if the content of \p l1 are lexicographically
-     *         less or equal than the content of \p l2
+     * @param[in] list1 input container
+     * @param[in] list2 input container
+     * @retval true if the content of \p list1 are lexicographically
+     *         less or equal than the content of \p list2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<=(const ForwardList<T>& l1, const ForwardList<T>& l2)
+    bool operator<=(const ForwardList<T>& list1, const ForwardList<T>& list2)
     {
-        return !(operator>(l1, l2));
+        return !(operator>(list1, list2));
     }
 
     /**
      * @brief The relational operator compares two ForwardList objects
      *
      * @tparam T type of data stored in ForwardList
-     * @param[in] l1 input container
-     * @param[in] l2 input container
-     * @retval true if the content of \p l1 are lexicographically
-     *         greater or equal than the content of \p l2
+     * @param[in] list1 input container
+     * @param[in] list2 input container
+     * @retval true if the content of \p list1 are lexicographically
+     *         greater or equal than the content of \p list2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>=(const ForwardList<T>& l1, const ForwardList<T>& l2)
+    bool operator>=(const ForwardList<T>& list1, const ForwardList<T>& list2)
     {
-        return !(operator<(l1, l2));
+        return !(operator<(list1, list2));
     }
 
     /// @todo implement non-member specialized swap function
