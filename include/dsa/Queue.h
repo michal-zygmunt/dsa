@@ -238,7 +238,7 @@ namespace dsa
     {
         if (&other != this)
         {
-            while (container.size())
+            while (!container.empty())
             {
                 container.pop_front();
             }
@@ -373,7 +373,7 @@ namespace dsa
     {
         Queue<T> temp{ queue };
 
-        while (temp.size())
+        while (!temp.empty())
         {
             out << temp.front() << ' ';
             temp.pop();
@@ -402,7 +402,7 @@ namespace dsa
         Queue<T> temp_1{ queue1 };
         Queue<T> temp_2{ queue2 };
 
-        while (temp_1.size() && temp_2.size())
+        while (!temp_1.empty() && !temp_2.empty())
         {
             if (temp_1.front() != temp_2.front())
             {
@@ -447,7 +447,7 @@ namespace dsa
         Queue<T> temp_1{ queue1 };
         Queue<T> temp_2{ queue2 };
 
-        while (temp_1.size() && temp_2.size())
+        while (!temp_1.empty() && !temp_2.empty())
         {
             if (temp_1.front() >= temp_2.front())
             {
