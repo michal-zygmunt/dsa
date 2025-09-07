@@ -779,7 +779,7 @@ namespace dsa
             for (size_t i = 0; i < index; i++)
             {
                 temp = dynamic_cast<Node*>(temp->m_next);
-                if (!temp)
+                if (temp == nullptr)
                 {
                     break;
                 }
@@ -839,7 +839,7 @@ namespace dsa
          */
         void init_node()
         {
-            if (!m_front)
+            if (m_front == nullptr)
             {
                 m_front = new NodeBase;
             }
@@ -1376,7 +1376,7 @@ namespace dsa
     {
         if (&other != this && m_front && other.m_front)
         {
-            if (m_size)
+            if (m_size != 0)
             {
                 auto iter = find_iter_before_last();
                 NodeBase* last{ iter.m_current_node->m_next };
@@ -1447,7 +1447,7 @@ namespace dsa
         {
             const size_t dist = distance(first, last) - 1;
 
-            if (first == last || !dist)
+            if (first == last || dist == 0)
             {
                 return;
             }
