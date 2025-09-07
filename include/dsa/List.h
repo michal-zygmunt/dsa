@@ -25,7 +25,7 @@ namespace dsa
     class List;
 
     template<typename T>
-    List<T> operator+(const List<T>& l1, const List<T>& l2);
+    List<T> operator+(const List<T>& list1, const List<T>& list2);
 
     /**
      * @brief Implements List using Node with pointer to adjacent
@@ -603,12 +603,12 @@ namespace dsa
          * @brief Function inserts new Node before specified \p pos
          *
          * @param[in] pos const_iterator to insert element before
-         * @param[in] il initializer_list with elements to insert before \p pos
+         * @param[in] init_list initializer_list with elements to insert before \p pos
          * @return pointer to List element
          * @retval iterator to first inserted element
          * @retval pos if no element was inserted
          */
-        iterator insert(const_iterator pos, std::initializer_list<T> il);
+        iterator insert(const_iterator pos, std::initializer_list<T> init_list);
 
         /// @todo add insert_range
 
@@ -753,20 +753,20 @@ namespace dsa
          *
          * @param[in] pos const_iterator before which content of other container will be inserted
          * @param[in,out] other container to take elements from
-         * @param[in] it const_iterator pointing to element to move
+         * @param[in] iter const_iterator pointing to element to move
          * @details Content of other object will be taken by constructed object
          */
-        void splice(const_iterator pos, List<T>& other, const_iterator it);
+        void splice(const_iterator pos, List<T>& other, const_iterator iter);
 
         /**
          * @brief Function moves elements from other List object
          *
          * @param[in] pos const_iterator before which content of other container will be inserted
          * @param[in,out] other container to take elements from
-         * @param[in] it const_iterator pointing to element to move
+         * @param[in] iter const_iterator pointing to element to move
          * @details Content of other object will be taken by constructed object
          */
-        void splice(const_iterator pos, List<T>&& other, const_iterator it);
+        void splice(const_iterator pos, List<T>&& other, const_iterator iter);
 
         /**
          * @brief Function moves elements in range [first, last) from other List object
@@ -832,12 +832,12 @@ namespace dsa
         /**
          * @brief push_back elements of another List to base container
          *
-         * @param[in] il initializer_list to read elements from
+         * @param[in] init_list initializer_list to read elements from
          * @return List<T>&
          */
-        List<T>& operator+=(const std::initializer_list<T> il)
+        List<T>& operator+=(const std::initializer_list<T> init_list)
         {
-            for (const auto& item : il)
+            for (const auto& item : init_list)
             {
                 push_back(item);
             }
@@ -869,9 +869,16 @@ namespace dsa
     private:
 
         /**
-         * @brief Forward friend declaration of List operator+
+         * @brief Construct new object based on two List objects
+         *
+         * Forward friend declaration of List operator+
+         *
+         * @tparam T type of data stored in List Node
+         * @param[in] list1 input List
+         * @param[in] list2 input List
+         * @return List<T> List<T> with content of two input lists
          */
-        friend List<T> operator+<>(const List<T>& l1, const List<T>& l2);
+        friend List<T> operator+<>(const List<T>& list1, const List<T>& list2);
 
         /**
          * @brief Function add end node located just after last user created data
@@ -1232,7 +1239,7 @@ namespace dsa
     template<typename T>
     typename List<T>::iterator List<T>::insert(const_iterator pos, size_t count, const_reference value)
     {
-        iterator it{ pos.m_current_node };
+        iterator iter{ pos.m_current_node };
 
         if (!if_valid_iterator(pos))
         {
@@ -1241,29 +1248,29 @@ namespace dsa
 
         for (size_t i = 0; i < count; i++)
         {
-            it = insert_element_before(it, value);
+            iter = insert_element_before(iter, value);
         }
 
-        return it;
+        return iter;
     }
 
     template<typename T>
-    typename List<T>::iterator List<T>::insert(const_iterator pos, std::initializer_list<T> il)
+    typename List<T>::iterator List<T>::insert(const_iterator pos, std::initializer_list<T> init_list)
     {
-        iterator it(pos.m_current_node);
+        iterator iter(pos.m_current_node);
 
         if (!if_valid_iterator(pos))
         {
             return nullptr;
         }
 
-        const size_t list_size = il.size();
+        const size_t list_size = init_list.size();
         for (size_t i = 0; i < list_size; i++)
         {
-            it = insert_element_before(it, il.begin()[list_size - 1 - i]);
+            iter = insert_element_before(iter, init_list.begin()[list_size - 1 - i]);
         }
 
-        return it;
+        return iter;
     }
 
     template<typename T>
@@ -1291,13 +1298,13 @@ namespace dsa
             return last;
         }
 
-        iterator it(first.m_current_node);
+        iterator iter(first.m_current_node);
         for (size_t i = 0; i < dist; i++)
         {
-            it = erase_element(it);
+            iter = erase_element(iter);
         }
 
-        return it;
+        return iter;
     }
 
     template<typename T>
@@ -1556,15 +1563,15 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::splice(const_iterator pos, List<T>& other, const_iterator it)
+    void List<T>::splice(const_iterator pos, List<T>& other, const_iterator iter)
     {
-        transfer(pos, other, it, it.m_current_node->m_next);
+        transfer(pos, other, iter, iter.m_current_node->m_next);
     }
 
     template<typename T>
-    void List<T>::splice(const_iterator pos, List<T>&& other, const_iterator it)
+    void List<T>::splice(const_iterator pos, List<T>&& other, const_iterator iter)
     {
-        transfer(pos, other, it, it.m_current_node->m_next);
+        transfer(pos, other, iter, iter.m_current_node->m_next);
     }
 
     template<typename T>
@@ -1776,18 +1783,18 @@ namespace dsa
      * @brief Construct new object based on two List objects
      *
      * @tparam T type of data stored in List Node
-     * @param[in] l1 input List
-     * @param[in] l2 input List
-     * @return List<T>
+     * @param[in] list1 input List
+     * @param[in] list2 input List
+     * @return List<T> List<T> with content of two input lists
      */
     template<typename T>
-    List<T> operator+(const List<T>& l1, const List<T>& l2)
+    List<T> operator+(const List<T>& list1, const List<T>& list2)
     {
-        List<T> temp(l1);
+        List<T> temp(list1);
 
-        for (auto it = l2.cbegin(); it != l2.cend(); ++it)
+        for (auto iter = list2.cbegin(); iter != list2.cend(); ++iter)
         {
-            T value = *it;
+            T value = *iter;
             temp.push_back(value);
         }
 
@@ -1799,20 +1806,20 @@ namespace dsa
      *
      * @tparam T type of initializer list elements
      * @param[in,out] out reference to output stream
-     * @param[in] ll List to print
+     * @param[in] list List to print
      * @return std::ostream&
      */
     template<typename T>
-    std::ostream& operator<<(std::ostream& out, const List<T>& ll)
+    std::ostream& operator<<(std::ostream& out, const List<T>& list)
     {
-        if (ll.empty())
+        if (list.empty())
         {
             return out;
         }
 
-        for (auto it = ll.cbegin(); it != ll.cend(); ++it)
+        for (auto iter = list.cbegin(); iter != list.cend(); ++iter)
         {
-            T value = *it;
+            T value = *iter;
             out << value << ' ';
         }
 
@@ -1823,31 +1830,31 @@ namespace dsa
      * @brief The relational operator compares two List objects
      *
      * @tparam T type of data stored in List
-     * @param[in] l1 input container
-     * @param[in] l2 input container
+     * @param[in] list1 input container
+     * @param[in] list2 input container
      * @retval true if containers are equal
      * @retval false if containers are not equal
      */
     template<typename T>
-    bool operator==(const List<T>& l1, const List<T>& l2)
+    bool operator==(const List<T>& list1, const List<T>& list2)
     {
-        if (l1.size() != l2.size())
+        if (list1.size() != list2.size())
         {
             return false;
         }
 
-        auto l1_it = l1.cbegin();
-        auto l2_it = l2.cbegin();
+        auto list1_iter = list1.cbegin();
+        auto list2_iter = list2.cbegin();
 
-        while (l1_it != l1.cend() && l2_it != l2.cend())
+        while (list1_iter != list1.cend() && list2_iter != list2.cend())
         {
-            if (*l1_it != *l2_it)
+            if (*list1_iter != *list2_iter)
             {
                 return false;
             }
 
-            l1_it++;
-            l2_it++;
+            list1_iter++;
+            list2_iter++;
         }
 
         return true;
@@ -1857,42 +1864,42 @@ namespace dsa
      * @brief The relational operator compares two List objects
      *
      * @tparam T type of data stored in List
-     * @param[in] l1 input container
-     * @param[in] l2 input container
+     * @param[in] list1 input container
+     * @param[in] list2 input container
      * @retval true if containers are not equal
      * @retval false if containers are equal
      */
     template<typename T>
-    bool operator!=(const List<T>& l1, const List<T>& l2)
+    bool operator!=(const List<T>& list1, const List<T>& list2)
     {
-        return !(operator==(l1, l2));
+        return !(operator==(list1, list2));
     }
 
     /**
      * @brief The relational operator compares two List objects
      *
      * @tparam T type of data stored in List
-     * @param[in] l1 input container
-     * @param[in] l2 input container
-     * @retval true if the content of \p l1 are lexicographically
-     *         less than the content of \p l2
+     * @param[in] list1 input container
+     * @param[in] list2 input container
+     * @retval true if the content of \p list1 are lexicographically
+     *         less than the content of \p list2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<(const List<T>& l1, const List<T>& l2)
+    bool operator<(const List<T>& list1, const List<T>& list2)
     {
-        auto l1_it = l1.cbegin();
-        auto l2_it = l2.cbegin();
+        auto list1_iter = list1.cbegin();
+        auto list2_iter = list2.cbegin();
 
-        while (l1_it != l1.cend() && l2_it != l2.cend())
+        while (list1_iter != list1.cend() && list2_iter != list2.cend())
         {
-            if (*l1_it >= *l2_it)
+            if (*list1_iter >= *list2_iter)
             {
                 return false;
             }
 
-            l1_it++;
-            l2_it++;
+            list1_iter++;
+            list2_iter++;
         }
 
         return true;
@@ -1902,48 +1909,48 @@ namespace dsa
      * @brief The relational operator compares two List objects
      *
      * @tparam T type of data stored in List
-     * @param[in] l1 input container
-     * @param[in] l2 input container
-     * @retval true if the content of \p l1 are lexicographically
-     *         greater than the content of \p l2
+     * @param[in] list1 input container
+     * @param[in] list2 input container
+     * @retval true if the content of \p list1 are lexicographically
+     *         greater than the content of \p list2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>(const List<T>& l1, const List<T>& l2)
+    bool operator>(const List<T>& list1, const List<T>& list2)
     {
-        return operator<(l2, l1);
+        return operator<(list2, list1);
     }
 
     /**
      * @brief The relational operator compares two List objects
      *
      * @tparam T type of data stored in List
-     * @param[in] l1 input container
-     * @param[in] l2 input container
-     * @retval true if the content of \p l1 are lexicographically
-     *         less or equal than the content of \p l2
+     * @param[in] list1 input container
+     * @param[in] list2 input container
+     * @retval true if the content of \p list1 are lexicographically
+     *         less or equal than the content of \p list2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<=(const List<T>& l1, const List<T>& l2)
+    bool operator<=(const List<T>& list1, const List<T>& list2)
     {
-        return !(operator>(l1, l2));
+        return !(operator>(list1, list2));
     }
 
     /**
      * @brief The relational operator compares two List objects
      *
      * @tparam T type of data stored in List
-     * @param[in] l1 input container
-     * @param[in] l2 input container
-     * @retval true if the content of \p l1 are lexicographically
-     *         greater or equal than the content of \p l2
+     * @param[in] list1 input container
+     * @param[in] list2 input container
+     * @retval true if the content of \p list1 are lexicographically
+     *         greater or equal than the content of \p list2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>=(const List<T>& l1, const List<T>& l2)
+    bool operator>=(const List<T>& list1, const List<T>& list2)
     {
-        return !(operator<(l1, l2));
+        return !(operator<(list1, list2));
     }
 
     /// @todo implement non-member specialized swap function
