@@ -68,9 +68,9 @@ namespace dsa
         /**
          * @brief Construct a new Queue object using initializer list
          *
-         * @param[in] il initializer list of values of type T
+         * @param[in] init_list initializer list of values of type T
          */
-        Queue(const std::initializer_list<T>& il);
+        Queue(const std::initializer_list<T>& init_list);
 
         /**
          * @brief Construct a new Queue object using copy constructor
@@ -169,9 +169,9 @@ namespace dsa
         /**
          * @brief Function add range of elements at the end of Queue
          *
-         * @param[in] il range of std::initializer_list elements of type T
+         * @param[in] init_list range of std::initializer_list elements of type T
          */
-        void push_range(const std::initializer_list<T>& il);
+        void push_range(const std::initializer_list<T>& init_list);
 
         /**
          * @brief Function removes the first element of Queue
@@ -196,10 +196,10 @@ namespace dsa
         /**
         * @brief Function add range of elements at the end of Queue
         *
-        * @param[in] other std::initializer_list to read elements from
+        * @param[in] init_list std::initializer_list to read elements from
         * @return Queue<T>& reference to Queue
         */
-        Queue<T>& operator+=(const std::initializer_list<T>& other);
+        Queue<T>& operator+=(const std::initializer_list<T>& init_list);
 
     private:
 
@@ -213,9 +213,9 @@ namespace dsa
     }
 
     template<typename T>
-    Queue<T>::Queue(const std::initializer_list<T>& il)
+    Queue<T>::Queue(const std::initializer_list<T>& init_list)
     {
-        for (const auto& item : il)
+        for (const auto& item : init_list)
         {
             container.push_back(item);
         }
@@ -318,9 +318,9 @@ namespace dsa
     }
 
     template<typename T>
-    void Queue<T>::push_range(const std::initializer_list<T>& il)
+    void Queue<T>::push_range(const std::initializer_list<T>& init_list)
     {
-        for (const auto& item : il)
+        for (const auto& item : init_list)
         {
             push(item);
         }
@@ -344,18 +344,18 @@ namespace dsa
     template<typename T>
     Queue<T>& Queue<T>::operator+=(const Queue<T>& other)
     {
-        for (const auto& i : other.container)
+        for (const auto& item : other.container)
         {
-            push(i);
+            push(item);
         }
 
         return *this;
     }
 
     template<typename T>
-    Queue<T>& Queue<T>::operator+=(const std::initializer_list<T>& il)
+    Queue<T>& Queue<T>::operator+=(const std::initializer_list<T>& init_list)
     {
-        push_range(il);
+        push_range(init_list);
 
         return *this;
     }
@@ -386,21 +386,21 @@ namespace dsa
      * @brief The relational operator compares two Queue objects
      *
      * @tparam T type of data stored in Queue
-     * @param[in] q1 input container
-     * @param[in] q2 input container
+     * @param[in] queue1 input container
+     * @param[in] queue2 input container
      * @retval true if containers are equal
      * @retval false if containers are not equal
      */
     template<typename T>
-    bool operator==(const Queue<T>& q1, const Queue<T>& q2)
+    bool operator==(const Queue<T>& queue1, const Queue<T>& queue2)
     {
-        if (q1.size() != q2.size())
+        if (queue1.size() != queue2.size())
         {
             return false;
         }
 
-        Queue<T> temp_1{ q1 };
-        Queue<T> temp_2{ q2 };
+        Queue<T> temp_1{ queue1 };
+        Queue<T> temp_2{ queue2 };
 
         while (temp_1.size() && temp_2.size())
         {
@@ -420,32 +420,32 @@ namespace dsa
      * @brief The relational operator compares two Queue objects
      *
      * @tparam T type of data stored in Queue
-     * @param[in] q1 input container
-     * @param[in] q2 input container
+     * @param[in] queue1 input container
+     * @param[in] queue2 input container
      * @retval true if containers are not equal
      * @retval false if containers are equal
      */
     template<typename T>
-    bool operator!=(const Queue<T>& q1, const Queue<T>& q2)
+    bool operator!=(const Queue<T>& queue1, const Queue<T>& queue2)
     {
-        return !(operator==(q1, q2));
+        return !(operator==(queue1, queue2));
     }
 
     /**
      * @brief The relational operator compares two Queue objects
      *
      * @tparam T type of data stored in Queue
-     * @param[in] q1 input container
-     * @param[in] q2 input container
-     * @retval true if the content of \p q1 are lexicographically
-     *         less than the content of \p q2
+     * @param[in] queue1 input container
+     * @param[in] queue2 input container
+     * @retval true if the content of \p queue1 are lexicographically
+     *         less than the content of \p queue2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<(const Queue<T>& q1, const Queue<T>& q2)
+    bool operator<(const Queue<T>& queue1, const Queue<T>& queue2)
     {
-        Queue<T> temp_1{ q1 };
-        Queue<T> temp_2{ q2 };
+        Queue<T> temp_1{ queue1 };
+        Queue<T> temp_2{ queue2 };
 
         while (temp_1.size() && temp_2.size())
         {
@@ -465,48 +465,48 @@ namespace dsa
      * @brief The relational operator compares two Queue objects
      *
      * @tparam T type of data stored in Queue
-     * @param[in] q1 input container
-     * @param[in] q2 input container
-     * @retval true if the content of \p q1 are lexicographically
-     *         greater than the content of \p q2
+     * @param[in] queue1 input container
+     * @param[in] queue2 input container
+     * @retval true if the content of \p queue1 are lexicographically
+     *         greater than the content of \p queue2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>(const Queue<T>& q1, const Queue<T>& q2)
+    bool operator>(const Queue<T>& queue1, const Queue<T>& queue2)
     {
-        return operator<(q2, q1);
+        return operator<(queue2, queue1);
     }
 
     /**
      * @brief The relational operator compares two Queue objects
      *
      * @tparam T type of data stored in Queue
-     * @param[in] q1 input container
-     * @param[in] q2 input container
-     * @retval true if the content of \p q1 are lexicographically
-     *         less or equal than the content of \p q2
+     * @param[in] queue1 input container
+     * @param[in] queue2 input container
+     * @retval true if the content of \p queue1 are lexicographically
+     *         less or equal than the content of \p queue2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<=(const Queue<T>& q1, const Queue<T>& q2)
+    bool operator<=(const Queue<T>& queue1, const Queue<T>& queue2)
     {
-        return !(operator>(q1, q2));
+        return !(operator>(queue1, queue2));
     }
 
     /**
      * @brief The relational operator compares two Queue objects
      *
      * @tparam T type of data stored in Queue
-     * @param[in] q1 input container
-     * @param[in] q2 input container
-     * @retval true if the content of \p q1 are lexicographically
-     *         greater or equal than the content of \p q2
+     * @param[in] queue1 input container
+     * @param[in] queue2 input container
+     * @retval true if the content of \p queue1 are lexicographically
+     *         greater or equal than the content of \p queue2
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>=(const Queue<T>& q1, const Queue<T>& q2)
+    bool operator>=(const Queue<T>& queue1, const Queue<T>& queue2)
     {
-        return !(operator<(q1, q2));
+        return !(operator<(queue1, queue2));
     }
 
 }
