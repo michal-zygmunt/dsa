@@ -13,6 +13,7 @@
 #define LIST_H
 
 #include <cstddef>
+#include <cstdint>
 #include <initializer_list>
 #include <iostream>
 #include <iterator>
@@ -1714,7 +1715,7 @@ namespace dsa
         NodeBase* temp{};
 
         // select list end to look for selected index
-        enum Mode { FRONT, BACK, AUTO };
+        enum Mode : std::uint8_t { FRONT, BACK, AUTO };
 
 #ifdef _MSC_VER
         // clang-tidy recommends the variable as const
