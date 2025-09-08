@@ -228,7 +228,7 @@ namespace dsa
              * @retval true if ForwardListIterator objects are the same
              * @retval false if ForwardListIterator objects are different
              */
-            bool operator==(const ForwardListIterator<IF_CONST>& other)
+            bool operator==(const ForwardListIterator<IF_CONST>& other) const
             {
                 return m_current_node == other.m_current_node;
             }
@@ -241,7 +241,7 @@ namespace dsa
              * @retval true if ForwardListIterator objects are different
              * @retval false if ForwardListIterator objects are the same
              */
-            bool operator!=(const ForwardListIterator<IF_CONST>& other)
+            bool operator!=(const ForwardListIterator<IF_CONST>& other) const
             {
                 return !operator==(other);
             }
@@ -541,7 +541,7 @@ namespace dsa
          * @retval iterator to inserted \p value
          * @retval pos if no element was inserted
          */
-        iterator insert_after(const_iterator pos, const_reference value);
+        iterator insert_after(const const_iterator& pos, const_reference value);
 
         /**
          * @brief Function inserts new Node after specified ForwardList const_iterator
@@ -553,7 +553,7 @@ namespace dsa
          * @retval iterator pointer to last inserted element
          * @retval pos if no element was inserted
          */
-        iterator insert_after(const_iterator pos, size_t count, const_reference value);
+        iterator insert_after(const const_iterator& pos, size_t count, const_reference value);
 
         /**
          * @brief Function inserts new Node after specified ForwardList const_iterator
@@ -564,7 +564,7 @@ namespace dsa
          * @retval iterator to last inserted element
          * @retval pos if no element was inserted
          */
-        iterator insert_after(const_iterator pos, std::initializer_list<T> init_list);
+        iterator insert_after(const const_iterator& pos, std::initializer_list<T> init_list);
 
         /// @todo add emplace_after
 
@@ -576,7 +576,7 @@ namespace dsa
         * @retval iterator element after deleted element
         * @retval nullptr if invalid iterator
         */
-        iterator erase_after(const_iterator pos);
+        iterator erase_after(const const_iterator& pos);
 
         /**
          * @brief Function erases Node between specified ForwardList Const_Iterators
@@ -587,7 +587,7 @@ namespace dsa
          * @retval iterator to element after last deleted element
          * @retval nullptr if invalid iterator
          */
-        iterator erase_after(const_iterator first, const_iterator last);
+        iterator erase_after(const const_iterator& first, const const_iterator& last);
 
         /**
          * @brief Function adds new Node at the beginning of ForwardList
@@ -648,7 +648,7 @@ namespace dsa
          * @param[in,out] other container to take elements from
          * @details Content of other object will be taken by constructed object
          */
-        void splice_after(const_iterator pos, ForwardList<T>& other);
+        void splice_after(const const_iterator& pos, ForwardList<T>& other);
 
         /**
          * @brief Function moves elements from other ForwardList object
@@ -667,7 +667,7 @@ namespace dsa
          * @param[in] iter const_iterator after which elements of \p other will be taken
          * @details Content of other object will be taken by constructed object
          */
-        void splice_after(const_iterator pos, ForwardList<T>& other, const_iterator iter);
+        void splice_after(const const_iterator& pos, ForwardList<T>& other, const const_iterator& iter);
 
         /**
          * @brief Function moves elements from other ForwardList object
@@ -688,7 +688,8 @@ namespace dsa
          * @param[in] last const_iterator until which elements of \p other will be taken
          * @details Content of other object will be taken by constructed object
          */
-        void splice_after(const_iterator pos, ForwardList<T>& other, const_iterator first, const_iterator last);
+        void splice_after(const const_iterator& pos, ForwardList<T>& other,
+            const const_iterator& first, const const_iterator& last);
 
         /**
          * @brief Function moves elements from other ForwardList object
@@ -924,7 +925,7 @@ namespace dsa
          * @return true if \p pos belong to ForwardList
          * @return false if otherwise
          */
-        bool if_valid_iterator(const_iterator pos)
+        bool if_valid_iterator(const const_iterator& pos)
         {
             /* initial implementation
             */
@@ -948,7 +949,7 @@ namespace dsa
          * @param[in] last const_iterator pointing to last (inclusive) element
          * @return size_t number of elements between input elements
          */
-        size_t distance(const_iterator first, const_iterator last);
+        size_t distance(const_iterator first, const const_iterator& last);
 
         /**
          * @brief Function moves elements from other ForwardList object
@@ -958,7 +959,7 @@ namespace dsa
          * @param[in] iter const_iterator after which elements of \p other will be taken
          * @details Content of other object will be taken by constructed object
          */
-        void transfer(const_iterator pos, ForwardList<T>& other, const_iterator iter);
+        void transfer(const const_iterator& pos, ForwardList<T>& other, const const_iterator& iter);
 
         /**
          * @brief Function moves elements from other ForwardList object
@@ -969,7 +970,8 @@ namespace dsa
          * @param[in] last const_iterator until which elements of \p other will be taken
          * @details Content of other object will be taken by constructed object
          */
-        void transfer(const_iterator pos, ForwardList<T>& other, const_iterator first, const_iterator last);
+        void transfer(const const_iterator& pos, ForwardList<T>& other,
+            const const_iterator& first, const const_iterator& last);
 
 
         NodeBase* m_front{};
@@ -1198,13 +1200,14 @@ namespace dsa
     }
 
     template<typename T>
-    typename ForwardList<T>::iterator ForwardList<T>::insert_after(const_iterator pos, const_reference value)
+    typename ForwardList<T>::iterator ForwardList<T>::insert_after(const const_iterator& pos, const_reference value)
     {
         return insert_after(pos, 1, value);
     }
 
     template<typename T>
-    typename ForwardList<T>::iterator ForwardList<T>::insert_after(const_iterator pos, size_t count, const_reference value)
+    typename ForwardList<T>::iterator ForwardList<T>::insert_after(const const_iterator& pos,
+        size_t count, const_reference value)
     {
         if (!if_valid_iterator(pos))
         {
@@ -1221,7 +1224,8 @@ namespace dsa
     }
 
     template<typename T>
-    typename ForwardList<T>::iterator ForwardList<T>::insert_after(const_iterator pos, std::initializer_list<T> init_list)
+    typename ForwardList<T>::iterator ForwardList<T>::insert_after(const const_iterator& pos,
+        std::initializer_list<T> init_list)
     {
         if (!if_valid_iterator(pos))
         {
@@ -1238,7 +1242,7 @@ namespace dsa
     }
 
     template<typename T>
-    typename ForwardList<T>::iterator ForwardList<T>::erase_after(const_iterator pos)
+    typename ForwardList<T>::iterator ForwardList<T>::erase_after(const const_iterator& pos)
     {
         if (!if_valid_iterator(pos))
         {
@@ -1252,7 +1256,8 @@ namespace dsa
     }
 
     template<typename T>
-    typename ForwardList<T>::iterator ForwardList<T>::erase_after(const_iterator first, const_iterator last)
+    typename ForwardList<T>::iterator ForwardList<T>::erase_after(const const_iterator& first,
+        const const_iterator& last)
     {
         if (!if_valid_iterator(first) || !if_valid_iterator(last))
         {
@@ -1406,7 +1411,7 @@ namespace dsa
     }
 
     template<typename T>
-    size_t ForwardList<T>::distance(const_iterator first, const_iterator last)
+    size_t ForwardList<T>::distance(const_iterator first, const const_iterator& last)
     {
         size_t dist{};
         while (first != last)
@@ -1419,7 +1424,7 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::transfer(const_iterator pos, ForwardList<T>& other, const_iterator iter)
+    void ForwardList<T>::transfer(const const_iterator& pos, ForwardList<T>& other, const const_iterator& iter)
     {
         if (&other != this && other.m_size > 0)
         {
@@ -1441,7 +1446,8 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::transfer(const_iterator pos, ForwardList<T>& other, const_iterator first, const_iterator last)
+    void ForwardList<T>::transfer(const const_iterator& pos, ForwardList<T>& other,
+        const const_iterator& first, const const_iterator& last)
     {
         if (&other != this && other.m_size > 0)
         {
@@ -1478,7 +1484,7 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>& other)
+    void ForwardList<T>::splice_after(const const_iterator& pos, ForwardList<T>& other)
     {
         transfer(pos, other, other.before_begin(), other.end());
     }
@@ -1490,7 +1496,7 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>& other, const_iterator iter)
+    void ForwardList<T>::splice_after(const const_iterator& pos, ForwardList<T>& other, const const_iterator& iter)
     {
         transfer(pos, other, iter);
     }
@@ -1502,7 +1508,8 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>& other, const_iterator first, const_iterator last)
+    void ForwardList<T>::splice_after(const const_iterator& pos, ForwardList<T>& other,
+        const const_iterator& first, const const_iterator& last)
     {
         transfer(pos, other, first, last);
     }
