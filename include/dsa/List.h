@@ -585,7 +585,7 @@ namespace dsa
          * @retval iterator to inserted \p value
          * @retval pos if no element was inserted
          */
-        iterator insert(const_iterator pos, const_reference value);
+        iterator insert(const const_iterator& pos, const_reference value);
 
         /**
          * @brief Function inserts new Node before specified \p pos
@@ -597,7 +597,7 @@ namespace dsa
          * @retval iterator to inserted \p value
          * @retval pos if no element was inserted
          */
-        iterator insert(const_iterator pos, size_t count, const_reference value);
+        iterator insert(const const_iterator& pos, size_t count, const_reference value);
 
         /**
          * @brief Function inserts new Node before specified \p pos
@@ -608,7 +608,7 @@ namespace dsa
          * @retval iterator to first inserted element
          * @retval pos if no element was inserted
          */
-        iterator insert(const_iterator pos, std::initializer_list<T> init_list);
+        iterator insert(const const_iterator& pos, std::initializer_list<T> init_list);
 
         /// @todo add insert_range
 
@@ -737,7 +737,7 @@ namespace dsa
          * @param[in,out] other container to take elements from
          * @details Content of other object will be taken by constructed object
          */
-        void splice(const_iterator pos, List<T>& other);
+        void splice(const const_iterator& pos, List<T>& other);
 
         /**
          * @brief Function moves elements from other List object
@@ -756,7 +756,7 @@ namespace dsa
          * @param[in] iter const_iterator pointing to element to move
          * @details Content of other object will be taken by constructed object
          */
-        void splice(const_iterator pos, List<T>& other, const_iterator iter);
+        void splice(const const_iterator& pos, List<T>& other, const const_iterator& iter);
 
         /**
          * @brief Function moves elements from other List object
@@ -777,7 +777,7 @@ namespace dsa
          * @param[in] last const_iterator pointing to element after last taken element
          * @details Content of other object will be taken by constructed object
          */
-        void splice(const_iterator pos, List<T>& other, const_iterator first, const_iterator last);
+        void splice(const const_iterator& pos, List<T>& other, const const_iterator& first, const const_iterator& last);
 
         /**
          * @brief Function moves elements in range [first, last) from other List object
@@ -1005,7 +1005,7 @@ namespace dsa
          * @param[in] last const_iterator pointing to last (inclusive) element
          * @return size_t number of elements between input elements
          */
-        size_t distance(const_iterator first, const_iterator last);
+        size_t distance(const_iterator first, const const_iterator& last);
 
         /**
          * @brief Function moves elements from other List object
@@ -1016,7 +1016,7 @@ namespace dsa
          * @param[in] last const_iterator until which elements of \p other will be taken
          * @details Content of other object will be taken by constructed object
          */
-        void transfer(const_iterator pos, List<T>& other, const_iterator first, const_iterator last);
+        void transfer(const_iterator pos, List<T>& other, const_iterator first, const const_iterator& last);
 
         NodeBase* m_front{};
         NodeBase* m_back{};
@@ -1231,13 +1231,13 @@ namespace dsa
     }
 
     template<typename T>
-    typename List<T>::iterator List<T>::insert(const_iterator pos, const_reference value)
+    typename List<T>::iterator List<T>::insert(const const_iterator& pos, const_reference value)
     {
         return insert(pos, 1, value);
     }
 
     template<typename T>
-    typename List<T>::iterator List<T>::insert(const_iterator pos, size_t count, const_reference value)
+    typename List<T>::iterator List<T>::insert(const const_iterator& pos, size_t count, const_reference value)
     {
         iterator iter{ pos.m_current_node };
 
@@ -1255,7 +1255,7 @@ namespace dsa
     }
 
     template<typename T>
-    typename List<T>::iterator List<T>::insert(const_iterator pos, std::initializer_list<T> init_list)
+    typename List<T>::iterator List<T>::insert(const const_iterator& pos, std::initializer_list<T> init_list)
     {
         iterator iter(pos.m_current_node);
 
@@ -1492,7 +1492,7 @@ namespace dsa
     }
 
     template<typename T>
-    size_t List<T>::distance(const_iterator first, const_iterator last)
+    size_t List<T>::distance(const_iterator first, const const_iterator& last)
     {
         size_t dist{};
         while (first != last)
@@ -1505,7 +1505,7 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::transfer(const_iterator pos, List<T>& other, const_iterator first, const_iterator last)
+    void List<T>::transfer(const_iterator pos, List<T>& other, const_iterator first, const const_iterator& last)
     {
         if (&other != this && other.m_size > 0)
         {
@@ -1551,7 +1551,7 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::splice(const_iterator pos, List<T>& other)
+    void List<T>::splice(const const_iterator& pos, List<T>& other)
     {
         transfer(pos, other, other.begin(), other.end());
     }
@@ -1563,7 +1563,7 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::splice(const_iterator pos, List<T>& other, const_iterator iter)
+    void List<T>::splice(const const_iterator& pos, List<T>& other, const const_iterator& iter)
     {
         transfer(pos, other, iter, iter.m_current_node->m_next);
     }
@@ -1575,7 +1575,8 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::splice(const_iterator pos, List<T>& other, const_iterator first, const_iterator last)
+    void List<T>::splice(const const_iterator& pos, List<T>& other,
+        const const_iterator& first, const const_iterator& last)
     {
         transfer(pos, other, first, last);
     }
