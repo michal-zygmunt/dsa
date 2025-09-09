@@ -85,7 +85,7 @@ namespace dsa
          * @param[in] other Stack object of type T
          * @return Stack& reference to Stack object
          */
-        Stack& operator=(const Stack<T>& other);
+        auto operator=(const Stack<T>& other) -> Stack&;
 
         /**
          * @brief Construct a new Stack object using move constructor
@@ -102,7 +102,7 @@ namespace dsa
          * @param[in,out] other Stack object of type T
          * @return Stack& reference to Stack object
          */
-        Stack& operator=(Stack<T>&& other) noexcept;
+        auto operator=(Stack<T>&& other) noexcept -> Stack&;
 
         /**
          * @brief Destroy the Stack object
@@ -114,14 +114,14 @@ namespace dsa
          *
          * @return T& reference to Stack top element
          */
-        reference top();
+        auto top() -> reference;
 
         /**
          * @brief Function returns pointer to Stack top element
          *
          * @return const T& const_reference to Stack top element
          */
-        const_reference top() const;
+        auto top() const -> const_reference;
 
         /**
          * @brief Function checks if container has no elements
@@ -129,14 +129,14 @@ namespace dsa
          * @retval true if container is empty
          * @retval false if container is not empty
          */
-        bool empty() const;
+        auto empty() const -> bool;
 
         /**
          * @brief Function returns Stack size
          *
          * @return size_t number of elements in container
          */
-        size_t size() const;
+        auto size() const -> size_t;
 
         /**
          * @brief Function add new element at the top of Stack
@@ -197,7 +197,7 @@ namespace dsa
     }
 
     template<typename T>
-    Stack<T>& Stack<T>::operator=(const Stack<T>& other)
+    auto Stack<T>::operator=(const Stack<T>& other) -> Stack<T>&
     {
         if (&other != this)
         {
@@ -222,7 +222,7 @@ namespace dsa
     }
 
     template<typename T>
-    Stack<T>& Stack<T>::operator=(Stack<T>&& other) noexcept
+    auto Stack<T>::operator=(Stack<T>&& other) noexcept -> Stack<T>&
     {
         if (&other != this)
         {
@@ -233,25 +233,25 @@ namespace dsa
     }
 
     template<typename T>
-    typename Stack<T>::reference Stack<T>::top()
+    auto Stack<T>::top() -> typename Stack<T>::reference
     {
         return container.back();
     }
 
     template<typename T>
-    typename Stack<T>::const_reference Stack<T>::top() const
+    auto Stack<T>::top() const -> typename Stack<T>::const_reference
     {
         return container.back();
     }
 
     template<typename T>
-    bool Stack<T>::empty() const
+    auto Stack<T>::empty() const -> bool
     {
         return container.size() == 0;
     }
 
     template<typename T>
-    size_t Stack<T>::size() const
+    auto Stack<T>::size() const -> size_t
     {
         return container.size();
     }
@@ -295,7 +295,7 @@ namespace dsa
      * @return std::ostream& reference to std::ostream
      */
     template<typename T>
-    std::ostream& operator<<(std::ostream& out, const Stack<T>& stack)
+    auto operator<<(std::ostream& out, const Stack<T>& stack) -> std::ostream&
     {
         Stack<T> temp{ stack };
 
@@ -318,7 +318,7 @@ namespace dsa
      * @retval false if containers are not equal
      */
     template<typename T>
-    bool operator==(const Stack<T>& stack1, const Stack<T>& stack2)
+    auto operator==(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
     {
         if (stack1.size() != stack2.size())
         {
@@ -352,7 +352,7 @@ namespace dsa
      * @retval false if containers are equal
      */
     template<typename T>
-    bool operator!=(const Stack<T>& stack1, const Stack<T>& stack2)
+    auto operator!=(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
     {
         return !(operator==(stack1, stack2));
     }
@@ -368,7 +368,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<(const Stack<T>& stack1, const Stack<T>& stack2)
+    auto operator<(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
     {
         Stack<T> temp_1{ stack1 };
         Stack<T> temp_2{ stack2 };
@@ -398,7 +398,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>(const Stack<T>& stack1, const Stack<T>& stack2)
+    auto operator>(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
     {
         return operator<(stack2, stack1);
     }
@@ -414,7 +414,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<=(const Stack<T>& stack1, const Stack<T>& stack2)
+    auto operator<=(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
     {
         return !(operator>(stack1, stack2));
     }
@@ -430,7 +430,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>=(const Stack<T>& stack1, const Stack<T>& stack2)
+    auto operator>=(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
     {
         return !(operator<(stack1, stack2));
     }
