@@ -37,7 +37,7 @@ namespace tests
      * @retval false otherwise
      */
     template<typename T>
-    bool if_error(T val1, T val2)
+    auto if_error(T val1, T val2) -> bool
     {
         const bool res = val1 != val2;
         if (res)
@@ -58,7 +58,7 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    bool if_error(dsa::ForwardList<T> container, const std::initializer_list<T>& test_values)
+    auto if_error(dsa::ForwardList<T> container, const std::initializer_list<T>& test_values) -> bool
     {
         if (if_error(container.size(), test_values.size()))
         {
@@ -88,7 +88,7 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    bool if_error(dsa::List<T> container, const std::initializer_list<T>& test_values)
+    auto if_error(dsa::List<T> container, const std::initializer_list<T>& test_values) -> bool
     {
         if (if_error(container.size(), test_values.size()))
         {
@@ -118,7 +118,7 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    bool if_error(dsa::Queue<T> queue, const std::initializer_list<T>& test_values)
+    auto if_error(dsa::Queue<T> queue, const std::initializer_list<T>& test_values) -> bool
     {
         if (if_error(queue.size(), test_values.size()))
         {
@@ -148,7 +148,7 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    bool if_error(dsa::Stack<T> stack, const std::initializer_list<T>& test_values)
+    auto if_error(dsa::Stack<T> stack, const std::initializer_list<T>& test_values) -> bool
     {
         if (if_error(stack.size(), test_values.size()))
         {
@@ -177,7 +177,7 @@ namespace tests
      * @return std::ostream&
      */
     template<typename T>
-    std::ostream& operator<<(std::ostream& out, const std::initializer_list<T>& init_list)
+    auto operator<<(std::ostream& out, const std::initializer_list<T>& init_list) -> std::ostream&
     {
         for (const auto& item : init_list)
         {
@@ -196,7 +196,7 @@ namespace tests
      * @param[in] expected expected content of input container, stored as elements of initializer list
      */
     template<typename T, typename U>
-    void compare(std::string container_name, const T& container, const std::initializer_list<U>& expected)
+    void compare(const std::string& container_name, const T& container, const std::initializer_list<U>& expected)
     {
         std::cout << container_name << ':' << '\t' << container << '\n';
         std::cout << "Expected:  \t" << expected << '\n';
@@ -213,7 +213,7 @@ namespace tests
      * @param[in] val2 input value
      */
     template<typename T>
-    void compare(std::string container_name, const T& val1, const T& val2)
+    void compare(const std::string& container_name, const T& val1, const T& val2)
     {
         std::cout << container_name << ':' << '\t' << val1 << '\n';
         std::cout << "Expected:  \t" << val2 << '\n';
@@ -231,7 +231,7 @@ namespace tests
      * @retval false otherwise
      */
     template<typename T>
-    bool compare(T val1, T val2)
+    auto compare(T val1, T val2) -> bool
     {
         return if_error(val1, val2);
     }
