@@ -26,7 +26,7 @@ namespace dsa
     class List;
 
     template<typename T>
-    List<T> operator+(const List<T>& list1, const List<T>& list2);
+    auto operator+(const List<T>& list1, const List<T>& list2) -> List<T>;
 
     /**
      * @brief Implements List using Node with pointer to adjacent
@@ -90,7 +90,7 @@ namespace dsa
              *
              * @return T value stored in Node
              */
-            T& value()
+            auto value() -> T&
             {
                 return m_value;
             }
@@ -100,7 +100,7 @@ namespace dsa
              *
              * @return T value stored in Node
              */
-            T value() const
+            auto value() const -> T
             {
                 return m_value;
             }
@@ -193,7 +193,7 @@ namespace dsa
              * @param[in] node input Node
              * @return ListIterator& reference to updated Node
              */
-            ListIterator& operator=(NodeBase* node)
+            auto operator=(NodeBase* node) -> ListIterator&
             {
                 this->m_current_node = node;
                 return *this;
@@ -204,7 +204,7 @@ namespace dsa
              *
              * @return ListIterator& reference to next Node
              */
-            ListIterator& operator++()
+            auto operator++() -> ListIterator&
             {
                 if (m_current_node)
                 {
@@ -219,7 +219,7 @@ namespace dsa
              *
              * @return ListIterator& reference to next ListIterator
              */
-            ListIterator operator++(int)
+            auto operator++(int) -> ListIterator
             {
                 const ListIterator iterator = *this;
                 ++(*this);
@@ -231,7 +231,7 @@ namespace dsa
              *
              * @return ListIterator& reference to previous Node
              */
-            ListIterator& operator--()
+            auto operator--() -> ListIterator&
             {
                 if (m_current_node)
                 {
@@ -246,7 +246,7 @@ namespace dsa
              *
              * @return ListIterator& reference to previous ListIterator
              */
-            ListIterator operator--(int)
+            auto operator--(int) -> ListIterator
             {
                 const ListIterator iterator = *this;
                 --(*this);
@@ -261,7 +261,7 @@ namespace dsa
              * @retval true if ListIterator objects are the same
              * @retval false if ListIterator objects are different
              */
-            bool operator==(const ListIterator<IF_CONST>& other)
+            auto operator==(const ListIterator<IF_CONST>& other) -> bool
             {
                 return m_current_node == other.m_current_node;
             }
@@ -274,7 +274,7 @@ namespace dsa
              * @retval true if ListIterator objects are different
              * @retval false if ListIterator objects are the same
              */
-            bool operator!=(const ListIterator<IF_CONST>& other)
+            auto operator!=(const ListIterator<IF_CONST>& other) -> bool
             {
                 return !operator==(other);
             }
@@ -287,7 +287,7 @@ namespace dsa
              * @retval valid ListIterator if index is valid
              * @retval nullptr if index is invalid
              */
-            ListIterator operator[](size_t index)
+            auto operator[](size_t index) -> ListIterator
             {
                 NodeBase* temp{ m_current_node };
 
@@ -311,7 +311,7 @@ namespace dsa
              *
              * @return T& reference or const reference to data stored in Node
              */
-            reference operator*() const
+            auto operator*() const -> reference
             {
                 if (Node* node = dynamic_cast<Node*>(m_current_node))
                 {
@@ -325,7 +325,7 @@ namespace dsa
              *
              * @return T* pointer to data stored in Node
              */
-            pointer operator->()
+            auto operator->() -> pointer
             {
                 if (Node* node = dynamic_cast<Node*>(m_current_node))
                 {
@@ -429,7 +429,7 @@ namespace dsa
          * @param[in] other List object of type T
          * @return List&
          */
-        List& operator=(const List<T>& other);
+        auto operator=(const List<T>& other) -> List&;
 
         /**
          * @brief Construct a new List object using move constructor
@@ -446,7 +446,7 @@ namespace dsa
          * @param[in,out] other List object of type T
          * @return List&
          */
-        List& operator=(List<T>&& other) noexcept;
+        auto operator=(List<T>&& other) noexcept -> List&;
 
         /**
          * @brief Destroy the List object
@@ -477,70 +477,70 @@ namespace dsa
          *
          * @return reference to data stored in List first Node
          */
-        reference front();
+        auto front() -> reference;
 
         /**
          * @brief Function returns const reference value stored in List first Node
          *
          * @return const reference to data stored in List first Node
          */
-        const_reference front() const;
+        auto front() const -> const_reference;
 
         /**
          * @brief Function returns reference to value stored in List last Node
          *
          * @return reference to data stored in List last Node
          */
-        reference back();
+        auto back() -> reference;
 
         /**
          * @brief Function returns const reference value stored in List last Node
          *
          * @return const reference to data stored in List last Node
          */
-        const_reference back() const;
+        auto back() const -> const_reference;
 
         /**
          * @brief Function returns pointer to List first Node
          *
          * @return iterator iterator to List first Node
          */
-        iterator begin() noexcept;
+        auto begin() noexcept -> iterator;
 
         /**
          * @brief Function returns const pointer to List first Node
          *
          * @return const_iterator const iterator to List first Node
          */
-        const_iterator begin() const noexcept;
+        auto begin() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns const pointer to List first Node
          *
          * @return const_iterator const iterator to List first Node
          */
-        const_iterator cbegin() const noexcept;
+        auto cbegin() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns pointer to List last Node
          *
          * @return iterator iterator to List last Node
          */
-        iterator end() noexcept;
+        auto end() noexcept -> iterator;
 
         /**
          * @brief Function returns pointer to List last Node
          *
          * @return const_iterator const iterator to List last Node
          */
-        const_iterator end() const noexcept;
+        auto end() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns pointer to List last Node
          *
          * @return const_iterator const iterator to List last Node
          */
-        const_iterator cend() const noexcept;
+        auto cend() const noexcept -> const_iterator;
 
         /// @todo add rbegin
 
@@ -556,21 +556,21 @@ namespace dsa
          * @retval true if container is empty
          * @retval false if container is not empty
          */
-        bool empty() const;
+        auto empty() const -> bool;
 
         /**
          * @brief Function returns List size
          *
          * @return size_t number of elements in container
          */
-        size_t size() const;
+        auto size() const -> size_t;
 
         /**
          * @brief Function returns maximum number of elements container can hold
          *
          * @return size_t maximum number of elements
          */
-        size_t max_size() const noexcept;
+        auto max_size() const noexcept -> size_t;
 
         /**
          * @brief Function removes all elements of List
@@ -586,7 +586,7 @@ namespace dsa
          * @retval iterator to inserted \p value
          * @retval pos if no element was inserted
          */
-        iterator insert(const const_iterator& pos, const_reference value);
+        auto insert(const const_iterator& pos, const_reference value) -> iterator;
 
         /**
          * @brief Function inserts new Node before specified \p pos
@@ -598,7 +598,7 @@ namespace dsa
          * @retval iterator to inserted \p value
          * @retval pos if no element was inserted
          */
-        iterator insert(const const_iterator& pos, size_t count, const_reference value);
+        auto insert(const const_iterator& pos, size_t count, const_reference value) -> iterator;
 
         /**
          * @brief Function inserts new Node before specified \p pos
@@ -609,7 +609,7 @@ namespace dsa
          * @retval iterator to first inserted element
          * @retval pos if no element was inserted
          */
-        iterator insert(const const_iterator& pos, std::initializer_list<T> init_list);
+        auto insert(const const_iterator& pos, std::initializer_list<T> init_list) -> iterator;
 
         /// @todo add insert_range
 
@@ -624,7 +624,7 @@ namespace dsa
         * @retval begin iterator if \p pos was first element prior to removal
         * @retval end iterator if \p pos was last element prior to removal
         */
-        iterator erase(iterator pos);
+        auto erase(iterator pos) -> iterator;
 
         /**
         * @brief Function erases Node object at specified \p pos
@@ -635,7 +635,7 @@ namespace dsa
         * @retval begin iterator if \p pos was first element prior to removal
         * @retval end iterator if \p pos was last element prior to removal
         */
-        iterator erase(const_iterator pos);
+        auto erase(const_iterator pos) -> iterator;
 
         /**
          * @brief Function erases Node objects in range [first, last)
@@ -647,7 +647,7 @@ namespace dsa
          * @retval end iterator if \p last was end element prior to removal
          * @retval last iterator if \p first to p\ last is empty range
          */
-        iterator erase(iterator first, iterator last);
+        auto erase(iterator first, iterator last) -> iterator;
 
         /**
          * @brief Function erases Node objects in range [first, last)
@@ -659,7 +659,7 @@ namespace dsa
          * @retval end iterator if \p last was end element prior to removal
          * @retval last iterator if \p first to \p last is empty range
          */
-        iterator erase(const_iterator first, const_iterator last);
+        auto erase(const_iterator first, const_iterator last) -> iterator;
 
         /**
          * @brief Function adds new Node at the end of List
@@ -820,7 +820,7 @@ namespace dsa
          * @param[in] other List to read elements from
          * @return List<T>&
          */
-        List<T>& operator+=(const List<T>& other)
+        auto operator+=(const List<T>& other) -> List<T>&
         {
             for (auto it = other.cbegin(); it != other.cend(); ++it)
             {
@@ -836,7 +836,7 @@ namespace dsa
          * @param[in] init_list initializer_list to read elements from
          * @return List<T>&
          */
-        List<T>& operator+=(const std::initializer_list<T> init_list)
+        auto operator+=(const std::initializer_list<T> init_list) -> List<T>&
         {
             for (const auto& item : init_list)
             {
@@ -854,7 +854,7 @@ namespace dsa
          * @retval Node* if index is valid
          * @retval nullptr if invalid index
          */
-        Node* get(size_t index) const;
+        auto get(size_t index) const -> Node*;
 
         /**
          * @brief Function sets value of specifed Node of List
@@ -865,7 +865,7 @@ namespace dsa
          * @retval true if value of Node was overwritten
          * @retval false if invalid index
          */
-        bool set(size_t index, T value);
+        auto set(size_t index, T value) -> bool;
 
     private:
 
@@ -879,7 +879,7 @@ namespace dsa
          * @param[in] list2 input List
          * @return List<T> List<T> with content of two input lists
          */
-        friend List<T> operator+<>(const List<T>& list1, const List<T>& list2);
+        friend auto operator+<>(const List<T>& list1, const List<T>& list2)->List<T>;
 
         /**
          * @brief Function add end node located just after last user created data
@@ -899,7 +899,7 @@ namespace dsa
          * @param[in] iterator to element to which will be erased
          * @return iterator to element following \p pos
          */
-        iterator erase_element(iterator pos)
+        auto erase_element(iterator pos) -> iterator
         {
             if (!if_valid_iterator(pos))
             {
@@ -938,7 +938,7 @@ namespace dsa
         * @retval iterator to inserted element
         * @retval iterator to \p pos if no element was inserted
         */
-        iterator insert_element_before(iterator pos, const_reference value)
+        auto insert_element_before(iterator pos, const_reference value) -> iterator
         {
             if (!if_valid_iterator(pos))
             {
@@ -978,7 +978,7 @@ namespace dsa
          * @return true if \p pos belong to List
          * @return false if otherwise
          */
-        bool if_valid_iterator(const_iterator pos)
+        auto if_valid_iterator(const_iterator pos) -> bool
         {
             bool valid_iterator{};
 
@@ -1006,7 +1006,7 @@ namespace dsa
          * @param[in] last const_iterator pointing to last (inclusive) element
          * @return size_t number of elements between input elements
          */
-        size_t distance(const_iterator first, const const_iterator& last);
+        auto distance(const_iterator first, const const_iterator& last) -> size_t;
 
         /**
          * @brief Function moves elements from other List object
@@ -1057,7 +1057,7 @@ namespace dsa
     }
 
     template<typename T>
-    List<T>& List<T>::operator=(const List<T>& other)
+    auto List<T>::operator=(const List<T>& other) -> List<T>&
     {
         if (&other != this)
         {
@@ -1082,7 +1082,7 @@ namespace dsa
     }
 
     template<typename T>
-    List<T>& List<T>::operator=(List<T>&& other) noexcept
+    auto List<T>::operator=(List<T>&& other) noexcept -> List<T>&
     {
         if (&other != this)
         {
@@ -1135,79 +1135,79 @@ namespace dsa
     }
 
     template<typename T>
-    typename List<T>::reference List<T>::front()
+    auto List<T>::front() -> typename List<T>::reference
     {
         return *begin();
     }
 
     template<typename T>
-    typename List<T>::const_reference List<T>::front() const
+    auto List<T>::front() const -> typename List<T>::const_reference
     {
         return *cbegin();
     }
 
     template<typename T>
-    typename List<T>::reference List<T>::back()
+    auto List<T>::back() -> typename List<T>::reference
     {
         return *(--end());
     }
 
     template<typename T>
-    typename List<T>::const_reference List<T>::back() const
+    auto List<T>::back() const -> typename List<T>::const_reference
     {
         return *(--cend());
     }
 
     template<typename T>
-    typename List<T>::iterator List<T>::begin() noexcept
+    auto List<T>::begin() noexcept -> typename List<T>::iterator
     {
         return iterator(m_front);
     }
 
     template<typename T>
-    typename List<T>::const_iterator List<T>::begin() const noexcept
+    auto List<T>::begin() const noexcept -> typename List<T>::const_iterator
     {
         return const_iterator(m_front);
     }
 
     template<typename T>
-    typename List<T>::const_iterator List<T>::cbegin() const noexcept
+    auto List<T>::cbegin() const noexcept -> typename List<T>::const_iterator
     {
         return begin();
     }
 
     template<typename T>
-    typename List<T>::iterator List<T>::end() noexcept
+    auto List<T>::end() noexcept -> typename List<T>::iterator
     {
         return iterator(m_back);
     }
 
     template<typename T>
-    typename List<T>::const_iterator List<T>::end() const noexcept
+    auto List<T>::end() const noexcept -> typename List<T>::const_iterator
     {
         return const_iterator(m_back);
     }
 
     template<typename T>
-    typename List<T>::const_iterator List<T>::cend() const noexcept
+    auto List<T>::cend() const noexcept -> typename List<T>::const_iterator
     {
         return end();
     }
 
     template<typename T>
-    bool List<T>::empty() const
+    auto List<T>::empty() const -> bool
     {
         return m_size == 0;
     }
 
     template<typename T>
-    size_t List<T>::size() const
+    auto List<T>::size() const -> size_t
     {
         return m_size;
     }
 
     template<typename T>
-    size_t List<T>::max_size() const noexcept
+    auto List<T>::max_size() const noexcept -> size_t
     {
         return std::numeric_limits<size_t>::max();
     }
@@ -1232,13 +1232,13 @@ namespace dsa
     }
 
     template<typename T>
-    typename List<T>::iterator List<T>::insert(const const_iterator& pos, const_reference value)
+    auto List<T>::insert(const const_iterator& pos, const_reference value) -> typename List<T>::iterator
     {
         return insert(pos, 1, value);
     }
 
     template<typename T>
-    typename List<T>::iterator List<T>::insert(const const_iterator& pos, size_t count, const_reference value)
+    auto List<T>::insert(const const_iterator& pos, size_t count, const_reference value) -> typename List<T>::iterator
     {
         iterator iter{ pos.m_current_node };
 
@@ -1256,7 +1256,7 @@ namespace dsa
     }
 
     template<typename T>
-    typename List<T>::iterator List<T>::insert(const const_iterator& pos, std::initializer_list<T> init_list)
+    auto List<T>::insert(const const_iterator& pos, std::initializer_list<T> init_list) -> typename List<T>::iterator
     {
         iterator iter(pos.m_current_node);
 
@@ -1275,7 +1275,7 @@ namespace dsa
     }
 
     template<typename T>
-    typename List<T>::iterator List<T>::erase(iterator pos)
+    auto List<T>::erase(iterator pos) -> typename List<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1286,7 +1286,7 @@ namespace dsa
     }
 
     template<typename T>
-    typename List<T>::iterator List<T>::erase(iterator first, iterator last)
+    auto List<T>::erase(iterator first, iterator last) -> typename List<T>::iterator
     {
         if (!if_valid_iterator(first) || !if_valid_iterator(last))
         {
@@ -1493,7 +1493,7 @@ namespace dsa
     }
 
     template<typename T>
-    size_t List<T>::distance(const_iterator first, const const_iterator& last)
+    auto List<T>::distance(const_iterator first, const const_iterator& last) -> size_t
     {
         size_t dist{};
         while (first != last)
@@ -1705,7 +1705,7 @@ namespace dsa
     }
 
     template<typename T>
-    typename List<T>::Node* List<T>::get(size_t index) const
+    auto List<T>::get(size_t index) const -> typename List<T>::Node*
     {
         if (index >= m_size)
         {
@@ -1769,7 +1769,7 @@ namespace dsa
     }
 
     template<typename T>
-    bool List<T>::set(size_t index, T value)
+    auto List<T>::set(size_t index, T value) -> bool
     {
         Node* temp = get(index);
         if (temp)
@@ -1790,7 +1790,7 @@ namespace dsa
      * @return List<T> List<T> with content of two input lists
      */
     template<typename T>
-    List<T> operator+(const List<T>& list1, const List<T>& list2)
+    auto operator+(const List<T>& list1, const List<T>& list2) -> List<T>
     {
         List<T> temp(list1);
 
@@ -1812,7 +1812,7 @@ namespace dsa
      * @return std::ostream&
      */
     template<typename T>
-    std::ostream& operator<<(std::ostream& out, const List<T>& list)
+    auto operator<<(std::ostream& out, const List<T>& list) -> std::ostream&
     {
         if (list.empty())
         {
@@ -1838,7 +1838,7 @@ namespace dsa
      * @retval false if containers are not equal
      */
     template<typename T>
-    bool operator==(const List<T>& list1, const List<T>& list2)
+    auto operator==(const List<T>& list1, const List<T>& list2) -> bool
     {
         if (list1.size() != list2.size())
         {
@@ -1872,7 +1872,7 @@ namespace dsa
      * @retval false if containers are equal
      */
     template<typename T>
-    bool operator!=(const List<T>& list1, const List<T>& list2)
+    auto operator!=(const List<T>& list1, const List<T>& list2) -> bool
     {
         return !(operator==(list1, list2));
     }
@@ -1888,7 +1888,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<(const List<T>& list1, const List<T>& list2)
+    auto operator<(const List<T>& list1, const List<T>& list2) -> bool
     {
         auto list1_iter = list1.cbegin();
         auto list2_iter = list2.cbegin();
@@ -1918,7 +1918,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>(const List<T>& list1, const List<T>& list2)
+    auto operator>(const List<T>& list1, const List<T>& list2) -> bool
     {
         return operator<(list2, list1);
     }
@@ -1934,7 +1934,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<=(const List<T>& list1, const List<T>& list2)
+    auto operator<=(const List<T>& list1, const List<T>& list2) -> bool
     {
         return !(operator>(list1, list2));
     }
@@ -1950,7 +1950,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>=(const List<T>& list1, const List<T>& list2)
+    auto operator>=(const List<T>& list1, const List<T>& list2) -> bool
     {
         return !(operator<(list1, list2));
     }
