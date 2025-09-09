@@ -26,7 +26,7 @@ namespace dsa
     class ForwardList;
 
     template<typename T>
-    ForwardList<T> operator+(const ForwardList<T>& list1, const ForwardList<T>& list2);
+    auto operator+(const ForwardList<T>& list1, const ForwardList<T>& list2) -> ForwardList<T>;
 
     /**
      * @brief Implements ForwardList using Node with pointer to next element
@@ -85,7 +85,7 @@ namespace dsa
              *
              * @return T& reference to value stored in Node
              */
-            T& value()
+            auto value() -> T&
             {
                 return m_value;
             }
@@ -95,7 +95,7 @@ namespace dsa
              *
              * @return T to value stored in Node
              */
-            T value() const
+            auto value() const -> T
             {
                 return m_value;
             }
@@ -187,7 +187,7 @@ namespace dsa
              * @param[in] node input Node
              * @return ForwardListIterator& reference to updated Node
              */
-            ForwardListIterator& operator=(NodeBase* node)
+            auto operator=(NodeBase* node) -> ForwardListIterator&
             {
                 this->m_current_node = node;
                 return *this;
@@ -198,7 +198,7 @@ namespace dsa
              *
              * @return ForwardListIterator& reference to next Node
              */
-            ForwardListIterator& operator++()
+            auto operator++() -> ForwardListIterator&
             {
                 if (m_current_node)
                 {
@@ -213,7 +213,7 @@ namespace dsa
              *
              * @return ForwardListIterator& reference to next ForwardListIterator
              */
-            ForwardListIterator operator++(int)
+            auto operator++(int) -> ForwardListIterator
             {
                 const ForwardListIterator iterator = *this;
                 ++(*this);
@@ -228,7 +228,7 @@ namespace dsa
              * @retval true if ForwardListIterator objects are the same
              * @retval false if ForwardListIterator objects are different
              */
-            bool operator==(const ForwardListIterator<IF_CONST>& other) const
+            auto operator==(const ForwardListIterator<IF_CONST>& other) const -> bool
             {
                 return m_current_node == other.m_current_node;
             }
@@ -241,7 +241,7 @@ namespace dsa
              * @retval true if ForwardListIterator objects are different
              * @retval false if ForwardListIterator objects are the same
              */
-            bool operator!=(const ForwardListIterator<IF_CONST>& other) const
+            auto operator!=(const ForwardListIterator<IF_CONST>& other) const -> bool
             {
                 return !operator==(other);
             }
@@ -254,7 +254,7 @@ namespace dsa
              * @retval valid ForwardListIterator if index is valid
              * @retval nullptr if index is invalid
              */
-            ForwardListIterator operator[](size_t index)
+            auto operator[](size_t index) -> ForwardListIterator
             {
                 NodeBase* temp{ m_current_node };
 
@@ -278,7 +278,7 @@ namespace dsa
              *
              * @return T& reference or const reference to data stored in Node
              */
-            reference operator*() const
+            auto operator*() const -> reference
             {
                 if (Node* node = dynamic_cast<Node*>(m_current_node))
                 {
@@ -292,7 +292,7 @@ namespace dsa
              *
              * @return T* pointer to data stored in Node
              */
-            pointer operator->()
+            auto operator->() -> pointer
             {
                 if (Node* node = dynamic_cast<Node*>(m_current_node))
                 {
@@ -396,7 +396,7 @@ namespace dsa
          * @param[in] other ForwardList object of type T
          * @return ForwardList& reference to ForwardList object
          */
-        ForwardList& operator=(const ForwardList<T>& other);
+        auto operator=(const ForwardList<T>& other) -> ForwardList&;
 
         /**
          * @brief Construct a new ForwardList object using move constructor
@@ -413,7 +413,7 @@ namespace dsa
          * @param[in,out] other ForwardList object of type T
          * @return ForwardList& reference to ForwardList object
          */
-        ForwardList& operator=(ForwardList<T>&& other) noexcept;
+        auto operator=(ForwardList<T>&& other) noexcept -> ForwardList&;
 
         /**
          * @brief Destroy the ForwardList object
@@ -440,77 +440,77 @@ namespace dsa
          *
          * @return reference to data stored in ForwardList first Node
          */
-        reference front();
+        auto front() -> reference;
 
         /**
          * @brief Function returns const reference value stored in ForwardList first Node
          *
          * @return const reference to data stored in ForwardList first Node
          */
-        const_reference front() const;
+        auto front() const -> const_reference;
 
         /**
          * @brief Function returns iterator just before ForwardList first Node
          *
          * @return iterator iterator just before ForwardList first Node
          */
-        iterator before_begin() noexcept;
+        auto before_begin() noexcept -> iterator;
 
         /**
          * @brief Function returns const_iterator just before ForwardList first Node
          *
          * @return const_iterator iterator just before ForwardList first Node
          */
-        const_iterator before_begin() const noexcept;
+        auto before_begin() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns const_iterator just before ForwardList first Node
          *
          * @return const_iterator iterator just before ForwardList first Node
          */
-        const_iterator cbefore_begin() const noexcept;
+        auto cbefore_begin() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns pointer to ForwardList first Node
          *
          * @return iterator iterator to ForwardList first Node
          */
-        iterator begin() noexcept;
+        auto begin() noexcept -> iterator;
 
         /**
          * @brief Function returns const pointer to ForwardList first Node
          *
          * @return const_iterator const iterator to ForwardList first Node
          */
-        const_iterator begin() const noexcept;
+        auto begin() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns const pointer to ForwardList first Node
          *
          * @return const_iterator const iterator to ForwardList first Node
          */
-        const_iterator cbegin() const noexcept;
+        auto cbegin() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns pointer to ForwardList last Node
          *
          * @return iterator iterator to ForwardList last Node
          */
-        iterator end() noexcept;
+        auto end() noexcept -> iterator;
 
         /**
          * @brief Function returns pointer to ForwardList last Node
          *
          * @return const_iterator const iterator to ForwardList last Node
          */
-        const_iterator end() const noexcept;
+        auto end() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns pointer to ForwardList last Node
          *
          * @return const_iterator const iterator to ForwardList last Node
          */
-        const_iterator cend() const noexcept;
+        auto cend() const noexcept -> const_iterator;
 
         /**
          * @brief Function checks if container has no elements
@@ -518,14 +518,14 @@ namespace dsa
          * @retval true if container is empty
          * @retval false if container is not empty
          */
-        bool empty() const;
+        auto empty() const -> bool;
 
         /**
          * @brief Function returns maximum number of elements container can hold
          *
          * @return size_t maximum number of elements
          */
-        size_t max_size() const noexcept;
+        auto max_size() const noexcept -> size_t;
 
         /**
          * @brief Function removes all elements of ForwardList
@@ -541,7 +541,7 @@ namespace dsa
          * @retval iterator to inserted \p value
          * @retval pos if no element was inserted
          */
-        iterator insert_after(const const_iterator& pos, const_reference value);
+        auto insert_after(const const_iterator& pos, const_reference value) -> iterator;
 
         /**
          * @brief Function inserts new Node after specified ForwardList const_iterator
@@ -553,7 +553,7 @@ namespace dsa
          * @retval iterator pointer to last inserted element
          * @retval pos if no element was inserted
          */
-        iterator insert_after(const const_iterator& pos, size_t count, const_reference value);
+        auto insert_after(const const_iterator& pos, size_t count, const_reference value) -> iterator;
 
         /**
          * @brief Function inserts new Node after specified ForwardList const_iterator
@@ -564,7 +564,7 @@ namespace dsa
          * @retval iterator to last inserted element
          * @retval pos if no element was inserted
          */
-        iterator insert_after(const const_iterator& pos, std::initializer_list<T> init_list);
+        auto insert_after(const const_iterator& pos, std::initializer_list<T> init_list) -> iterator;
 
         /// @todo add emplace_after
 
@@ -576,7 +576,7 @@ namespace dsa
         * @retval iterator element after deleted element
         * @retval nullptr if invalid iterator
         */
-        iterator erase_after(const const_iterator& pos);
+        auto erase_after(const const_iterator& pos) -> iterator;
 
         /**
          * @brief Function erases Node between specified ForwardList Const_Iterators
@@ -587,7 +587,7 @@ namespace dsa
          * @retval iterator to element after last deleted element
          * @retval nullptr if invalid iterator
          */
-        iterator erase_after(const const_iterator& first, const const_iterator& last);
+        auto erase_after(const const_iterator& first, const const_iterator& last) -> iterator;
 
         /**
          * @brief Function adds new Node at the beginning of ForwardList
@@ -730,7 +730,7 @@ namespace dsa
          * @param[in] other ForwardList to read elements from
          * @return ForwardList<T>&
          */
-        ForwardList<T>& operator+=(const ForwardList<T>& other)
+        auto operator+=(const ForwardList<T>& other) -> ForwardList<T>&
         {
             auto before_last = find_iter_before_last();
 
@@ -749,7 +749,7 @@ namespace dsa
          * @param[in] init_list initializer_list to read elements from
          * @return ForwardList<T>&
          */
-        ForwardList<T>& operator+=(const std::initializer_list<T> init_list)
+        auto operator+=(const std::initializer_list<T> init_list) -> ForwardList<T>&
         {
             auto before_last = find_iter_before_last();
 
@@ -769,7 +769,7 @@ namespace dsa
          * @retval Node* if index is valid
          * @retval nullptr if invalid index
          */
-        Node* get(size_t index) const
+        auto get(size_t index) const -> Node*
         {
             if (index > m_size)
             {
@@ -798,7 +798,7 @@ namespace dsa
          * @retval true if value of Node was overwritten
          * @retval false if invalid index
          */
-        bool set(size_t index, T value)
+        auto set(size_t index, T value) -> bool
         {
             Node* temp = get(index);
             if (temp)
@@ -815,7 +815,7 @@ namespace dsa
          *
          * @return size_t number of elements in container
          */
-        size_t size() const
+        auto size() const -> size_t
         {
             return m_size;
         }
@@ -832,7 +832,7 @@ namespace dsa
          * @param[in] list2 input ForwardList
          * @return ForwardList<T> with content of two input lists
          */
-        friend ForwardList<T> operator+<>(const ForwardList<T>& list1, const ForwardList<T>& list2);
+        friend auto operator+<>(const ForwardList<T>& list1, const ForwardList<T>& list2)->ForwardList<T>;
 
         /**
          * @brief Function initialize ForwardList pointer located just before user added data
@@ -851,7 +851,7 @@ namespace dsa
          *
          * @return iterator to Node before last one
          */
-        iterator find_iter_before_last()
+        auto find_iter_before_last() -> iterator
         {
             NodeBase* temp{ m_front->m_next };
             while (temp && temp->m_next && temp->m_next->m_next)
@@ -874,7 +874,7 @@ namespace dsa
          * @param[in] pos iterator after which element will be erased
          * @return iterator to element following deleted one
          */
-        iterator erase_element_after(iterator pos)
+        auto erase_element_after(iterator pos) -> iterator
         {
             if (!if_valid_iterator(pos))
             {
@@ -900,7 +900,7 @@ namespace dsa
         * @retval iterator to iterator inserted after \pos
         * @retval nullptr if invalid iterator
         */
-        iterator insert_element_after(iterator pos, const_reference value)
+        auto insert_element_after(iterator pos, const_reference value) -> iterator
         {
             if (!if_valid_iterator(pos))
             {
@@ -925,7 +925,7 @@ namespace dsa
          * @return true if \p pos belong to ForwardList
          * @return false if otherwise
          */
-        bool if_valid_iterator(const const_iterator& pos)
+        auto if_valid_iterator(const const_iterator& pos) -> bool
         {
             /* initial implementation
             */
@@ -949,7 +949,7 @@ namespace dsa
          * @param[in] last const_iterator pointing to last (inclusive) element
          * @return size_t number of elements between input elements
          */
-        size_t distance(const_iterator first, const const_iterator& last);
+        auto distance(const_iterator first, const const_iterator& last) -> size_t;
 
         /**
          * @brief Function moves elements from other ForwardList object
@@ -1019,7 +1019,7 @@ namespace dsa
     }
 
     template<typename T>
-    ForwardList<T>& ForwardList<T>::operator=(const ForwardList<T>& other)
+    auto ForwardList<T>::operator=(const ForwardList<T>& other) -> ForwardList<T>&
     {
         init_node();
 
@@ -1047,7 +1047,7 @@ namespace dsa
     }
 
     template<typename T>
-    ForwardList<T>& ForwardList<T>::operator=(ForwardList<T>&& other) noexcept
+    auto ForwardList<T>::operator=(ForwardList<T>&& other) noexcept -> ForwardList<T>&
     {
         if (&other != this)
         {
@@ -1103,80 +1103,80 @@ namespace dsa
     }
 
     template<typename T>
-    typename ForwardList<T>::reference ForwardList<T>::front()
+    auto ForwardList<T>::front() -> typename ForwardList<T>::reference
     {
         return *begin();
     }
 
     template<typename T>
-    typename ForwardList<T>::const_reference ForwardList<T>::front() const
+    auto ForwardList<T>::front() const -> typename ForwardList<T>::const_reference
     {
         return *cbegin();
     }
 
     template<typename T>
-    typename ForwardList<T>::iterator ForwardList<T>::before_begin() noexcept
+    auto ForwardList<T>::before_begin() noexcept -> typename ForwardList<T>::iterator
     {
         return iterator(m_front);
     }
 
     template<typename T>
-    typename ForwardList<T>::const_iterator ForwardList<T>::before_begin() const noexcept
+    auto ForwardList<T>::before_begin() const noexcept -> typename ForwardList<T>::const_iterator
     {
         return const_iterator(m_front);
     }
 
     template<typename T>
-    typename ForwardList<T>::const_iterator ForwardList<T>::cbefore_begin() const noexcept
+    auto ForwardList<T>::cbefore_begin() const noexcept -> typename ForwardList<T>::const_iterator
     {
         return before_begin();
     }
 
     template<typename T>
-    typename ForwardList<T>::iterator ForwardList<T>::begin() noexcept
+    auto ForwardList<T>::begin() noexcept -> typename ForwardList<T>::iterator
     {
         return iterator(m_front->m_next);
     }
 
     template<typename T>
-    typename ForwardList<T>::const_iterator ForwardList<T>::begin() const noexcept
+    auto ForwardList<T>::begin() const noexcept -> typename ForwardList<T>::const_iterator
     {
         return const_iterator(m_front->m_next);
     }
 
     template<typename T>
-    typename ForwardList<T>::const_iterator ForwardList<T>::cbegin() const noexcept
+    auto ForwardList<T>::cbegin() const noexcept -> typename ForwardList<T>::const_iterator
     {
         return begin();
     }
 
     template<typename T>
-    typename ForwardList<T>::iterator ForwardList<T>::end() noexcept
+    auto ForwardList<T>::end() noexcept -> typename ForwardList<T>::iterator
     {
         return iterator(nullptr);
     }
 
     template<typename T>
-    typename ForwardList<T>::const_iterator ForwardList<T>::end() const noexcept
+    auto ForwardList<T>::end() const noexcept -> typename ForwardList<T>::const_iterator
     {
         return const_iterator(nullptr);
     }
 
     template<typename T>
-    typename ForwardList<T>::const_iterator ForwardList<T>::cend() const noexcept
+    auto ForwardList<T>::cend() const noexcept -> typename ForwardList<T>::const_iterator
     {
         return end();
     }
 
 
     template<typename T>
-    bool ForwardList<T>::empty() const
+    auto ForwardList<T>::empty() const -> bool
     {
         return m_size == 0;
     }
 
     template<typename T>
-    size_t ForwardList<T>::max_size() const noexcept
+    auto ForwardList<T>::max_size() const noexcept -> size_t
     {
         return std::numeric_limits<size_t>::max();
     }
@@ -1200,14 +1200,15 @@ namespace dsa
     }
 
     template<typename T>
-    typename ForwardList<T>::iterator ForwardList<T>::insert_after(const const_iterator& pos, const_reference value)
+    auto ForwardList<T>::insert_after(const const_iterator& pos, const_reference value)
+        -> typename ForwardList<T>::iterator
     {
         return insert_after(pos, 1, value);
     }
 
     template<typename T>
-    typename ForwardList<T>::iterator ForwardList<T>::insert_after(const const_iterator& pos,
-        size_t count, const_reference value)
+    auto ForwardList<T>::insert_after(const const_iterator& pos, size_t count, const_reference value)
+        -> typename ForwardList<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1224,8 +1225,8 @@ namespace dsa
     }
 
     template<typename T>
-    typename ForwardList<T>::iterator ForwardList<T>::insert_after(const const_iterator& pos,
-        std::initializer_list<T> init_list)
+    auto ForwardList<T>::insert_after(const const_iterator& pos, std::initializer_list<T> init_list)
+        -> typename ForwardList<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1242,7 +1243,7 @@ namespace dsa
     }
 
     template<typename T>
-    typename ForwardList<T>::iterator ForwardList<T>::erase_after(const const_iterator& pos)
+    auto ForwardList<T>::erase_after(const const_iterator& pos) -> typename ForwardList<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1256,8 +1257,8 @@ namespace dsa
     }
 
     template<typename T>
-    typename ForwardList<T>::iterator ForwardList<T>::erase_after(const const_iterator& first,
-        const const_iterator& last)
+    auto ForwardList<T>::erase_after(const const_iterator& first,
+        const const_iterator& last) -> typename ForwardList<T>::iterator
     {
         if (!if_valid_iterator(first) || !if_valid_iterator(last))
         {
@@ -1411,7 +1412,7 @@ namespace dsa
     }
 
     template<typename T>
-    size_t ForwardList<T>::distance(const_iterator first, const const_iterator& last)
+    auto ForwardList<T>::distance(const_iterator first, const const_iterator& last) -> size_t
     {
         size_t dist{};
         while (first != last)
@@ -1617,7 +1618,7 @@ namespace dsa
      * @return ForwardList<T> with content of two input lists
      */
     template<typename T>
-    ForwardList<T> operator+(const ForwardList<T>& list1, const ForwardList<T>& list2)
+    auto operator+(const ForwardList<T>& list1, const ForwardList<T>& list2) -> ForwardList<T>
     {
         ForwardList<T> temp(list1);
         auto before_last = temp.find_iter_before_last();
@@ -1641,7 +1642,7 @@ namespace dsa
      * @return std::ostream&
      */
     template<typename T>
-    std::ostream& operator<<(std::ostream& out, const ForwardList<T>& list)
+    auto operator<<(std::ostream& out, const ForwardList<T>& list) -> std::ostream&
     {
         if (list.empty())
         {
@@ -1667,7 +1668,7 @@ namespace dsa
      * @retval false if containers are not equal
      */
     template<typename T>
-    bool operator==(const ForwardList<T>& list1, const ForwardList<T>& list2)
+    auto operator==(const ForwardList<T>& list1, const ForwardList<T>& list2) -> bool
     {
         if (list1.size() != list2.size())
         {
@@ -1701,7 +1702,7 @@ namespace dsa
      * @retval false if containers are equal
      */
     template<typename T>
-    bool operator!=(const ForwardList<T>& list1, const ForwardList<T>& list2)
+    auto operator!=(const ForwardList<T>& list1, const ForwardList<T>& list2) -> bool
     {
         return !(operator==(list1, list2));
     }
@@ -1717,7 +1718,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<(const ForwardList<T>& list1, const ForwardList<T>& list2)
+    auto operator<(const ForwardList<T>& list1, const ForwardList<T>& list2) -> bool
     {
         auto list1_iter = list1.cbegin();
         auto list2_iter = list2.cbegin();
@@ -1747,7 +1748,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>(const ForwardList<T>& list1, const ForwardList<T>& list2)
+    auto operator>(const ForwardList<T>& list1, const ForwardList<T>& list2) -> bool
     {
         return operator<(list2, list1);
     }
@@ -1763,7 +1764,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<=(const ForwardList<T>& list1, const ForwardList<T>& list2)
+    auto operator<=(const ForwardList<T>& list1, const ForwardList<T>& list2) -> bool
     {
         return !(operator>(list1, list2));
     }
@@ -1779,7 +1780,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>=(const ForwardList<T>& list1, const ForwardList<T>& list2)
+    auto operator>=(const ForwardList<T>& list1, const ForwardList<T>& list2) -> bool
     {
         return !(operator<(list1, list2));
     }
