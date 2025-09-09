@@ -85,7 +85,7 @@ namespace dsa
          * @param[in] other Queue object of type T
          * @return Queue& reference to Queue object
          */
-        Queue& operator=(const Queue<T>& other);
+        auto operator=(const Queue<T>& other) -> Queue&;
 
         /**
          * @brief Construct a new Queue object using move constructor
@@ -102,7 +102,7 @@ namespace dsa
          * @param[in,out] other Queue object of type T
          * @return Queue& reference to Queue object
          */
-        Queue& operator=(Queue<T>&& other) noexcept;
+        auto operator=(Queue<T>&& other) noexcept -> Queue&;
 
         /**
          * @brief Destroy the Queue object
@@ -114,28 +114,28 @@ namespace dsa
          *
          * @return T& reference to Queue first object
          */
-        reference front();
+        auto front() -> reference;
 
         /**
          * @brief Function returns pointer to Queue first object
          *
          * @return const T& const reference to Queue first object
          */
-        const_reference front() const;
+        auto front() const -> const_reference;
 
         /**
          * @brief Function returns pointer to Queue last object
          *
          * @return T& reference to Queue last object
          */
-        reference back();
+        auto back() -> reference;
 
         /**
          * @brief Function returns pointer to Queue last object
          *
          * @return const T& const reference to Queue last object
          */
-        const_reference back() const;
+        auto back() const -> const_reference;
 
         /**
          * @brief Function checks if container has no elements
@@ -143,14 +143,14 @@ namespace dsa
          * @retval true if container is empty
          * @retval false if container is not empty
          */
-        bool empty() const;
+        auto empty() const -> bool;
 
         /**
          * @brief Function returns Queue size
          *
          * @return size_t number of elements in container
          */
-        size_t size() const;
+        auto size() const -> size_t;
 
         /**
          * @brief Function add new element at the end of Queue
@@ -191,7 +191,7 @@ namespace dsa
          * @param[in] other Queue to read elements from
          * @return Queue<T>& reference to Queue
          */
-        Queue<T>& operator+=(const Queue<T>& other);
+        auto operator+=(const Queue<T>& other) -> Queue<T>&;
 
         /**
         * @brief Function add range of elements at the end of Queue
@@ -199,7 +199,7 @@ namespace dsa
         * @param[in] init_list std::initializer_list to read elements from
         * @return Queue<T>& reference to Queue
         */
-        Queue<T>& operator+=(const std::initializer_list<T>& init_list);
+        auto operator+=(const std::initializer_list<T>& init_list) -> Queue<T>&;
 
     private:
 
@@ -234,7 +234,7 @@ namespace dsa
     }
 
     template<typename T>
-    Queue<T>& Queue<T>::operator=(const Queue<T>& other)
+    auto Queue<T>::operator=(const Queue<T>& other) -> Queue<T>&
     {
         if (&other != this)
         {
@@ -259,7 +259,7 @@ namespace dsa
     }
 
     template<typename T>
-    Queue<T>& Queue<T>::operator=(Queue<T>&& other) noexcept
+    auto Queue<T>::operator=(Queue<T>&& other) noexcept -> Queue<T>&
     {
         if (&other != this)
         {
@@ -270,37 +270,37 @@ namespace dsa
     }
 
     template<typename T>
-    typename Queue<T>::reference Queue<T>::front()
+    auto Queue<T>::front() -> typename Queue<T>::reference
     {
         return container.front();
     }
 
     template<typename T>
-    typename Queue<T>::const_reference Queue<T>::front() const
+    auto Queue<T>::front() const -> typename Queue<T>::const_reference
     {
         return container.front();
     }
 
     template<typename T>
-    typename Queue<T>::reference Queue<T>::back()
+    auto Queue<T>::back() -> typename Queue<T>::reference
     {
         return container.back();
     }
 
     template<typename T>
-    typename Queue<T>::const_reference Queue<T>::back() const
+    auto Queue<T>::back() const -> typename Queue<T>::const_reference
     {
         return container.back();
     }
 
     template<typename T>
-    bool Queue<T>::empty() const
+    auto Queue<T>::empty() const -> bool
     {
         return container.size() == 0;
     }
 
     template<typename T>
-    size_t Queue<T>::size() const
+    auto Queue<T>::size() const -> size_t
     {
         return container.size();
     }
@@ -342,7 +342,7 @@ namespace dsa
     }
 
     template<typename T>
-    Queue<T>& Queue<T>::operator+=(const Queue<T>& other)
+    auto Queue<T>::operator+=(const Queue<T>& other) -> Queue<T>&
     {
         for (const auto& item : other.container)
         {
@@ -353,7 +353,7 @@ namespace dsa
     }
 
     template<typename T>
-    Queue<T>& Queue<T>::operator+=(const std::initializer_list<T>& init_list)
+    auto Queue<T>::operator+=(const std::initializer_list<T>& init_list) -> Queue<T>&
     {
         push_range(init_list);
 
@@ -369,7 +369,7 @@ namespace dsa
      * @return std::ostream& reference to std::ostream
      */
     template<typename T>
-    std::ostream& operator<<(std::ostream& out, const Queue<T>& queue)
+    auto operator<<(std::ostream& out, const Queue<T>& queue) -> std::ostream&
     {
         Queue<T> temp{ queue };
 
@@ -392,7 +392,7 @@ namespace dsa
      * @retval false if containers are not equal
      */
     template<typename T>
-    bool operator==(const Queue<T>& queue1, const Queue<T>& queue2)
+    auto operator==(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
     {
         if (queue1.size() != queue2.size())
         {
@@ -426,7 +426,7 @@ namespace dsa
      * @retval false if containers are equal
      */
     template<typename T>
-    bool operator!=(const Queue<T>& queue1, const Queue<T>& queue2)
+    auto operator!=(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
     {
         return !(operator==(queue1, queue2));
     }
@@ -442,7 +442,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<(const Queue<T>& queue1, const Queue<T>& queue2)
+    auto operator<(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
     {
         Queue<T> temp_1{ queue1 };
         Queue<T> temp_2{ queue2 };
@@ -472,7 +472,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>(const Queue<T>& queue1, const Queue<T>& queue2)
+    auto operator>(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
     {
         return operator<(queue2, queue1);
     }
@@ -488,7 +488,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator<=(const Queue<T>& queue1, const Queue<T>& queue2)
+    auto operator<=(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
     {
         return !(operator>(queue1, queue2));
     }
@@ -504,7 +504,7 @@ namespace dsa
      * @retval false otherwise
      */
     template<typename T>
-    bool operator>=(const Queue<T>& queue1, const Queue<T>& queue2)
+    auto operator>=(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
     {
         return !(operator<(queue1, queue2));
     }
