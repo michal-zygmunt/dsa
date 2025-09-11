@@ -1438,7 +1438,7 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::merge(ForwardList<T>&& other)
     {
-        merge(other);
+        merge(std::move(other));
     }
 
     template<typename T>
@@ -1523,7 +1523,7 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>&& other)
     {
-        transfer(pos, other, other.before_begin(), other.end());
+        transfer(pos, std::move(other), other.before_begin(), other.end());
     }
 
     template<typename T>
@@ -1535,7 +1535,7 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>&& other, const_iterator iter)
     {
-        transfer(pos, other, iter);
+        transfer(pos, std::move(other), iter);
     }
 
     template<typename T>
@@ -1548,7 +1548,7 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>&& other, const_iterator first, const_iterator last)
     {
-        transfer(pos, other, first, last);
+        transfer(pos, std::move(other), first, last);
     }
 
     template<typename T>
