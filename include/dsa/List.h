@@ -1519,7 +1519,7 @@ namespace dsa
     template<typename T>
     void List<T>::merge(List<T>&& other)
     {
-        merge(other);
+        merge(std::move(other));
     }
 
     template<typename T>
@@ -1590,7 +1590,7 @@ namespace dsa
     template<typename T>
     void List<T>::splice(const_iterator pos, List<T>&& other)
     {
-        transfer(pos, other, other.begin(), other.end());
+        transfer(pos, std::move(other), other.begin(), other.end());
     }
 
     template<typename T>
@@ -1602,7 +1602,7 @@ namespace dsa
     template<typename T>
     void List<T>::splice(const_iterator pos, List<T>&& other, const_iterator iter)
     {
-        transfer(pos, other, iter, iter.m_current_node->m_next);
+        transfer(pos, std::move(other), iter, iter.m_current_node->m_next);
     }
 
     template<typename T>
@@ -1615,7 +1615,7 @@ namespace dsa
     template<typename T>
     void List<T>::splice(const_iterator pos, List<T>&& other, const_iterator first, const_iterator last)
     {
-        transfer(pos, other, first, last);
+        transfer(pos, std::move(other), first, last);
     }
 
     template<typename T>
