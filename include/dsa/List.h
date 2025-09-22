@@ -470,7 +470,7 @@ namespace dsa
          *
          * @param[in,out] other List object of type T
          */
-        List(List<T>&& other);
+        List(List<T>&& other) noexcept;
 
         /**
          * @brief Assign List object using move assignment
@@ -479,7 +479,7 @@ namespace dsa
          * @param[in,out] other List object of type T
          * @return List&
          */
-        auto operator=(List<T>&& other) -> List&;
+        auto operator=(List<T>&& other) noexcept -> List&;
 
         /**
          * @brief Destroy the List object
@@ -1109,13 +1109,13 @@ namespace dsa
     }
 
     template<typename T>
-    List<T>::List(List<T>&& other)
+    List<T>::List(List<T>&& other) noexcept
     {
         operator=(std::move(other));
     }
 
     template<typename T>
-    auto List<T>::operator=(List<T>&& other) -> List<T>&
+    auto List<T>::operator=(List<T>&& other) noexcept -> List<T>&
     {
         if (&other != this)
         {
