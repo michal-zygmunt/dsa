@@ -37,25 +37,31 @@
 	
 	
 	<Type Name="dsa::List&lt;*&gt;">
-		<DisplayString Condition="m_front == 0xcccccccccccccccc">invalid</DisplayString>
+		<DisplayString Condition="m_head == 0xcccccccccccccccc">invalid</DisplayString>
 		<DisplayString>size = {m_size}</DisplayString>
 		<Expand>
 			<LinkedListItems>
 				<Size>m_size</Size>
-				<HeadPointer>m_front</HeadPointer>
-				<NextPointer>m_next</NextPointer>
+				<HeadPointer>m_head._Mypair._Myval2</HeadPointer>
+				<NextPointer>m_next._Mypair._Myval2</NextPointer>
 				<ValueNode>(*this)</ValueNode>
 			</LinkedListItems>
 		</Expand>
 	</Type>
 
+	
 	<Type Name="dsa::List&lt;*&gt;::Node">
 		<DisplayString>{m_value}</DisplayString>
+		<Expand>
+			<Item Name="Value">m_value</Item>
+			<Item Name="NextPtr">m_next._Mypair._Myval2</Item>
+			<Item Name="PrevPtr">m_prev</Item>
+		</Expand>
 	</Type>
 
 
 	<Type Name="dsa::Queue&lt;*&gt;">
-		<DisplayString Condition="container.m_front == 0xcccccccccccccccc">invalid</DisplayString>
+		<DisplayString Condition="container.m_head == 0xcccccccccccccccc">invalid</DisplayString>
 		<DisplayString>size = {container.m_size}</DisplayString>
 		<Expand>
 			<ExpandedItem>container</ExpandedItem>
@@ -64,7 +70,7 @@
 
 
 	<Type Name="dsa::Stack&lt;*&gt;">
-		<DisplayString Condition="container.m_front == 0xcccccccccccccccc">invalid</DisplayString>
+		<DisplayString Condition="container.m_head == 0xcccccccccccccccc">invalid</DisplayString>
 		<DisplayString>size = {container.m_size}</DisplayString>
 		<Expand>
 			<ExpandedItem>container</ExpandedItem>

@@ -12,12 +12,15 @@
 #ifndef LIST_H
 #define LIST_H
 
+#include "memory.h"
+
 #include <cstddef>
 #include <cstdint>
 #include <initializer_list>
 #include <iostream>
 #include <iterator>
 #include <limits>
+#include <memory>
 
 namespace dsa
 {
@@ -95,7 +98,7 @@ namespace dsa
             /**
              * @brief Pointer to next node
              */
-            NodeBase* m_next{};
+            std::unique_ptr<NodeBase> m_next{};
 
             /**
              * @brief Pointer to previous node
@@ -161,7 +164,7 @@ namespace dsa
          * @tparam T type of data stored in Node
          */
         template<bool IF_CONST>
-        class ListIterator : NodeBase
+        class ListIterator
         {
         public:
 
@@ -212,7 +215,7 @@ namespace dsa
              *
              * @param[in] node input Node
              */
-            ListIterator(NodeBase* node) noexcept
+            ListIterator(NodeBase* node)
                 : m_current_node{ node }
             {
             }
@@ -238,7 +241,7 @@ namespace dsa
             {
                 if (m_current_node)
                 {
-                    m_current_node = m_current_node->m_next;
+                    m_current_node = m_current_node->m_next.get();
                 }
 
                 return *this;
@@ -325,7 +328,7 @@ namespace dsa
                 {
                     if (temp->m_next)
                     {
-                        temp = temp->m_next;
+                        temp = temp->m_next.get();
                     }
                     else
                     {
@@ -467,7 +470,7 @@ namespace dsa
          *
          * @param[in,out] other List object of type T
          */
-        List(List<T>&& other) noexcept;
+        List(List<T>&& other);
 
         /**
          * @brief Assign List object using move assignment
@@ -476,7 +479,7 @@ namespace dsa
          * @param[in,out] other List object of type T
          * @return List&
          */
-        auto operator=(List<T>&& other) noexcept -> List&;
+        auto operator=(List<T>&& other) -> List&;
 
         /**
          * @brief Destroy the List object
@@ -535,42 +538,42 @@ namespace dsa
          *
          * @return iterator iterator to List first Node
          */
-        auto begin() noexcept -> iterator;
+        auto begin() -> iterator;
 
         /**
          * @brief Function returns const pointer to List first Node
          *
          * @return const_iterator const iterator to List first Node
          */
-        auto begin() const noexcept -> const_iterator;
+        auto begin() const -> const_iterator;
 
         /**
          * @brief Function returns const pointer to List first Node
          *
          * @return const_iterator const iterator to List first Node
          */
-        auto cbegin() const noexcept -> const_iterator;
+        auto cbegin() const -> const_iterator;
 
         /**
          * @brief Function returns pointer to List last Node
          *
          * @return iterator iterator to List last Node
          */
-        auto end() noexcept -> iterator;
+        auto end() -> iterator;
 
         /**
          * @brief Function returns pointer to List last Node
          *
          * @return const_iterator const iterator to List last Node
          */
-        auto end() const noexcept -> const_iterator;
+        auto end() const -> const_iterator;
 
         /**
          * @brief Function returns pointer to List last Node
          *
          * @return const_iterator const iterator to List last Node
          */
-        auto cend() const noexcept -> const_iterator;
+        auto cend() const -> const_iterator;
 
         /// @todo add rbegin
 
@@ -600,7 +603,7 @@ namespace dsa
          *
          * @return size_t maximum number of elements
          */
-        auto max_size() const noexcept -> size_t;
+        auto max_size() const -> size_t;
 
         /**
          * @brief Function removes all elements of List
@@ -743,7 +746,7 @@ namespace dsa
          *
          * @param[in,out] other object to swap content with
          */
-        void swap(List<T>& other) noexcept;
+        void swap(List<T>& other);
 
         /**
          * @brief Function combines two Lists
@@ -917,9 +920,10 @@ namespace dsa
          */
         void init_node()
         {
-            if (m_back == nullptr)
+            if (m_head == nullptr)
             {
-                m_back = new NodeBase;
+                m_head = dsa::make_unique<NodeBase>();
+                m_tail = m_head.get();
             }
         }
 
@@ -942,21 +946,20 @@ namespace dsa
                 return iterator(begin());
             }
 
-            if (pos == end() || pos == m_back)
+            if (pos == end() || pos == m_tail)
             {
                 pop_back();
                 return iterator(end());
             }
 
             NodeBase* temp{ pos.m_current_node->m_prev };
-            NodeBase* to_remove{ temp->m_next };
+            NodeBase* to_remove{ temp->m_next.get() };
 
-            temp->m_next = to_remove->m_next;
+            temp->m_next = std::move(to_remove->m_next);
             temp->m_next->m_prev = temp;
-            delete to_remove;
 
             m_size--;
-            return iterator(temp->m_next);
+            return iterator(temp->m_next.get());
         }
 
         /**
@@ -989,15 +992,15 @@ namespace dsa
 
             NodeBase* temp{ pos.m_current_node->m_prev };
 
-            Node* newNode = new Node(value);
-            newNode->m_next = temp->m_next;
+            auto newNode = dsa::make_unique<Node>(value);
+            newNode->m_next = std::move(temp->m_next);
             newNode->m_prev = temp;
 
-            temp->m_next->m_prev = newNode;
-            temp->m_next = newNode;
+            temp->m_next = std::move(newNode);
+            temp->m_next->m_next->m_prev = temp->m_next.get();
 
             m_size++;
-            return iterator(newNode);
+            return iterator(temp->m_next.get());
         }
 
         /**
@@ -1049,8 +1052,8 @@ namespace dsa
          */
         void transfer(const_iterator pos, List<T>& other, const_iterator first, const const_iterator& last);
 
-        NodeBase* m_front{};
-        NodeBase* m_back{};
+        std::unique_ptr<NodeBase> m_head{};
+        NodeBase* m_tail{};
         size_t m_size{};
     };
 
@@ -1091,7 +1094,7 @@ namespace dsa
     {
         if (&other != this)
         {
-            while (m_front)
+            while (m_head->m_next)
             {
                 pop_front();
             }
@@ -1106,25 +1109,24 @@ namespace dsa
     }
 
     template<typename T>
-    List<T>::List(List<T>&& other) noexcept
+    List<T>::List(List<T>&& other)
     {
-        operator=(other);
+        operator=(std::move(other));
     }
 
     template<typename T>
-    auto List<T>::operator=(List<T>&& other) noexcept -> List<T>&
+    auto List<T>::operator=(List<T>&& other) -> List<T>&
     {
         if (&other != this)
         {
             clear();
-            NodeBase* temp = m_back;
 
-            m_front = other.m_front;
-            m_back = other.m_back;
+            m_head = std::move(other.m_head);
+            m_tail = std::move(other.m_tail);
             m_size = other.m_size;
 
-            other.m_front = nullptr;
-            other.m_back = temp;
+            other.m_head = nullptr;
+            other.m_tail = nullptr;
             other.m_size = 0;
         }
 
@@ -1135,11 +1137,6 @@ namespace dsa
     List<T>::~List()
     {
         clear();
-
-        if (m_back != nullptr)
-        {
-            delete m_back;
-        }
     }
 
     template<typename T>
@@ -1189,37 +1186,37 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::begin() noexcept -> typename List<T>::iterator
+    auto List<T>::begin() -> typename List<T>::iterator
     {
-        return iterator(m_front);
+        return iterator(m_head.get());
     }
 
     template<typename T>
-    auto List<T>::begin() const noexcept -> typename List<T>::const_iterator
+    auto List<T>::begin() const -> typename List<T>::const_iterator
     {
-        return const_iterator(m_front);
+        return const_iterator(m_head.get());
     }
 
     template<typename T>
-    auto List<T>::cbegin() const noexcept -> typename List<T>::const_iterator
+    auto List<T>::cbegin() const -> typename List<T>::const_iterator
     {
         return begin();
     }
 
     template<typename T>
-    auto List<T>::end() noexcept -> typename List<T>::iterator
+    auto List<T>::end() -> typename List<T>::iterator
     {
-        return iterator(m_back);
+        return iterator(m_tail);
     }
 
     template<typename T>
-    auto List<T>::end() const noexcept -> typename List<T>::const_iterator
+    auto List<T>::end() const -> typename List<T>::const_iterator
     {
-        return const_iterator(m_back);
+        return const_iterator(m_tail);
     }
 
     template<typename T>
-    auto List<T>::cend() const noexcept -> typename List<T>::const_iterator
+    auto List<T>::cend() const -> typename List<T>::const_iterator
     {
         return end();
     }
@@ -1237,7 +1234,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::max_size() const noexcept -> size_t
+    auto List<T>::max_size() const -> size_t
     {
         return std::numeric_limits<size_t>::max();
     }
@@ -1245,19 +1242,15 @@ namespace dsa
     template<typename T>
     void List<T>::clear()
     {
-        if (m_front && m_front->m_next)
+        if (m_head && m_head->m_next)
         {
-            NodeBase* temp{ m_front };
-            while (temp->m_next)
+            while (m_head->m_next)
             {
-                m_front->m_prev = nullptr;
-                m_front = temp->m_next;
-                delete temp;
-                temp = m_front;
+                m_head = std::move(m_head->m_next);
             }
 
             m_size = 0;
-            m_back->m_prev = nullptr;
+            m_tail->m_prev = nullptr;
         }
     }
 
@@ -1343,19 +1336,18 @@ namespace dsa
     {
         init_node();
 
-        Node* newNode = new Node(value);
-
-        if (m_front == nullptr)
+        auto newNode = dsa::make_unique<Node>(value);
+        if (!m_head->m_next)
         {
-            m_front = newNode;
-            m_front->m_next = m_back;
-            m_back->m_prev = newNode;
+            newNode->m_next = std::move(m_head);
+            m_head = std::move(newNode);
+            m_tail->m_prev = m_head.get();
         }
         else
         {
-            newNode->m_next = m_front;
-            m_front->m_prev = newNode;
-            m_front = newNode;
+            m_head->m_prev = newNode.get();
+            newNode->m_next = std::move(m_head);
+            m_head = std::move(newNode);
         }
 
         m_size++;
@@ -1364,23 +1356,22 @@ namespace dsa
     template<typename T>
     void List<T>::pop_front()
     {
-        if (m_front == nullptr)
+        if (m_size == 0)
         {
             return;
         }
 
-        NodeBase* temp{ m_front };
         if (m_size == 1)
         {
-            m_front = nullptr;
-            m_back->m_prev = nullptr;
+            m_head = std::move(m_head->m_next);
+            m_tail->m_prev = nullptr;
         }
         else
         {
-            m_front = m_front->m_next;
-            m_front->m_prev = nullptr;
+            m_head = std::move(m_head->m_next);
+            m_head->m_prev = nullptr;
         }
-        delete temp;
+
         m_size--;
     }
 
@@ -1389,20 +1380,20 @@ namespace dsa
     {
         init_node();
 
-        Node* newNode = new Node(value);
+        auto newNode = dsa::make_unique<Node>(value);
 
-        if (m_size == 0)
+        if (!m_head->m_next) // only sentinel exists
         {
-            m_front = newNode;
-            m_front->m_next = m_back;
-            m_back->m_prev = newNode;
+            newNode->m_next = std::move(m_head);
+            m_head = std::move(newNode);
+            m_tail->m_prev = m_head.get();
         }
         else
         {
-            m_back->m_prev->m_next = newNode;
-            newNode->m_prev = m_back->m_prev;
-            newNode->m_next = m_back;
-            m_back->m_prev = newNode;
+            newNode->m_prev = m_tail->m_prev;
+            newNode->m_next = std::move(m_tail->m_prev->m_next);
+            m_tail->m_prev = newNode.get();
+            m_tail->m_prev->m_prev->m_next = std::move(newNode);
         }
 
         m_size++;
@@ -1416,20 +1407,18 @@ namespace dsa
             return;
         }
 
-        NodeBase* temp{ m_back->m_prev };
         if (m_size == 1)
         {
-            // temp is m_front
-            m_front = nullptr;
-            m_back->m_prev = nullptr;
+            m_head = std::move(m_head->m_next);
+            m_tail->m_prev = nullptr;
         }
         else
         {
-            m_back->m_prev = temp->m_prev;
-            temp->m_prev->m_next = m_back;
+            NodeBase* temp{ m_tail->m_prev->m_prev };
+            m_tail->m_prev->m_prev->m_next = std::move(m_tail->m_prev->m_next);
+            m_tail->m_prev = temp;
         }
 
-        delete temp;
         m_size--;
     }
 
@@ -1467,25 +1456,13 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::swap(List<T>& other) noexcept
+    void List<T>::swap(List<T>& other)
     {
         if (&other != this)
         {
-            NodeBase* temp_front{ m_front };
-            NodeBase* temp_back{ m_back };
-            size_t temp_size{ m_size };
-
-            m_front = other.m_front;
-            m_back = other.m_back;
-            m_size = other.m_size;
-
-            other.m_front = temp_front;
-            other.m_back = temp_back;
-            other.m_size = temp_size;
-
-            temp_front = nullptr;
-            temp_back = nullptr;
-            temp_size = 0;
+            std::swap(m_head, other.m_head);
+            std::swap(m_tail, other.m_tail);
+            std::swap(m_size, other.m_size);
         }
     }
 
@@ -1496,17 +1473,25 @@ namespace dsa
         {
             if (m_size != 0)
             {
-                m_back->m_prev->m_next = other.m_front;
-                other.m_front->m_prev = m_back->m_prev;
+                NodeBase* last{ m_tail->m_prev };
+                std::unique_ptr<NodeBase> sentinel = std::move(m_tail->m_prev->m_next);
 
-                other.m_back->m_prev->m_next = m_back;
-                m_back->m_prev = other.m_back->m_prev;
+                NodeBase* other_last{ other.m_tail->m_prev };
+                std::unique_ptr<NodeBase> other_sentinel = std::move(other.m_tail->m_prev->m_next);
+
+                m_tail->m_prev->m_next = std::move(other.m_head);
+                m_tail->m_prev->m_next->m_prev = last;
+                m_tail->m_prev = other_last;
+                m_tail->m_prev->m_next = std::move(sentinel);
+                m_tail = m_tail->m_prev->m_next.get();
+
                 m_size += other.m_size;
 
                 // cleanup other list
-                delete other.m_back;
-                other.m_front = nullptr;
-                other.m_back = nullptr;
+                other.m_head = std::move(other_sentinel);
+                NodeBase* other_front{ other.m_head.get() };
+                other_front->m_prev = nullptr;
+                other.m_tail = other_front;
                 other.m_size = 0;
             }
             else
@@ -1540,40 +1525,47 @@ namespace dsa
     {
         if (&other != this && other.m_size > 0)
         {
-            NodeBase* temp_prev{ pos.m_current_node->m_prev };
-            NodeBase* temp_next{ pos.m_current_node };
+            const size_t dist = distance(first, last);
+            if (first == last || dist == 0)
+            {
+                return;
+            }
 
-            NodeBase* first_to_move{ first.m_current_node };
+            NodeBase* temp_prev{ pos.m_current_node->m_prev }; // to append to
             NodeBase* last_to_move{ last.m_current_node->m_prev };
 
-            const size_t dist = distance(first, last);
+            // select fragment from other
 
+            std::unique_ptr<NodeBase> fragment{};
+            std::unique_ptr<NodeBase> fragment_end{ std::move(last_to_move->m_next) };
             if (first == other.begin())
             {
-                other.m_front = last.m_current_node;
-                last.m_current_node->m_prev = nullptr;
+                fragment = std::move(other.m_head);
+                other.m_head = std::move(fragment_end);
+                other.m_head->m_prev = nullptr;
             }
             else
             {
-                first.m_current_node->m_prev->m_next = last.m_current_node;
-                last.m_current_node->m_prev = first.m_current_node->m_prev;
+                fragment = std::move(first.m_current_node->m_prev->m_next);
+                fragment->m_prev->m_next = std::move(fragment_end);
+                fragment->m_prev->m_next->m_prev = first.m_current_node->m_prev;
+                fragment->m_prev = nullptr;
             }
 
-            if (pos == m_front)
-            {
-                m_front = first_to_move;
-                m_front->m_prev = temp_prev;
+            // insert fragment into this
 
-                last_to_move->m_next = temp_next;
-                temp_next->m_prev = last_to_move;
+            if (pos == begin())
+            {
+                last_to_move->m_next = std::move(m_head);
+                last_to_move->m_next->m_prev = last_to_move;
+                m_head = std::move(fragment);
             }
             else
             {
-                temp_prev->m_next = first_to_move;
-                first_to_move->m_prev = temp_prev;
-
-                last_to_move->m_next = temp_next;
-                temp_next->m_prev = last_to_move;
+                last_to_move->m_next = std::move(temp_prev->m_next);
+                last_to_move->m_next->m_prev = last_to_move;
+                temp_prev->m_next = std::move(fragment);
+                temp_prev->m_next->m_prev = temp_prev;
             }
 
             m_size += dist;
@@ -1596,7 +1588,7 @@ namespace dsa
     template<typename T>
     void List<T>::splice(const const_iterator& pos, List<T>& other, const const_iterator& iter)
     {
-        transfer(pos, other, iter, iter.m_current_node->m_next);
+        transfer(pos, other, iter, iter.m_current_node->m_next.get());
     }
 
     template<typename T>
@@ -1621,74 +1613,74 @@ namespace dsa
     template<typename T>
     void List<T>::remove(const_reference value)
     {
-        NodeBase* temp{ m_front };
+        NodeBase* temp{ m_head.get() };
         NodeBase* next{};
-        while (temp)
+
+        while (temp->m_next.get())
         {
-            next = temp->m_next;
+            next = temp->m_next.get();
             if (next == nullptr)
             {
                 return;
             }
 
-            if (Node* node = dynamic_cast<Node*>(m_front))
+            if (Node* node = dynamic_cast<Node*>(m_head.get()))
             {
                 if (node->value() == value)
                 {
                     pop_front();
-                    temp = m_front;
+                    temp = m_head.get();
                     continue;
                 }
             }
 
-            if (next && next != m_back && next->m_next != nullptr)
+            if (next && next != m_tail && next->m_next != nullptr)
             {
                 Node* node = dynamic_cast<Node*>(next);
                 if (node->value() == value)
                 {
-                    NodeBase* to_remove = temp->m_next;
-                    temp->m_next = to_remove->m_next;
-                    to_remove->m_next->m_prev = temp;
-                    delete to_remove;
-                    m_size--;
+                    erase(ListIterator<false>(node));
                     continue;
                 }
             }
 
-            temp = temp->m_next;
+            temp = temp->m_next.get();
         }
     }
 
     template<typename T>
     void List<T>::reverse()
     {
-        NodeBase* temp{ m_front };
-        NodeBase* temp_back{ m_back->m_prev };
-        m_front = temp_back;
-        temp_back = temp;
+        if (m_head->m_next == nullptr)
+        {
+            return;
+        }
 
-        NodeBase* prev{};
-        NodeBase* next{};
+        NodeBase* new_back{ m_head.get() };
+        std::unique_ptr<NodeBase> sentinel = std::move(m_tail->m_prev->m_next);
+
+        std::unique_ptr<NodeBase> temp = std::move(m_head);
+        std::unique_ptr<NodeBase> prev{};
 
         for (size_t i = 0; i < m_size; i++)
         {
-            next = temp->m_next;
-            temp->m_next = prev;
-            temp->m_prev = next;
+            std::unique_ptr<NodeBase> next = std::move(temp->m_next);
+            temp->m_next = std::move(prev);
+            temp->m_prev = next.get();
 
-            prev = temp;
-            temp = next;
+            prev = std::move(temp);
+            temp = std::move(next);
         }
 
-        m_front->m_prev = nullptr;
-        temp_back->m_next = m_back;
-        m_back->m_prev = temp_back;
+        m_head = std::move(prev);
+        m_tail->m_prev = new_back;
+        m_tail->m_prev->m_next = std::move(sentinel);
     }
 
     template<typename T>
     void List<T>::unique()
     {
-        NodeBase* temp{ m_front };
+        NodeBase* temp{ m_head.get() };
         NodeBase* prev{};
         NodeBase* next{};
         while (temp)
@@ -1697,11 +1689,11 @@ namespace dsa
 
             while (prev->m_next)
             {
-                next = prev->m_next;
+                next = prev->m_next.get();
 
                 Node* node_next = dynamic_cast<Node*>(next);
                 Node* node_temp = dynamic_cast<Node*>(temp);
-                if (next != m_back && node_next && node_temp)
+                if (next != m_tail && node_next && node_temp)
                 {
                     if (node_next->value() == node_temp->value())
                     {
@@ -1713,12 +1705,11 @@ namespace dsa
                         }
                         else // temp was last node
                         {
-                            m_back = prev;
+                            m_tail = prev;
                         }
 
-                        prev->m_next = to_remove->m_next;
+                        prev->m_next = std::move(to_remove->m_next);
 
-                        delete to_remove;
                         m_size--;
                         continue;
                     }
@@ -1726,11 +1717,11 @@ namespace dsa
 
                 if (prev)
                 {
-                    prev = prev->m_next;
+                    prev = prev->m_next.get();
                 }
             }
 
-            temp = temp->m_next;
+            temp = temp->m_next.get();
         }
     }
 
@@ -1759,16 +1750,16 @@ namespace dsa
         if (mode == FRONT)
         {
             // count nodes from front
-            temp = m_front;
+            temp = m_head.get();
             for (size_t i = 0; i < index; i++)
             {
-                temp = temp->m_next;
+                temp = temp->m_next.get();
             }
         }
         else if (mode == BACK)
         {
             // count nodes from back
-            temp = m_back->m_prev;
+            temp = m_tail->m_prev;
             for (size_t i = m_size - 1; i > index; i--)
             {
                 temp = temp->m_prev;
@@ -1779,15 +1770,15 @@ namespace dsa
             // optimize counting nodes from front or back
             if (index < m_size / 2)
             {
-                temp = m_front;
+                temp = m_head.get();
                 for (size_t i = 0; i < index; i++)
                 {
-                    temp = temp->m_next;
+                    temp = temp->m_next.get();
                 }
             }
             else
             {
-                temp = m_back->m_prev;
+                temp = m_tail->m_prev;
                 for (size_t i = m_size - 1; i > index; i--)
                 {
                     temp = temp->m_prev;
