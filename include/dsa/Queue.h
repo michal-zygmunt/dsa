@@ -254,8 +254,8 @@ namespace dsa
 
     template<typename T>
     Queue<T>::Queue(Queue<T>&& other) noexcept
+        : container{ std::move(other.container) }
     {
-        container = std::move(other.container);
     }
 
     template<typename T>
