@@ -746,7 +746,7 @@ namespace dsa
          *
          * @param[in,out] other object to swap content with
          */
-        void swap(List<T>& other);
+        void swap(List<T>& other) noexcept;
 
         /**
          * @brief Function combines two Lists
@@ -1456,7 +1456,7 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::swap(List<T>& other)
+    void List<T>::swap(List<T>& other) noexcept
     {
         if (&other != this)
         {
