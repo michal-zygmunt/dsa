@@ -171,14 +171,26 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // check const_iterator for const object
         dsa::ForwardList<int> list10 = dsa::ForwardList<int>{ 10, 20, 30 };
+
+        auto iter10bb = list10.before_begin();
+        iter10bb++;
+        tests::compare("iter10bb", *iter10bb, 10);
+
+        auto citer10bb = list10.cbefore_begin();
+        citer10bb++;
+        tests::compare("iter10bb", *citer10bb, 10);
+
         auto iter10b = list10.begin();
+        tests::compare("iter10b", *iter10b, 10);
         *iter10b = 1;
         auto citer10b = list10.cbegin();
-        //*citer10b = 1; // compilation error
+        tests::compare("citer10b", *citer10b, 1);
+
         auto iter10e = list10.end();
-        //*iter10e = 1; // runtime error, assignment to memory outside list
+        tests::compare("iter10e", iter10e == dsa::ForwardList<int>::iterator(nullptr), true);
+
         auto citer10e = list10.cend();
-        //*citer10e = 1; // compilation error
+        tests::compare("citer10e", citer10e == dsa::ForwardList<int>::const_iterator(nullptr), true);
     }
     catch (const std::runtime_error& exception)
     {
@@ -193,26 +205,41 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     const dsa::ForwardList<int> list11 = dsa::ForwardList<int>{ 10, 20, 30 };
     auto iter11b = list11.begin();
-    //*iter11b = 1; // compilation error
-    auto citer11b = list11.cbegin();
-    //*citer11b = 1; // compilation error
-    auto iter11e = list11.end();
-    //*iter11e = 1; // compilation error
-    auto citer11e = list11.cend();
-    //*citer11e = 1; // compilation error
+    tests::compare("iter11b", *iter11b, 10);
 
-    // Iterate over const_iterator
-    const dsa::ForwardList<int> list12 = dsa::ForwardList<int>{ 10, 20, 30 };
-    auto cit = list12.cbegin();
-    std::cout << *cit << ' ';
-    tests::compare(*cit, 10);
-    cit++;
-    std::cout << *cit << ' ';
-    tests::compare(*cit, 20);
-    cit++;
-    std::cout << *cit << ' ';
-    tests::compare(*cit, 30);
-    cit++;
+    auto citer11b = list11.cbegin();
+    tests::compare("citer11b", *citer11b, 10);
+
+    auto iter11e = list11.end();
+    tests::compare("iter11e", iter11e == dsa::ForwardList<int>::const_iterator(nullptr), true);
+
+    auto citer11e = list11.cend();
+    tests::compare("citer11e", citer11e == dsa::ForwardList<int>::const_iterator(nullptr), true);
+
+    // increment iterator
+    dsa::ForwardList<int> list12 = dsa::ForwardList<int>{ 10, 20, 30 };
+    std::cout << "ForwardList12\t" << list12 << '\n';
+    auto it_12 = list12.begin();
+    tests::compare("it_12", *it_12, 10);
+    it_12++;
+    tests::compare("it_12", *it_12, 20);
+    it_12++;
+    tests::compare("it_12", *it_12, 30);
+    it_12++;
+    std::cout << '\n';
+
+    // increment const_iterator
+    const dsa::ForwardList<int> list13 = dsa::ForwardList<int>{ 10, 20, 30 };
+    std::cout << "ForwardList13\t" << list13 << '\n';
+
+    auto cit_13 = list13.cbegin();
+    tests::compare("cit_13", *cit_13, 10);
+    cit_13++;
+    tests::compare("cit_13", *cit_13, 20);
+    cit_13++;
+    tests::compare("cit_13", *cit_13, 30);
+    cit_13++;
+    std::cout << '\n';
 
     return tests::failed;
 
