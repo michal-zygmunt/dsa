@@ -12,24 +12,30 @@
 -->
 
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	
 	<Type Name="dsa::ForwardList&lt;*&gt;">
-		<DisplayString Condition="m_front == 0xcccccccccccccccc">invalid</DisplayString>
+		<DisplayString Condition="m_head == 0xcccccccccccccccc">invalid</DisplayString>
 		<DisplayString>size = {m_size}</DisplayString>
 		<Expand>
 			<LinkedListItems>
 				<Size>m_size</Size>
-				<HeadPointer>m_front->m_next</HeadPointer>
-				<NextPointer>m_next</NextPointer>
+				<HeadPointer>m_head._Mypair._Myval2->m_next._Mypair._Myval2</HeadPointer>
+				<NextPointer>m_next._Mypair._Myval2</NextPointer>
 				<ValueNode>(*this)</ValueNode>
 			</LinkedListItems>
 		</Expand>
 	</Type>
-
+	
+	
 	<Type Name="dsa::ForwardList&lt;*&gt;::Node">
 		<DisplayString>{m_value}</DisplayString>
+		<Expand>
+			<Item Name="Value">m_value</Item>
+			<Item Name="NextPtr">m_next._Mypair._Myval2</Item>
+		</Expand>
 	</Type>
-
-
+	
+	
 	<Type Name="dsa::List&lt;*&gt;">
 		<DisplayString Condition="m_front == 0xcccccccccccccccc">invalid</DisplayString>
 		<DisplayString>size = {m_size}</DisplayString>

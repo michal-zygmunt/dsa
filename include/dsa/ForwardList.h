@@ -12,11 +12,14 @@
 #ifndef FORWARD_LIST_H
 #define FORWARD_LIST_H
 
+#include "memory.h"
+
 #include <cstddef>
 #include <initializer_list>
 #include <iostream>
 #include <iterator>
 #include <limits>
+#include <memory>
 #include <utility>
 
 namespace dsa
@@ -95,7 +98,7 @@ namespace dsa
             /**
              * @brief Pointer to next node
              */
-            NodeBase* m_next{};
+            std::unique_ptr<NodeBase> m_next{};
         };
 
         /**
@@ -155,7 +158,7 @@ namespace dsa
          * @tparam IF_CONST if \p true generate iterator with const reference to underlying data type
          */
         template<bool IF_CONST>
-        class ForwardListIterator : NodeBase
+        class ForwardListIterator
         {
         public:
 
@@ -232,7 +235,7 @@ namespace dsa
             {
                 if (m_current_node)
                 {
-                    m_current_node = m_current_node->m_next;
+                    m_current_node = m_current_node->m_next.get();
                 }
 
                 return *this;
@@ -292,7 +295,7 @@ namespace dsa
                 {
                     if (temp->m_next)
                     {
-                        temp = temp->m_next;
+                        temp = temp->m_next.get();
                     }
                     else
                     {
@@ -806,10 +809,10 @@ namespace dsa
                 return nullptr;
             }
 
-            Node* temp = dynamic_cast<Node*>(m_front->m_next);
+            Node* temp = dynamic_cast<Node*>(m_head->m_next.get());
             for (size_t i = 0; i < index; i++)
             {
-                temp = dynamic_cast<Node*>(temp->m_next);
+                temp = dynamic_cast<Node*>(temp->m_next.get());
                 if (temp == nullptr)
                 {
                     break;
@@ -870,9 +873,9 @@ namespace dsa
          */
         void init_node()
         {
-            if (m_front == nullptr)
+            if (m_head == nullptr)
             {
-                m_front = new NodeBase;
+                m_head = dsa::make_unique<NodeBase>();
             }
         }
 
@@ -883,10 +886,10 @@ namespace dsa
          */
         auto find_iter_before_last() -> iterator
         {
-            NodeBase* temp{ m_front->m_next };
+            NodeBase* temp{ m_head->m_next.get() };
             while (temp && temp->m_next && temp->m_next->m_next)
             {
-                temp = temp->m_next;
+                temp = temp->m_next.get();
             }
 
             auto iter = iterator(temp);
@@ -912,13 +915,13 @@ namespace dsa
             }
 
             NodeBase* temp{ pos.m_current_node };
-            NodeBase* to_remove{ temp->m_next };
+            NodeBase* to_remove{ temp->m_next.get() };
 
-            temp->m_next = to_remove->m_next;
-            delete to_remove;
+            temp->m_next = std::move(to_remove->m_next);
+
 
             m_size--;
-            return iterator(temp->m_next);
+            return iterator(temp->m_next.get());
         }
 
         /**
@@ -930,21 +933,19 @@ namespace dsa
         * @retval iterator to iterator inserted after \pos
         * @retval nullptr if invalid iterator
         */
-        auto insert_element_after(iterator pos, const_reference value) -> iterator
+        auto insert_element_after(iterator& pos, const_reference value) -> iterator
         {
             if (!if_valid_iterator(pos))
             {
                 return nullptr;
             }
 
-            NodeBase* temp{ pos.m_current_node };
+            auto newNode = dsa::make_unique<Node>(value);
+            newNode->m_next = std::move(pos.m_current_node->m_next);
+            pos.m_current_node->m_next = std::move(newNode);
 
-            Node* newNode = new Node(value);
-            newNode->m_next = temp->m_next;
-
-            temp->m_next = newNode;
             m_size++;
-            return iterator(newNode);
+            return iterator(pos.m_current_node->m_next.get());
         }
 
         /**
@@ -957,8 +958,6 @@ namespace dsa
          */
         auto if_valid_iterator(const const_iterator& pos) -> bool
         {
-            /* initial implementation
-            */
             bool valid_iterator{};
             for (auto it = cbefore_begin(); it != cend(); ++it)
             {
@@ -1003,8 +1002,7 @@ namespace dsa
         void transfer(const const_iterator& pos, ForwardList<T>& other,
             const const_iterator& first, const const_iterator& last);
 
-
-        NodeBase* m_front{};
+        std::unique_ptr<NodeBase> m_head{};
         size_t m_size{};
     };
 
@@ -1019,8 +1017,9 @@ namespace dsa
     {
         init_node();
 
-        Node* newNode = new Node(value);
-        m_front->m_next = newNode;
+        auto newNode = dsa::make_unique<Node>(value);
+        m_head->m_next = std::move(newNode);
+
         m_size++;
     }
 
@@ -1055,7 +1054,7 @@ namespace dsa
 
         if (&other != this)
         {
-            while (m_front->m_next)
+            while (m_head->m_next)
             {
                 pop_front();
             }
@@ -1084,10 +1083,10 @@ namespace dsa
             clear();
             init_node();
 
-            m_front->m_next = other.m_front->m_next;
+            m_head->m_next = std::move(other.m_head->m_next);
             m_size = other.m_size;
 
-            other.m_front->m_next = nullptr;
+            other.m_head->m_next = nullptr;
             other.m_size = 0;
         }
 
@@ -1098,14 +1097,12 @@ namespace dsa
     ForwardList<T>::~ForwardList()
     {
         clear();
-
-        delete m_front;
     }
 
     template<typename T>
     void ForwardList<T>::assign(size_t count, const_reference value)
     {
-        while (m_front->m_next)
+        while (m_head->m_next)
         {
             pop_front();
         }
@@ -1120,7 +1117,7 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::assign(const std::initializer_list<T>& init_list)
     {
-        while (m_front->m_next)
+        while (m_head->m_next)
         {
             pop_front();
         }
@@ -1147,13 +1144,13 @@ namespace dsa
     template<typename T>
     auto ForwardList<T>::before_begin() noexcept -> typename ForwardList<T>::iterator
     {
-        return iterator(m_front);
+        return iterator(m_head.get());
     }
 
     template<typename T>
     auto ForwardList<T>::before_begin() const noexcept -> typename ForwardList<T>::const_iterator
     {
-        return const_iterator(m_front);
+        return const_iterator(m_head.get());
     }
 
     template<typename T>
@@ -1165,13 +1162,13 @@ namespace dsa
     template<typename T>
     auto ForwardList<T>::begin() noexcept -> typename ForwardList<T>::iterator
     {
-        return iterator(m_front->m_next);
+        return iterator(m_head->m_next.get());
     }
 
     template<typename T>
     auto ForwardList<T>::begin() const noexcept -> typename ForwardList<T>::const_iterator
     {
-        return const_iterator(m_front->m_next);
+        return const_iterator(m_head->m_next.get());
     }
 
     template<typename T>
@@ -1214,18 +1211,17 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::clear()
     {
-        if (m_front && m_front->m_next)
+        if (m_head && m_head->m_next)
         {
-            NodeBase* temp{ m_front->m_next };
+            NodeBase* temp{ m_head->m_next.get() };
             while (temp)
             {
-                m_front->m_next = temp->m_next;
-                delete temp;
-                temp = m_front->m_next;
+                m_head->m_next = std::move(temp->m_next);
+                temp = m_head->m_next.get();
             }
 
             m_size = 0;
-            m_front->m_next = nullptr;
+            m_head->m_next = nullptr;
         }
     }
 
@@ -1302,21 +1298,21 @@ namespace dsa
             erase_element_after(iter);
         }
 
-        return iter.m_next;
+        return first.m_current_node->m_next.get();
     }
 
     template<typename T>
     void ForwardList<T>::push_front(T value)
     {
-        Node* newNode = new Node(value);
-        if (!m_front->m_next)
+        auto newNode = dsa::make_unique<Node>(value);
+        if (!m_head->m_next)
         {
-            m_front->m_next = newNode;
+            m_head->m_next = std::move(newNode);
         }
         else
         {
-            newNode->m_next = m_front->m_next;
-            m_front->m_next = newNode;
+            newNode->m_next = std::move(m_head->m_next);
+            m_head->m_next = std::move(newNode);
         }
 
         m_size++;
@@ -1325,21 +1321,21 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::pop_front()
     {
-        if (!m_front->m_next)
+        if (!m_head->m_next)
         {
             return;
         }
 
-        NodeBase* temp{ m_front->m_next };
+        NodeBase* temp{ m_head->m_next.get() };
         if (m_size == 1)
         {
-            m_front->m_next = nullptr;
+            m_head->m_next = nullptr;
         }
         else
         {
-            m_front->m_next = temp->m_next;
+            m_head->m_next = std::move(temp->m_next);
         }
-        delete temp;
+
         m_size--;
     }
 
@@ -1393,39 +1389,27 @@ namespace dsa
     {
         if (&other != this)
         {
-            NodeBase* temp_front{ m_front };
-            size_t temp_size{ m_size };
-
-            m_front = other.m_front;
-            m_size = other.m_size;
-
-            other.m_front = temp_front;
-            other.m_size = temp_size;
-
-            temp_front = nullptr;
-            temp_size = 0;
+            std::swap(m_head->m_next, other.m_head->m_next);
+            std::swap(m_size, other.m_size);
         }
     }
 
     template<typename T>
     void ForwardList<T>::merge(ForwardList<T>& other)
     {
-        if (&other != this && m_front && other.m_front)
+        if (&other != this && m_head && other.m_head)
         {
             if (m_size != 0)
             {
                 auto iter = find_iter_before_last();
-                NodeBase* last{ iter.m_current_node->m_next };
+                NodeBase* last{ iter.m_current_node->m_next.get() };
 
                 iter = other.find_iter_before_last();
-                NodeBase* other_last{ iter.m_current_node->m_next };
 
-                last->m_next = other.m_front->m_next;
-                last = other_last;
+                last->m_next = std::move(other.m_head->m_next);
                 m_size += other.m_size;
 
-                other.m_front->m_next = nullptr;
-                other_last = nullptr;
+                other.m_head->m_next = nullptr;
                 other.m_size = 0;
             }
             else
@@ -1460,15 +1444,15 @@ namespace dsa
         if (&other != this && other.m_size > 0)
         {
             NodeBase* temp_prev{ pos.m_current_node };  // to append to
-            NodeBase* temp_next{ iter.m_current_node };   // does not move
+            NodeBase* temp_next{ iter.m_current_node }; // does not move
 
-            NodeBase* to_move{ temp_next->m_next };
+            std::unique_ptr<NodeBase> to_move{ std::move(temp_next->m_next) };
 
             if (to_move)
             {
-                temp_next->m_next = to_move->m_next;
-                to_move->m_next = temp_prev->m_next;
-                temp_prev->m_next = to_move;
+                temp_next->m_next = std::move(to_move->m_next);
+                to_move->m_next = std::move(temp_prev->m_next);
+                temp_prev->m_next = std::move(to_move);
 
                 m_size += 1;
                 other.m_size -= 1;
@@ -1490,23 +1474,24 @@ namespace dsa
             }
 
             NodeBase* temp_prev{ pos.m_current_node };     // to append to
+            std::unique_ptr<NodeBase> to_append_to{ std::move(pos.m_current_node->m_next) };
             NodeBase* temp_next{ first.m_current_node };   // does not move
 
-            NodeBase* first_to_move{ temp_next->m_next };
             NodeBase* last_to_move{ temp_next };
             for (size_t i = 0; i < dist; i++)
             {
                 if (last_to_move)
                 {
-                    last_to_move = last_to_move->m_next;
+                    last_to_move = last_to_move->m_next.get();
                 }
             }
 
             if (temp_next)
             {
-                temp_next->m_next = last_to_move->m_next;
-                last_to_move->m_next = temp_prev->m_next;
-                temp_prev->m_next = first_to_move;
+                std::unique_ptr<NodeBase> to_move{ std::move(temp_next->m_next) };
+                temp_next->m_next = std::move(last_to_move->m_next);
+                last_to_move->m_next = std::move(to_append_to);
+                temp_prev->m_next = std::move(to_move);
 
                 m_size += dist;
                 other.m_size -= dist;
@@ -1554,57 +1539,51 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::remove(const_reference value)
     {
-        NodeBase* temp{ m_front };
+        NodeBase* temp{ m_head.get() };
         NodeBase* next{};
 
         while (temp)
         {
-            next = temp->m_next;
+            next = temp->m_next.get();
 
             if (Node* node = dynamic_cast<Node*>(next))
             {
                 if (node->value() == value)
                 {
-                    NodeBase* to_remove = temp->m_next;
-                    temp->m_next = to_remove->m_next;
-                    delete to_remove;
+                    NodeBase* to_remove = std::move(temp->m_next.get());
+                    temp->m_next = std::move(to_remove->m_next);
+
                     m_size--;
                     continue;
                 }
             }
 
-            temp = temp->m_next;
+            temp = std::move(temp->m_next.get());
         }
     }
 
     template<typename T>
     void ForwardList<T>::reverse()
     {
-        NodeBase* temp{ m_front->m_next };
-
-        auto iter = find_iter_before_last();
-        NodeBase* last{ iter.m_current_node->m_next };
-
-        m_front->m_next = last;
-        last = temp;
-
-        NodeBase* prev{};
-        NodeBase* next{};
+        std::unique_ptr<NodeBase> temp = std::move(m_head->m_next);
+        std::unique_ptr<NodeBase> prev{};
 
         for (size_t i = 0; i < m_size; i++)
         {
-            next = temp->m_next;
-            temp->m_next = prev;
+            std::unique_ptr<NodeBase> next = std::move(temp->m_next);
+            temp->m_next = std::move(prev);
 
-            prev = temp;
-            temp = next;
+            prev = std::move(temp);
+            temp = std::move(next);
         }
+
+        m_head->m_next = std::move(prev);
     }
 
     template<typename T>
     void ForwardList<T>::unique()
     {
-        NodeBase* temp{ m_front };
+        NodeBase* temp{ m_head.get() };
         NodeBase* prev{};
         NodeBase* next{};
         while (temp)
@@ -1613,7 +1592,7 @@ namespace dsa
 
             while (prev)
             {
-                next = prev->m_next;
+                next = prev->m_next.get();
 
                 Node* node_next = dynamic_cast<Node*>(next);
                 Node* node_temp = dynamic_cast<Node*>(temp);
@@ -1621,9 +1600,9 @@ namespace dsa
                 {
                     if (node_next->value() == node_temp->value())
                     {
-                        NodeBase* to_remove = next;
-                        prev->m_next = to_remove->m_next;
-                        delete to_remove;
+                        NodeBase* to_remove = std::move(next);
+                        prev->m_next = std::move(to_remove->m_next);
+
                         m_size--;
                         continue;
                     }
@@ -1631,11 +1610,11 @@ namespace dsa
 
                 if (prev)
                 {
-                    prev = prev->m_next;
+                    prev = prev->m_next.get();
                 }
             }
 
-            temp = temp->m_next;
+            temp = temp->m_next.get();
         }
     }
 
