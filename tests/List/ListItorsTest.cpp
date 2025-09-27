@@ -28,51 +28,45 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     {
         std::cout << "Explicit iterator\n";
         dsa::List<int> list1{ 0, 10, 20 };
+        // NOLINTNEXTLINE(modernize-loop-convert)
         for (dsa::List<int>::iterator iterator = list1.begin(); iterator != list1.end(); iterator++)
         {
-            auto& val = *iterator;
-            std::cout << val << '\t';
-            val += 100;
-            std::cout << val << '\n';
+            *iterator += 100;
+            std::cout << *iterator << '\t';
         }
+        std::cout << '\n';
         const std::initializer_list<int> expected1 = { 100, 110, 120 };
         tests::compare("List1", list1, expected1);
 
         std::cout << "Auto iterator\n";
         dsa::List<int> list2{ 0, 25, 50 };
-        for (auto iterator = list2.begin(); iterator != list2.end(); iterator++)
+        for (auto& item : list2)
         {
-            auto& val = *iterator;
-            std::cout << val << '\t';
-            val += 100;
-            std::cout << val << '\n';
+            item += 100;
+            std::cout << item << '\t';
         }
+        std::cout << '\n';
         const std::initializer_list<int> expected2 = { 100, 125, 150 };
         tests::compare("List2", list2, expected2);
 
-        std::cout << "Explicit Const iterator\n";
+        std::cout << "Explicit const_iterator\n";
         const dsa::List<int> list3{ 0, 10, 20 };
+        // NOLINTNEXTLINE(modernize-loop-convert)
         for (dsa::List<int>::const_iterator iterator = list3.cbegin(); iterator != list3.cend(); iterator++)
         {
-            //auto& val = *iterator; // reference generate compilation error
-            auto val = *iterator;
-            std::cout << val << '\t';
-            val += 100;
-            std::cout << val << '\n';
+            std::cout << (*iterator) << '\t';
         }
+        std::cout << '\n';
         const std::initializer_list<int> expected3 = { 0, 10, 20 };
         tests::compare("List3", list3, expected3);
 
-        std::cout << "Auto Const iterator\n";
+        std::cout << "Auto const_iterator\n";
         const dsa::List<int> list4{ 0, 25, 50 };
-        for (auto iterator = list4.cbegin(); iterator != list4.cend(); iterator++)
+        for (const auto& item : list4)
         {
-            //auto& val = *iterator; // reference generate compilation error
-            auto val = *iterator;
-            std::cout << val << '\t';
-            val += 100;
-            std::cout << val << '\n';
+            std::cout << item << '\t';
         }
+        std::cout << '\n';
         const std::initializer_list<int> expected4 = { 0, 25, 50 };
         tests::compare("List4", list4, expected4);
 
