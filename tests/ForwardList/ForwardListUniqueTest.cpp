@@ -57,7 +57,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     const std::initializer_list<int> expected7 = {};
     tests::compare("ForwardList7", list7, expected7);
 
-    return tests::failed;
+    return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }

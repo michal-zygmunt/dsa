@@ -66,7 +66,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     const dsa::List<int> list9;
     tests::compare("max_size()", list9.max_size(), UINTMAX_MAX);
 
-    return tests::failed;
+    return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }

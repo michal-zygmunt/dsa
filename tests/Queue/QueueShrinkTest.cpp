@@ -46,7 +46,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     const dsa::Queue<int> queue5;
     tests::compare("queue5.empty()", queue5.empty(), true);
 
-    return tests::failed;
+    return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }

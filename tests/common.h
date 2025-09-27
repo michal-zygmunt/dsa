@@ -25,7 +25,16 @@
   */
 namespace tests
 {
-    static int failed{};
+    /**
+     * @brief Function return number of failed comparisons
+     *
+     * @return int& reference to failed comparison count
+     */
+    inline auto failed_count() -> int&
+    {
+        static int failed{};
+        return failed;
+    }
 
     /**
      * @brief Function compares two values
@@ -43,7 +52,7 @@ namespace tests
         if (res)
         {
             std::cout << "Comparison error! Value " << val1 << " not equal to " << val2 << '\n';
-            tests::failed++;
+            tests::failed_count()++;
         }
         return res;
     }

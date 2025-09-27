@@ -34,7 +34,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     queue2.push_range({ 20, 30, 40 });
     tests::compare("Queue2", queue2, expected);
 
-    return tests::failed;
+    return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }

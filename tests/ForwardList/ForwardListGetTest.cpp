@@ -49,7 +49,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     }
     tests::compare("ForwardList2", list2, expected2);
 
-    return tests::failed;
+    return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }

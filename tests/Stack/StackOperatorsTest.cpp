@@ -58,7 +58,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     tests::compare("Operator >=", stack2 >= stack3, true);
 
-    return tests::failed;
+    return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }

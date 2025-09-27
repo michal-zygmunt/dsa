@@ -255,7 +255,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("cit_15", *cit_15, 10);
     --cit_15;
 
-    return tests::failed;
+    return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }

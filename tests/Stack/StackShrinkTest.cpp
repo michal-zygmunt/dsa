@@ -46,7 +46,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     const dsa::Stack<int> stack5;
     tests::compare("stack5.size()", stack5.size(), static_cast<size_t>(0));
 
-    return tests::failed;
+    return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }

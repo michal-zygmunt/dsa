@@ -67,7 +67,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     list7 = std::move(temp_2);
     tests::compare("List7", list7, expected);
 
-    return tests::failed;
+    return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }

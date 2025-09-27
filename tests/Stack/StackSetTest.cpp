@@ -52,7 +52,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     stack4.swap(stack4);
     tests::compare("Stack4", stack4, expected);
 
-    return tests::failed;
+    return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }

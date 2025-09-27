@@ -235,7 +235,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     cit_13++;
     std::cout << '\n';
 
-    return tests::failed;
+    return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 }
