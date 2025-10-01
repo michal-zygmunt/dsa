@@ -659,7 +659,7 @@ namespace dsa
         void swap(ForwardList<T>& other) noexcept;
 
         /**
-         * @brief Function combines two ForwardLists
+         * @brief Function combines two sorted ForwardLists into one sorted ForwardList
          *
          * @param[in,out] other container to take elements from
          * @details Content of other object will be taken by constructed object
@@ -667,7 +667,7 @@ namespace dsa
         void merge(ForwardList<T>& other);
 
         /**
-         * @brief Function combines two ForwardLists
+         * @brief Function combines two sorted ForwardLists into one sorted ForwardList
          *
          * @param[in,out] other container to take elements from
          * @details Content of other object will be taken by constructed object
@@ -1401,15 +1401,43 @@ namespace dsa
         {
             if (m_size != 0)
             {
-                auto iter = find_iter_before_last();
-                NodeBase* last{ iter.m_current_node->m_next.get() };
+                auto temp_head = dsa::make_unique<Node>(0);
+                NodeBase* temp_tail = temp_head.get();
 
-                iter = other.find_iter_before_last();
+                std::unique_ptr<NodeBase> to_move{};
+                std::unique_ptr<NodeBase> to_return{};
 
-                last->m_next = std::move(other.m_head->m_next);
+                while (m_head->m_next && other.m_head->m_next)
+                {
+                    Node* node_this = dynamic_cast<Node*>(m_head->m_next.get());
+                    Node* node_other = dynamic_cast<Node*>(other.m_head->m_next.get());
+
+                    if (node_this && node_other)
+                    {
+                        if (node_this->value() <= node_other->value())
+                        {
+                            to_move = std::move(m_head->m_next);
+                            to_return = std::move(to_move->m_next);
+                            temp_tail->m_next = std::move(to_move);
+                            m_head->m_next = std::move(to_return);
+                        }
+                        else
+                        {
+                            to_move = std::move(other.m_head->m_next);
+                            to_return = std::move(to_move->m_next);
+                            temp_tail->m_next = std::move(to_move);
+                            other.m_head->m_next = std::move(to_return);
+                        }
+
+                        temp_tail = temp_tail->m_next.get();
+                    }
+                }
+                temp_tail->m_next =
+                    (m_head->m_next == nullptr) ? std::move(other.m_head->m_next) : std::move(m_head->m_next);
+
+                m_head->m_next = std::move(temp_head->m_next);
+
                 m_size += other.m_size;
-
-                other.m_head->m_next = nullptr;
                 other.m_size = 0;
             }
             else
