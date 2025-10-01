@@ -749,7 +749,7 @@ namespace dsa
         void swap(List<T>& other) noexcept;
 
         /**
-         * @brief Function combines two Lists
+         * @brief Function combines two sorted Lists into one sorted List
          *
          * @param[in,out] other container to take elements from
          * @details Content of other object will be taken by constructed object
@@ -757,7 +757,7 @@ namespace dsa
         void merge(List<T>& other);
 
         /**
-         * @brief Function combines two Lists
+         * @brief Function combines two sorted Lists into one sorted List
          *
          * @param[in,out] other container to take elements from
          * @details Content of other object will be taken by constructed object
@@ -1473,25 +1473,65 @@ namespace dsa
         {
             if (m_size != 0)
             {
-                NodeBase* last{ m_tail->m_prev };
-                std::unique_ptr<NodeBase> sentinel = std::move(m_tail->m_prev->m_next);
+                auto temp_head = dsa::make_unique<Node>(0);
+                NodeBase* temp_tail = temp_head.get();
 
-                NodeBase* other_last{ other.m_tail->m_prev };
-                std::unique_ptr<NodeBase> other_sentinel = std::move(other.m_tail->m_prev->m_next);
+                std::unique_ptr<NodeBase> to_move{};
+                std::unique_ptr<NodeBase> to_return{};
 
-                m_tail->m_prev->m_next = std::move(other.m_head);
-                m_tail->m_prev->m_next->m_prev = last;
-                m_tail->m_prev = other_last;
-                m_tail->m_prev->m_next = std::move(sentinel);
-                m_tail = m_tail->m_prev->m_next.get();
+                std::unique_ptr<NodeBase> sentinel_this{ std::move(m_tail->m_prev->m_next) };
+                std::unique_ptr<NodeBase> sentinel_other{ std::move(other.m_tail->m_prev->m_next) };
+
+                while (m_head && other.m_head)
+                {
+                    Node* node_this = dynamic_cast<Node*>(m_head.get());
+                    Node* node_other = dynamic_cast<Node*>(other.m_head.get());
+
+                    if (node_this && node_other)
+                    {
+                        if (node_this->value() <= node_other->value())
+                        {
+                            to_move = std::move(m_head);
+                            to_move->m_prev = temp_tail;
+
+                            to_return = std::move(to_move->m_next);
+                            temp_tail->m_next = std::move(to_move);
+                            m_head = std::move(to_return);
+                        }
+                        else
+                        {
+                            to_move = std::move(other.m_head);
+                            to_move->m_prev = temp_tail;
+
+                            to_return = std::move(to_move->m_next);
+                            temp_tail->m_next = std::move(to_move);
+                            other.m_head = std::move(to_return);
+                        }
+
+                        temp_tail = temp_tail->m_next.get();
+                    }
+                }
+
+                NodeBase* last{};
+                if (m_head == nullptr) // other.m_head attached at the end
+                {
+                    last = sentinel_other->m_prev;
+                    other.m_head->m_prev = temp_tail;
+                    temp_tail->m_next = std::move(other.m_head);
+                }
+                else // this.m_head attached at the end
+                {
+                    last = sentinel_this->m_prev;
+                    m_head->m_prev = temp_tail;
+                    temp_tail->m_next = std::move(m_head);
+                }
+                last->m_next = std::move(sentinel_this);
+                last->m_next->m_prev = last;
+
+                m_head = std::move(temp_head->m_next);
+                m_head->m_prev = nullptr;
 
                 m_size += other.m_size;
-
-                // cleanup other list
-                other.m_head = std::move(other_sentinel);
-                NodeBase* other_front{ other.m_head.get() };
-                other_front->m_prev = nullptr;
-                other.m_tail = other_front;
                 other.m_size = 0;
             }
             else
