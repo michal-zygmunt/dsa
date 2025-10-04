@@ -67,7 +67,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     tests::compare("Operator <", list3 < list2, true);
 
-    tests::compare("Operator >", list3 > list1, false);
+    tests::compare("Operator >", list3 > list1, true);
 
     tests::compare("Operator <=", list1 <= list3, true);
 

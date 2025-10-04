@@ -1956,16 +1956,22 @@ namespace dsa
 
         while (list1_iter != list1.cend() && list2_iter != list2.cend())
         {
-            if (*list1_iter >= *list2_iter)
+            if (*list1_iter > *list2_iter)
             {
                 return false;
+            }
+            if (*list1_iter < *list2_iter)
+            {
+                return true;
             }
 
             list1_iter++;
             list2_iter++;
         }
 
-        return true;
+        // first n elements are equal
+        // check sizes
+        return list1.size() < list2.size();
     }
 
     /**
