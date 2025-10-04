@@ -42,7 +42,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     tests::compare("Operator <=", stack1 <= stack2, true);
 
-    tests::compare("Operator <=", stack2 >= stack1, true);
+    tests::compare("Operator >=", stack2 >= stack1, true);
 
     std::cout << "Compare operators for objects of different size\n\n";
 

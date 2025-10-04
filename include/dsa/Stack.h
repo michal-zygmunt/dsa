@@ -375,16 +375,22 @@ namespace dsa
 
         while (!temp_1.empty() && !temp_2.empty())
         {
-            if (temp_1.top() >= temp_2.top())
+            if (temp_1.top() > temp_2.top())
             {
                 return false;
+            }
+            if (temp_1.top() < temp_2.top())
+            {
+                return true;
             }
 
             temp_1.pop();
             temp_2.pop();
         }
 
-        return true;
+        // first n elements are equal
+        // check sizes
+        return stack1.size() < stack1.size();
     }
 
     /**
