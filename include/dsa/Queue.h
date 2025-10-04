@@ -449,16 +449,22 @@ namespace dsa
 
         while (!temp_1.empty() && !temp_2.empty())
         {
-            if (temp_1.front() >= temp_2.front())
+            if (temp_1.front() > temp_2.front())
             {
                 return false;
+            }
+            if (temp_1.front() < temp_2.front())
+            {
+                return true;
             }
 
             temp_1.pop();
             temp_2.pop();
         }
 
-        return true;
+        // first n elements are equal
+        // check sizes
+        return queue1.size() < queue2.size();
     }
 
     /**

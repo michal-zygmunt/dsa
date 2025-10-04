@@ -52,7 +52,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     tests::compare("Operator <", queue3 < queue2, true);
 
-    tests::compare("Operator >", queue3 > queue1, false);
+    tests::compare("Operator >", queue3 > queue1, true);
 
     tests::compare("Operator <=", queue1 <= queue3, true);
 
