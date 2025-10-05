@@ -839,8 +839,8 @@ namespace dsa
         void reverse();
 
         /**
-         * @brief Function removes duplicated elements
-         * @details Only the first occurrence of given element is preserved
+         * @brief Function removes consecutive duplicated elements
+         * @details Only the first occurrence of given element in each group is preserved
          */
         void unique();
 
@@ -1727,13 +1727,13 @@ namespace dsa
         {
             prev = temp;
 
-            while (prev->m_next)
+            while (prev)
             {
                 next = prev->m_next.get();
 
                 Node* node_next = dynamic_cast<Node*>(next);
                 Node* node_temp = dynamic_cast<Node*>(temp);
-                if (next != m_tail && node_next && node_temp)
+                if (node_next && node_temp)
                 {
                     if (node_next->value() == node_temp->value())
                     {
@@ -1755,13 +1755,9 @@ namespace dsa
                     }
                 }
 
-                if (prev)
-                {
-                    prev = prev->m_next.get();
-                }
+                prev = prev->m_next.get();
+                temp = temp->m_next.get();
             }
-
-            temp = temp->m_next.get();
         }
     }
 
