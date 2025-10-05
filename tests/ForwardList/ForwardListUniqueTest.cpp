@@ -29,17 +29,17 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     dsa::ForwardList<int> list2 = dsa::ForwardList<int>({ 1, 4, 2, 3, 2, 4, 3, 5, 1 });
     list2.unique();
-    const std::initializer_list<int> expected2 = { 1, 4, 2, 3, 5 };
+    const std::initializer_list<int> expected2 = { 1, 4, 2, 3, 2, 4, 3, 5, 1 };
     tests::compare("ForwardList2", list2, expected2);
 
     dsa::ForwardList<int> list3 = dsa::ForwardList<int>({ 1, 1, 2, 4, 2, 1, 3, 1, 1 });
     list3.unique();
-    const std::initializer_list<int> expected3 = { 1, 2, 4, 3 };
+    const std::initializer_list<int> expected3 = { 1, 2, 4, 2, 1, 3, 1 };
     tests::compare("ForwardList3", list3, expected3);
 
     dsa::ForwardList<int> list4 = dsa::ForwardList<int>({ 1, 1, 1, 2, 2, 2, 1, 1, 1 });
     list4.unique();
-    const std::initializer_list<int> expected4 = { 1, 2 };
+    const std::initializer_list<int> expected4 = { 1, 2, 1 };
     tests::compare("ForwardList4", list4, expected4);
 
     dsa::ForwardList<int> list5 = dsa::ForwardList<int>({ 0, 0, 0, 0, 0, 0 });

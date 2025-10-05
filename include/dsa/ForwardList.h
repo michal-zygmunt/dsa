@@ -750,8 +750,8 @@ namespace dsa
         void reverse();
 
         /**
-         * @brief Function removes duplicated elements
-         * @details Only the first occurrence of given element is preserved
+         * @brief Function removes consecutive duplicated elements
+         * @details Only the first occurrence of given element in each group is preserved
          */
         void unique();
 
@@ -1640,9 +1640,9 @@ namespace dsa
                 {
                     prev = prev->m_next.get();
                 }
-            }
 
-            temp = temp->m_next.get();
+                temp = temp->m_next.get();
+            }
         }
     }
 
