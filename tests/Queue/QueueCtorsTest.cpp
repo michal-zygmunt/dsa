@@ -34,7 +34,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("Queue1", queue1, expected);
 
     std::cout << "Value ctor\n";
-    dsa::Queue<int> queue2(0);
+    dsa::Queue<int> queue2({ 0 });
     queue2.push(10);
     queue2.push(20);
     tests::compare("Queue2", queue2, expected);
@@ -68,7 +68,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::cout << "Move assignment ctor\n";
         dsa::Queue<int> temp_2(queue1);
-        dsa::Queue<int> queue7(0);
+        dsa::Queue<int> queue7;
+        queue7.push(0);
         queue7 = std::move(temp_2);
         tests::compare("Queue7", queue7, expected);
     }

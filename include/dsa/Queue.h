@@ -59,13 +59,6 @@ namespace dsa
         Queue() = default;
 
         /**
-         * @brief Construct a new Queue object using value of type T
-         *
-         * @param[in] value of type T
-         */
-        Queue(T value);
-
-        /**
          * @brief Construct a new Queue object using initializer list
          *
          * @param[in] init_list initializer list of values of type T
@@ -205,12 +198,6 @@ namespace dsa
 
         List<T> container{};
     };
-
-    template<typename T>
-    Queue<T>::Queue(T value)
-    {
-        container.push_back(value);
-    }
 
     template<typename T>
     Queue<T>::Queue(const std::initializer_list<T>& init_list)
