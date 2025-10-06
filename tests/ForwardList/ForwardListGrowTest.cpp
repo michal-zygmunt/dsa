@@ -23,7 +23,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start ForwardListGrow test:\n";
 
-    dsa::ForwardList<int> list1 = dsa::ForwardList<int>(10);
+    dsa::ForwardList<int> list1 = dsa::ForwardList<int>(1, 10);
     auto iterator = list1.insert_after(list1.cbegin(), 20);
     list1.insert_after(iterator, { 30, 40 });
     list1.push_front(0);
@@ -38,7 +38,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     const std::initializer_list<int> expected1{ -10, 0, 0, 2, 10, 20, 4, 30, 40 };
     tests::compare("ForwardList1", list1, expected1);
 
-    dsa::ForwardList<int> list2 = dsa::ForwardList<int>(50);
+    dsa::ForwardList<int> list2 = dsa::ForwardList<int>(1, 50);
     list2.push_front(40);
     list2.push_front(30);
     list2.push_front(20);
@@ -47,7 +47,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     const std::initializer_list<int> expected2 = { 10, 5, 5, 5, 5, 5, 20, 30, 40, 50 };
     tests::compare("ForwardList2", list2, expected2);
 
-    dsa::ForwardList<int> list3 = dsa::ForwardList<int>(50);
+    dsa::ForwardList<int> list3 = dsa::ForwardList<int>(1, 50);
     list3.push_front(40);
     list3.push_front(30);
     list3.push_front(10);

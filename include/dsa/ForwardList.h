@@ -403,11 +403,21 @@ namespace dsa
         ForwardList();
 
         /**
-         * @brief Construct a new ForwardList object using value of type T
+         * @brief Construct a new ForwardList object of size \p count,
+         * using default value of type T
          *
-         * @param[in] value of type T
+         * @param[in] count element count
          */
-        ForwardList(T value);
+        ForwardList(size_t count);
+
+        /**
+         * @brief Construct a new ForwardList object of size \p count,
+         * using provided \p value of type T
+         *
+         * @param[in] count element count
+         * @param[in] value value for all nodes
+         */
+        ForwardList(size_t count, const T& value);
 
         /**
          * @brief Construct a new ForwardList object using initializer list
@@ -1013,14 +1023,20 @@ namespace dsa
     }
 
     template<typename T>
-    ForwardList<T>::ForwardList(T value)
+    ForwardList<T>::ForwardList(size_t count)
+        : ForwardList(count, T{})
+    {
+    }
+
+    template<typename T>
+    ForwardList<T>::ForwardList(size_t count, const T& value)
     {
         init_node();
 
-        auto newNode = dsa::make_unique<Node>(value);
-        m_head->m_next = std::move(newNode);
-
-        m_size++;
+        for (size_t i = 0; i < count; i++)
+        {
+            push_front(value);
+        }
     }
 
     template<typename T>

@@ -34,7 +34,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("ForwardList1", list1, expected);
 
     std::cout << "Value ctor\n";
-    dsa::ForwardList<int> list2(20);
+    dsa::ForwardList<int> list2(1, 20);
     list2.push_front(0);
     list2.insert_after(list2.cbegin(), 10);
     tests::compare("ForwardList2", list2, expected);
@@ -68,7 +68,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::cout << "Move assignment ctor\n";
         dsa::ForwardList<int> temp_2(list1);
-        dsa::ForwardList<int> list7(0);
+        dsa::ForwardList<int> list7(1, 0);
         list7 = std::move(temp_2);
         tests::compare("ForwardList7", list7, expected);
     }

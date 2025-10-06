@@ -71,7 +71,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList4", list4, expected4);
 
         // Check iterator of one element
-        dsa::ForwardList<int> list5 = dsa::ForwardList<int>(0);
+        dsa::ForwardList<int> list5 = dsa::ForwardList<int>(1, 0);
         auto iterator = list5.insert_after(list5.cbegin(), 10);
         int val = *iterator;
         int expectedval = 10;
@@ -80,7 +80,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList5", list5, expected5);
 
         // Check iterator after inserting 0 elements
-        dsa::ForwardList<int> list6 = dsa::ForwardList<int>(50);
+        dsa::ForwardList<int> list6 = dsa::ForwardList<int>(1, 50);
         list6.push_front(40);
         list6.push_front(30);
         iterator = list6.insert_after(list6.cbegin(), 0, 5);
