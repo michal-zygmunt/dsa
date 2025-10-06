@@ -139,13 +139,6 @@ namespace dsa
         void push(T value);
 
         /**
-         * @brief Function add range of elements at the top of Stack
-         *
-         * @param[in] init_list range of std::initializer_list elements of type T
-         */
-        void push_range(const std::initializer_list<T>& init_list);
-
-        /**
          * @brief Function removes the top element of Stack
          */
         void pop();
@@ -247,15 +240,6 @@ namespace dsa
     void Stack<T>::push(T value)
     {
         container.push_back(value);
-    }
-
-    template<typename T>
-    void Stack<T>::push_range(const std::initializer_list<T>& init_list)
-    {
-        for (const auto& item : init_list)
-        {
-            push(item);
-        }
     }
 
     template<typename T>
