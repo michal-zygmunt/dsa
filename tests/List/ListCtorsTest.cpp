@@ -33,7 +33,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("List1", list1, expected);
 
     std::cout << "Value ctor\n";
-    dsa::List<int> list2(20);
+    dsa::List<int> list2(1, 20);
     list2.push_front(10);
     list2.insert(list2.cbegin(), 0);
     tests::compare("List2", list2, expected);
@@ -63,7 +63,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Move assignment ctor\n";
     dsa::List<int> temp_2(list1);
-    dsa::List<int> list7(0);
+    dsa::List<int> list7(1, 0);
     list7 = std::move(temp_2);
     tests::compare("List7", list7, expected);
 

@@ -33,12 +33,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     const std::initializer_list<int> expected4 = { 1,2,3,4,5,6 };
     tests::compare("ForwardList4", list4, expected4);
 
-    dsa::List<int> list5(0);
+    dsa::List<int> list5(1, 0);
     list5 += list2;
     const std::initializer_list<int> expected5 = { 0,4,5,6 };
     tests::compare("ForwardList5", list5, expected5);
 
-    dsa::List<int> list6(0);
+    dsa::List<int> list6(1, 0);
     list6 += { 4, 5, 6 };
     const std::initializer_list<int> expected6 = { 0,4,5,6 };
     tests::compare("ForwardList6", list6, expected6);

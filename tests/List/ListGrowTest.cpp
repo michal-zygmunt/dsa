@@ -23,7 +23,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     std::cout << "Start ListGrow test:\n";
 
-    dsa::List<int> list1 = dsa::List<int>(40);
+    dsa::List<int> list1 = dsa::List<int>(1, 40);
     auto iterator = list1.insert(list1.cbegin(), 30);
     list1.insert(iterator, { 10, 20 });
     list1.push_front(0);
@@ -38,7 +38,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     const std::initializer_list<int> expected1 = { 0, -10, 2, 0, 10, 4, 20, 30, 40 };
     tests::compare("List1", list1, expected1);
 
-    dsa::List<int> list2 = dsa::List<int>(50);
+    dsa::List<int> list2 = dsa::List<int>(1, 50);
     list2.push_front(40);
     list2.push_front(30);
     list2.push_front(20);
@@ -47,7 +47,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     const std::initializer_list<int> expected2 = { 5, 5, 5, 5, 5, 10, 20, 30, 40, 50 };
     tests::compare("List2", list2, expected2);
 
-    dsa::List<int> list3 = dsa::List<int>(50);
+    dsa::List<int> list3 = dsa::List<int>(1, 50);
     list3.push_front(40);
     list3.push_front(30);
     list3.push_front(20);

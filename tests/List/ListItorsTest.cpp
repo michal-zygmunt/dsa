@@ -71,7 +71,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List4", list4, expected4);
 
         // Check iterator of one element
-        dsa::List<int> list5 = dsa::List<int>(0);
+        dsa::List<int> list5 = dsa::List<int>(1, 0);
         auto iterator = list5.insert(list5.cbegin(), 10);
         int val = *iterator;
         int expectedval = 10;
@@ -80,7 +80,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List5", list5, expected5);
 
         // Check iterator after inserting 0 elements
-        dsa::List<int> list6 = dsa::List<int>(50);
+        dsa::List<int> list6 = dsa::List<int>(1, 50);
         list6.push_front(40);
         list6.push_front(30);
         iterator = list6.insert(list6.cbegin(), 0, 5);

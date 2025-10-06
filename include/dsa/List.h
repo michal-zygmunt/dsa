@@ -436,11 +436,21 @@ namespace dsa
         List();
 
         /**
-         * @brief Construct a new List object using value of type T
+         * @brief Construct a new List object of size \p count,
+         * using default value of type T
          *
-         * @param[in] value of type T
+         * @param[in] count element count
          */
-        List(T value);
+        List(size_t count);
+
+        /**
+         * @brief Construct a new List object of size \p count,
+         * using provided \p value of type T
+         *
+         * @param[in] count element count
+         * @param[in] value value for all nodes
+         */
+        List(size_t count, const T& value);
 
         /**
          * @brief Construct a new List object using initializer list
@@ -1064,11 +1074,20 @@ namespace dsa
     }
 
     template<typename T>
-    List<T>::List(T value)
+    List<T>::List(size_t count)
+        : List(count, T{})
+    {
+    }
+
+    template<typename T>
+    List<T>::List(size_t count, const T& value)
     {
         init_node();
 
-        push_front(value);
+        for (size_t i = 0; i < count; i++)
+        {
+            push_front(value);
+        }
     }
 
     template<typename T>
