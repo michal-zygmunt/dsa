@@ -34,7 +34,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     tests::compare("Stack1", stack1, expected);
 
     std::cout << "Value ctor\n";
-    dsa::Stack<int> stack2(0);
+    dsa::Stack<int> stack2({ 0 });
     stack2.push(10);
     stack2.push(20);
     tests::compare("Stack2", stack2, expected);
@@ -68,7 +68,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::cout << "Move assignment ctor\n";
         dsa::Stack<int> temp_2(stack1);
-        dsa::Stack<int> stack7(0);
+        dsa::Stack<int> stack7({ 0 });
         stack7 = std::move(temp_2);
         tests::compare("Stack7", stack7, expected);
     }

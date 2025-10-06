@@ -24,13 +24,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     const std::initializer_list<int> expected{ 10, 20, 30, 40 };
 
-    dsa::Stack<int> stack1 = dsa::Stack<int>(40);
+    dsa::Stack<int> stack1 = dsa::Stack<int>({ 40 });
     stack1.push(30);
     stack1.push(20);
     stack1.push(10);
     tests::compare("Stack1", stack1, expected);
 
-    dsa::Stack<int> stack2 = dsa::Stack<int>(40);
+    dsa::Stack<int> stack2 = dsa::Stack<int>({ 40 });
     stack2.push_range({ 30, 20, 10 });
     tests::compare("Stack2", stack2, expected);
 

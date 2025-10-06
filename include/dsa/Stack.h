@@ -59,13 +59,6 @@ namespace dsa
         Stack() = default;
 
         /**
-         * @brief Construct a new Stack object using value of type T
-         *
-         * @param[in] value of type T
-         */
-        Stack(T value);
-
-        /**
          * @brief Construct a new Stack object using initializer list
          *
          * @param[in] init_list initializer list of values of type T
@@ -168,12 +161,6 @@ namespace dsa
 
         List<T> container{};
     };
-
-    template<typename T>
-    Stack<T>::Stack(T value)
-    {
-        container.push_back(value);
-    }
 
     template<typename T>
     Stack<T>::Stack(const std::initializer_list<T>& init_list)
