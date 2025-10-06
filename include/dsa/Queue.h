@@ -160,13 +160,6 @@ namespace dsa
         void push(T&& value);
 
         /**
-         * @brief Function add range of elements at the end of Queue
-         *
-         * @param[in] init_list range of std::initializer_list elements of type T
-         */
-        void push_range(const std::initializer_list<T>& init_list);
-
-        /**
          * @brief Function removes the first element of Queue
          */
         void pop();
@@ -305,15 +298,6 @@ namespace dsa
     }
 
     template<typename T>
-    void Queue<T>::push_range(const std::initializer_list<T>& init_list)
-    {
-        for (const auto& item : init_list)
-        {
-            push(item);
-        }
-    }
-
-    template<typename T>
     void Queue<T>::pop()
     {
         container.pop_front();
@@ -335,14 +319,6 @@ namespace dsa
         {
             push(item);
         }
-
-        return *this;
-    }
-
-    template<typename T>
-    auto Queue<T>::operator+=(const std::initializer_list<T>& init_list) -> Queue<T>&
-    {
-        push_range(init_list);
 
         return *this;
     }

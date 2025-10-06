@@ -30,10 +30,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     queue1.push(40);
     tests::compare("Queue1", queue1, expected);
 
-    dsa::Queue<int> queue2 = dsa::Queue<int>({ 10 });
-    queue2.push_range({ 20, 30, 40 });
-    tests::compare("Queue2", queue2, expected);
-
     return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
