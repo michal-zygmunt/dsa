@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <initializer_list>
 #include <iostream>
+#include <new>
 #include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -22,10 +23,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     // tests are based on hardcoded magic numbers for comparison of container content
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
-    std::cout << "Start ListItors test:\n";
-
     try
     {
+        std::cout << "Start ListItors test:\n";
+
         std::cout << "Explicit iterator\n";
         dsa::List<int> list1{ 0, 10, 20 };
         // NOLINTNEXTLINE(modernize-loop-convert)
@@ -74,8 +75,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::List<int> list5 = dsa::List<int>(1, 0);
         auto iterator = list5.insert(list5.cbegin(), 10);
         int val = *iterator;
-        int expectedval = 10;
-        tests::compare("List5 iterator", val, expectedval);
+        const int expectedval5 = 10;
+        tests::compare("List5 iterator", val, expectedval5);
         const std::initializer_list<int> expected5 = { 10, 0 };
         tests::compare("List5", list5, expected5);
 
@@ -85,8 +86,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list6.push_front(30);
         iterator = list6.insert(list6.cbegin(), 0, 5);
         val = *iterator;
-        expectedval = 30;
-        tests::compare("List6 iterator", val, expectedval);
+        const int expectedval6 = 30;
+        tests::compare("List6 iterator", val, expectedval6);
         const std::initializer_list<int> expected6 = { 30, 40, 50 };
         tests::compare("List6", list6, expected6);
 
@@ -178,6 +179,77 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         auto citer10e = list10.cend();
         citer10e--;
         tests::compare("citer10e", *citer10e, 30);
+
+        const dsa::List<int> list11 = dsa::List<int>{ 10, 20, 30 };
+        auto iter11b = list11.begin();
+        tests::compare("iter11b", *iter11b, 10);
+
+        auto citer11b = list11.cbegin();
+        tests::compare("citer11b", *citer11b, 10);
+
+        auto iter11e = list11.end();
+        iter11e--;
+        tests::compare("iter11e", *iter11e, 30);
+
+        auto citer11e = list11.cend();
+        citer11e--;
+        tests::compare("citer11e", *citer11e, 30);
+
+        // increment iterator
+        dsa::List<int> list12 = dsa::List<int>{ 10, 20, 30 };
+        std::cout << "List12\t" << list12 << '\n';
+        auto it_12 = list12.begin();
+        tests::compare("it_12", *it_12, 10);
+        it_12++;
+        tests::compare("it_12", *it_12, 20);
+        it_12++;
+        tests::compare("it_12", *it_12, 30);
+        it_12++;
+        std::cout << '\n';
+
+        // increment const_iterator
+        const dsa::List<int> list13 = dsa::List<int>{ 10, 20, 30 };
+        std::cout << "List13\t" << list13 << '\n';
+
+        auto cit_13 = list13.cbegin();
+        tests::compare("cit_13", *cit_13, 10);
+        cit_13++;
+        tests::compare("cit_13", *cit_13, 20);
+        cit_13++;
+        tests::compare("cit_13", *cit_13, 30);
+        cit_13++;
+        std::cout << '\n';
+
+        // decrement iterator
+        dsa::List<int> list14 = dsa::List<int>{ 10, 20, 30 };
+        std::cout << "List14\t" << list14 << '\n';
+        auto it_14 = list14.end();
+        it_14--;
+        tests::compare("it_14", *it_14, 30);
+        --it_14;
+        tests::compare("it_14", *it_14, 20);
+        --it_14;
+        tests::compare("it_14", *it_14, 10);
+        --it_14;
+        std::cout << '\n';
+
+        // decrement const_iterator
+        const dsa::List<int> list15 = dsa::List<int>{ 10, 20, 30 };
+        std::cout << "List15\t" << list15 << '\n';
+        auto cit_15 = list15.cend();
+        cit_15--;
+        tests::compare("cit_15", *cit_15, 30);
+        --cit_15;
+        tests::compare("cit_15", *cit_15, 20);
+        --cit_15;
+        tests::compare("cit_15", *cit_15, 10);
+        --cit_15;
+
+    }
+    catch (const std::bad_alloc& exception)
+    {
+        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
+        return 1;
     }
     catch (const std::runtime_error& exception)
     {
@@ -189,71 +261,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::cerr << "Unhandled unknown exception\n";
         return 1;
     }
-
-    const dsa::List<int> list11 = dsa::List<int>{ 10, 20, 30 };
-    auto iter11b = list11.begin();
-    tests::compare("iter11b", *iter11b, 10);
-
-    auto citer11b = list11.cbegin();
-    tests::compare("citer11b", *citer11b, 10);
-
-    auto iter11e = list11.end();
-    iter11e--;
-    tests::compare("iter11e", *iter11e, 30);
-
-    auto citer11e = list11.cend();
-    citer11e--;
-    tests::compare("citer11e", *citer11e, 30);
-
-    // increment iterator
-    dsa::List<int> list12 = dsa::List<int>{ 10, 20, 30 };
-    std::cout << "List12\t" << list12 << '\n';
-    auto it_12 = list12.begin();
-    tests::compare("it_12", *it_12, 10);
-    it_12++;
-    tests::compare("it_12", *it_12, 20);
-    it_12++;
-    tests::compare("it_12", *it_12, 30);
-    it_12++;
-    std::cout << '\n';
-
-    // increment const_iterator
-    const dsa::List<int> list13 = dsa::List<int>{ 10, 20, 30 };
-    std::cout << "List13\t" << list13 << '\n';
-
-    auto cit_13 = list13.cbegin();
-    tests::compare("cit_13", *cit_13, 10);
-    cit_13++;
-    tests::compare("cit_13", *cit_13, 20);
-    cit_13++;
-    tests::compare("cit_13", *cit_13, 30);
-    cit_13++;
-    std::cout << '\n';
-
-    // decrement iterator
-    dsa::List<int> list14 = dsa::List<int>{ 10, 20, 30 };
-    std::cout << "List14\t" << list14 << '\n';
-    auto it_14 = list14.end();
-    it_14--;
-    tests::compare("it_14", *it_14, 30);
-    --it_14;
-    tests::compare("it_14", *it_14, 20);
-    --it_14;
-    tests::compare("it_14", *it_14, 10);
-    --it_14;
-    std::cout << '\n';
-
-    // decrement const_iterator
-    const dsa::List<int> list15 = dsa::List<int>{ 10, 20, 30 };
-    std::cout << "List15\t" << list15 << '\n';
-    auto cit_15 = list15.cend();
-    cit_15--;
-    tests::compare("cit_15", *cit_15, 30);
-    --cit_15;
-    tests::compare("cit_15", *cit_15, 20);
-    --cit_15;
-    tests::compare("cit_15", *cit_15, 10);
-    --cit_15;
 
     return tests::failed_count();
 
