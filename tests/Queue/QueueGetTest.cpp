@@ -15,6 +15,7 @@
 #include <cstddef>
 #include <initializer_list>
 #include <iostream>
+#include <new>
 #include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -22,12 +23,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     // tests are based on hardcoded magic numbers for comparison of container content
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
-    std::cout << "Start QueueGet test:\n";
-
-    const std::initializer_list<int> expected{ 0,10,20 };
-
     try
     {
+        std::cout << "Start QueueGet test:\n";
+
+        const std::initializer_list<int> expected{ 0,10,20 };
+
         dsa::Queue<int> queue1 = dsa::Queue<int>({ 0,10,20 });
         const size_t q1_size = queue1.size();
         std::cout << "Queue1:\t";
@@ -45,18 +46,18 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Queue1", queue1, expected);
 
         dsa::Queue<int> queue2 = dsa::Queue<int>({ 0,10,20 });
-        auto front = queue2.front();
-        auto back = queue2.back();
-        tests::compare(front, 0) || tests::compare(back, 20);
-        std::cout << "Queue2 front: " << front << ", back: " << back << '\n';
-        tests::compare("Queue2", queue2, expected);
+        tests::compare("Queue2 front", queue2.front(), 0);
+        tests::compare("Queue2 back", queue2.back(), 20);
 
         const dsa::Queue<int> queue3 = dsa::Queue<int>({ 0,10,20 });
-        front = queue3.front();
-        back = queue3.back();
-        tests::compare(front, 0) || tests::compare(back, 20);
-        std::cout << "Queue3 front: " << front << ", back: " << back << '\n';
-        tests::compare("Queue3", queue3, expected);
+        tests::compare("Queue3 front", queue3.front(), 0);
+        tests::compare("Queue3 back", queue3.back(), 20);
+
+    }
+    catch (const std::bad_alloc& exception)
+    {
+        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
+        return 1;
     }
     catch (const std::runtime_error& exception)
     {
