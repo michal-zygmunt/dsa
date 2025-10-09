@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <initializer_list>
 #include <iostream>
+#include <new>
 #include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -22,10 +23,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     // tests are based on hardcoded magic numbers for comparison of container content
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
-    std::cout << "Start ForwardListItors test:\n";
-
     try
     {
+        std::cout << "Start ForwardListItors test:\n";
+
         std::cout << "Explicit iterator\n";
         dsa::ForwardList<int> list1{ 0, 10, 20 };
         // NOLINTNEXTLINE(modernize-loop-convert)
@@ -72,10 +73,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // Check iterator of one element
         dsa::ForwardList<int> list5 = dsa::ForwardList<int>(1, 0);
-        auto iterator = list5.insert_after(list5.cbegin(), 10);
-        int val = *iterator;
-        int expectedval = 10;
-        tests::compare("ForwardList5 iterator", val, expectedval);
+        auto iterator5 = list5.insert_after(list5.cbegin(), 10);
+        int val = *iterator5;
+        const int expectedval5 = 10;
+        tests::compare("ForwardList5 iterator", val, expectedval5);
         const std::initializer_list<int> expected5 = { 0, 10 };
         tests::compare("ForwardList5", list5, expected5);
 
@@ -83,10 +84,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::ForwardList<int> list6 = dsa::ForwardList<int>(1, 50);
         list6.push_front(40);
         list6.push_front(30);
-        iterator = list6.insert_after(list6.cbegin(), 0, 5);
-        val = *iterator;
-        expectedval = 30;
-        tests::compare("ForwardList6 iterator", val, expectedval);
+        auto iterator6 = list6.insert_after(list6.cbegin(), 0, 5);
+        val = *iterator6;
+        const int expectedval6 = 30;
+        tests::compare("ForwardList6 iterator", val, expectedval6);
         const std::initializer_list<int> expected6 = { 30, 40, 50 };
         tests::compare("ForwardList6", list6, expected6);
 
@@ -185,6 +186,50 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         auto citer10e = list10.cend();
         tests::compare("citer10e", citer10e == dsa::ForwardList<int>::const_iterator(nullptr), true);
+
+        const dsa::ForwardList<int> list11 = dsa::ForwardList<int>{ 10, 20, 30 };
+        auto iter11b = list11.begin();
+        tests::compare("iter11b", *iter11b, 10);
+
+        auto citer11b = list11.cbegin();
+        tests::compare("citer11b", *citer11b, 10);
+
+        auto iter11e = list11.end();
+        tests::compare("iter11e", iter11e == dsa::ForwardList<int>::const_iterator(nullptr), true);
+
+        auto citer11e = list11.cend();
+        tests::compare("citer11e", citer11e == dsa::ForwardList<int>::const_iterator(nullptr), true);
+
+        // increment iterator
+        dsa::ForwardList<int> list12 = dsa::ForwardList<int>{ 10, 20, 30 };
+        std::cout << "ForwardList12\t" << list12 << '\n';
+        auto it_12 = list12.begin();
+        tests::compare("it_12", *it_12, 10);
+        it_12++;
+        tests::compare("it_12", *it_12, 20);
+        it_12++;
+        tests::compare("it_12", *it_12, 30);
+        it_12++;
+        std::cout << '\n';
+
+        // increment const_iterator
+        const dsa::ForwardList<int> list13 = dsa::ForwardList<int>{ 10, 20, 30 };
+        std::cout << "ForwardList13\t" << list13 << '\n';
+
+        auto cit_13 = list13.cbegin();
+        tests::compare("cit_13", *cit_13, 10);
+        cit_13++;
+        tests::compare("cit_13", *cit_13, 20);
+        cit_13++;
+        tests::compare("cit_13", *cit_13, 30);
+        cit_13++;
+        std::cout << '\n';
+
+    }
+    catch (const std::bad_alloc& exception)
+    {
+        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
+        return 1;
     }
     catch (const std::runtime_error& exception)
     {
@@ -196,44 +241,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::cerr << "Unhandled unknown exception\n";
         return 1;
     }
-
-    const dsa::ForwardList<int> list11 = dsa::ForwardList<int>{ 10, 20, 30 };
-    auto iter11b = list11.begin();
-    tests::compare("iter11b", *iter11b, 10);
-
-    auto citer11b = list11.cbegin();
-    tests::compare("citer11b", *citer11b, 10);
-
-    auto iter11e = list11.end();
-    tests::compare("iter11e", iter11e == dsa::ForwardList<int>::const_iterator(nullptr), true);
-
-    auto citer11e = list11.cend();
-    tests::compare("citer11e", citer11e == dsa::ForwardList<int>::const_iterator(nullptr), true);
-
-    // increment iterator
-    dsa::ForwardList<int> list12 = dsa::ForwardList<int>{ 10, 20, 30 };
-    std::cout << "ForwardList12\t" << list12 << '\n';
-    auto it_12 = list12.begin();
-    tests::compare("it_12", *it_12, 10);
-    it_12++;
-    tests::compare("it_12", *it_12, 20);
-    it_12++;
-    tests::compare("it_12", *it_12, 30);
-    it_12++;
-    std::cout << '\n';
-
-    // increment const_iterator
-    const dsa::ForwardList<int> list13 = dsa::ForwardList<int>{ 10, 20, 30 };
-    std::cout << "ForwardList13\t" << list13 << '\n';
-
-    auto cit_13 = list13.cbegin();
-    tests::compare("cit_13", *cit_13, 10);
-    cit_13++;
-    tests::compare("cit_13", *cit_13, 20);
-    cit_13++;
-    tests::compare("cit_13", *cit_13, 30);
-    cit_13++;
-    std::cout << '\n';
 
     return tests::failed_count();
 

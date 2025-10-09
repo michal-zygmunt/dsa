@@ -14,6 +14,7 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <new>
 #include <stdexcept>
 #include <utility>
 
@@ -22,29 +23,29 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     // tests are based on hardcoded magic numbers for comparison of container content
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
-    std::cout << "Start ForwardListCtors test:\n";
-
-    const std::initializer_list<int> expected{ 0, 10, 20 };
-
-    std::cout << "Default ctor\n";
-    dsa::ForwardList<int> list1;
-    list1.push_front(20);
-    list1.push_front(10);
-    list1.push_front(0);
-    tests::compare("ForwardList1", list1, expected);
-
-    std::cout << "Value ctor\n";
-    dsa::ForwardList<int> list2(1, 20);
-    list2.push_front(0);
-    list2.insert_after(list2.cbegin(), 10);
-    tests::compare("ForwardList2", list2, expected);
-
-    std::cout << "Initializer list ctor\n";
-    const dsa::ForwardList<int> list3(expected);
-    tests::compare("ForwardList3", list3, expected);
-
     try
     {
+        std::cout << "Start ForwardListCtors test:\n";
+
+        const std::initializer_list<int> expected{ 0, 10, 20 };
+
+        std::cout << "Default ctor\n";
+        dsa::ForwardList<int> list1;
+        list1.push_front(20);
+        list1.push_front(10);
+        list1.push_front(0);
+        tests::compare("ForwardList1", list1, expected);
+
+        std::cout << "Value ctor\n";
+        dsa::ForwardList<int> list2(1, 20);
+        list2.push_front(0);
+        list2.insert_after(list2.cbegin(), 10);
+        tests::compare("ForwardList2", list2, expected);
+
+        std::cout << "Initializer list ctor\n";
+        const dsa::ForwardList<int> list3(expected);
+        tests::compare("ForwardList3", list3, expected);
+
         std::cout << "Copy ctor\n";
         // intentionally make a copy to test copy constructor
         // NOLINTNEXTLINE(performance-unnecessary-copy-initialization)
@@ -71,6 +72,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::ForwardList<int> list7(1, 0);
         list7 = std::move(temp_2);
         tests::compare("ForwardList7", list7, expected);
+
+    }
+    catch (const std::bad_alloc& exception)
+    {
+        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
+        return 1;
     }
     catch (const std::runtime_error& exception)
     {
