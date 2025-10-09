@@ -13,50 +13,87 @@
 #include "dsa/Stack.h"
 
 #include <iostream>
+#include <new>
+#include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
     // tests are based on hardcoded magic numbers for comparison of container content
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
-    std::cout << "Start StackOperators test:\n";
+    try
+    {
+        std::cout << "Start StackOperators test:\n";
 
-    const dsa::Stack<int> stack1({ 1,2,3 });
-    const dsa::Stack<int> stack2({ 4,5,6 });
-    const dsa::Stack<int> stack3({ 1, 2, 3, 4 });
-    std::cout << "Stack1:\t" << stack1 << '\n';
-    std::cout << "Stack2:\t" << stack2 << '\n';
-    std::cout << "Stack3:\t" << stack3 << "\n\n";
+        const dsa::Stack<int> stack1({ 1, 2, 3 });
+        const dsa::Stack<int> stack2({ 4, 5, 6 });
+        const dsa::Stack<int> stack3({ 1, 2, 3, 4 });
+        std::cout << "Stack1:\t" << stack1 << '\n';
+        std::cout << "Stack2:\t" << stack2 << '\n';
+        std::cout << "Stack3:\t" << stack3 << "\n\n";
 
-    std::cout << "Compare operators for objects of the same size\n\n";
+        std::cout << "Compare operators for objects of the same size\n\n";
 
-    // intentional self-comparison, an object should be equal to itself
-    // NOLINTNEXTLINE(misc-redundant-expression)
-    tests::compare("Operator ==", stack1 == stack1, true);
+        // intentional self-comparison, an object should be equal to itself
+        // NOLINTNEXTLINE(misc-redundant-expression)
+        tests::compare("Stack1 == stack1", stack1 == stack1, true);
 
-    tests::compare("Operator !=", stack1 != stack2, true);
+        tests::compare("Stack1 != stack2", stack1 != stack2, true);
 
-    tests::compare("Operator <", stack1 < stack2, true);
+        tests::compare("Stack1 < stack2", stack1 < stack2, true);
+        tests::compare("Stack2 < stack1", stack2 < stack1, false);
 
-    tests::compare("Operator >", stack2 > stack1, true);
+        tests::compare("Stack1 > stack2", stack1 > stack2, false);
+        tests::compare("Stack2 > stack1", stack2 > stack1, true);
 
-    tests::compare("Operator <=", stack1 <= stack2, true);
+        tests::compare("Stack1 <= stack2", stack1 <= stack2, true);
+        tests::compare("Stack2 <= stack1", stack2 <= stack1, false);
 
-    tests::compare("Operator >=", stack2 >= stack1, true);
+        tests::compare("Stack1 >= stack2", stack1 >= stack2, false);
+        tests::compare("Stack2 >= stack1", stack2 >= stack1, true);
 
-    std::cout << "Compare operators for objects of different size\n\n";
+        std::cout << "Compare operators for objects of different size\n\n";
 
-    tests::compare("Operator ==", stack1 == stack3, false);
+        tests::compare("Stack1 == stack3", stack1 == stack3, false);
 
-    tests::compare("Operator !=", stack1 != stack3, true);
+        tests::compare("Stack1 != stack3", stack1 != stack3, true);
 
-    tests::compare("Operator <", stack3 < stack2, true);
+        tests::compare("Stack1 < stack3", stack1 < stack3, true);
+        tests::compare("Stack3 < stack1", stack3 < stack1, false);
+        tests::compare("Stack2 < stack3", stack2 < stack3, false);
+        tests::compare("Stack3 < stack2", stack3 < stack2, true);
 
-    tests::compare("Operator >", stack3 > stack1, true);
+        tests::compare("Stack1 > stack3", stack1 > stack3, false);
+        tests::compare("Stack3 > stack1", stack3 > stack1, true);
+        tests::compare("Stack2 > stack3", stack2 > stack3, true);
+        tests::compare("Stack3 > stack2", stack3 > stack2, false);
 
-    tests::compare("Operator <=", stack1 <= stack3, true);
+        tests::compare("Stack1 <= stack3", stack1 <= stack3, true);
+        tests::compare("Stack3 <= stack1", stack3 <= stack1, false);
+        tests::compare("Stack2 <= stack3", stack2 <= stack3, false);
+        tests::compare("Stack3 <= stack2", stack3 <= stack2, true);
 
-    tests::compare("Operator >=", stack2 >= stack3, true);
+        tests::compare("Stack1 >= stack3", stack1 >= stack3, false);
+        tests::compare("Stack3 >= stack1", stack3 >= stack1, true);
+        tests::compare("Stack2 >= stack3", stack2 >= stack3, true);
+        tests::compare("Stack3 >= stack2", stack3 >= stack2, false);
+
+    }
+    catch (const std::bad_alloc& exception)
+    {
+        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
+        return 1;
+    }
+    catch (const std::runtime_error& exception)
+    {
+        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
+        return 1;
+    }
+    catch (...)
+    {
+        std::cerr << "Unhandled unknown exception\n";
+        return 1;
+    }
 
     return tests::failed_count();
 

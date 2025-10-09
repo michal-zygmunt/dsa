@@ -14,6 +14,7 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <new>
 #include <stdexcept>
 #include <utility>
 
@@ -22,29 +23,30 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     // tests are based on hardcoded magic numbers for comparison of container content
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
-    std::cout << "Start StackCtors test:\n";
-
-    const std::initializer_list<int> expected{ 20,10,0 };
-
-    std::cout << "Default ctor\n";
-    dsa::Stack<int> stack1;
-    stack1.push(0);
-    stack1.push(10);
-    stack1.push(20);
-    tests::compare("Stack1", stack1, expected);
-
-    std::cout << "Value ctor\n";
-    dsa::Stack<int> stack2({ 0 });
-    stack2.push(10);
-    stack2.push(20);
-    tests::compare("Stack2", stack2, expected);
-
-    std::cout << "Initializer list ctor\n";
-    const dsa::Stack<int> stack3({ 0, 10, 20 });
-    tests::compare("Stack3", stack3, expected);
-
     try
     {
+        std::cout << "Start StackCtors test:\n";
+
+        const std::initializer_list<int> expected{ 20,10,0 };
+
+        std::cout << "Default ctor\n";
+        dsa::Stack<int> stack1;
+        stack1.push(0);
+        stack1.push(10);
+        stack1.push(20);
+        tests::compare("Stack1", stack1, expected);
+
+        std::cout << "Value ctor\n";
+        dsa::Stack<int> stack2({ 0 });
+        stack2.push(10);
+        stack2.push(20);
+        tests::compare("Stack2", stack2, expected);
+
+        std::cout << "Initializer list ctor\n";
+        const dsa::Stack<int> stack3({ 0, 10, 20 });
+        tests::compare("Stack3", stack3, expected);
+
+
         std::cout << "Copy ctor\n";
         // intentionally make a copy to test copy constructor
         // NOLINTNEXTLINE(performance-unnecessary-copy-initialization)
@@ -71,6 +73,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::Stack<int> stack7({ 0 });
         stack7 = std::move(temp_2);
         tests::compare("Stack7", stack7, expected);
+
+    }
+    catch (const std::bad_alloc& exception)
+    {
+        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
+        return 1;
     }
     catch (const std::runtime_error& exception)
     {

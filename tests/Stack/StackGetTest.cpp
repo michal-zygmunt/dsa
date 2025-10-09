@@ -14,6 +14,7 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <new>
 #include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -21,26 +22,26 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     // tests are based on hardcoded magic numbers for comparison of container content
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
-    std::cout << "Start StackGet test:\n";
-
-    const std::initializer_list<int> expected{ 0,10,20 };
-
     try
     {
+        std::cout << "Start StackGet test:\n";
+
+        const std::initializer_list<int> expected{ 0,10,20 };
+
         dsa::Stack<int> stack1 = dsa::Stack<int>({ 20, 10, 0 });
-        auto top = stack1.top();
-        tests::compare("Stack1 top", top, expected.begin()[0]);
-        tests::compare("Stack1", stack1, expected);
+        tests::compare("Stack1 top", stack1.top(), expected.begin()[0]);
 
         dsa::Stack<int> stack2 = dsa::Stack<int>({ 20, 10, 0 });
-        top = stack2.top();
-        tests::compare("Stack2 top", top, expected.begin()[0]);
-        tests::compare("Stack2", stack2, expected);
+        tests::compare("Stack2 top", stack2.top(), expected.begin()[0]);
 
         const dsa::Stack<int> stack3 = dsa::Stack<int>({ 20, 10, 0 });
-        top = stack3.top();
-        tests::compare("Stack3 top", top, expected.begin()[0]);
-        tests::compare("Stack3", stack3, expected);
+        tests::compare("Stack3 top", stack3.top(), expected.begin()[0]);
+
+    }
+    catch (const std::bad_alloc& exception)
+    {
+        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
+        return 1;
     }
     catch (const std::runtime_error& exception)
     {

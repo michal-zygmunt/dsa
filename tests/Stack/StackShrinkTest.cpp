@@ -15,36 +15,57 @@
 #include <cstddef>
 #include <initializer_list>
 #include <iostream>
+#include <new>
+#include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
     // tests are based on hardcoded magic numbers for comparison of container content
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
-    std::cout << "Start StackShrink test:\n";
+    try
+    {
+        std::cout << "Start StackShrink test:\n";
 
-    dsa::Stack<int> stack1 = dsa::Stack<int>({ 0,10,20,30,40,50 });
-    stack1.pop();
-    stack1.pop();
-    const std::initializer_list<int> expected1 = { 30,20,10,0 };
-    tests::compare("Stack1", stack1, expected1);
+        dsa::Stack<int> stack1 = dsa::Stack<int>({ 0,10,20,30,40,50 });
+        stack1.pop();
+        stack1.pop();
+        const std::initializer_list<int> expected1 = { 30,20,10,0 };
+        tests::compare("Stack1", stack1, expected1);
 
-    dsa::Stack<int> stack2 = dsa::Stack<int>({ 0,10,20 });
-    stack2.pop();
-    stack2.pop();
-    stack2.pop();
-    const std::initializer_list<int> expected2 = std::initializer_list<int>{ };
-    tests::compare("Stack2", stack2, expected2);
+        dsa::Stack<int> stack2 = dsa::Stack<int>({ 0,10,20 });
+        stack2.pop();
+        stack2.pop();
+        stack2.pop();
+        const std::initializer_list<int> expected2 = std::initializer_list<int>{ };
+        tests::compare("Stack2", stack2, expected2);
 
-    const dsa::Stack<int> stack3 = dsa::Stack<int>({ 0,10,20 });
-    tests::compare("stack3.size()", stack3.size(), static_cast<size_t>(3));
+        const dsa::Stack<int> stack3 = dsa::Stack<int>({ 0,10,20 });
+        tests::compare("Stack3.size()", stack3.size(), static_cast<size_t>(3));
 
-    dsa::Stack<int> stack4 = dsa::Stack<int>();
-    stack4.pop();
-    tests::compare("stack4.size()", stack4.size(), static_cast<size_t>(0));
+        dsa::Stack<int> stack4 = dsa::Stack<int>();
+        stack4.pop();
+        tests::compare("Stack4.size()", stack4.size(), static_cast<size_t>(0));
 
-    const dsa::Stack<int> stack5;
-    tests::compare("stack5.size()", stack5.size(), static_cast<size_t>(0));
+        const dsa::Stack<int> stack5;
+        tests::compare("Stack5.size()", stack5.size(), static_cast<size_t>(0));
+
+    }
+    catch (const std::bad_alloc& exception)
+    {
+        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
+        return 1;
+    }
+    catch (const std::runtime_error& exception)
+    {
+        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
+        return 1;
+    }
+    catch (...)
+    {
+        std::cerr << "Unhandled unknown exception\n";
+        return 1;
+    }
 
     return tests::failed_count();
 

@@ -14,21 +14,42 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <new>
+#include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
     // tests are based on hardcoded magic numbers for comparison of container content
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
-    std::cout << "Start StackGrow test:\n";
+    try
+    {
+        std::cout << "Start StackGrow test:\n";
 
-    const std::initializer_list<int> expected{ 10, 20, 30, 40 };
+        const std::initializer_list<int> expected{ 10, 20, 30, 40 };
 
-    dsa::Stack<int> stack1 = dsa::Stack<int>({ 40 });
-    stack1.push(30);
-    stack1.push(20);
-    stack1.push(10);
-    tests::compare("Stack1", stack1, expected);
+        dsa::Stack<int> stack1 = dsa::Stack<int>({ 40 });
+        stack1.push(30);
+        stack1.push(20);
+        stack1.push(10);
+        tests::compare("Stack1", stack1, expected);
+
+    }
+    catch (const std::bad_alloc& exception)
+    {
+        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
+        return 1;
+    }
+    catch (const std::runtime_error& exception)
+    {
+        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
+        return 1;
+    }
+    catch (...)
+    {
+        std::cerr << "Unhandled unknown exception\n";
+        return 1;
+    }
 
     return tests::failed_count();
 
