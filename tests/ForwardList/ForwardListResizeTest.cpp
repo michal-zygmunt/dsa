@@ -13,6 +13,7 @@
 #include "dsa/ForwardList.h"
 
 #include <cstdint>
+#include <forward_list>
 #include <initializer_list>
 #include <iostream>
 #include <new>
@@ -70,6 +71,40 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const dsa::ForwardList<int> list9;
         tests::compare("max_size()", list9.max_size(), UINTMAX_MAX);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::forward_list<int> std_list1{ 1, 2, 3, 4, 5 };
+        std_list1.resize(3);
+        tests::compare("ForwardList1 vs std", list1, std_list1);
+
+        std::forward_list<int> std_list2{ 1, 2, 3, 4, 5 };
+        std_list2.resize(5);
+        tests::compare("ForwardList2 vs std", list2, std_list2);
+
+        std::forward_list<int> std_list3{ 1, 2, 3, 4, 5 };
+        std_list3.resize(8);
+        tests::compare("ForwardList3 vs std", list3, std_list3);
+
+        std::forward_list<int> std_list4;
+        std_list4.resize(5);
+        tests::compare("ForwardList4 vs std", list4, std_list4);
+
+        std::forward_list<int> std_list5{ 1, 2, 3, 4, 5 };
+        std_list5.resize(3, 10);
+        tests::compare("ForwardList5 vs std", list5, std_list5);
+
+        std::forward_list<int> std_list6{ 1, 2, 3, 4, 5 };
+        std_list6.resize(5, 10);
+        tests::compare("ForwardList6 vs std", list6, std_list6);
+
+        std::forward_list<int> std_list7{ 1, 2, 3, 4, 5 };
+        std_list7.resize(8, 10);
+        tests::compare("ForwardList7 vs std", list7, std_list7);
+
+        std::forward_list<int> std_list8;
+        std_list8.resize(5, 10);
+        tests::compare("ForwardList8 vs std", list8, std_list8);
     }
     catch (const std::bad_alloc& exception)
     {

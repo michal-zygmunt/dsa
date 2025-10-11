@@ -12,6 +12,7 @@
 #include "common.h"
 #include "dsa/ForwardList.h"
 
+#include <forward_list>
 #include <initializer_list>
 #include <iostream>
 #include <new>
@@ -106,6 +107,56 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("list2 >= list3", list2 >= list3, true);
         tests::compare("list3 >= list2", list3 >= list2, false);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        const std::forward_list<int> std_list1({ 1, 2, 3 });
+        const std::forward_list<int> std_list2({ 4, 5, 6 });
+        const std::forward_list<int> std_list3({ 1, 2, 3, 4 });
+
+        // intentional self-comparison, an object should be equal to itself
+        // NOLINTNEXTLINE(misc-redundant-expression)
+        tests::compare("list1 == list1 vs std", list1 == list1, std_list1 == std_list1);
+
+        tests::compare("list1 != list2 vs std", list1 != list2, std_list1 != std_list2);
+
+        tests::compare("list1 < list2 vs std", list1 < list2, std_list1 < std_list2);
+        tests::compare("list2 < list1 vs std", list2 < list1, std_list2 < std_list1);
+
+        tests::compare("list1 > list2 vs std", list1 > list2, std_list1 > std_list2);
+        tests::compare("list2 > list1 vs std", list2 > list1, std_list2 > std_list1);
+
+        tests::compare("list1 <= list2 vs std", list1 <= list2, std_list1 <= std_list2);
+        tests::compare("list2 <= list1 vs std", list2 <= list1, std_list2 <= std_list1);
+
+        tests::compare("list1 >= list2 vs std", list1 >= list2, std_list1 >= std_list2);
+        tests::compare("list2 >= list1 vs std", list2 >= list1, std_list2 >= std_list1);
+
+        std::cout << "Compare operators for objects of different size\n\n";
+
+        tests::compare("list1 == list3 vs std", list1 == list3, std_list1 == std_list3);
+
+        tests::compare("list1 != list3 vs std", list1 != list3, std_list1 != std_list3);
+
+        tests::compare("list1 < list3 vs std", list1 < list3, std_list1 < std_list3);
+        tests::compare("list3 < list1 vs std", list3 < list1, std_list3 < std_list1);
+        tests::compare("list2 < list3 vs std", list2 < list3, std_list2 < std_list3);
+        tests::compare("list3 < list2 vs std", list3 < list2, std_list3 < std_list2);
+
+        tests::compare("list1 > list3 vs std", list1 > list3, std_list1 > std_list3);
+        tests::compare("list3 > list1 vs std", list3 > list1, std_list3 > std_list1);
+        tests::compare("list2 > list3 vs std", list2 > list3, std_list2 > std_list3);
+        tests::compare("list3 > list2 vs std", list3 > list2, std_list3 > std_list2);
+
+        tests::compare("list1 <= list3 vs std", list1 <= list3, std_list1 <= std_list3);
+        tests::compare("list3 <= list1 vs std", list3 <= list1, std_list3 <= std_list1);
+        tests::compare("list2 <= list3 vs std", list2 <= list3, std_list2 <= std_list3);
+        tests::compare("list3 <= list2 vs std", list3 <= list2, std_list3 <= std_list2);
+
+        tests::compare("list1 >= list3 vs std", list1 >= list3, std_list1 >= std_list3);
+        tests::compare("list3 >= list1 vs std", list3 >= list1, std_list3 >= std_list1);
+        tests::compare("list2 >= list3 vs std", list2 >= list3, std_list2 >= std_list3);
+        tests::compare("list3 >= list2 vs std", list3 >= list2, std_list3 >= std_list2);
     }
     catch (const std::bad_alloc& exception)
     {

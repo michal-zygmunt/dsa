@@ -13,6 +13,7 @@
 #include "dsa/ForwardList.h"
 
 #include <cstddef>
+#include <forward_list>
 #include <initializer_list>
 #include <iostream>
 #include <new>
@@ -89,6 +90,25 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected7 = { 10, 20, 30, 40 };
         tests::compare("ForwardList7", list7, expected7);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::forward_list<int> std_list5;
+        std_list5.insert_after(std_list5.before_begin(), 40);
+        std_list5.insert_after(std_list5.before_begin(), 30);
+        std_list5.insert_after(std_list5.cbefore_begin(), 20);
+        std_list5.insert_after(std_list5.cbefore_begin(), 10);
+        tests::compare("ForwardList5 vs std", list5, std_list5);
+
+        std::forward_list<int> std_list6{ 40 };
+        std_list6.insert_after(std_list6.before_begin(), 30);
+        std_list6.insert_after(std_list6.before_begin(), 20);
+        std_list6.insert_after(std_list6.before_begin(), 10);
+        tests::compare("ForwardList5 vs std", list5, std_list6);
+
+        std::forward_list<int> std_list7{ 40 };
+        std_list7.insert_after(std_list7.before_begin(), { 10, 20, 30 });
+        tests::compare("ForwardList7 vs std", list7, std_list7);
     }
     catch (const std::bad_alloc& exception)
     {

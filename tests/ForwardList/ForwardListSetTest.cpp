@@ -13,6 +13,7 @@
 #include "dsa/ForwardList.h"
 
 #include <cstddef>
+#include <forward_list>
 #include <initializer_list>
 #include <iostream>
 #include <new>
@@ -46,6 +47,16 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list3.assign(expected3);
         tests::compare("ForwardList3", list3, expected3);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::forward_list<int> std_list2{ 0, 10, 20 };
+        std_list2.assign(4, 1);
+        tests::compare("ForwardList2 vs std", list2, std_list2);
+
+        std::forward_list<int> std_list3{ 0, 10, 20 };
+        std_list3.assign(expected3);
+        tests::compare("ForwardList3 vs std", list3, std_list3);
     }
     catch (const std::bad_alloc& exception)
     {

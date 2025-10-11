@@ -12,6 +12,7 @@
 #include "common.h"
 #include "dsa/ForwardList.h"
 
+#include <forward_list>
 #include <initializer_list>
 #include <iostream>
 #include <new>
@@ -41,6 +42,20 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected3{};
         tests::compare("ForwardList3", list3, expected3);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::forward_list<int> std_list1{ 0, 10, 20, 30, 40, 50 };
+        std_list1.reverse();
+        tests::compare("ForwardList1 vs std", list1, std_list1);
+
+        std::forward_list<int> std_list2{ 0 };
+        std_list2.reverse();
+        tests::compare("ForwardList2 vs std", list2, std_list2);
+
+        std::forward_list<int> std_list3;
+        std_list3.reverse();
+        tests::compare("ForwardList3 vs std", list3, std_list3);
     }
     catch (const std::bad_alloc& exception)
     {

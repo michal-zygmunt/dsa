@@ -12,6 +12,7 @@
 #include "common.h"
 #include "dsa/ForwardList.h"
 
+#include <forward_list>
 #include <initializer_list>
 #include <iostream>
 #include <new>
@@ -61,6 +62,36 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected7 = {};
         tests::compare("ForwardList7", list7, expected7);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::forward_list<int> std_list1{ 1, 2, 3, 4, 5 };
+        std_list1.unique();
+        tests::compare("ForwardList1 vs std", list1, std_list1);
+
+        std::forward_list<int> std_list2{ 1, 4, 2, 3, 2, 4, 3, 5, 1 };
+        std_list2.unique();
+        tests::compare("ForwardList2 vs std", list2, std_list2);
+
+        std::forward_list<int> std_list3{ 1, 1, 2, 4, 2, 1, 3, 1, 1 };
+        std_list3.unique();
+        tests::compare("ForwardList3 vs std", list3, std_list3);
+
+        std::forward_list<int> std_list4{ 1, 1, 1, 2, 2, 2, 1, 1, 1 };
+        std_list4.unique();
+        tests::compare("ForwardList4 vs std", list4, std_list4);
+
+        std::forward_list<int> std_list5{ 0, 0, 0, 0, 0, 0 };
+        std_list5.unique();
+        tests::compare("ForwardList5 vs std", list5, std_list5);
+
+        std::forward_list<int> std_list6 = std::forward_list<int>();
+        std_list6.unique();
+        tests::compare("ForwardList6 vs std", list6, std_list6);
+
+        std::forward_list<int> std_list7;
+        std_list7.unique();
+        tests::compare("ForwardList7 vs std", list7, std_list7);
     }
     catch (const std::bad_alloc& exception)
     {

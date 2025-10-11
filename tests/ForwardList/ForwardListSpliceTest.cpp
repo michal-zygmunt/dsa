@@ -12,8 +12,10 @@
 #include "common.h"
 #include "dsa/ForwardList.h"
 
+#include <forward_list>
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
 #include <new>
 #include <stdexcept>
 
@@ -242,6 +244,66 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected50 = {};
         tests::compare("ForwardList50", list50, expected50);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        dsa::ForwardList<int> list51{ il_1 };
+        dsa::ForwardList<int> list52{ il_2 };
+        list51.splice_after(list51.begin(), list52, list52.begin(), list52.end());
+        std::forward_list<int> expected51{ il_1 };
+        std::forward_list<int> expected52{ il_2 };
+        expected51.splice_after(expected51.begin(), expected52, expected52.begin(), expected52.end());
+        tests::compare("ForwardList51", list51, expected51);
+        tests::compare("ForwardList52", list52, expected52);
+
+        dsa::ForwardList<int> list53{ il_1 };
+        dsa::ForwardList<int> list54{ il_2 };
+        list53.splice_after(list53.begin(), list54, list54.before_begin(), list54.end());
+        std::forward_list<int> expected53{ il_1 };
+        std::forward_list<int> expected54{ il_2 };
+        expected53.splice_after(expected53.begin(), expected54, expected54.before_begin(), expected54.end());
+        tests::compare("ForwardList53", list53, expected53);
+        tests::compare("ForwardList54", list54, expected54);
+
+        dsa::ForwardList<int> list55{ il_1 };
+        dsa::ForwardList<int> list56{ il_2 };
+        list55.splice_after(list55.before_begin(), list56, list56.before_begin(), list56.end());
+        std::forward_list<int> expected55{ il_1 };
+        std::forward_list<int> expected56{ il_2 };
+        expected55.splice_after(expected55.before_begin(), expected56, expected56.before_begin(), expected56.end());
+        tests::compare("ForwardList55", list55, expected55);
+        tests::compare("ForwardList56", list56, expected56);
+
+        dsa::ForwardList<int> list57{ il_1 };
+        dsa::ForwardList<int> list58{ il_2 };
+        constexpr int dist = 3;
+        auto iter_list58 = list58.begin();
+        std::advance(iter_list58, dist);
+        list57.splice_after(list57.begin(), list58, list58.begin(), iter_list58);
+        std::forward_list<int> expected57{ il_1 };
+        std::forward_list<int> expected58{ il_2 };
+        auto iter_expected57 = expected58.begin();
+        std::advance(iter_expected57, dist);
+        expected57.splice_after(expected57.begin(), expected58, expected58.begin(), iter_expected57);
+        tests::compare("ForwardList57", list57, expected57);
+        tests::compare("ForwardList58", list58, expected58);
+
+        dsa::ForwardList<int> list59{ il_1 };
+        dsa::ForwardList<int> list60{ il_2 };
+        auto iter_list59 = list59.begin();
+        std::advance(iter_list59, dist);
+        auto iter_list60 = list60.begin();
+        std::advance(iter_list60, dist);
+        list59.splice_after(iter_list59, list60, list60.begin(), iter_list60);
+        std::forward_list<int> expected59{ il_1 };
+        std::forward_list<int> expected60{ il_2 };
+        auto iter_expected59 = expected59.begin();
+        std::advance(iter_expected59, dist);
+        auto iter_expected60 = expected60.begin();
+        std::advance(iter_expected60, dist);
+        expected59.splice_after(iter_expected59, expected60, expected60.begin(), iter_expected60);
+        tests::compare("ForwardList59", list59, expected59);
+        tests::compare("ForwardList60", list60, expected60);
     }
     catch (const std::bad_alloc& exception)
     {
