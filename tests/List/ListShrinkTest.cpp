@@ -15,6 +15,8 @@
 #include <cstddef>
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
+#include <list>
 #include <new>
 #include <stdexcept>
 
@@ -88,6 +90,47 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected9 = { };
         tests::compare("List9", list9, expected9);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::list<int> std_list2{ 0, 10, 20, 30, 40, 50 };
+        auto iter_start_2 = std_list2.begin();
+        auto iter_end_2 = std_list2.begin();
+        std::advance(iter_start_2, 1);
+        std::advance(iter_end_2, 3);
+        std_list2.erase(iter_start_2, iter_end_2);
+        tests::compare("List2 vs std", list2, std_list2);
+
+        std::list<int> std_list3{ 0, 10, 20, 30, 40, 50 };
+        auto iter_start_3 = std_list3.begin();
+        auto iter_end_3 = std_list3.begin();
+        std::advance(iter_start_3, 1);
+        std_list3.erase(iter_start_3);
+        iter_start_3 = std_list3.begin();
+        std::advance(iter_start_3, 1);
+        std::advance(iter_end_3, 3);
+        std_list3.erase(iter_start_3, iter_end_3);
+        tests::compare("List3 vs std", list3, std_list3);
+
+        std::list<int> std_list4{ 0, 10, 20, 30, 40, 50 };
+        auto iter_start_4 = std_list4.begin();
+        auto iter_end_4 = std_list4.begin();
+        std::advance(iter_start_4, 1);
+        std_list4.erase(iter_start_4);
+        iter_start_4 = std_list4.begin();
+        iter_end_4 = std_list4.begin();
+        std::advance(iter_start_4, 1);
+        std::advance(iter_end_4, 4);
+        std_list4.erase(iter_start_4, iter_end_4);
+        tests::compare("List4 vs std", list4, std_list4);
+
+        std::list<int> std_list5{ 0, 10, 0, 0, 40, 0 };
+        std_list5.remove(0);
+        tests::compare("List5 vs std", list5, std_list5);
+
+        std::list<int> std_list6{ 0, 0, 0, 0, 0, 0 };
+        std_list6.remove(0);
+        tests::compare("List6 vs std", list6, std_list6);
     }
     catch (const std::bad_alloc& exception)
     {

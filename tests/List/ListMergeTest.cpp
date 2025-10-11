@@ -14,6 +14,7 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <list>
 #include <new>
 #include <stdexcept>
 
@@ -79,6 +80,32 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected12 = {};
         tests::compare("List12", list12, expected12);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::list<int> std_list1{ il_1 };
+        std::list<int> std_list2{ il_2 };
+        std_list1.merge(std_list2);
+        tests::compare("List1 vs std", list1, std_list1);
+        tests::compare("List2 vs std", list2, std_list2);
+
+        std::list<int> std_list3{ il_1 };
+        std::list<int> std_list4;
+        std_list4.merge(std_list3);
+        tests::compare("List3 vs std", list3, std_list3);
+        tests::compare("List4 vs std", list4, std_list4);
+
+        std::list<int> std_list5{ il_3 };
+        std::list<int> std_list6{ il_4 };
+        std_list5.merge(std_list6);
+        tests::compare("List5 vs std", list5, std_list5);
+        tests::compare("List6 vs std", list6, std_list6);
+
+        std::list<int> std_list7{ il_4 };
+        std::list<int> std_list8{ il_3 };
+        std_list7.merge(std_list8);
+        tests::compare("List7 vs std", list7, std_list7);
+        tests::compare("List8 vs std", list8, std_list8);
     }
     catch (const std::bad_alloc& exception)
     {

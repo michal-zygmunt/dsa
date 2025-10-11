@@ -14,6 +14,7 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <list>
 #include <new>
 #include <stdexcept>
 
@@ -41,6 +42,20 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected3{};
         tests::compare("List3", list3, expected3);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::list<int> std_list1{ 0, 10, 20, 30, 40, 50 };
+        std_list1.reverse();
+        tests::compare("List1 vs std", list1, std_list1);
+
+        std::list<int> std_list2{ 0 };
+        std_list2.reverse();
+        tests::compare("List2 vs std", list2, std_list2);
+
+        std::list<int> std_list3;
+        std_list3.reverse();
+        tests::compare("List3 vs std", list3, std_list3);
     }
     catch (const std::bad_alloc& exception)
     {

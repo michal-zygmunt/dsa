@@ -5,7 +5,7 @@
  *
  * @copyright Copyright (c) 2025 Michal Zygmunt
  * This project is distributed under the MIT License.
- * See accompanying LICENSE.txt file or obtain copy at
+ * See accompanying LICENSE.txt file or obtain copy "List
  * https://opensource.org/license/mit
  */
 
@@ -14,6 +14,7 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <list>
 #include <new>
 #include <stdexcept>
 
@@ -61,6 +62,36 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected7 = {};
         tests::compare("list7", list7, expected7);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::list<int> std_list1{ 1, 2, 3, 4, 5 };
+        std_list1.unique();
+        tests::compare("list1 vs std", list1, std_list1);
+
+        std::list<int> std_list2{ 1, 4, 2, 3, 2, 4, 3, 5, 1 };
+        std_list2.unique();
+        tests::compare("list2 vs std", list2, std_list2);
+
+        std::list<int> std_list3{ 1, 1, 2, 4, 2, 1, 3, 1, 1 };
+        std_list3.unique();
+        tests::compare("list3 vs std", list3, std_list3);
+
+        std::list<int> std_list4{ 1, 1, 1, 2, 2, 2, 1, 1, 1 };
+        std_list4.unique();
+        tests::compare("list4 vs std", list4, std_list4);
+
+        std::list<int> std_list5{ 0, 0, 0, 0, 0, 0 };
+        std_list5.unique();
+        tests::compare("list5 vs std", list5, std_list5);
+
+        std::list<int> std_list6 = std::list<int>();
+        std_list6.unique();
+        tests::compare("list6 vs std", list6, std_list6);
+
+        std::list<int> std_list7;
+        std_list7.unique();
+        tests::compare("list7 vs std", list7, std_list7);
     }
     catch (const std::bad_alloc& exception)
     {

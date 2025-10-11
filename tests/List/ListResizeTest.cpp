@@ -15,6 +15,7 @@
 #include <cstdint>
 #include <initializer_list>
 #include <iostream>
+#include <list>
 #include <new>
 #include <stdexcept>
 
@@ -75,6 +76,43 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected10 = { };
         tests::compare("List10", list10, expected10);
 
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::list<int> std_list1{ 1, 2, 3, 4, 5 };
+        std_list1.resize(3);
+        tests::compare("List1 vs std", list1, std_list1);
+
+        std::list<int> std_list2{ 1, 2, 3, 4, 5 };
+        std_list2.resize(5);
+        tests::compare("List2 vs std", list2, std_list2);
+
+        std::list<int> std_list3{ 1, 2, 3, 4, 5 };
+        std_list3.resize(8);
+        tests::compare("List3 vs std", list3, std_list3);
+
+        std::list<int> std_list4;
+        std_list4.resize(5);
+        tests::compare("List4 vs std", list4, std_list4);
+
+        std::list<int> std_list5{ 1, 2, 3, 4, 5 };
+        std_list5.resize(3, 10);
+        tests::compare("List5 vs std", list5, std_list5);
+
+        std::list<int> std_list6{ 1, 2, 3, 4, 5 };
+        std_list6.resize(5, 10);
+        tests::compare("List6 vs std", list6, std_list6);
+
+        std::list<int> std_list7{ 1, 2, 3, 4, 5 };
+        std_list7.resize(8, 10);
+        tests::compare("List7 vs std", list7, std_list7);
+
+        std::list<int> std_list8;
+        std_list8.resize(5, 10);
+        tests::compare("List8 vs std", list8, std_list8);
+
+        std::list<int> std_list10{ 1, 2, 3, 4, 5 };
+        std_list10.resize(0);
+        tests::compare("List10 vs std", list10, std_list10);
     }
     catch (const std::bad_alloc& exception)
     {

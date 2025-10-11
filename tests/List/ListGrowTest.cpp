@@ -15,6 +15,7 @@
 #include <cstddef>
 #include <initializer_list>
 #include <iostream>
+#include <list>
 #include <new>
 #include <stdexcept>
 
@@ -84,6 +85,20 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected7 = { 10, 20, 30, 40 };
         tests::compare("ForwardList7", list7, expected7);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::list<int> std_list5{ 10, 20, 30 };
+        std_list5.insert(std_list5.end(), 40);
+        tests::compare("List5 vs std", list5, std_list5);
+
+        std::list<int> std_list6{ 10, 20, 30 };
+        std_list6.insert(std_list6.end(), { 40, 50, 60 });
+        tests::compare("List6 vs std", list6, std_list6);
+
+        dsa::List<int> std_list7{ 40 };
+        std_list7.insert(std_list7.begin(), { 10, 20, 30 });
+        tests::compare("List7 vs std", list7, std_list7);
     }
     catch (const std::bad_alloc& exception)
     {

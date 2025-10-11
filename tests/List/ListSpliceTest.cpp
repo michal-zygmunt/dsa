@@ -14,6 +14,8 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
+#include <list>
 #include <new>
 #include <stdexcept>
 
@@ -244,6 +246,70 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected50 = {};
         tests::compare("List50", list50, expected50);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        dsa::List<int> list51{ il_1 };
+        dsa::List<int> list52{ il_2 };
+        list51.splice(list51.begin(), list52, list52.begin(), list52.end());
+        std::list<int> expected51{ il_1 };
+        std::list<int> expected52{ il_2 };
+        expected51.splice(expected51.begin(), expected52, expected52.begin(), expected52.end());
+        tests::compare("List51", list51, expected51);
+        tests::compare("List52", list52, expected52);
+
+        dsa::List<int> list53{ il_1 };
+        dsa::List<int> list54{ il_2 };
+        list53.splice(list53.end(), list54, list54.begin(), list54.end());
+        std::list<int> expected53{ il_1 };
+        std::list<int> expected54{ il_2 };
+        expected53.splice(expected53.end(), expected54, expected54.begin(), expected54.end());
+        tests::compare("List53", list53, expected53);
+        tests::compare("List54", list54, expected54);
+
+        dsa::List<int> list55{ il_1 };
+        dsa::List<int> list56{ il_2 };
+        constexpr int dist = 3;
+        auto iter_list55 = list55.begin();
+        std::advance(iter_list55, dist);
+        list55.splice(iter_list55, list56, list56.begin(), list56.end());
+        std::list<int> expected55{ il_1 };
+        std::list<int> expected56{ il_2 };
+        auto iter_expected55 = expected55.begin();
+        std::advance(iter_expected55, dist);
+        expected55.splice(iter_expected55, expected56, expected56.begin(), expected56.end());
+        tests::compare("List55", list55, expected55);
+        tests::compare("List56", list56, expected56);
+
+        dsa::List<int> list57{ il_1 };
+        dsa::List<int> list58{ il_2 };
+        auto iter_list58 = list58.begin();
+        std::advance(iter_list58, dist);
+        list57.splice(list57.begin(), list58, list58.begin(), iter_list58);
+        std::list<int> expected57{ il_1 };
+        std::list<int> expected58{ il_2 };
+        auto std_iter = expected58.begin();
+        std::advance(std_iter, dist);
+        expected57.splice(expected57.begin(), expected58, expected58.begin(), std_iter);
+        tests::compare("List57", list57, expected57);
+        tests::compare("List58", list58, expected58);
+
+        dsa::List<int> list59{ il_1 };
+        dsa::List<int> list60{ il_2 };
+        auto iter_list59 = list59.begin();
+        std::advance(iter_list59, dist);
+        auto iter_list60 = list60.begin();
+        std::advance(iter_list60, dist);
+        list59.splice(iter_list59, list60, list60.begin(), iter_list60);
+        std::list<int> expected59{ il_1 };
+        std::list<int> expected60{ il_2 };
+        auto iter_expected59 = expected59.begin();
+        std::advance(iter_expected59, dist);
+        auto iter_expected60 = expected60.begin();
+        std::advance(iter_expected60, dist);
+        expected59.splice(iter_expected59, expected60, expected60.begin(), iter_expected60);
+        tests::compare("List59", list59, expected59);
+        tests::compare("List60", list60, expected60);
     }
     catch (const std::bad_alloc& exception)
     {
