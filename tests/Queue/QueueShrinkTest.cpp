@@ -16,6 +16,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <new>
+#include <queue>
 #include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -50,6 +51,29 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const dsa::Queue<int> queue5;
         tests::compare("Queue5.empty()", queue5.empty(), true);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::queue<int> std_queue1 = std::queue<int>({ 0,10,20,30,40,50 });
+        std_queue1.pop();
+        std_queue1.pop();
+        tests::compare("Queue1 vs std", queue1, std_queue1);
+
+        std::queue<int> std_queue2 = std::queue<int>({ 0,10,20 });
+        std_queue2.pop();
+        std_queue2.pop();
+        std_queue2.pop();
+        tests::compare("Queue2 vs std", queue2, std_queue2);
+
+        const std::queue<int> std_queue3 = std::queue<int>({ 0,10,20 });
+        tests::compare("Queue3.size() vs std", queue3.size(), std_queue3.size());
+
+        const std::queue<int> std_queue4 = std::queue<int>();
+        // do not use pop on empty std::queue
+        tests::compare("Queue4.size() vs std", queue4.size(), std_queue4.size());
+
+        const std::queue<int> std_queue5;
+        tests::compare("Queue5.empty() vs std", queue5.empty(), std_queue5.empty());
     }
     catch (const std::bad_alloc& exception)
     {

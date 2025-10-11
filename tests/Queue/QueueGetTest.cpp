@@ -16,6 +16,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <new>
+#include <queue>
 #include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -53,6 +54,19 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Queue3 front", queue3.front(), 0);
         tests::compare("Queue3 back", queue3.back(), 20);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        const std::queue<int> std_queue1 = std::queue<int>({ 0,10,20 });
+        tests::compare("Queue1 vs std", queue1, std_queue1);
+
+        std::queue<int> std_queue2 = std::queue<int>({ 0,10,20 });
+        tests::compare("Queue2 front vs std", queue2.front(), std_queue2.front());
+        tests::compare("Queue2 back vs std", queue2.back(), std_queue2.back());
+
+        const std::queue<int> std_queue3 = std::queue<int>({ 0,10,20 });
+        tests::compare("Queue3 front vs std", queue3.front(), std_queue3.front());
+        tests::compare("Queue3 back vs std", queue3.back(), std_queue3.back());
     }
     catch (const std::bad_alloc& exception)
     {

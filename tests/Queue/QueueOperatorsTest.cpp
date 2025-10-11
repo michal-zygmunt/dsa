@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <new>
+#include <queue>
 #include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -78,6 +79,56 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Queue2 >= queue3", queue2 >= queue3, true);
         tests::compare("Queue3 >= queue2", queue3 >= queue2, false);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        const std::queue<int> std_queue1({ 1, 2, 3 });
+        const std::queue<int> std_queue2({ 4, 5, 6 });
+        const std::queue<int> std_queue3({ 1, 2, 3, 4 });
+
+        // intentional self-comparison, an object should be equal to itself
+        // NOLINTNEXTLINE(misc-redundant-expression)
+        tests::compare("Queue1 == queue1 vs std", queue1 == queue1, std_queue1 == std_queue1);
+
+        tests::compare("Queue1 != queue2 vs std", queue1 != queue2, std_queue1 != std_queue2);
+
+        tests::compare("Queue1 < queue2 vs std", queue1 < queue2, std_queue1 < std_queue2);
+        tests::compare("Queue2 < queue1 vs std", queue2 < queue1, std_queue2 < std_queue1);
+
+        tests::compare("Queue1 > queue2 vs std", queue1 > queue2, std_queue1 > std_queue2);
+        tests::compare("Queue2 > queue1 vs std", queue2 > queue1, std_queue2 > std_queue1);
+
+        tests::compare("Queue1 <= queue2 vs std", queue1 <= queue2, std_queue1 <= std_queue2);
+        tests::compare("Queue2 <= queue1 vs std", queue2 <= queue1, std_queue2 <= std_queue1);
+
+        tests::compare("Queue1 >= queue2 vs std", queue1 >= queue2, std_queue1 >= std_queue2);
+        tests::compare("Queue2 >= queue1 vs std", queue2 >= queue1, std_queue2 >= std_queue1);
+
+        std::cout << "Compare operators for objects of different size\n\n";
+
+        tests::compare("Queue1 == queue3 vs std", queue1 == queue3, std_queue1 == std_queue3);
+
+        tests::compare("Queue1 != queue3 vs std", queue1 != queue3, std_queue1 != std_queue3);
+
+        tests::compare("Queue1 < queue3 vs std", queue1 < queue3, std_queue1 < std_queue3);
+        tests::compare("Queue3 < queue1 vs std", queue3 < queue1, std_queue3 < std_queue1);
+        tests::compare("Queue2 < queue3 vs std", queue2 < queue3, std_queue2 < std_queue3);
+        tests::compare("Queue3 < queue2 vs std", queue3 < queue2, std_queue3 < std_queue2);
+
+        tests::compare("Queue1 > queue3 vs std", queue1 > queue3, std_queue1 > std_queue3);
+        tests::compare("Queue3 > queue1 vs std", queue3 > queue1, std_queue3 > std_queue1);
+        tests::compare("Queue2 > queue3 vs std", queue2 > queue3, std_queue2 > std_queue3);
+        tests::compare("Queue3 > queue2 vs std", queue3 > queue2, std_queue3 > std_queue2);
+
+        tests::compare("Queue1 <= queue3 vs std", queue1 <= queue3, std_queue1 <= std_queue3);
+        tests::compare("Queue3 <= queue1 vs std", queue3 <= queue1, std_queue3 <= std_queue1);
+        tests::compare("Queue2 <= queue3 vs std", queue2 <= queue3, std_queue2 <= std_queue3);
+        tests::compare("Queue3 <= queue2 vs std", queue3 <= queue2, std_queue3 <= std_queue2);
+
+        tests::compare("Queue1 >= queue3 vs std", queue1 >= queue3, std_queue1 >= std_queue3);
+        tests::compare("Queue3 >= queue1 vs std", queue3 >= queue1, std_queue3 >= std_queue1);
+        tests::compare("Queue2 >= queue3 vs std", queue2 >= queue3, std_queue2 >= std_queue3);
+        tests::compare("Queue3 >= queue2 vs std", queue3 >= queue2, std_queue3 >= std_queue2);
     }
     catch (const std::bad_alloc& exception)
     {

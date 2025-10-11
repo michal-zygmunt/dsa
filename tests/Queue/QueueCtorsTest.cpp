@@ -15,6 +15,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <new>
+#include <queue>
 #include <stdexcept>
 #include <utility>
 
@@ -75,6 +76,44 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         queue7 = std::move(temp_2);
         tests::compare("Queue7", queue7, expected);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::queue<int> std_queue1;
+        std_queue1.push(0);
+        std_queue1.push(10);
+        std_queue1.push(20);
+        tests::compare("Queue1 vs std", queue1, std_queue1);
+
+        std::queue<int> std_queue2({ 0 });
+        std_queue2.push(10);
+        std_queue2.push(20);
+        tests::compare("Queue2 vs std", queue2, std_queue2);
+
+        const std::queue<int> std_queue3(expected);
+        tests::compare("Queue3 vs std", queue3, std_queue3);
+
+        const std::queue<int> std_queue4{ std_queue1 };
+        tests::compare("Queue4 vs std", queue4, expected);
+
+        std::queue<int> std_queue5{ std_queue1 };
+        std_queue5.push(1);
+        std_queue5.push(2);
+        std_queue5.push(3);
+        std_queue5.push(4);
+        std_queue5.push(5);
+        std_queue5 = std_queue1;
+        tests::compare("Queue5 vs std", queue5, std_queue5);
+
+        std::queue<int> std_temp_1(std_queue1);
+        const std::queue<int> std_queue6 = std::move(std_temp_1);
+        tests::compare("Queue6", queue6, std_queue6);
+
+        std::queue<int> std_temp_2(std_queue1);
+        std::queue<int> std_queue7;
+        std_queue7.push(0);
+        std_queue7 = std::move(std_temp_2);
+        tests::compare("Queue7", queue7, std_queue7);
     }
     catch (const std::bad_alloc& exception)
     {
