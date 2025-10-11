@@ -15,6 +15,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <new>
+#include <stack>
 #include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -42,6 +43,34 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         stack4.swap(stack4);
         tests::compare("Stack4", stack4, expected);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::stack<int> std_stack1;
+        std_stack1.push(0);
+        std_stack1.push(10);
+        std_stack1.push(20);
+        std_stack1.top() = 50;
+        tests::compare("Stack1 vs std", stack1, std_stack1);
+
+        std::stack<int> std_stack2;
+        std_stack2.push(0);
+        std_stack2.push(10);
+        std_stack2.push(20);
+        std::stack<int> std_stack3;
+        std_stack3.push(0);
+        std_stack3.push(10);
+        std_stack3.push(50);
+        std_stack2.swap(std_stack3);
+        tests::compare("Stack2 vs std", stack2, std_stack2);
+        tests::compare("Stack3 vs std", stack3, std_stack3);
+
+        std::stack<int> std_stack4;
+        std_stack4.push(0);
+        std_stack4.push(10);
+        std_stack4.push(50);
+        std_stack4.swap(std_stack4);
+        tests::compare("Stack4 vs std", stack4, std_stack4);
     }
     catch (const std::bad_alloc& exception)
     {

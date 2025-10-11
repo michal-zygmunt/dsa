@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <new>
+#include <stack>
 #include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -78,6 +79,56 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Stack2 >= stack3", stack2 >= stack3, true);
         tests::compare("Stack3 >= stack2", stack3 >= stack2, false);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        const std::stack<int> std_stack1({ 1, 2, 3 });
+        const std::stack<int> std_stack2({ 4, 5, 6 });
+        const std::stack<int> std_stack3({ 1, 2, 3, 4 });
+
+        // intentional self-comparison, an object should be equal to itself
+        // NOLINTNEXTLINE(misc-redundant-expression)
+        tests::compare("Stack1 == stack1 vs std", stack1 == stack1, std_stack1 == std_stack1);
+
+        tests::compare("Stack1 != stack2 vs std", stack1 != stack2, std_stack1 != std_stack2);
+
+        tests::compare("Stack1 < stack2 vs std", stack1 < stack2, std_stack1 < std_stack2);
+        tests::compare("Stack2 < stack1 vs std", stack2 < stack1, std_stack2 < std_stack1);
+
+        tests::compare("Stack1 > stack2 vs std", stack1 > stack2, std_stack1 > std_stack2);
+        tests::compare("Stack2 > stack1 vs std", stack2 > stack1, std_stack2 > std_stack1);
+
+        tests::compare("Stack1 <= stack2 vs std", stack1 <= stack2, std_stack1 <= std_stack2);
+        tests::compare("Stack2 <= stack1 vs std", stack2 <= stack1, std_stack2 <= std_stack1);
+
+        tests::compare("Stack1 >= stack2 vs std", stack1 >= stack2, std_stack1 >= std_stack2);
+        tests::compare("Stack2 >= stack1 vs std", stack2 >= stack1, std_stack2 >= std_stack1);
+
+        std::cout << "Compare operators for objects of different size\n\n";
+
+        tests::compare("Stack1 == stack3 vs std", stack1 == stack3, std_stack1 == std_stack3);
+
+        tests::compare("Stack1 != stack3 vs std", stack1 != stack3, std_stack1 != std_stack3);
+
+        tests::compare("Stack1 < stack3 vs std", stack1 < stack3, std_stack1 < std_stack3);
+        tests::compare("Stack3 < stack1 vs std", stack3 < stack1, std_stack3 < std_stack1);
+        tests::compare("Stack2 < stack3 vs std", stack2 < stack3, std_stack2 < std_stack3);
+        tests::compare("Stack3 < stack2 vs std", stack3 < stack2, std_stack3 < std_stack2);
+
+        tests::compare("Stack1 > stack3 vs std", stack1 > stack3, std_stack1 > std_stack3);
+        tests::compare("Stack3 > stack1 vs std", stack3 > stack1, std_stack3 > std_stack1);
+        tests::compare("Stack2 > stack3 vs std", stack2 > stack3, std_stack2 > std_stack3);
+        tests::compare("Stack3 > stack2 vs std", stack3 > stack2, std_stack3 > std_stack2);
+
+        tests::compare("Stack1 <= stack3 vs std", stack1 <= stack3, std_stack1 <= std_stack3);
+        tests::compare("Stack3 <= stack1 vs std", stack3 <= stack1, std_stack3 <= std_stack1);
+        tests::compare("Stack2 <= stack3 vs std", stack2 <= stack3, std_stack2 <= std_stack3);
+        tests::compare("Stack3 <= stack2 vs std", stack3 <= stack2, std_stack3 <= std_stack2);
+
+        tests::compare("Stack1 >= stack3 vs std", stack1 >= stack3, std_stack1 >= std_stack3);
+        tests::compare("Stack3 >= stack1 vs std", stack3 >= stack1, std_stack3 >= std_stack1);
+        tests::compare("Stack2 >= stack3 vs std", stack2 >= stack3, std_stack2 >= std_stack3);
+        tests::compare("Stack3 >= stack2 vs std", stack3 >= stack2, std_stack3 >= std_stack2);
     }
     catch (const std::bad_alloc& exception)
     {

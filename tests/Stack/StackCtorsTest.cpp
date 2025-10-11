@@ -15,6 +15,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <new>
+#include <stack>
 #include <stdexcept>
 #include <utility>
 
@@ -74,6 +75,44 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         stack7 = std::move(temp_2);
         tests::compare("Stack7", stack7, expected);
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::stack<int> std_stack1;
+        std_stack1.push(0);
+        std_stack1.push(10);
+        std_stack1.push(20);
+        tests::compare("Stack1 vs std", stack1, std_stack1);
+
+        std::stack<int> std_stack2({ 0 });
+        std_stack2.push(10);
+        std_stack2.push(20);
+        tests::compare("Stack2 vs std", stack2, std_stack2);
+
+        const std::stack<int> std_stack3({ 0, 10, 20 });
+        tests::compare("Stack3 vs std", stack3, std_stack3);
+
+        const std::stack<int> std_stack4{ std_stack1 };
+        tests::compare("Stack4 vs std", stack4, expected);
+
+        std::stack<int> std_stack5{ std_stack1 };
+        std_stack5.push(1);
+        std_stack5.push(2);
+        std_stack5.push(3);
+        std_stack5.push(4);
+        std_stack5.push(5);
+        std_stack5 = std_stack1;
+        tests::compare("Stack5 vs std", stack5, std_stack5);
+
+        std::stack<int> std_temp_1(std_stack1);
+        const std::stack<int> std_stack6 = std::move(std_temp_1);
+        tests::compare("Stack6", stack6, std_stack6);
+
+        std::stack<int> std_temp_2(std_stack1);
+        std::stack<int> std_stack7;
+        std_stack7.push(0);
+        std_stack7 = std::move(std_temp_2);
+        tests::compare("Stack7", stack7, std_stack7);
     }
     catch (const std::bad_alloc& exception)
     {

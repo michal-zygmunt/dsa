@@ -16,6 +16,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <new>
+#include <stack>
 #include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -50,6 +51,29 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const dsa::Stack<int> stack5;
         tests::compare("Stack5.size()", stack5.size(), static_cast<size_t>(0));
 
+
+        std::cout << "Compare operations results with std container\n\n";
+
+        std::stack<int> std_stack1 = std::stack<int>({ 0,10,20,30,40,50 });
+        std_stack1.pop();
+        std_stack1.pop();
+        tests::compare("Stack1 vs std", stack1, std_stack1);
+
+        std::stack<int> std_stack2 = std::stack<int>({ 0,10,20 });
+        std_stack2.pop();
+        std_stack2.pop();
+        std_stack2.pop();
+        tests::compare("Stack2 vs std", stack2, std_stack2);
+
+        const std::stack<int> std_stack3 = std::stack<int>({ 0,10,20 });
+        tests::compare("Stack3.size() vs std", stack3.size(), std_stack3.size());
+
+        const std::stack<int> std_stack4 = std::stack<int>();
+        // do not use pop on empty std::stack
+        tests::compare("Stack4.size() vs std", stack4.size(), std_stack4.size());
+
+        const std::stack<int> std_stack5;
+        tests::compare("Stack5.empty() vs std", stack5.empty(), std_stack5.empty());
     }
     catch (const std::bad_alloc& exception)
     {
