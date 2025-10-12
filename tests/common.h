@@ -19,6 +19,7 @@
 
 #include <forward_list>
 #include <initializer_list>
+#include <iomanip>
 #include <iostream>
 #include <list>
 #include <queue>
@@ -402,6 +403,25 @@ namespace tests
     }
 
     /**
+     * @brief Function prints content of compared containers
+     *
+     * @tparam T type of data stored in forst container
+     * @tparam U type of data stored in second container
+     * @param[in] name_1 first container name to print
+     * @param[in] container_1 first input container
+     * @param[in] name_2 second container name to print
+     * @param[in] container_2 second input container
+     */
+    template<typename T, typename U>
+    auto print_containers(const std::string& name_1, const T& container_1,
+        const std::string& name_2, const U& container_2) -> void
+    {
+        const int size{ static_cast<int>(std::max(name_1.length(), name_2.length())) };
+        std::cout << std::setw(size) << std::left << name_1 << ": " << container_1 << '\n';
+        std::cout << std::setw(size) << std::left << name_2 << ": " << container_2 << '\n';
+    }
+
+    /**
      * @brief Function compares content of two containers
      *
      * @tparam T input container
@@ -413,8 +433,7 @@ namespace tests
     template<typename T, typename U>
     void compare(const std::string& container_name, const T& container, const std::initializer_list<U>& expected)
     {
-        std::cout << container_name << ':' << '\t' << container << '\n';
-        std::cout << "Expected:  \t" << expected << '\n';
+        print_containers(container_name, container, "Expected", expected);
         const bool res = if_error(container, expected);
         std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     }
@@ -431,8 +450,7 @@ namespace tests
     template<typename T, typename U>
     void compare(const std::string& container_name, const T& container, const std::forward_list<U>& expected)
     {
-        std::cout << container_name << ':' << '\t' << container << '\n';
-        std::cout << "Expected:  \t" << expected << '\n';
+        print_containers(container_name, container, "Expected", expected);
         const bool res = if_error(container, expected);
         std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     }
@@ -449,8 +467,7 @@ namespace tests
     template<typename T, typename U>
     void compare(const std::string& container_name, const T& container, const std::list<U>& expected)
     {
-        std::cout << container_name << ':' << '\t' << container << '\n';
-        std::cout << "Expected:  \t" << expected << '\n';
+        print_containers(container_name, container, "Expected", expected);
         const bool res = if_error(container, expected);
         std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     }
@@ -467,8 +484,7 @@ namespace tests
     template<typename T, typename U>
     void compare(const std::string& container_name, const T& container, std::queue<U> expected)
     {
-        std::cout << container_name << ':' << '\t' << container << '\n';
-        std::cout << "Expected:  \t" << expected << '\n';
+        print_containers(container_name, container, "Expected", expected);
         const bool res = if_error(container, expected);
         std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     }
@@ -485,8 +501,7 @@ namespace tests
     template<typename T, typename U>
     void compare(const std::string& container_name, const T& container, const std::stack<U>& expected)
     {
-        std::cout << container_name << ':' << '\t' << container << '\n';
-        std::cout << "Expected:  \t" << expected << '\n';
+        print_containers(container_name, container, "Expected", expected);
         const bool res = if_error(container, expected);
         std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     }
@@ -502,8 +517,7 @@ namespace tests
     template<typename T>
     void compare(const std::string& container_name, const T& val1, const T& val2)
     {
-        std::cout << container_name << ':' << '\t' << val1 << '\n';
-        std::cout << "Expected:  \t" << val2 << '\n';
+        print_containers(container_name, val1, "Expected", val2);
         const bool res = if_error(val1, val2);
         std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     }
