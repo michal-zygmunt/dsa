@@ -327,6 +327,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         return 1;
     }
 
+    tests::print_stats();
     return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
