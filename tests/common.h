@@ -42,9 +42,20 @@ namespace tests
     }
 
     /**
+     * @brief Function return total number of comparisons
+     *
+     * @return int& reference to total comparison count
+     */
+    inline auto total_count() -> int&
+    {
+        static int total{};
+        return total;
+    }
+
+    /**
      * @brief Function compares two values
      *
-     * @tparam T type of compared objects
+     * @tparam T type of compared values
      * @param[in] val1 input value
      * @param[in] val2 input value
      * @retval true if values are not equal
@@ -63,6 +74,22 @@ namespace tests
     }
 
     /**
+     * @brief Function compares two values
+     *
+     * @tparam T type of compared objects
+     * @param[in] val1 input value
+     * @param[in] val2 input value
+     * @retval true if values are not equal
+     * @retval false otherwise
+     */
+    template<typename T>
+    auto cmp(const T& val1, const T& val2) -> bool
+    {
+        tests::total_count()++;
+        return if_error(val1, val2);
+    }
+
+    /**
      * @brief Function compares values of ForwardList and initializer list
      *
      * @tparam T type of elements to compare
@@ -72,15 +99,18 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    auto if_error(dsa::ForwardList<T> container, const std::initializer_list<T>& test_values) -> bool
+    auto cmp(dsa::ForwardList<T> container, const std::initializer_list<T>& test_values) -> bool
     {
-        if (if_error(container.size(), test_values.size()))
+        const auto size{ (test_values.size()) };
+        tests::total_count() += static_cast<int>(size);
+
+        if (if_error(container.size(), size))
         {
             std::cout << "Objects of different length!\n";
             return true;
         }
 
-        for (size_t i = 0; i < test_values.size(); i++)
+        for (size_t i = 0; i < size; i++)
         {
             if (if_error(container.front(), test_values.begin()[i]))
             {
@@ -102,15 +132,18 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    auto if_error(dsa::List<T> container, const std::initializer_list<T>& test_values) -> bool
+    auto cmp(dsa::List<T> container, const std::initializer_list<T>& test_values) -> bool
     {
-        if (if_error(container.size(), test_values.size()))
+        const auto size{ (test_values.size()) };
+        tests::total_count() += static_cast<int>(size);
+
+        if (if_error(container.size(), size))
         {
             std::cout << "Objects of different length!\n";
             return true;
         }
 
-        for (size_t i = 0; i < test_values.size(); i++)
+        for (size_t i = 0; i < size; i++)
         {
             if (if_error(container.front(), test_values.begin()[i]))
             {
@@ -132,15 +165,18 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    auto if_error(dsa::Queue<T> queue, const std::initializer_list<T>& test_values) -> bool
+    auto cmp(dsa::Queue<T> queue, const std::initializer_list<T>& test_values) -> bool
     {
-        if (if_error(queue.size(), test_values.size()))
+        const auto size{ (test_values.size()) };
+        tests::total_count() += static_cast<int>(size);
+
+        if (if_error(queue.size(), size))
         {
             std::cout << "Objects of different length!\n";
             return true;
         }
 
-        for (size_t i = 0; i < test_values.size(); i++)
+        for (size_t i = 0; i < size; i++)
         {
             if (if_error(queue.front(), test_values.begin()[i]))
             {
@@ -162,15 +198,18 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    auto if_error(dsa::Stack<T> stack, const std::initializer_list<T>& test_values) -> bool
+    auto cmp(dsa::Stack<T> stack, const std::initializer_list<T>& test_values) -> bool
     {
-        if (if_error(stack.size(), test_values.size()))
+        const auto size{ (test_values.size()) };
+        tests::total_count() += static_cast<int>(size);
+
+        if (if_error(stack.size(), size))
         {
             std::cout << "Objects of different length!\n";
             return true;
         }
 
-        for (size_t i = 0; i < test_values.size(); i++)
+        for (size_t i = 0; i < size; i++)
         {
             if (if_error(stack.top(), test_values.begin()[i]))
             {
@@ -192,17 +231,18 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    auto if_error(dsa::ForwardList<T> container, std::forward_list<T> test_values) -> bool
+    auto cmp(dsa::ForwardList<T> container, std::forward_list<T> test_values) -> bool
     {
-        auto test_values_size = static_cast<size_t>(std::distance(test_values.begin(), test_values.end()));
+        const auto size{ static_cast<size_t>(std::distance(test_values.begin(), test_values.end())) };
+        tests::total_count() += static_cast<int>(size);
 
-        if (if_error(container.size(), test_values_size))
+        if (if_error(container.size(), size))
         {
             std::cout << "Objects of different length!\n";
             return true;
         }
 
-        for (size_t i = 0; i < test_values_size; i++)
+        for (size_t i = 0; i < size; i++)
         {
             if (if_error(container.front(), test_values.front()))
             {
@@ -225,17 +265,18 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    auto if_error(dsa::List<T> container, std::list<T> test_values) -> bool
+    auto cmp(dsa::List<T> container, std::list<T> test_values) -> bool
     {
-        auto test_values_size = static_cast<size_t>(std::distance(test_values.begin(), test_values.end()));
+        const auto size{ static_cast<size_t>(std::distance(test_values.begin(), test_values.end())) };
+        tests::total_count() += static_cast<int>(size);
 
-        if (if_error(container.size(), test_values_size))
+        if (if_error(container.size(), size))
         {
             std::cout << "Objects of different length!\n";
             return true;
         }
 
-        for (size_t i = 0; i < test_values_size; i++)
+        for (size_t i = 0; i < size; i++)
         {
             if (if_error(container.front(), test_values.front()))
             {
@@ -258,15 +299,18 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    auto if_error(dsa::Queue<T> queue, std::queue<T>& test_values) -> bool
+    auto cmp(dsa::Queue<T> queue, std::queue<T>& test_values) -> bool
     {
-        if (if_error(queue.size(), test_values.size()))
+        const auto size{ (test_values.size()) };
+        tests::total_count() += static_cast<int>(size);
+
+        if (if_error(queue.size(), size))
         {
             std::cout << "Objects of different length!\n";
             return true;
         }
 
-        for (size_t i = 0; i < test_values.size(); i++)
+        for (size_t i = 0; i < size; i++)
         {
             if (if_error(queue.front(), test_values.front()))
             {
@@ -289,15 +333,18 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    auto if_error(dsa::Stack<T> stack, std::stack<T> test_values) -> bool
+    auto cmp(dsa::Stack<T> stack, std::stack<T> test_values) -> bool
     {
-        if (if_error(stack.size(), test_values.size()))
+        const auto size{ (test_values.size()) };
+        tests::total_count() += static_cast<int>(size);
+
+        if (if_error(stack.size(), size))
         {
             std::cout << "Objects of different length!\n";
             return true;
         }
 
-        for (size_t i = 0; i < test_values.size(); i++)
+        for (size_t i = 0; i < size; i++)
         {
             if (if_error(stack.top(), test_values.top()))
             {
@@ -403,6 +450,15 @@ namespace tests
     }
 
     /**
+     * @brief Function print number of passed and failed comparisons
+     */
+    inline auto print_stats() -> void
+    {
+        std::cout << total_count() - failed_count() << "/" << total_count() << " PASS, "
+            << failed_count() << " FAIL\n";
+    }
+
+    /**
      * @brief Function prints content of compared containers
      *
      * @tparam T type of data stored in forst container
@@ -434,7 +490,7 @@ namespace tests
     void compare(const std::string& container_name, const T& container, const std::initializer_list<U>& expected)
     {
         print_containers(container_name, container, "Expected", expected);
-        const bool res = if_error(container, expected);
+        const bool res = cmp(container, expected);
         std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     }
 
@@ -451,7 +507,7 @@ namespace tests
     void compare(const std::string& container_name, const T& container, const std::forward_list<U>& expected)
     {
         print_containers(container_name, container, "Expected", expected);
-        const bool res = if_error(container, expected);
+        const bool res = cmp(container, expected);
         std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     }
 
@@ -468,7 +524,7 @@ namespace tests
     void compare(const std::string& container_name, const T& container, const std::list<U>& expected)
     {
         print_containers(container_name, container, "Expected", expected);
-        const bool res = if_error(container, expected);
+        const bool res = cmp(container, expected);
         std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     }
 
@@ -485,7 +541,7 @@ namespace tests
     void compare(const std::string& container_name, const T& container, std::queue<U> expected)
     {
         print_containers(container_name, container, "Expected", expected);
-        const bool res = if_error(container, expected);
+        const bool res = cmp(container, expected);
         std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     }
 
@@ -502,7 +558,7 @@ namespace tests
     void compare(const std::string& container_name, const T& container, const std::stack<U>& expected)
     {
         print_containers(container_name, container, "Expected", expected);
-        const bool res = if_error(container, expected);
+        const bool res = cmp(container, expected);
         std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     }
 
@@ -518,7 +574,7 @@ namespace tests
     void compare(const std::string& container_name, const T& val1, const T& val2)
     {
         print_containers(container_name, val1, "Expected", val2);
-        const bool res = if_error(val1, val2);
+        const bool res = cmp(val1, val2);
         std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
     }
 
@@ -534,7 +590,7 @@ namespace tests
     template<typename T>
     auto compare(T val1, T val2) -> bool
     {
-        return if_error(val1, val2);
+        return cmp(val1, val2);
     }
 }
 
