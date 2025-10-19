@@ -94,10 +94,11 @@ if(ENABLE_WARNINGS)
 			/sdl
 			/GS
 			/WX
-			/RTC1 # /RTCs /RTSu
 			/diagnostics:column
 			/diagnostics:caret
 			/utf-8
+			# use runtime check errors only for Debug config
+			$<$<CONFIG:Debug>: /RTC1> # /RTCs /RTSu
 		)
 		# MSVC specific flags
 		if(MSVC AND NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
