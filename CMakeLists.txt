@@ -176,7 +176,8 @@ if(ENABLE_SANITIZERS)
 		if(MSVC AND NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 			# MSVC feature
 			target_compile_options(dsa_testing INTERFACE
-				/fsanitize=address
+				# use sanitizer only for Debug config
+				$<$<CONFIG:Debug>: /fsanitize=address>
 			)
 			# require MSVC-Clang installation
 			find_program(CLANGXX_PATH clang++)
