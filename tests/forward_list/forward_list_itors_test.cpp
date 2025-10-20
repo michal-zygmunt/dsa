@@ -161,6 +161,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // std library operation on custom iterators
         dsa::ForwardList<int> list9 = dsa::ForwardList<int>{ 10, 20, 30, 40, 50 };
+        // use classic iterator based algorithms
+        // NOLINTNEXTLINE(modernize-use-ranges)
         std::fill(list9.begin(), list9.end(), 10);
         const std::initializer_list<int> expected9 = { 10, 10, 10, 10, 10 };
         tests::compare("ForwardList9", list9, expected9);
@@ -278,6 +280,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList6 vs std", list6, std_list6);
 
         std::forward_list<int>std_list9 = std::forward_list<int>{ 10, 20, 30, 40, 50 };
+        // use classic iterator based algorithms
+        // NOLINTNEXTLINE(modernize-use-ranges)
         std::fill(std_list9.begin(), std_list9.end(), 10);
         tests::compare("ForwardList9 vs std", list9, std_list9);
 
