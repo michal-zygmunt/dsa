@@ -168,7 +168,7 @@ namespace dsa
              * @tparam IF_CONST if \p true generate iterator with const reference to underlying data type
              * @tparam T data type
              */
-            using iterator_type = typename std::conditional<IF_CONST, const T, T>::type;
+            using iterator_type = std::conditional_t<IF_CONST, const T, T>;
 
             /**
              * @brief Alias for forward iterator tag, define iterator direction
