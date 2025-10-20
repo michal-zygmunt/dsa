@@ -885,7 +885,7 @@ namespace dsa
         {
             if (m_head == nullptr)
             {
-                m_head = dsa::make_unique<NodeBase>();
+                m_head = std::make_unique<NodeBase>();
             }
         }
 
@@ -950,7 +950,7 @@ namespace dsa
                 return nullptr;
             }
 
-            auto newNode = dsa::make_unique<Node>(value);
+            auto newNode = std::make_unique<Node>(value);
             newNode->m_next = std::move(pos.m_current_node->m_next);
             pos.m_current_node->m_next = std::move(newNode);
 
@@ -1320,7 +1320,7 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::push_front(T value)
     {
-        auto newNode = dsa::make_unique<Node>(value);
+        auto newNode = std::make_unique<Node>(value);
         if (!m_head->m_next)
         {
             m_head->m_next = std::move(newNode);
@@ -1417,7 +1417,7 @@ namespace dsa
         {
             if (m_size != 0)
             {
-                auto temp_head = dsa::make_unique<Node>(0);
+                auto temp_head = std::make_unique<Node>(0);
                 NodeBase* temp_tail = temp_head.get();
 
                 std::unique_ptr<NodeBase> to_move{};
