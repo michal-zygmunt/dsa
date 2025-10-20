@@ -114,7 +114,7 @@ namespace dsa
          *
          * @return const T& const reference to Queue first object
          */
-        auto front() const -> const_reference;
+        [[nodiscard]] auto front() const -> const_reference;
 
         /**
          * @brief Function returns pointer to Queue last object
@@ -128,7 +128,7 @@ namespace dsa
          *
          * @return const T& const reference to Queue last object
          */
-        auto back() const -> const_reference;
+        [[nodiscard]] auto back() const -> const_reference;
 
         /**
          * @brief Function checks if container has no elements
@@ -136,14 +136,14 @@ namespace dsa
          * @retval true if container is empty
          * @retval false if container is not empty
          */
-        auto empty() const -> bool;
+        [[nodiscard]] auto empty() const -> bool;
 
         /**
          * @brief Function returns Queue size
          *
          * @return size_t number of elements in container
          */
-        auto size() const -> size_t;
+        [[nodiscard]] auto size() const -> size_t;
 
         /**
          * @brief Function add new element at the end of Queue
