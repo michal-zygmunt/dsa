@@ -133,7 +133,7 @@ namespace dsa
              *
              * @return T to value stored in Node
              */
-            auto value() const -> T
+            [[nodiscard]] auto value() const -> T
             {
                 return m_value;
             }
@@ -490,7 +490,7 @@ namespace dsa
          *
          * @return const reference to data stored in ForwardList first Node
          */
-        auto front() const -> const_reference;
+        [[nodiscard]] auto front() const -> const_reference;
 
         /**
          * @brief Function returns iterator just before ForwardList first Node
@@ -561,14 +561,14 @@ namespace dsa
          * @retval true if container is empty
          * @retval false if container is not empty
          */
-        auto empty() const -> bool;
+        [[nodiscard]] auto empty() const -> bool;
 
         /**
          * @brief Function returns maximum number of elements container can hold
          *
          * @return size_t maximum number of elements
          */
-        auto max_size() const noexcept -> size_t;
+        [[nodiscard]] auto max_size() const noexcept -> size_t;
 
         /**
          * @brief Function removes all elements of ForwardList
@@ -812,7 +812,7 @@ namespace dsa
          * @retval Node* if index is valid
          * @retval nullptr if invalid index
          */
-        auto get(size_t index) const -> Node*
+        [[nodiscard]] auto get(size_t index) const -> Node*
         {
             if (index > m_size)
             {
@@ -858,7 +858,7 @@ namespace dsa
          *
          * @return size_t number of elements in container
          */
-        auto size() const -> size_t
+        [[nodiscard]] auto size() const -> size_t
         {
             return m_size;
         }
