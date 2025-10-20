@@ -138,7 +138,7 @@ namespace dsa
              *
              * @return T value stored in Node
              */
-            auto value() const -> T
+            [[nodiscard]] auto value() const -> T
             {
                 return m_value;
             }
@@ -527,7 +527,7 @@ namespace dsa
          *
          * @return const reference to data stored in List first Node
          */
-        auto front() const -> const_reference;
+        [[nodiscard]] auto front() const -> const_reference;
 
         /**
          * @brief Function returns reference to value stored in List last Node
@@ -541,7 +541,7 @@ namespace dsa
          *
          * @return const reference to data stored in List last Node
          */
-        auto back() const -> const_reference;
+        [[nodiscard]] auto back() const -> const_reference;
 
         /**
          * @brief Function returns pointer to List first Node
@@ -562,7 +562,7 @@ namespace dsa
          *
          * @return const_iterator const iterator to List first Node
          */
-        auto cbegin() const -> const_iterator;
+        [[nodiscard]] auto cbegin() const -> const_iterator;
 
         /**
          * @brief Function returns pointer to List last Node
@@ -583,7 +583,7 @@ namespace dsa
          *
          * @return const_iterator const iterator to List last Node
          */
-        auto cend() const -> const_iterator;
+        [[nodiscard]] auto cend() const -> const_iterator;
 
         /// @todo add rbegin
 
@@ -599,21 +599,21 @@ namespace dsa
          * @retval true if container is empty
          * @retval false if container is not empty
          */
-        auto empty() const -> bool;
+        [[nodiscard]] auto empty() const -> bool;
 
         /**
          * @brief Function returns List size
          *
          * @return size_t number of elements in container
          */
-        auto size() const -> size_t;
+        [[nodiscard]] auto size() const -> size_t;
 
         /**
          * @brief Function returns maximum number of elements container can hold
          *
          * @return size_t maximum number of elements
          */
-        auto max_size() const -> size_t;
+        [[nodiscard]] auto max_size() const -> size_t;
 
         /**
          * @brief Function removes all elements of List
@@ -897,7 +897,7 @@ namespace dsa
          * @retval Node* if index is valid
          * @retval nullptr if invalid index
          */
-        auto get(size_t index) const -> Node*;
+        [[nodiscard]] auto get(size_t index) const -> Node*;
 
         /**
          * @brief Function sets value of specifed Node of List
