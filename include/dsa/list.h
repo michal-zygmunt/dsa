@@ -1307,10 +1307,10 @@ namespace dsa
             return nullptr;
         }
 
-        const size_t list_size = init_list.size();
-        for (size_t i = 0; i < list_size; i++)
+        for (const auto& val : init_list)
         {
-            iter = insert_element_before(iter, init_list.begin()[list_size - 1 - i]);
+            iter = insert_element_before(iter, val);
+            ++iter;
         }
 
         return iter;
