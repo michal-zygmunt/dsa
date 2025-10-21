@@ -110,9 +110,9 @@ namespace tests
             return true;
         }
 
-        for (size_t i = 0; i < size; i++)
+        for (const auto& item : test_values)
         {
-            if (if_error(container.front(), test_values.begin()[i]))
+            if (if_error(container.front(), item))
             {
                 return true;
             }
@@ -143,9 +143,9 @@ namespace tests
             return true;
         }
 
-        for (size_t i = 0; i < size; i++)
+        for (const auto& item : test_values)
         {
-            if (if_error(container.front(), test_values.begin()[i]))
+            if (if_error(container.front(), item))
             {
                 return true;
             }
@@ -176,9 +176,9 @@ namespace tests
             return true;
         }
 
-        for (size_t i = 0; i < size; i++)
+        for (const auto& item : test_values)
         {
-            if (if_error(queue.front(), test_values.begin()[i]))
+            if (if_error(queue.front(), item))
             {
                 return true;
             }
@@ -209,9 +209,9 @@ namespace tests
             return true;
         }
 
-        for (size_t i = 0; i < size; i++)
+        for (const auto& item : test_values)
         {
-            if (if_error(stack.top(), test_values.begin()[i]))
+            if (if_error(stack.top(), item))
             {
                 return true;
             }
