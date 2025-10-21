@@ -1276,9 +1276,9 @@ namespace dsa
         }
 
         iterator iter{ pos.m_current_node };
-        for (size_t i = 0; i < init_list.size(); i++)
+        for (const auto val : init_list)
         {
-            iter = insert_element_after(iter, init_list.begin()[i]);
+            iter = insert_element_after(iter, val);
         }
 
         return iter;
