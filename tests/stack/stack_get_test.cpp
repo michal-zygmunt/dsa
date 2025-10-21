@@ -30,13 +30,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected{ 0,10,20 };
 
         dsa::Stack<int> stack1 = dsa::Stack<int>({ 20, 10, 0 });
-        tests::compare("Stack1 top", stack1.top(), expected.begin()[0]);
+        tests::compare("Stack1 top", stack1.top(), *expected.begin());
 
         dsa::Stack<int> stack2 = dsa::Stack<int>({ 20, 10, 0 });
-        tests::compare("Stack2 top", stack2.top(), expected.begin()[0]);
+        tests::compare("Stack2 top", stack2.top(), *expected.begin());
 
         const dsa::Stack<int> stack3 = dsa::Stack<int>({ 20, 10, 0 });
-        tests::compare("Stack3 top", stack3.top(), expected.begin()[0]);
+        tests::compare("Stack3 top", stack3.top(), *expected.begin());
 
 
         std::cout << "Compare operations results with std container\n\n";
