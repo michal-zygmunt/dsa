@@ -15,6 +15,7 @@
 #include <cstddef>
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
 #include <list>
 #include <new>
 #include <stdexcept>
@@ -34,11 +35,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list1.push_front(0);
         list1.push_front(-10);
         // Try inserting nodes at invalid indexes
-        auto indexes = { -1, 0, 4, 2, 100 };
-        for (size_t i = 0; i < indexes.size(); i++)
+        for (const auto& item : { -1, 0, 4, 2, 100 })
         {
-            const int idx_val = indexes.begin()[i];
-            list1.insert(list1.cbegin()[static_cast<size_t>(idx_val)], idx_val);
+            iterator = list1.begin();
+            std::advance(iterator, item);
+            list1.insert(iterator, item);
         }
         const std::initializer_list<int> expected1 = { 0, -10, 2, 0, 10, 4, 20, 30, 40 };
         tests::compare("List1", list1, expected1);

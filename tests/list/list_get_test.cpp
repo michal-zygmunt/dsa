@@ -36,6 +36,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
             auto* temp = list1.get(i);
             if (static_cast<bool>(temp))
             {
+                // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                 tests::compare(temp->value(), expected1.begin()[i]);
             }
         }
@@ -43,13 +44,15 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         const dsa::List<int> list2 = dsa::List<int>({ 20, 10, 0 });
         const std::initializer_list<int> expected2 = { 20, 10, 0 };
-        for (size_t i = 0; i < indexes.size(); i++)
+        size_t idx{ 0 };
+        for (const auto& item : expected2)
         {
-            auto* temp = list2.get(i);
+            auto* temp = list2.get(idx);
             if (static_cast<bool>(temp))
             {
-                tests::compare(temp->value(), expected2.begin()[i]);
+                tests::compare(temp->value(), item);
             }
+            idx++;
         }
         tests::compare("List2", list2, expected2);
 
