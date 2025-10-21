@@ -31,15 +31,14 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected{ 0,10,20 };
 
         dsa::Queue<int> queue1 = dsa::Queue<int>({ 0,10,20 });
-        const size_t q1_size = queue1.size();
         std::cout << "Queue1:\t";
-        for (size_t i = 0; i < q1_size; i++)
+        for (const auto& item : expected)
         {
             auto temp = queue1.front();
             if (static_cast<bool>(temp))
             {
                 std::cout << temp << ' ';
-                tests::compare(temp, expected.begin()[i]);
+                tests::compare(temp, item);
                 queue1.pop();
             }
         }
