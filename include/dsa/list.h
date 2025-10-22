@@ -1499,7 +1499,7 @@ namespace dsa
                 std::unique_ptr<NodeBase> to_return{};
 
                 std::unique_ptr<NodeBase> sentinel_this{ std::move(m_tail->m_prev->m_next) };
-                std::unique_ptr<NodeBase> sentinel_other{ std::move(other.m_tail->m_prev->m_next) };
+                const std::unique_ptr<NodeBase> sentinel_other{ std::move(other.m_tail->m_prev->m_next) };
 
                 while (m_head && other.m_head)
                 {
