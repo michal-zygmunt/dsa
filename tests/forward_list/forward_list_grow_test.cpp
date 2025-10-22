@@ -12,7 +12,6 @@
 #include "common.h"
 #include "dsa/forward_list.h"
 
-#include <cstddef>
 #include <forward_list>
 #include <initializer_list>
 #include <iostream>
