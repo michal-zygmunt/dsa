@@ -12,7 +12,6 @@
 #include "common.h"
 #include "dsa/list.h"
 
-#include <cstddef>
 #include <initializer_list>
 #include <iostream>
 #include <iterator>
