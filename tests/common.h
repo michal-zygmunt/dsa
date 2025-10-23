@@ -53,6 +53,14 @@ namespace tests
     }
 
     /**
+     * @brief Function print error message
+     *
+     * @param[in] message text describing error
+     * @param[in] exception exception to handle
+     */
+    void print_err_msg(const std::string& message, const std::exception* exception = nullptr);
+
+    /**
      * @brief Function compares two values
      *
      * @tparam T type of compared values
