@@ -12,6 +12,7 @@
 #include "common.h"
 #include "dsa/stack.h"
 
+#include <exception>
 #include <iostream>
 #include <new>
 #include <stack>
@@ -129,24 +130,31 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Stack3 >= stack1 vs std", stack3 >= stack1, std_stack3 >= std_stack1);
         tests::compare("Stack2 >= stack3 vs std", stack2 >= stack3, std_stack2 >= std_stack3);
         tests::compare("Stack3 >= stack2 vs std", stack3 >= stack2, std_stack3 >= std_stack2);
+
+
+        tests::print_stats();
     }
     catch (const std::bad_alloc& exception)
     {
-        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
+        tests::print_err_msg("Caught std::bad_alloc: ", &exception);
         return 1;
     }
     catch (const std::runtime_error& exception)
     {
-        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
-        return 1;
+        tests::print_err_msg("Caught std::runtime_error: ", &exception);
+        return 2;
+    }
+    catch (const std::exception& exception)
+    {
+        tests::print_err_msg("Caught exception: ", &exception);
+        return 3;
     }
     catch (...)
     {
-        std::cerr << "Unhandled unknown exception\n";
-        return 1;
+        tests::print_err_msg("Unhandled unknown exception");
+        return 4;
     }
 
-    tests::print_stats();
     return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
