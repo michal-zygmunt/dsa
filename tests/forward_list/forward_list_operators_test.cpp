@@ -12,6 +12,7 @@
 #include "common.h"
 #include "dsa/forward_list.h"
 
+#include <exception>
 #include <forward_list>
 #include <initializer_list>
 #include <iostream>
@@ -38,23 +39,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected4 = { 1, 2, 3, 4, 5, 6 };
         tests::compare("ForwardList4", list4, expected4);
 
-        try
-        {
-            dsa::ForwardList<int> list5(1, 0);
-            list5 += list2;
-            const std::initializer_list<int> expected5 = { 0, 4, 5, 6 };
-            tests::compare("ForwardList5", list5, expected5);
-        }
-        catch (const std::runtime_error& exception)
-        {
-            std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
-            return 1;
-        }
-        catch (...)
-        {
-            std::cerr << "Unhandled unknown exception\n";
-            return 1;
-        }
+        dsa::ForwardList<int> list5(1, 0);
+        list5 += list2;
+        const std::initializer_list<int> expected5 = { 0, 4, 5, 6 };
+        tests::compare("ForwardList5", list5, expected5);
 
         dsa::ForwardList<int> list6(1, 0);
         list6 += { 4, 5, 6 };
@@ -157,24 +145,31 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("list3 >= list1 vs std", list3 >= list1, std_list3 >= std_list1);
         tests::compare("list2 >= list3 vs std", list2 >= list3, std_list2 >= std_list3);
         tests::compare("list3 >= list2 vs std", list3 >= list2, std_list3 >= std_list2);
+
+
+        tests::print_stats();
     }
     catch (const std::bad_alloc& exception)
     {
-        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
+        tests::print_err_msg("Caught std::bad_alloc: ", &exception);
         return 1;
     }
     catch (const std::runtime_error& exception)
     {
-        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
-        return 1;
+        tests::print_err_msg("Caught std::runtime_error: ", &exception);
+        return 2;
+    }
+    catch (const std::exception& exception)
+    {
+        tests::print_err_msg("Caught exception: ", &exception);
+        return 3;
     }
     catch (...)
     {
-        std::cerr << "Unhandled unknown exception\n";
-        return 1;
+        tests::print_err_msg("Unhandled unknown exception");
+        return 4;
     }
 
-    tests::print_stats();
     return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
