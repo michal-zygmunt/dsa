@@ -12,6 +12,7 @@
 #include "common.h"
 #include "dsa/list.h"
 
+#include <exception>
 #include <initializer_list>
 #include <iostream>
 #include <list>
@@ -60,24 +61,31 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_list3.swap(std_list4);
         tests::compare("List3 vs std", list3, std_list3);
         tests::compare("List4 vs std", list4, std_list4);
+
+
+        tests::print_stats();
     }
     catch (const std::bad_alloc& exception)
     {
-        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
+        tests::print_err_msg("Caught std::bad_alloc: ", &exception);
         return 1;
     }
     catch (const std::runtime_error& exception)
     {
-        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
-        return 1;
+        tests::print_err_msg("Caught std::runtime_error: ", &exception);
+        return 2;
+    }
+    catch (const std::exception& exception)
+    {
+        tests::print_err_msg("Caught exception: ", &exception);
+        return 3;
     }
     catch (...)
     {
-        std::cerr << "Unhandled unknown exception\n";
-        return 1;
+        tests::print_err_msg("Unhandled unknown exception");
+        return 4;
     }
 
-    tests::print_stats();
     return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
