@@ -22,7 +22,9 @@
 #include <iomanip>
 #include <iostream>
 #include <list>
+#include <optional>
 #include <queue>
+#include <source_location>
 #include <stack>
 
  /**
@@ -59,6 +61,15 @@ namespace tests
      * @param[in] exception exception to handle
      */
     void print_err_msg(const std::string& message, const std::exception* exception = nullptr);
+
+    /**
+     * @brief Helper function to handle exceptions
+     *
+     * @param[in] exception exception to handle
+     * @param[in] location struct containing information about called file / line / function
+     */
+    auto handle_exception(const std::optional<std::exception_ptr>& exception = std::nullopt,
+        const std::source_location& location = std::source_location::current()) -> int;
 
     /**
      * @brief Function compares two values
