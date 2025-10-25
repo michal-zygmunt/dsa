@@ -16,9 +16,7 @@
 #include <exception>
 #include <initializer_list>
 #include <iostream>
-#include <new>
 #include <queue>
-#include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -79,25 +77,9 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         tests::print_stats();
     }
-    catch (const std::bad_alloc& exception)
-    {
-        tests::print_err_msg("Caught std::bad_alloc: ", &exception);
-        return 1;
-    }
-    catch (const std::runtime_error& exception)
-    {
-        tests::print_err_msg("Caught std::runtime_error: ", &exception);
-        return 2;
-    }
-    catch (const std::exception& exception)
-    {
-        tests::print_err_msg("Caught exception: ", &exception);
-        return 3;
-    }
     catch (...)
     {
-        tests::print_err_msg("Unhandled unknown exception");
-        return 4;
+        return tests::handle_exception(std::current_exception());
     }
 
     return tests::failed_count();
