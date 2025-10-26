@@ -13,10 +13,9 @@
 #include "dsa/forward_list.h"
 
 #include <cstddef>
+#include <exception>
 #include <initializer_list>
 #include <iostream>
-#include <new>
-#include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -36,6 +35,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
             auto* temp = list1.get(i);
             if (static_cast<bool>(temp))
             {
+                // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                 tests::compare(temp->value(), expected1.begin()[i]);
             }
         }
@@ -43,37 +43,29 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         const dsa::ForwardList<int> list2 = dsa::ForwardList<int>({ 20, 10, 0 });
         const std::initializer_list<int> expected2 = { 20, 10, 0 };
-        for (size_t i = 0; i < indexes.size(); i++)
+        size_t idx = 0;
+        for (const auto& item : expected2)
         {
-            auto* temp = list2.get(i);
+            auto* temp = list2.get(idx);
             if (static_cast<bool>(temp))
             {
-                tests::compare(temp->value(), expected2.begin()[i]);
+                tests::compare(temp->value(), item);
             }
+            idx++;
         }
         tests::compare("ForwardList2", list2, expected2);
 
         const dsa::ForwardList<int> list3 = dsa::ForwardList<int>({ 0, 10, 20 });
         tests::compare("ForwardList3 front", list3.front(), 0);
 
-    }
-    catch (const std::bad_alloc& exception)
-    {
-        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
-        return 1;
-    }
-    catch (const std::runtime_error& exception)
-    {
-        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
-        return 1;
+
+        tests::print_stats();
     }
     catch (...)
     {
-        std::cerr << "Unhandled unknown exception\n";
-        return 1;
+        return tests::handle_exception(std::current_exception());
     }
 
-    tests::print_stats();
     return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)

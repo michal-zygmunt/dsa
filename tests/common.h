@@ -22,7 +22,9 @@
 #include <iomanip>
 #include <iostream>
 #include <list>
+#include <optional>
 #include <queue>
+#include <source_location>
 #include <stack>
 
  /**
@@ -30,6 +32,21 @@
   */
 namespace tests
 {
+    /**
+     * @enum ExceptionCode
+     * @brief Determines return codes for exceptions in tests
+     *
+     * @note all values are negative
+     */
+    enum class ExceptionCode : std::int8_t
+    {
+        BadAlloc = -1,          ///< Memory allocation error
+        RuntimeError = -2,      ///< Exception generated during program execution
+        Exception = -3,         ///< General exception, exception reason should be moved into separate catch block
+        Unknown = -4,           ///< Unhandled exception from (...) block
+        Nullopt = -5            ///< Optional exception is invalid
+    };
+
     /**
      * @brief Function return number of failed comparisons
      *
@@ -51,6 +68,23 @@ namespace tests
         static int total{};
         return total;
     }
+
+    /**
+     * @brief Function print error message
+     *
+     * @param[in] message text describing error
+     * @param[in] exception exception to handle
+     */
+    void print_err_msg(const std::string& message, const std::exception* exception = nullptr);
+
+    /**
+     * @brief Helper function to handle exceptions
+     *
+     * @param[in] exception exception to handle
+     * @param[in] location struct containing information about called file / line / function
+     */
+    auto handle_exception(const std::optional<std::exception_ptr>& exception = std::nullopt,
+        const std::source_location& location = std::source_location::current()) -> int;
 
     /**
      * @brief Function compares two values
@@ -110,9 +144,9 @@ namespace tests
             return true;
         }
 
-        for (size_t i = 0; i < size; i++)
+        for (const auto& item : test_values)
         {
-            if (if_error(container.front(), test_values.begin()[i]))
+            if (if_error(container.front(), item))
             {
                 return true;
             }
@@ -143,9 +177,9 @@ namespace tests
             return true;
         }
 
-        for (size_t i = 0; i < size; i++)
+        for (const auto& item : test_values)
         {
-            if (if_error(container.front(), test_values.begin()[i]))
+            if (if_error(container.front(), item))
             {
                 return true;
             }
@@ -176,9 +210,9 @@ namespace tests
             return true;
         }
 
-        for (size_t i = 0; i < size; i++)
+        for (const auto& item : test_values)
         {
-            if (if_error(queue.front(), test_values.begin()[i]))
+            if (if_error(queue.front(), item))
             {
                 return true;
             }
@@ -209,9 +243,9 @@ namespace tests
             return true;
         }
 
-        for (size_t i = 0; i < size; i++)
+        for (const auto& item : test_values)
         {
-            if (if_error(stack.top(), test_values.begin()[i]))
+            if (if_error(stack.top(), item))
             {
                 return true;
             }

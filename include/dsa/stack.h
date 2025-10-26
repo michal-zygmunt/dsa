@@ -114,7 +114,7 @@ namespace dsa
          *
          * @return const T& const_reference to Stack top element
          */
-        auto top() const -> const_reference;
+        [[nodiscard]] auto top() const -> const_reference;
 
         /**
          * @brief Function checks if container has no elements
@@ -122,14 +122,14 @@ namespace dsa
          * @retval true if container is empty
          * @retval false if container is not empty
          */
-        auto empty() const -> bool;
+        [[nodiscard]] auto empty() const -> bool;
 
         /**
          * @brief Function returns Stack size
          *
          * @return size_t number of elements in container
          */
-        auto size() const -> size_t;
+        [[nodiscard]] auto size() const -> size_t;
 
         /**
          * @brief Function add new element at the top of Stack

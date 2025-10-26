@@ -12,11 +12,10 @@
 #include "common.h"
 #include "dsa/stack.h"
 
+#include <exception>
 #include <initializer_list>
 #include <iostream>
-#include <new>
 #include <stack>
-#include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -71,24 +70,15 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_stack4.push(50);
         std_stack4.swap(std_stack4);
         tests::compare("Stack4 vs std", stack4, std_stack4);
-    }
-    catch (const std::bad_alloc& exception)
-    {
-        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
-        return 1;
-    }
-    catch (const std::runtime_error& exception)
-    {
-        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
-        return 1;
+
+
+        tests::print_stats();
     }
     catch (...)
     {
-        std::cerr << "Unhandled unknown exception\n";
-        return 1;
+        return tests::handle_exception(std::current_exception());
     }
 
-    tests::print_stats();
     return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)

@@ -13,11 +13,10 @@
 #include "dsa/list.h"
 
 #include <algorithm>
+#include <exception>
 #include <initializer_list>
 #include <iostream>
 #include <list>
-#include <new>
-#include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -161,6 +160,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // std library operation on custom iterators
         dsa::List<int> list9 = dsa::List<int>{ 10, 20, 30, 40, 50 };
+        // use classic iterator based algorithms
+        // NOLINTNEXTLINE(modernize-use-ranges)
         std::fill(list9.begin(), list9.end(), 10);
         const std::initializer_list<int> expected9 = { 10, 10, 10, 10, 10 };
         tests::compare("List9", list9, expected9);
@@ -298,6 +299,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List6 vs std", list6, std_list6);
 
         std::list<int>std_list9 = std::list<int>{ 10, 20, 30, 40, 50 };
+        // use classic iterator based algorithms
+        // NOLINTNEXTLINE(modernize-use-ranges)
         std::fill(std_list9.begin(), std_list9.end(), 10);
         tests::compare("List9 vs std", list9, std_list9);
 
@@ -313,24 +316,15 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         auto std_citer11b = std_list11.cbegin();
         tests::compare("citer11b vs std", *citer11b, *std_citer11b);
-    }
-    catch (const std::bad_alloc& exception)
-    {
-        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
-        return 1;
-    }
-    catch (const std::runtime_error& exception)
-    {
-        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
-        return 1;
+
+
+        tests::print_stats();
     }
     catch (...)
     {
-        std::cerr << "Unhandled unknown exception\n";
-        return 1;
+        return tests::handle_exception(std::current_exception());
     }
 
-    tests::print_stats();
     return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)

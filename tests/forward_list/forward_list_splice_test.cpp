@@ -12,12 +12,11 @@
 #include "common.h"
 #include "dsa/forward_list.h"
 
+#include <exception>
 #include <forward_list>
 #include <initializer_list>
 #include <iostream>
 #include <iterator>
-#include <new>
-#include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -304,24 +303,15 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         expected59.splice_after(iter_expected59, expected60, expected60.begin(), iter_expected60);
         tests::compare("ForwardList59 vs std", list59, expected59);
         tests::compare("ForwardList60 vs std", list60, expected60);
-    }
-    catch (const std::bad_alloc& exception)
-    {
-        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
-        return 1;
-    }
-    catch (const std::runtime_error& exception)
-    {
-        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
-        return 1;
+
+
+        tests::print_stats();
     }
     catch (...)
     {
-        std::cerr << "Unhandled unknown exception\n";
-        return 1;
+        return tests::handle_exception(std::current_exception());
     }
 
-    tests::print_stats();
     return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)

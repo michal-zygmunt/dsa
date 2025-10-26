@@ -12,11 +12,10 @@
 #include "common.h"
 #include "dsa/queue.h"
 
+#include <exception>
 #include <initializer_list>
 #include <iostream>
-#include <new>
 #include <queue>
-#include <stdexcept>
 #include <utility>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -114,24 +113,15 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_queue7.push(0);
         std_queue7 = std::move(std_temp_2);
         tests::compare("Queue7 vs std", queue7, std_queue7);
-    }
-    catch (const std::bad_alloc& exception)
-    {
-        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
-        return 1;
-    }
-    catch (const std::runtime_error& exception)
-    {
-        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
-        return 1;
+
+
+        tests::print_stats();
     }
     catch (...)
     {
-        std::cerr << "Unhandled unknown exception\n";
-        return 1;
+        return tests::handle_exception(std::current_exception());
     }
 
-    tests::print_stats();
     return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)

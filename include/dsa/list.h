@@ -138,7 +138,7 @@ namespace dsa
              *
              * @return T value stored in Node
              */
-            auto value() const -> T
+            [[nodiscard]] auto value() const -> T
             {
                 return m_value;
             }
@@ -174,7 +174,7 @@ namespace dsa
              * @tparam IF_CONST if \p true generate iterator with const reference to underlying data type
              * @tparam T data type
              */
-            using iterator_type = typename std::conditional<IF_CONST, const T, T>::type;
+            using iterator_type = std::conditional_t<IF_CONST, const T, T>;
 
             /**
              * @brief Alias for bidirectional iterator tag, define iterator direction
@@ -527,7 +527,7 @@ namespace dsa
          *
          * @return const reference to data stored in List first Node
          */
-        auto front() const -> const_reference;
+        [[nodiscard]] auto front() const -> const_reference;
 
         /**
          * @brief Function returns reference to value stored in List last Node
@@ -541,7 +541,7 @@ namespace dsa
          *
          * @return const reference to data stored in List last Node
          */
-        auto back() const -> const_reference;
+        [[nodiscard]] auto back() const -> const_reference;
 
         /**
          * @brief Function returns pointer to List first Node
@@ -562,7 +562,7 @@ namespace dsa
          *
          * @return const_iterator const iterator to List first Node
          */
-        auto cbegin() const -> const_iterator;
+        [[nodiscard]] auto cbegin() const -> const_iterator;
 
         /**
          * @brief Function returns pointer to List last Node
@@ -583,7 +583,7 @@ namespace dsa
          *
          * @return const_iterator const iterator to List last Node
          */
-        auto cend() const -> const_iterator;
+        [[nodiscard]] auto cend() const -> const_iterator;
 
         /// @todo add rbegin
 
@@ -599,21 +599,21 @@ namespace dsa
          * @retval true if container is empty
          * @retval false if container is not empty
          */
-        auto empty() const -> bool;
+        [[nodiscard]] auto empty() const -> bool;
 
         /**
          * @brief Function returns List size
          *
          * @return size_t number of elements in container
          */
-        auto size() const -> size_t;
+        [[nodiscard]] auto size() const -> size_t;
 
         /**
          * @brief Function returns maximum number of elements container can hold
          *
          * @return size_t maximum number of elements
          */
-        auto max_size() const -> size_t;
+        [[nodiscard]] auto max_size() const -> size_t;
 
         /**
          * @brief Function removes all elements of List
@@ -897,7 +897,7 @@ namespace dsa
          * @retval Node* if index is valid
          * @retval nullptr if invalid index
          */
-        auto get(size_t index) const -> Node*;
+        [[nodiscard]] auto get(size_t index) const -> Node*;
 
         /**
          * @brief Function sets value of specifed Node of List
@@ -932,7 +932,7 @@ namespace dsa
         {
             if (m_head == nullptr)
             {
-                m_head = dsa::make_unique<NodeBase>();
+                m_head = std::make_unique<NodeBase>();
                 m_tail = m_head.get();
             }
         }
@@ -1002,7 +1002,7 @@ namespace dsa
 
             NodeBase* temp{ pos.m_current_node->m_prev };
 
-            auto newNode = dsa::make_unique<Node>(value);
+            auto newNode = std::make_unique<Node>(value);
             newNode->m_next = std::move(temp->m_next);
             newNode->m_prev = temp;
 
@@ -1307,10 +1307,10 @@ namespace dsa
             return nullptr;
         }
 
-        const size_t list_size = init_list.size();
-        for (size_t i = 0; i < list_size; i++)
+        for (const auto& val : init_list)
         {
-            iter = insert_element_before(iter, init_list.begin()[list_size - 1 - i]);
+            iter = insert_element_before(iter, val);
+            ++iter;
         }
 
         return iter;
@@ -1355,7 +1355,7 @@ namespace dsa
     {
         init_node();
 
-        auto newNode = dsa::make_unique<Node>(value);
+        auto newNode = std::make_unique<Node>(value);
         if (!m_head->m_next)
         {
             newNode->m_next = std::move(m_head);
@@ -1399,7 +1399,7 @@ namespace dsa
     {
         init_node();
 
-        auto newNode = dsa::make_unique<Node>(value);
+        auto newNode = std::make_unique<Node>(value);
 
         if (!m_head->m_next) // only sentinel exists
         {
@@ -1492,14 +1492,14 @@ namespace dsa
         {
             if (m_size != 0)
             {
-                auto temp_head = dsa::make_unique<Node>(0);
+                auto temp_head = std::make_unique<Node>(0);
                 NodeBase* temp_tail = temp_head.get();
 
                 std::unique_ptr<NodeBase> to_move{};
                 std::unique_ptr<NodeBase> to_return{};
 
                 std::unique_ptr<NodeBase> sentinel_this{ std::move(m_tail->m_prev->m_next) };
-                std::unique_ptr<NodeBase> sentinel_other{ std::move(other.m_tail->m_prev->m_next) };
+                const std::unique_ptr<NodeBase> sentinel_other{ std::move(other.m_tail->m_prev->m_next) };
 
                 while (m_head && other.m_head)
                 {

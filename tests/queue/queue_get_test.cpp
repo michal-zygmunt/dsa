@@ -12,12 +12,10 @@
 #include "common.h"
 #include "dsa/queue.h"
 
-#include <cstddef>
+#include <exception>
 #include <initializer_list>
 #include <iostream>
-#include <new>
 #include <queue>
-#include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -31,15 +29,14 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected{ 0,10,20 };
 
         dsa::Queue<int> queue1 = dsa::Queue<int>({ 0,10,20 });
-        const size_t q1_size = queue1.size();
         std::cout << "Queue1:\t";
-        for (size_t i = 0; i < q1_size; i++)
+        for (const auto& item : expected)
         {
             auto temp = queue1.front();
             if (static_cast<bool>(temp))
             {
                 std::cout << temp << ' ';
-                tests::compare(temp, expected.begin()[i]);
+                tests::compare(temp, item);
                 queue1.pop();
             }
         }
@@ -67,24 +64,15 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::queue<int> std_queue3 = std::queue<int>({ 0,10,20 });
         tests::compare("Queue3 front vs std", queue3.front(), std_queue3.front());
         tests::compare("Queue3 back vs std", queue3.back(), std_queue3.back());
-    }
-    catch (const std::bad_alloc& exception)
-    {
-        std::cerr << "Caught std::bad_alloc: " << exception.what() << '\n';
-        return 1;
-    }
-    catch (const std::runtime_error& exception)
-    {
-        std::cerr << "Caught std::runtime_error: " << exception.what() << '\n';
-        return 1;
+
+
+        tests::print_stats();
     }
     catch (...)
     {
-        std::cerr << "Unhandled unknown exception\n";
-        return 1;
+        return tests::handle_exception(std::current_exception());
     }
 
-    tests::print_stats();
     return tests::failed_count();
 
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)

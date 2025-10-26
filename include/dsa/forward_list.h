@@ -133,7 +133,7 @@ namespace dsa
              *
              * @return T to value stored in Node
              */
-            auto value() const -> T
+            [[nodiscard]] auto value() const -> T
             {
                 return m_value;
             }
@@ -168,7 +168,7 @@ namespace dsa
              * @tparam IF_CONST if \p true generate iterator with const reference to underlying data type
              * @tparam T data type
              */
-            using iterator_type = typename std::conditional<IF_CONST, const T, T>::type;
+            using iterator_type = std::conditional_t<IF_CONST, const T, T>;
 
             /**
              * @brief Alias for forward iterator tag, define iterator direction
@@ -490,7 +490,7 @@ namespace dsa
          *
          * @return const reference to data stored in ForwardList first Node
          */
-        auto front() const -> const_reference;
+        [[nodiscard]] auto front() const -> const_reference;
 
         /**
          * @brief Function returns iterator just before ForwardList first Node
@@ -561,14 +561,14 @@ namespace dsa
          * @retval true if container is empty
          * @retval false if container is not empty
          */
-        auto empty() const -> bool;
+        [[nodiscard]] auto empty() const -> bool;
 
         /**
          * @brief Function returns maximum number of elements container can hold
          *
          * @return size_t maximum number of elements
          */
-        auto max_size() const noexcept -> size_t;
+        [[nodiscard]] auto max_size() const noexcept -> size_t;
 
         /**
          * @brief Function removes all elements of ForwardList
@@ -812,7 +812,7 @@ namespace dsa
          * @retval Node* if index is valid
          * @retval nullptr if invalid index
          */
-        auto get(size_t index) const -> Node*
+        [[nodiscard]] auto get(size_t index) const -> Node*
         {
             if (index > m_size)
             {
@@ -858,7 +858,7 @@ namespace dsa
          *
          * @return size_t number of elements in container
          */
-        auto size() const -> size_t
+        [[nodiscard]] auto size() const -> size_t
         {
             return m_size;
         }
@@ -885,7 +885,7 @@ namespace dsa
         {
             if (m_head == nullptr)
             {
-                m_head = dsa::make_unique<NodeBase>();
+                m_head = std::make_unique<NodeBase>();
             }
         }
 
@@ -950,7 +950,7 @@ namespace dsa
                 return nullptr;
             }
 
-            auto newNode = dsa::make_unique<Node>(value);
+            auto newNode = std::make_unique<Node>(value);
             newNode->m_next = std::move(pos.m_current_node->m_next);
             pos.m_current_node->m_next = std::move(newNode);
 
@@ -1276,9 +1276,9 @@ namespace dsa
         }
 
         iterator iter{ pos.m_current_node };
-        for (size_t i = 0; i < init_list.size(); i++)
+        for (const auto val : init_list)
         {
-            iter = insert_element_after(iter, init_list.begin()[i]);
+            iter = insert_element_after(iter, val);
         }
 
         return iter;
@@ -1320,7 +1320,7 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::push_front(T value)
     {
-        auto newNode = dsa::make_unique<Node>(value);
+        auto newNode = std::make_unique<Node>(value);
         if (!m_head->m_next)
         {
             m_head->m_next = std::move(newNode);
@@ -1417,7 +1417,7 @@ namespace dsa
         {
             if (m_size != 0)
             {
-                auto temp_head = dsa::make_unique<Node>(0);
+                auto temp_head = std::make_unique<Node>(0);
                 NodeBase* temp_tail = temp_head.get();
 
                 std::unique_ptr<NodeBase> to_move{};
