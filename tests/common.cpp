@@ -49,29 +49,28 @@ namespace tests
             catch (const std::bad_alloc& exc)
             {
                 tests::print_err_msg(" | Exception std::bad_alloc: ", &exc);
-                return 1;
+                return static_cast<int>(tests::ExceptionCode::BadAlloc);
             }
             catch (const std::runtime_error& exc)
             {
                 tests::print_err_msg(" | Exception std::runtime_error: ", &exc);
-                return 2;
+                return static_cast<int>(tests::ExceptionCode::RuntimeError);
             }
             catch (const std::exception& exc)
             {
                 tests::print_err_msg(" | Exception: ", &exc);
-                return 3;
+                return static_cast<int>(tests::ExceptionCode::Exception);
             }
             catch (...)
             {
                 tests::print_err_msg(" | Unknown exception type");
-                return 4;
+                return static_cast<int>(tests::ExceptionCode::Unknown);
             }
         }
         else
         {
             tests::print_err_msg(" | Nullopt exception");
-            // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
-            return 5;
+            return static_cast<int>(tests::ExceptionCode::Nullopt);
         }
     }
 

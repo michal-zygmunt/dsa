@@ -33,6 +33,21 @@
 namespace tests
 {
     /**
+     * @enum ExceptionCode
+     * @brief Determines return codes for exceptions in tests
+     *
+     * @note all values are negative
+     */
+    enum class ExceptionCode : std::int8_t
+    {
+        BadAlloc = -1,          ///< Memory allocation error
+        RuntimeError = -2,      ///< Exception generated during program execution
+        Exception = -3,         ///< General exception, exception reason should be moved into separate catch block
+        Unknown = -4,           ///< Unhandled exception from (...) block
+        Nullopt = -5            ///< Optional exception is invalid
+    };
+
+    /**
      * @brief Function return number of failed comparisons
      *
      * @return int& reference to failed comparison count
