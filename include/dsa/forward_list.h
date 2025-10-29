@@ -20,6 +20,7 @@
 #include <iterator>
 #include <limits>
 #include <memory>
+#include <ranges>
 #include <utility>
 
 namespace dsa
@@ -1856,4 +1857,9 @@ namespace dsa
     /// @todo implement non-member specialized erase_if function
 
 }
+
+// test std::ranges::forward_range concept
+static_assert(std::ranges::forward_range<dsa::ForwardList<int>>);
+static_assert(std::ranges::forward_range<const dsa::ForwardList<int>>);
+
 #endif // !FORWARD_LIST_H
