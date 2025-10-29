@@ -197,12 +197,17 @@ namespace dsa
              *
              * @tparam T* pointer to data type
              */
-            using pointer = T*;
+            using pointer = iterator_type*;
 
             /**
              * @brief Alias for reference to type used by iterator
              */
             using reference = iterator_type&;
+
+            /**
+             * @brief Construct a new ForwardListIterator object
+             */
+            ForwardListIterator() noexcept = default;
 
             /**
              * @brief Construct a new ForwardListIterator object
@@ -504,14 +509,14 @@ namespace dsa
          *
          * @return const_iterator iterator just before ForwardList first Node
          */
-        auto before_begin() const noexcept -> const_iterator;
+        [[nodiscard]] auto before_begin() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns const_iterator just before ForwardList first Node
          *
          * @return const_iterator iterator just before ForwardList first Node
          */
-        auto cbefore_begin() const noexcept -> const_iterator;
+        [[nodiscard]] auto cbefore_begin() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns pointer to ForwardList first Node
@@ -532,7 +537,7 @@ namespace dsa
          *
          * @return const_iterator const iterator to ForwardList first Node
          */
-        auto cbegin() const noexcept -> const_iterator;
+        [[nodiscard]] auto cbegin() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns pointer to ForwardList last Node
@@ -553,7 +558,7 @@ namespace dsa
          *
          * @return const_iterator const iterator to ForwardList last Node
          */
-        auto cend() const noexcept -> const_iterator;
+        [[nodiscard]] auto cend() const noexcept -> const_iterator;
 
         /**
          * @brief Function checks if container has no elements
