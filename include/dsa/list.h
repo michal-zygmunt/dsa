@@ -21,6 +21,7 @@
 #include <iterator>
 #include <limits>
 #include <memory>
+#include <ranges>
 
 namespace dsa
 {
@@ -2049,4 +2050,9 @@ namespace dsa
     /// @todo implement non-member specialized erase_if function
 
 }
+
+// test std::ranges::bidirectional_range concept
+static_assert(std::ranges::bidirectional_range<dsa::List<int>>);
+static_assert(std::ranges::bidirectional_range<const dsa::List<int>>);
+
 #endif // !LIST_H
