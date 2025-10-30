@@ -203,7 +203,7 @@ namespace dsa
              *
              * @tparam T* pointer to data type
              */
-            using pointer = T*;
+            using pointer = iterator_type*;
 
             /**
              * @brief Alias for reference to type used by iterator
@@ -212,10 +212,15 @@ namespace dsa
 
             /**
              * @brief Construct a new ListIterator object
+             */
+            ListIterator() noexcept = default;
+
+            /**
+             * @brief Construct a new ListIterator object
              *
              * @param[in] node input Node
              */
-            ListIterator(NodeBase* node)
+            ListIterator(NodeBase* node) noexcept
                 : m_current_node{ node }
             {
             }
@@ -294,7 +299,7 @@ namespace dsa
              * @retval true if ListIterator objects are the same
              * @retval false if ListIterator objects are different
              */
-            auto operator==(const ListIterator<IF_CONST>& other) -> bool
+            auto operator==(const ListIterator& other) const -> bool
             {
                 return m_current_node == other.m_current_node;
             }
@@ -307,7 +312,7 @@ namespace dsa
              * @retval true if ListIterator objects are different
              * @retval false if ListIterator objects are the same
              */
-            auto operator!=(const ListIterator<IF_CONST>& other) -> bool
+            auto operator!=(const ListIterator& other) const -> bool
             {
                 return !operator==(other);
             }
