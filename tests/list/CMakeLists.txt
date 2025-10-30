@@ -55,3 +55,7 @@ add_test(NAME list_splice_test COMMAND list_splice_test)
 add_executable(list_itors_test list_itors_test.cpp ${SRC_DIR}/common.cpp)
 target_link_libraries(list_itors_test PRIVATE dsa_testing)
 add_test(NAME list_itors_test COMMAND list_itors_test)
+
+add_executable(list_ranges_test list_ranges_test.cpp ${SRC_DIR}/common.cpp)
+target_link_libraries(list_ranges_test PRIVATE dsa_testing)
+add_test(NAME list_ranges_test COMMAND list_ranges_test)
