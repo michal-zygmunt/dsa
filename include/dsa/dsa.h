@@ -12,6 +12,7 @@
 #ifndef DSA_H
 #define DSA_H
 
+#include "array"
 #include "forward_list.h"
 #include "list.h"
 #include "queue.h"
