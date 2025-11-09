@@ -426,7 +426,75 @@ namespace dsa
         value_type m_data[N == 0 ? 1 : N]{};
     };
 
-    /// @todo add dsa::get()
+    /**
+     * @brief Provide access to Ith element of an array
+     *
+     * @tparam I index of element in container
+     * @tparam T data type stored in container
+     * @tparam N number of elements in container
+     * @param[in] array container to extract element from
+     * @return T& reference to Ith element of array container
+     */
+    template<std::size_t I, typename T, std::size_t N>
+    constexpr auto get(dsa::Array<T, N>& array) noexcept -> T&
+    {
+        static_assert(I < N, "Index out of range in dsa::Array::get");
+        return array[I];
+    }
+
+    /**
+     * @brief Provide access to Ith element of an array
+     *
+     * @tparam I index of element in container
+     * @tparam T data type stored in container
+     * @tparam N number of elements in container
+     * @param[in] array container to extract element from
+     * @return const T& reference to Ith element of array container
+     */
+    template<std::size_t I, typename T, std::size_t N>
+    constexpr auto get(const dsa::Array<T, N>& array) noexcept -> const T&
+    {
+        static_assert(I < N, "Index out of range in dsa::Array::get");
+        return array[I];
+    }
+
+    /**
+     * @brief Provide access to Ith element of an array
+     *
+     * Intentionally not moving entire parameter array.
+     * This overload of get<I>(dsa::Array&&) returns an rvalue reference to an element,
+     * matching the behaviour of std::get<I>(std::array&&) in C++ standard library.
+     * Only the selected element is moved from std::move(array[I]), not the whole array.
+     *
+     * @tparam I index of element in container
+     * @tparam T data type stored in container
+     * @tparam N number of elements in container
+     * @param[in] array container to extract element from
+     * @return T&& reference to Ith element of array container
+     */
+    template<std::size_t I, typename T, std::size_t N>
+    // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+    constexpr auto get(dsa::Array<T, N>&& array) noexcept -> T&&
+    {
+        static_assert(I < N, "Index out of range in dsa::Array::get");
+        return std::move(array[I]);
+    }
+
+    /**
+     * @brief Provide access to Ith element of an array
+     *
+     * @tparam I index of element in container
+     * @tparam T data type stored in container
+     * @tparam N number of elements in container
+     * @param[in] array container to extract element from
+     * @return const T&& reference to Ith element of array container
+     */
+    template<std::size_t I, typename T, std::size_t N>
+    constexpr auto get(const dsa::Array<T, N>&& array) noexcept -> const T&&
+    {
+        static_assert(I < N, "Index out of range in dsa::Array::get");
+        return std::move(array[I]);
+    }
 
     /**
      * @brief Exchanges content of two Array containers
@@ -589,6 +657,57 @@ namespace dsa
     {
         return !(operator<(array1, array2));
     }
+}
+
+namespace std
+{
+    /*
+    * These are explicit specializations of standard templates 'tuple_size' and 'tuple_element'
+    * for a user-defined type dsa::Array. This is allowed by C++ standard and required
+    * to enable structured bindings and tuple-like behaviour.
+    *
+    * No new symbols or modification of standard library behaviour was introduced,
+    * only providing valid specialization for user-defined type.
+    */
+    // NOLINTBEGIN(cert-dcl58-cpp)
+
+    /// @cond SPECIALIZATION
+    /**
+     * @brief Provides compile-time access to the number of elements in an dsa::Array
+     *
+     * @tparam T data type stored in container
+     * @tparam N number of elements in container
+     *
+     * @see https://en.cppreference.com/w/cpp/container/array/tuple_size.html
+     */
+    template<typename T, std::size_t N>
+    struct tuple_size <dsa::Array<T, N>> : std::integral_constant<std::size_t, N>
+    {
+    };
+    /// @endcond
+
+    /// @cond SPECIALIZATION
+    /**
+     * @brief Provides compile-time access to the indexes of the elements in dsa::Array
+     *
+     * @tparam I index of element in container
+     * @tparam T data type stored in container
+     * @tparam N number of elements in container
+     *
+     * @see https://en.cppreference.com/w/cpp/container/array/tuple_element.html
+     */
+    template<std::size_t I, typename T, std::size_t N>
+    struct tuple_element<I, dsa::Array<T, N>>
+    {
+        /**
+         * @brief Data type of element stored in container
+         *        Required to assign template type to member field of std::tuple_element<I,T>::type
+         */
+        using type = T;
+    };
+    /// @endcond
+
+    // NOLINTEND(cert-dcl58-cpp)
 }
 
 #endif // !ARRAY_H
