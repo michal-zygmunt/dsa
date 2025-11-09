@@ -12,6 +12,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include "dsa/array.h"
 #include "dsa/forward_list.h"
 #include "dsa/list.h"
 #include "dsa/queue.h"
@@ -41,10 +42,11 @@ namespace tests
     enum class ExceptionCode : std::int8_t
     {
         BadAlloc = -1,          ///< Memory allocation error
-        RuntimeError = -2,      ///< Exception generated during program execution
-        Exception = -3,         ///< General exception, exception reason should be moved into separate catch block
-        Unknown = -4,           ///< Unhandled exception from (...) block
-        Nullopt = -5            ///< Optional exception is invalid
+        OutOfRange = -2,        ///< Accesing wrong range
+        RuntimeError = -3,      ///< Exception generated during program execution
+        Exception = -4,         ///< General exception, exception reason should be moved into separate catch block
+        Unknown = -5,           ///< Unhandled exception from (...) block
+        Nullopt = -6            ///< Optional exception is invalid
     };
 
     /**
@@ -256,6 +258,43 @@ namespace tests
     }
 
     /**
+     * @brief Function compares values of Array and initializer list
+     *
+     * @tparam T type of elements to compare
+     * @tparam N number of elements in Array
+     * @param[in] stack input Array
+     * @param[in] test_values input initializer list
+     * @return true if compared containers are different
+     * @return false if containers are equal
+     */
+    template<typename T, size_t N>
+    auto cmp(dsa::Array<T, N> array, const std::initializer_list<T>& test_values) -> bool
+    {
+        const auto size{ (test_values.size()) };
+        tests::total_count() += static_cast<int>(size);
+
+        if (if_error(array.size(), size))
+        {
+            std::cout << "Objects of different length!\n";
+            return true;
+        }
+
+        auto array_iter = array.begin();
+
+        for (const auto& item : test_values)
+        {
+            if (if_error(*array_iter, item))
+            {
+                return true;
+            }
+
+            ++array_iter;
+        }
+
+        return false;
+    }
+
+    /**
      * @brief Function compares values of ForwardList and forward_list
      *
      * @tparam T type of elements to compare
@@ -392,6 +431,80 @@ namespace tests
     }
 
     /**
+     * @brief Function compares values of Array and array
+     *
+     * @tparam T type of elements to compare
+     * @tparam N number of elements in Array
+     * @param[in] stack input Array
+     * @param[in] test_values input array
+     * @return true if compared containers are different
+     * @return false if containers are equal
+     */
+    template<typename T, size_t N>
+    auto cmp(dsa::Array<T, N> array, const std::array<T, N>& test_values) -> bool
+    {
+        const auto size{ (test_values.size()) };
+        tests::total_count() += static_cast<int>(size);
+
+        if (if_error(array.size(), size))
+        {
+            std::cout << "Objects of different length!\n";
+            return true;
+        }
+
+        auto array_iter = array.begin();
+
+        for (const auto& item : test_values)
+        {
+            if (if_error(*array_iter, item))
+            {
+                return true;
+            }
+
+            ++array_iter;
+        }
+
+        return false;
+    }
+
+    /**
+     * @brief Function compares values of Array and vector
+     *
+     * @tparam T type of elements to compare
+     * @tparam N number of elements in Array
+     * @param[in] stack input Array
+     * @param[in] test_values input vector
+     * @return true if compared containers are different
+     * @return false if containers are equal
+     */
+    template<typename T, size_t N>
+    auto cmp(dsa::Array<T, N> array, const std::vector<T>& test_values) -> bool
+    {
+        const auto size{ (test_values.size()) };
+        tests::total_count() += static_cast<int>(size);
+
+        if (if_error(array.size(), size))
+        {
+            std::cout << "Objects of different length!\n";
+            return true;
+        }
+
+        auto array_iter = array.begin();
+
+        for (const auto& item : test_values)
+        {
+            if (if_error(*array_iter, item))
+            {
+                return true;
+            }
+
+            ++array_iter;
+        }
+
+        return false;
+    }
+
+    /**
      * @brief Function overloads out operator to print all elements of initializer list
      *
      * @tparam T type of initializer list elements
@@ -439,6 +552,42 @@ namespace tests
     auto operator<<(std::ostream& out, const std::list<T>& std_list) -> std::ostream&
     {
         for (const auto& item : std_list)
+        {
+            out << item << ' ';
+        }
+        return out;
+    }
+
+    /**
+     * @brief Function overloads out operator to print all elements of array
+     *
+     * @tparam T type of list elements
+     * @param[in,out] out reference to output stream
+     * @param[in] std_list input container of type T
+     * @return std::ostream&
+     */
+    template<typename T, size_t N >
+    auto operator<<(std::ostream& out, const std::array<T, N>& std_array) -> std::ostream&
+    {
+        for (const auto& item : std_array)
+        {
+            out << item << ' ';
+        }
+        return out;
+    }
+
+    /**
+     * @brief Function overloads out operator to print all elements of vector
+     *
+     * @tparam T type of list elements
+     * @param[in,out] out reference to output stream
+     * @param[in] std_list input container of type T
+     * @return std::ostream&
+     */
+    template<typename T>
+    auto operator<<(std::ostream& out, const std::vector<T>& std_vector) -> std::ostream&
+    {
+        for (const auto& item : std_vector)
         {
             out << item << ' ';
         }
@@ -590,6 +739,40 @@ namespace tests
      */
     template<typename T, typename U>
     void compare(const std::string& container_name, const T& container, const std::stack<U>& expected)
+    {
+        print_containers(container_name, container, "Expected", expected);
+        const bool res = cmp(container, expected);
+        std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    }
+
+    /**
+     * @brief Function compares content of two containers
+     *
+     * @tparam T input container
+     * @tparam U type of data stored in array
+     * @param[in] container_name container name to print
+     * @param[in] container input container
+     * @param[in] expected expected content of input container, stored as array
+     */
+    template<typename T, typename U, size_t N>
+    void compare(const std::string& container_name, const T& container, const std::array<U, N>& expected)
+    {
+        print_containers(container_name, container, "Expected", expected);
+        const bool res = cmp(container, expected);
+        std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+    }
+
+    /**
+     * @brief Function compares content of two containers
+     *
+     * @tparam T input container
+     * @tparam U type of data stored in vector
+     * @param[in] container_name container name to print
+     * @param[in] container input container
+     * @param[in] expected expected content of input container, stored as vector
+     */
+    template<typename T, typename U>
+    void compare(const std::string& container_name, const T& container, const std::vector<U>& expected)
     {
         print_containers(container_name, container, "Expected", expected);
         const bool res = cmp(container, expected);

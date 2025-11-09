@@ -51,6 +51,11 @@ namespace tests
                 tests::print_err_msg(" | Exception std::bad_alloc: ", &exc);
                 return static_cast<int>(tests::ExceptionCode::BadAlloc);
             }
+            catch (const std::out_of_range& exc)
+            {
+                tests::print_err_msg(" | Exception std::out_of_range: ", &exc);
+                return static_cast<int>(tests::ExceptionCode::OutOfRange);
+            }
             catch (const std::runtime_error& exc)
             {
                 tests::print_err_msg(" | Exception std::runtime_error: ", &exc);
