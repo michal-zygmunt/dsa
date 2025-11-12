@@ -15,3 +15,7 @@ add_test(NAME array_operators_test COMMAND array_operators_test)
 add_executable(array_binding_test array_binding_test.cpp ${SRC_DIR}/common.cpp)
 target_link_libraries(array_binding_test PRIVATE dsa_testing)
 add_test(NAME array_binding_test COMMAND array_binding_test)
+
+add_executable(array_ranges_test array_ranges_test.cpp ${SRC_DIR}/common.cpp)
+target_link_libraries(array_ranges_test PRIVATE dsa_testing)
+add_test(NAME array_ranges_test COMMAND array_ranges_test)
