@@ -707,6 +707,60 @@ namespace std
     };
     /// @endcond
 
+    namespace ranges
+    {
+        /*
+        * These are explicit specializations of range semantics for a user-defined type dsa::Array
+        * specifically to be recognized as 'borrowed range' or 'view'
+        */
+
+        /// @cond SPECIALIZATION
+        /**
+         * @brief Specialization of std::ranges::enable_borrowed_range for dsa::Array
+         *
+         * Declaring type as a borrowed range require the iterators to remain usable
+         * even after the original object has been moved away
+         *
+         * @tparam T data type stored in container
+         * @tparam N number of elements in container
+         *
+         * @see https://en.cppreference.com/w/cpp/ranges/borrowed_range.html
+         */
+        template<typename T, std::size_t N>
+        inline constexpr bool enable_borrowed_range<dsa::Array<T, N>> = true;
+        /// @endcond
+
+        /// @cond SPECIALIZATION
+        /**
+         * @brief Specialization of std::ranges::enable_view for dsa::Array
+         *
+         * Declaring type as a view allows it to be used with std::views pipelines
+         *
+         * @tparam T data type stored in container
+         * @tparam N number of elements in container
+         *
+         * @see https://en.cppreference.com/w/cpp/ranges/view.html
+         */
+        template<typename T, std::size_t N>
+        inline constexpr bool enable_view<dsa::Array<T, N>> = true;
+        /// @endcond
+
+        /// @cond SPECIALIZATION
+        /**
+         * @brief Specialization of std::ranges::enable_view for dsa::Array
+         *
+         * Declaring type as a view allows it to be used with std::views pipelines
+         *
+         * @tparam T data type stored in container
+         * @tparam N number of elements in container
+         *
+         * @see https://en.cppreference.com/w/cpp/ranges/view.html
+         */
+        template<typename T, std::size_t N>
+        inline constexpr bool enable_view<const dsa::Array<T, N>> = true;
+        /// @endcond
+    }
+
     // NOLINTEND(cert-dcl58-cpp)
 }
 
