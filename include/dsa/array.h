@@ -657,6 +657,39 @@ namespace dsa
     {
         return !(operator<(array1, array2));
     }
+
+    /**
+     * @brief The relational operator compares two Array objects
+     *
+     * @param[in] array1 input container
+     * @param[in] array2 input container
+     * @retval -1 if the content of \p array1 is lexicographically lesser than the content of \p array2
+     * @retval  0 if the content of \p array1 and \p array2 is equal
+     * @retval +1 if the content of \p array1 is lexicographically greater than the content of \p array2
+     */
+    template<typename T, std::size_t N>
+    auto operator<=>(const Array<T, N>& array1, const Array<T, N>& array2)
+    {
+        auto array1_iter = array1.cbegin();
+        auto array2_iter = array2.cbegin();
+
+        for (size_t i = 0; i < N; i++)
+        {
+            if (*array1_iter < *array2_iter)
+            {
+                return std::strong_ordering::less;
+            }
+            if (*array1_iter > *array2_iter)
+            {
+                return std::strong_ordering::greater;
+            }
+
+            array1_iter++;
+            array2_iter++;
+        }
+
+        return std::strong_ordering::equivalent;
+    }
 }
 
 namespace std
