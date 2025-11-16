@@ -11,6 +11,7 @@ with documentation, unit tests and code coverage reports.
 ## Implemented Containers
 
 ### Sequence containers
+- [Array](@ref dsa::Array)
 - [ForwardList](@ref dsa::ForwardList)
 - [List](@ref dsa::List)
 

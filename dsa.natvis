@@ -12,7 +12,23 @@
 -->
 
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
-	
+
+	<Type Name="dsa::Array&lt;*,*&gt;">
+		<DisplayString>size = {sizeof(this->m_data)/sizeof(this->m_data[0])}</DisplayString>
+		<Expand>
+			<ArrayItems>
+				<Size>sizeof(this->m_data)/sizeof(this->m_data[0])</Size>
+				<ValuePointer>m_data</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
+	<Type Name="dsa::Array&lt;*,0&gt;">
+		<DisplayString>size = 0</DisplayString>
+		<Expand>
+		</Expand>
+	</Type>
+
 	<Type Name="dsa::ForwardList&lt;*&gt;">
 		<DisplayString Condition="m_head == 0xcccccccccccccccc">invalid</DisplayString>
 		<DisplayString>size = {m_size}</DisplayString>
