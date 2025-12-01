@@ -27,3 +27,7 @@ add_test(NAME vector_shrink_test COMMAND vector_shrink_test)
 add_executable(vector_swap_test vector_swap_test.cpp ${SRC_DIR}/common.cpp)
 target_link_libraries(vector_swap_test PRIVATE dsa_testing)
 add_test(NAME vector_swap_test COMMAND vector_swap_test)
+
+add_executable(vector_operators_test vector_operators_test.cpp ${SRC_DIR}/common.cpp)
+target_link_libraries(vector_operators_test PRIVATE dsa_testing)
+add_test(NAME vector_operators_test COMMAND vector_operators_test)
