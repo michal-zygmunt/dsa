@@ -35,3 +35,7 @@ add_test(NAME vector_operators_test COMMAND vector_operators_test)
 add_executable(vector_itors_test vector_itors_test.cpp ${SRC_DIR}/common.cpp)
 target_link_libraries(vector_itors_test PRIVATE dsa_testing)
 add_test(NAME vector_itors_test COMMAND vector_itors_test)
+
+add_executable(vector_ranges_test vector_ranges_test.cpp ${SRC_DIR}/common.cpp)
+target_link_libraries(vector_ranges_test PRIVATE dsa_testing)
+add_test(NAME vector_ranges_test COMMAND vector_ranges_test)
