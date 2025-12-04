@@ -1068,7 +1068,7 @@ namespace dsa
 
             if (m_size >= m_capacity)
             {
-                reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
+                reallocate(calc_new_capacity());
             }
             std::allocator_traits<allocator_type>::construct(m_allocator, end(), std::forward<Args>(args)...);
             ++m_size;
@@ -1161,7 +1161,7 @@ namespace dsa
         {
             if (m_size >= m_capacity)
             {
-                reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
+                reallocate(calc_new_capacity());
             }
 
             std::allocator_traits<allocator_type>::construct(m_allocator, end(), value);
@@ -1178,7 +1178,7 @@ namespace dsa
             // Some implementations throw std::lengt_error when push_back causes a reallocation that exceeds mas_size()
             if (m_size >= m_capacity)
             {
-                reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
+                reallocate(calc_new_capacity());
             }
 
             std::allocator_traits<allocator_type>::construct(m_allocator, end(), std::move(value));
@@ -1263,6 +1263,16 @@ namespace dsa
         }
 
     private:
+
+        /**
+         * @brief Function calculate proposition of new capacity for the container
+         *
+         * @return size_type proposition of new capacity
+         */
+        auto calc_new_capacity() -> size_type
+        {
+            return m_capacity == 0 ? 1 : m_capacity * 2;
+        }
 
         /**
          * @brief Underlaying dynamic size memory containing all elements
