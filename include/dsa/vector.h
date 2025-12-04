@@ -153,14 +153,9 @@ namespace dsa
             requires std::input_iterator<InputIt>
         constexpr Vector(InputIt first, InputIt last)
         {
-            const size_type count = last - first;
-            reserve(count);
-
-            while (first != last)
-            {
-                push_back(*first);
-                first++;
-            }
+            // do not use const reference to keep arguments the same as in std
+            // NOLINTNEXTLINE(performance-unnecessary-value-param)
+            assign(first, last);
         }
 
         /**
@@ -195,12 +190,7 @@ namespace dsa
          */
         constexpr Vector(std::initializer_list<T> init_list)
         {
-            reallocate(init_list.size());
-
-            for (auto const& item : init_list)
-            {
-                push_back(item);
-            }
+            assign(init_list);
         }
 
         /**
@@ -310,9 +300,11 @@ namespace dsa
          */
         template<typename InputIt>
             requires std::input_iterator<InputIt>
+        // do not use `last` as const reference to keep arguments the same as in std
+        // NOLINTNEXTLINE(performance-unnecessary-value-param)
         constexpr void assign(InputIt first, InputIt last)
         {
-            const size_type count = last - first;
+            const auto count = static_cast<size_type>(std::distance(first, last));
 
             clear_allocation();
             m_capacity = 0;
