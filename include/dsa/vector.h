@@ -1109,24 +1109,7 @@ namespace dsa
          */
         constexpr auto erase(iterator first, iterator last) -> iterator
         {
-            size_type count{};
-
-            // destroy objects in range [first, last)
-            iterator iter{ first };
-            while (iter != last)
-            {
-                std::allocator_traits<allocator_type>::destroy(m_allocator, iter);
-                ++iter;
-                ++count;
-            }
-
-            // move remaining objects into empty space
-            // this moves memory in range [last, end()] to addres pointed by `first`, that was already released
-            // NOLINTNEXTLINE(readability-suspicious-call-argument)
-            std::move(last, end(), first);
-
-            m_size -= count;
-            return first;
+            return erase(static_cast<const_iterator>(first), static_cast<const_iterator>(last));
         }
 
         /**
@@ -1141,7 +1124,23 @@ namespace dsa
          */
         constexpr auto erase(const_iterator first, const_iterator last) -> iterator
         {
-            return erase(const_cast<iterator>(first), const_cast<iterator>(last));
+            const auto offset_last = static_cast<size_type>(last - cbegin());
+            const auto offset_first = static_cast<size_type>(first - cbegin());
+            const size_type count{ offset_last - offset_first };
+
+            // destroy objects in range [first, last)
+            while (first != last)
+            {
+                std::allocator_traits<allocator_type>::destroy(m_allocator, first);
+                ++first;
+            }
+
+            // move remaining objects into empty space
+            // this moves memory in range [last, end()] to addres pointed by `first`, that was already released
+            std::move(begin() + offset_last, end(), begin() + offset_first);
+
+            m_size -= count;
+            return begin() + offset_first;
         }
 
         /**
