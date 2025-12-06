@@ -744,65 +744,14 @@ namespace dsa
          */
         constexpr auto insert(const_iterator pos, size_type count, const T& value) -> iterator
         {
-            iterator new_pos{};
+            iterator new_pos{ insert_make_space_for_new_elems(pos, count) };
 
-            if (size() + count > capacity())
+            // create objects in range [pos, pos + count]
+            iterator new_iter{ new_pos };
+            for (size_t i = 0; i < count; i++)
             {
-                // allocate memory to store new content
-                const size_type new_capacity = m_capacity + count;
-                pointer new_data = allocator_type().allocate(new_capacity);
-
-                // use iterator to move all objects from original vector to new allocated memory
-                iterator iter{ begin() };
-                iterator new_iter = new_data;
-
-                // move all objects before pos from original memory
-                while (iter != pos)
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
-                    ++iter;
-                    ++new_iter;
-                }
-
-                // insert new elements
-                new_pos = new_iter;
-                for (size_t i = 0; i < count; i++)
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, value);
-                    ++new_iter;
-                }
-
-                // move all remaining objects from original memory
-                while (iter != end())
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
-                    ++iter;
-                    ++new_iter;
-                }
-
-                clear_allocation();
-                m_data = new_data;
-                m_capacity = new_capacity;
-                m_size += count;
-            }
-            else
-            {
-                // store address to insert new elements
-                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
-                iterator iter{ const_cast<iterator>(pos) };
-                new_pos = iter;
-
-                // move object to the right
-                std::move(iter, end(), iter + count);
-
-                // create objects in range [pos, pos + count]
-                for (size_t i = 0; i < count; i++)
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, iter, value);
-                    ++iter;
-                }
-
-                m_size += count;
+                std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, value);
+                ++new_iter;
             }
 
             return new_pos;
@@ -824,68 +773,16 @@ namespace dsa
             requires std::input_iterator<InputIt>
         constexpr auto insert(const_iterator pos, InputIt first, InputIt last) -> iterator
         {
-            iterator new_pos{};
-            const size_type count = last - first;
+            const auto count = static_cast<size_type>(std::distance(first, last));
+            iterator new_pos{ insert_make_space_for_new_elems(pos, count) };
 
-            if (size() + count > capacity())
+            // create objects in range [pos, pos + count]
+            iterator new_iter{ new_pos };
+            while (first != last)
             {
-                // allocate memory to store new content
-                const size_type new_capacity = m_capacity + count;
-                pointer new_data = allocator_type().allocate(new_capacity);
-
-                // use iterator to move all objects from original vector to new allocated memory
-                iterator iter{ begin() };
-                iterator new_iter = new_data;
-
-                // move all objects before pos from original memory
-                while (iter != pos)
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
-                    ++iter;
-                    ++new_iter;
-                }
-
-                // insert new elements
-                new_pos = new_iter;
-                while (first != last)
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, *first);
-                    ++new_iter;
-                    ++first;
-                }
-
-                // move all remaining objects from original memory
-                while (iter != end())
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
-                    ++iter;
-                    ++new_iter;
-                }
-
-                clear_allocation();
-                m_data = new_data;
-                m_capacity = new_capacity;
-                m_size += count;
-            }
-            else
-            {
-                // store address to insert new elements
-                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
-                iterator iter{ const_cast<iterator>(pos) };
-                new_pos = iter;
-
-                // move object to the right
-                std::move(iter, end(), iter + count);
-
-                // create objects in range [pos, pos + count]
-                while (first != last)
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, iter, *first);
-                    ++iter;
-                    ++first;
-                }
-
-                m_size += count;
+                std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, *first);
+                ++new_iter;
+                ++first;
             }
 
             return new_pos;
@@ -903,66 +800,15 @@ namespace dsa
          */
         constexpr auto insert(const_iterator pos, std::initializer_list<T> init_list) -> iterator
         {
-            iterator new_pos{};
             const size_type count = init_list.size();
+            iterator new_pos{ insert_make_space_for_new_elems(pos, count) };
 
-            if (size() + count > capacity())
+            // create objects in range [pos, pos + count]
+            iterator new_iter{ new_pos };
+            for (const auto& value : init_list)
             {
-                // allocate memory to store new content
-                const size_type new_capacity = m_capacity + count;
-                pointer new_data = allocator_type().allocate(new_capacity);
-
-                // use iterator to move all objects from original vector to new allocated memory
-                iterator iter{ begin() };
-                iterator new_iter = new_data;
-
-                // move all objects before pos from original memory
-                while (iter != pos)
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
-                    ++iter;
-                    ++new_iter;
-                }
-
-                // insert new elements
-                new_pos = new_iter;
-                for (const auto& value : init_list)
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, value);
-                    ++new_iter;
-                }
-
-                // move all remaining objects from original memory
-                while (iter != end())
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
-                    ++iter;
-                    ++new_iter;
-                }
-
-                clear_allocation();
-                m_data = new_data;
-                m_capacity = new_capacity;
-                m_size += count;
-            }
-            else
-            {
-                // store address to insert new elements
-                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
-                iterator iter{ const_cast<iterator>(pos) };
-                new_pos = iter;
-
-                // move object to the right
-                std::move(iter, end(), iter + count);
-
-                // create objects in range [pos, pos + count]
-                for (const auto& value : init_list)
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, iter, value);
-                    ++iter;
-                }
-
-                m_size += count;
+                std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, value);
+                ++new_iter;
             }
 
             return new_pos;
@@ -982,61 +828,10 @@ namespace dsa
         template<typename... Args>
         constexpr auto emplace(const_iterator pos, Args&&... args) -> iterator
         {
-            iterator new_pos{};
-            const size_type count = 1;
+            iterator new_pos{ insert_make_space_for_new_elems(pos, 1) };
 
-            if (size() + count > capacity())
-            {
-                // allocate memory to store new content
-                const size_type new_capacity = m_capacity + count;
-                pointer new_data = allocator_type().allocate(new_capacity);
-
-                // use iterator to move all objects from original vector to new allocated memory
-                iterator iter{ begin() };
-                iterator new_iter = new_data;
-
-                // move all objects before pos from original memory
-                while (iter != pos)
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
-                    ++iter;
-                    ++new_iter;
-                }
-
-                // insert new elements
-                new_pos = new_iter;
-                std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::forward<Args>(args)...);
-                ++new_iter;
-
-                // move all remaining objects from original memory
-                while (iter != end())
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
-                    ++iter;
-                    ++new_iter;
-                }
-
-                clear_allocation();
-                m_data = new_data;
-                m_capacity = new_capacity;
-                m_size += count;
-            }
-            else
-            {
-                // store address to insert new elements
-                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
-                iterator iter{ const_cast<iterator>(pos) };
-                new_pos = iter;
-
-                // move object to the right
-                std::move(iter, end(), iter + count);
-
-                // create objects in range [pos, pos + count]
-                std::allocator_traits<allocator_type>::construct(m_allocator, iter, std::forward<Args>(args)...);
-                //++iter;
-
-                m_size += count;
-            }
+            // emplace new element
+            std::allocator_traits<allocator_type>::construct(m_allocator, new_pos, std::forward<Args>(args)...);
 
             return new_pos;
         }
@@ -1263,6 +1058,72 @@ namespace dsa
         auto calc_new_capacity() -> size_type
         {
             return m_capacity == 0 ? 1 : m_capacity * 2;
+        }
+
+        /**
+         * @brief Function creates empty space for new elements during insert
+         *
+         * @param[in] pos iterator before which new element will be inserted
+         * @param[in] count number of new elements to insert into container
+         *
+         * @return iterator to first empty space to insert new element
+         */
+        auto insert_make_space_for_new_elems(const_iterator pos, size_type count) -> iterator
+        {
+            iterator new_pos{};
+
+            if (size() + count > capacity())
+            {
+                // allocate memory to store new content
+                const size_type new_capacity = m_capacity + count;
+                pointer new_data = allocator_type().allocate(new_capacity);
+
+                // use iterator to move all objects from original vector to new allocated memory
+                iterator iter{ begin() };
+                iterator new_iter = new_data;
+
+                // move all objects before pos from original memory
+                while (iter != pos)
+                {
+                    std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
+                    ++iter;
+                    ++new_iter;
+                }
+
+                // make space for new elements
+                new_pos = new_iter;
+                for (size_t i = 0; i < count; i++)
+                {
+                    ++new_iter;
+                }
+
+                // move all remaining objects from original memory
+                while (iter != end())
+                {
+                    std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
+                    ++iter;
+                    ++new_iter;
+                }
+
+                clear_allocation();
+                m_data = new_data;
+                m_capacity = new_capacity;
+                m_size += count;
+            }
+            else
+            {
+                // store address to insert new elements
+                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+                iterator iter{ const_cast<iterator>(pos) };
+                new_pos = iter;
+
+                // move object to the right
+                std::move(iter, end(), iter + count);
+
+                m_size += count;
+            }
+
+            return new_pos;
         }
 
         /**
