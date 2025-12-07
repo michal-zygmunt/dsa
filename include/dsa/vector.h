@@ -114,7 +114,7 @@ namespace dsa
         /**
          * @brief Construct a new Vector object
          */
-        constexpr Vector() = default;
+        constexpr Vector();
 
         /**
          * @brief Construct a new Vector object of size \p count,
@@ -122,10 +122,7 @@ namespace dsa
          *
          * @param[in] count element count
          */
-        constexpr Vector(size_type count)
-            : Vector(count, T())
-        {
-        }
+        constexpr Vector(size_type count);
 
         /**
          * @brief Construct a new Vector object of size \p count,
@@ -134,13 +131,7 @@ namespace dsa
          * @param[in] count element count
          * @param[in] value value for all elements
          */
-        constexpr Vector(size_type count, const T& value)
-        {
-            for (size_t i = 0; i < count; i++)
-            {
-                push_back(value);
-            }
-        }
+        constexpr Vector(size_type count, const T& value);
 
         /**
          * @brief Construct a new Vector object using elements from range [ \p first , \p last )
@@ -151,26 +142,14 @@ namespace dsa
          */
         template<typename InputIt>
             requires std::input_iterator<InputIt>
-        constexpr Vector(InputIt first, InputIt last)
-        {
-            // do not use const reference to keep arguments the same as in std
-            // NOLINTNEXTLINE(performance-unnecessary-value-param)
-            assign(first, last);
-        }
+        constexpr Vector(InputIt first, InputIt last);
 
         /**
          * @brief Construct a new Vector object using copy constructor
          *
          * @param[in] other Vector object of type T
          */
-        constexpr Vector(const Vector& other)
-        {
-            reserve(other.size());
-            for (const auto& item : other)
-            {
-                push_back(item);
-            }
-        }
+        constexpr Vector(const Vector<T>& other);
 
         /**
          * @brief Construct a new Vector object using move constructor
@@ -178,28 +157,19 @@ namespace dsa
          *
          * @param[in,out] other Vector object of type T
          */
-        constexpr Vector(Vector&& other) noexcept
-        {
-            operator=(std::move(other));
-        }
+        constexpr Vector(Vector<T>&& other) noexcept;
 
         /**
          * @brief Construct a new Vector object using initializer list
          *
          * @param[in] init_list initializer list of values of type T
          */
-        constexpr Vector(std::initializer_list<T> init_list)
-        {
-            assign(init_list);
-        }
+        constexpr Vector(std::initializer_list<T> init_list);
 
         /**
          * @brief Destroy the Vector object
          */
-        ~Vector()
-        {
-            clear_allocation();
-        }
+        ~Vector();
 
         /**
          * @brief Assign Vector object using copy assignment
@@ -208,23 +178,7 @@ namespace dsa
          * @param[in,out] other Vector object of type T
          * @return Vector& reference to constructed Vector of type T
          */
-        constexpr auto operator=(const Vector<T>& other) -> Vector<T>&
-        {
-            if (&other != this)
-            {
-                clear_allocation();
-                m_capacity = 0;
-                m_size = 0;
-
-                m_data = allocator_type().allocate(other.size());
-                for (const auto& item : other)
-                {
-                    push_back(item);
-                }
-            }
-
-            return *this;
-        }
+        constexpr auto operator=(const Vector<T>& other) -> Vector<T>&;
 
         /**
          * @brief Assign Vector object using move assignment
@@ -233,23 +187,7 @@ namespace dsa
          * @param[in,out] other Vector object of type T
          * @return Vector& reference to constructed Vector of type T
          */
-        constexpr auto operator=(Vector<T>&& other) noexcept -> Vector<T>&
-        {
-            if (&other != this)
-            {
-                clear_allocation();
-
-                m_data = other.m_data;
-                m_capacity = other.m_capacity;
-                m_size = other.m_size;
-
-                other.m_data = nullptr;
-                other.m_capacity = 0;
-                other.m_size = 0;
-            }
-
-            return *this;
-        }
+        constexpr auto operator=(Vector<T>&& other) noexcept -> Vector<T>&;
 
         /**
          * @brief Assign Vector object from \p init_list elements
@@ -257,20 +195,7 @@ namespace dsa
          * @param[in] init_list values to replace Vector with
          * @return Vector& reference to constructed Vector of type T
          */
-        constexpr auto operator=(std::initializer_list<T> init_list) -> Vector<T>&
-        {
-            clear_allocation();
-            m_capacity = 0;
-            m_size = 0;
-
-            m_data = allocator_type().allocate(init_list.size());
-            for (auto const& item : init_list)
-            {
-                push_back(item);
-            }
-
-            return *this;
-        }
+        constexpr auto operator=(std::initializer_list<T> init_list) -> Vector<T>&;
 
         /**
          * @brief Function assign \p count , elements of \p value to Vector object
@@ -278,18 +203,7 @@ namespace dsa
          * @param[in] count new size of the container
          * @param[in] value value to initialize elements of the container with
          */
-        constexpr void assign(size_type count, const T& value)
-        {
-            clear_allocation();
-            m_capacity = 0;
-            m_size = 0;
-
-            m_data = allocator_type().allocate(count);
-            for (size_t i = 0; i < count; i++)
-            {
-                push_back(value);
-            }
-        }
+        constexpr void assign(size_type count, const T& value);
 
         /**
          * @brief Function assign elements from range [ \p first , \p last ) to Vector object
@@ -302,49 +216,21 @@ namespace dsa
             requires std::input_iterator<InputIt>
         // do not use `last` as const reference to keep arguments the same as in std
         // NOLINTNEXTLINE(performance-unnecessary-value-param)
-        constexpr void assign(InputIt first, InputIt last)
-        {
-            const auto count = static_cast<size_type>(std::distance(first, last));
-
-            clear_allocation();
-            m_capacity = 0;
-            m_size = 0;
-
-            m_data = allocator_type().allocate(count);
-            while (first != last)
-            {
-                push_back(*first);
-                first++;
-            }
-        }
+        constexpr void assign(InputIt first, InputIt last);
 
         /**
          * @brief Function assign values of \p init_list to Vector object
          *
          * @param[in] init_list initializer list of values of type T
          */
-        constexpr void assign(std::initializer_list<T> init_list)
-        {
-            clear_allocation();
-            m_capacity = 0;
-            m_size = 0;
-
-            m_data = allocator_type().allocate(init_list.size());
-            for (auto const& item : init_list)
-            {
-                push_back(item);
-            }
-        }
+        constexpr void assign(std::initializer_list<T> init_list);
 
         /**
          * @brief Get the allocator object
          *
          * @return allocator_type type of memory allocator
          */
-        [[nodiscard]] constexpr auto get_allocator() const -> allocator_type
-        {
-            return m_allocator;
-        }
+        [[nodiscard]] constexpr auto get_allocator() const -> allocator_type;
 
         /**
          * @brief Returns a reference to Vector element at \p pos index.
@@ -353,16 +239,7 @@ namespace dsa
          * @param[in] pos index of element to return
          * @return reference to Vector element at \p pos index
          */
-        [[nodiscard]] constexpr auto at(size_type pos) -> reference
-        {
-            if (pos >= m_size)
-            {
-                throw std::out_of_range("Pos argument outside of container range");
-            }
-
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            return m_data[pos];
-        }
+        [[nodiscard]] constexpr auto at(size_type pos) -> reference;
 
         /**
          * @brief Returns a const_reference to Vector element at \p pos index.
@@ -371,16 +248,7 @@ namespace dsa
          * @param[in] pos index of element to return
          * @return const_reference to Vector element at \p pos index
          */
-        [[nodiscard]] constexpr auto at(size_type pos) const -> const_reference
-        {
-            if (pos >= m_size)
-            {
-                throw std::out_of_range("Pos argument outside of container range");
-            }
-
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            return m_data[pos];
-        }
+        [[nodiscard]] constexpr auto at(size_type pos) const -> const_reference;
 
         /**
          * @brief Returns a reference to Vector element at \p pos index.
@@ -389,11 +257,7 @@ namespace dsa
          * @param[in] pos index of element to return
          * @return reference to Vector element
          */
-        [[nodiscard]] constexpr auto operator[](size_type pos) -> reference
-        {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            return m_data[pos];
-        }
+        [[nodiscard]] constexpr auto operator[](size_type pos)->reference;
 
         /**
          * @brief Returns a const_reference to Vector element at \p pos index.
@@ -402,77 +266,49 @@ namespace dsa
          * @param[in] pos index of element to return
          * @return const_reference to Vector element
          */
-        [[nodiscard]] constexpr auto operator[](size_type pos) const -> const_reference
-        {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            return m_data[pos];
-        }
+        [[nodiscard]] constexpr auto operator[](size_type pos) const->const_reference;
 
         /**
          * @brief Returns reference to first Arary element
          *
          * @return reference to first element
          */
-        [[nodiscard]] constexpr auto front() -> reference
-        {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            return m_data[0];
-        }
+        [[nodiscard]] constexpr auto front() -> reference;
 
         /**
          * @brief Returns const_reference to first Arary element
          *
          * @return const_reference to first element
          */
-        [[nodiscard]] constexpr auto front() const -> const_reference
-        {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            return m_data[0];
-        }
+        [[nodiscard]] constexpr auto front() const -> const_reference;
 
         /**
          * @brief Returns reference to last Arary element
          *
          * @return reference to last element
          */
-        [[nodiscard]] constexpr auto back() -> reference
-        {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            return m_data[m_size - 1];
-        }
+        [[nodiscard]] constexpr auto back() -> reference;
 
         /**
          * @brief Returns const_reference to last Arary element
          *
          * @return const_reference to last element
          */
-        [[nodiscard]] constexpr auto back() const -> const_reference
-        {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            return m_data[m_size - 1];
-        }
+        [[nodiscard]] constexpr auto back() const -> const_reference;
 
         /**
          * @brief Returns pointer to underlying data container
          *
          * @return pointer to underlaying data container
          */
-        [[nodiscard]] constexpr auto data() noexcept -> pointer
-        {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            return &m_data[0];
-        }
+        [[nodiscard]] constexpr auto data() noexcept -> pointer;
 
         /**
          * @brief Returns const_pointer to underlying data container
          *
          * @return const_pointer to underlaying data container
          */
-        [[nodiscard]] constexpr auto data() const noexcept -> const_pointer
-        {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            return &m_data[0];
-        }
+        [[nodiscard]] constexpr auto data() const noexcept -> const_pointer;
 
         /**
          * @brief Returns iterator to first element
@@ -481,10 +317,7 @@ namespace dsa
          *
          * @return iterator to first element
          */
-        [[nodiscard]] constexpr auto begin() noexcept -> iterator
-        {
-            return m_data;
-        }
+        [[nodiscard]] constexpr auto begin() noexcept -> iterator;
 
         /**
          * @brief Returns const_iterator to first element
@@ -493,10 +326,7 @@ namespace dsa
          *
          * @return const_iterator to first element
          */
-        [[nodiscard]] constexpr auto begin() const noexcept -> const_iterator
-        {
-            return m_data;
-        }
+        [[nodiscard]] constexpr auto begin() const noexcept -> const_iterator;
 
         /**
          * @brief Returns const_iterator to first element
@@ -505,10 +335,7 @@ namespace dsa
          *
          * @return const_iterator to first element
          */
-        [[nodiscard]] constexpr auto cbegin() const noexcept -> const_iterator
-        {
-            return m_data;
-        }
+        [[nodiscard]] constexpr auto cbegin() const noexcept -> const_iterator;
 
         /**
          * @brief Returns iterator past last element of underlaying data structure
@@ -517,11 +344,7 @@ namespace dsa
          *
          * @return iterator past last element
          */
-        [[nodiscard]] constexpr auto end() noexcept -> iterator
-        {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            return m_data + m_size;
-        }
+        [[nodiscard]] constexpr auto end() noexcept -> iterator;
 
         /**
          * @brief Returns const_iterator past last element of underlaying data structure
@@ -530,11 +353,7 @@ namespace dsa
          *
          * @return const_iterator past last element
          */
-        [[nodiscard]] constexpr auto end() const noexcept -> const_iterator
-        {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            return m_data + m_size;
-        }
+        [[nodiscard]] constexpr auto end() const noexcept -> const_iterator;
 
         /**
          * @brief Returns const_iterator past last element of underlaying data structure
@@ -543,11 +362,7 @@ namespace dsa
          *
          * @return const_iterator past last element
          */
-        [[nodiscard]] constexpr auto cend() const noexcept -> const_iterator
-        {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            return m_data + m_size;
-        }
+        [[nodiscard]] constexpr auto cend() const noexcept -> const_iterator;
 
         /**
          * @brief Returns reverse_iterator to the first element of reversed underlaying data structure
@@ -556,10 +371,7 @@ namespace dsa
          *
          * @return reverse_iterator to the first element
          */
-        [[nodiscard]] constexpr auto rbegin() -> reverse_iterator
-        {
-            return reverse_iterator(end());
-        }
+        [[nodiscard]] constexpr auto rbegin() -> reverse_iterator;
 
         /**
          * @brief Returns const_reverse_iterator to the first element of reversed underlaying data structure
@@ -568,10 +380,7 @@ namespace dsa
          *
          * @return const_reverse_iterator to the first element
          */
-        [[nodiscard]] constexpr auto rbegin() const -> const_reverse_iterator
-        {
-            return const_reverse_iterator(end());
-        }
+        [[nodiscard]] constexpr auto rbegin() const -> const_reverse_iterator;
 
         /**
          * @brief Returns const_reverse_iterator to the first element of reversed underlaying data structure
@@ -580,10 +389,7 @@ namespace dsa
          *
          * @return const_reverse_iterator to the first element
          */
-        [[nodiscard]] constexpr auto crbegin() const noexcept -> const_reverse_iterator
-        {
-            return const_reverse_iterator(end());
-        }
+        [[nodiscard]] constexpr auto crbegin() const noexcept -> const_reverse_iterator;
 
         /**
          * @brief Returns reverse_iterator past the last element of reversed underlaying data structure
@@ -592,10 +398,7 @@ namespace dsa
          *
          * @return reverse_iterator to the element after the last element
          */
-        [[nodiscard]] constexpr auto rend() -> reverse_iterator
-        {
-            return reverse_iterator(begin());
-        }
+        [[nodiscard]] constexpr auto rend() -> reverse_iterator;
 
         /**
          * @brief Returns const_reverse_iterator past the last element of reversed underlaying data structure
@@ -604,10 +407,7 @@ namespace dsa
          *
          * @return const_reverse_iterator to the element after the last element
          */
-        [[nodiscard]] constexpr auto rend() const -> const_reverse_iterator
-        {
-            return const_reverse_iterator(begin());
-        }
+        [[nodiscard]] constexpr auto rend() const -> const_reverse_iterator;
 
         /**
          * @brief Returns const_reverse_iterator past the last element of reversed underlaying data structure
@@ -616,10 +416,7 @@ namespace dsa
          *
          * @return const_reverse_iterator to the element after the last element
          */
-        [[nodiscard]] constexpr auto crend() const noexcept -> const_reverse_iterator
-        {
-            return const_reverse_iterator(begin());
-        }
+        [[nodiscard]] constexpr auto crend() const noexcept -> const_reverse_iterator;
 
         /**
          * @brief Checks if container has elements
@@ -627,54 +424,35 @@ namespace dsa
          * @return true if container is empty
          * @return false if container is not empty
          */
-        [[nodiscard]] constexpr auto empty() const -> bool
-        {
-            return m_size == 0;
-        }
+        [[nodiscard]] constexpr auto empty() const -> bool;
 
         /**
          * @brief Returns number of elements in container
          *
          * @return size_type number of elements in container
          */
-        [[nodiscard]] constexpr auto size() const noexcept -> size_type
-        {
-            return m_size;
-        }
+        [[nodiscard]] constexpr auto size() const noexcept -> size_type;
 
         /**
          * @brief Returns maximum number of elements container can hold
          *
          * @return size_type maximum number of elements
          */
-        [[nodiscard]] constexpr auto max_size() const noexcept -> size_type
-        {
-            return std::allocator_traits<allocator_type>::max_size(get_allocator());
-        }
+        [[nodiscard]] constexpr auto max_size() const noexcept -> size_type;
 
         /**
          * @brief Increase the capacity of the container
          *
          * @param[in] new_cap new capacity of container, new number of elements the container can store
          */
-        constexpr void reserve(size_type new_cap)
-        {
-            if (new_cap > capacity())
-            {
-                // strong exception guarantee by reallocate
-                reallocate(new_cap);
-            }
-        }
+        constexpr void reserve(size_type new_cap);
 
         /**
          * @brief Returns the number of elements allocated for container
          *
          * @return size_type number of allocated elements
          */
-        constexpr auto capacity() -> size_type
-        {
-            return m_capacity;
-        }
+        constexpr auto capacity() -> size_type;
 
         /**
          * @brief Request to remove of unused capacity
@@ -682,13 +460,7 @@ namespace dsa
          * @note If request is fulfilled and reallocation occurs, all iterators
          *       and all references to the container elements are invalidated
          */
-        constexpr void shrink_to_fit()
-        {
-            if (m_capacity > m_size)
-            {
-                reallocate(m_size);
-            }
-        }
+        constexpr void shrink_to_fit();
 
         /**
          * @brief Erases all elements of the container
@@ -696,11 +468,7 @@ namespace dsa
          *
          * @note Operation invalidates all pointers and references
          */
-        constexpr void clear()
-        {
-            destroy_elements();
-            m_size = 0;
-        }
+        constexpr void clear();
 
         /**
          * @brief Insert a copy of \p value before \p pos
@@ -709,10 +477,7 @@ namespace dsa
          * @param[in] value element to insert into container
          * @return iterator pointing to inserted element
          */
-        constexpr auto insert(const_iterator pos, const T& value) -> iterator
-        {
-            return insert(pos, 1, value);
-        }
+        constexpr auto insert(const_iterator pos, const T& value) -> iterator;
 
         /**
          * @brief Insert \p value before \p pos possibly using move semantics
@@ -721,10 +486,7 @@ namespace dsa
          * @param[in] value element to insert into container
          * @return iterator pointing to inserted element
          */
-        constexpr auto insert(const_iterator pos, T&& value) -> iterator
-        {
-            return insert(pos, 1, std::move(value));
-        }
+        constexpr auto insert(const_iterator pos, T&& value) -> iterator;
 
         /**
          * @brief Insert \p count copies of \p value before \p pos
@@ -737,20 +499,7 @@ namespace dsa
          * @note if no reallocation occurs, all iterators and references before \p pos remains valid
          *       if reallocation occurs, all iterators and references are invalidated
          */
-        constexpr auto insert(const_iterator pos, size_type count, const T& value) -> iterator
-        {
-            iterator new_pos{ insert_make_space_for_new_elems(pos, count) };
-
-            // create objects in range [pos, pos + count]
-            iterator new_iter{ new_pos };
-            for (size_t i = 0; i < count; i++)
-            {
-                std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, value);
-                ++new_iter;
-            }
-
-            return new_pos;
-        }
+        constexpr auto insert(const_iterator pos, size_type count, const T& value) -> iterator;
 
         /**
          * @brief Insert elements from range [ \p first , \p last ) befor \p pos
@@ -766,22 +515,7 @@ namespace dsa
          */
         template<typename InputIt>
             requires std::input_iterator<InputIt>
-        constexpr auto insert(const_iterator pos, InputIt first, InputIt last) -> iterator
-        {
-            const auto count = static_cast<size_type>(std::distance(first, last));
-            iterator new_pos{ insert_make_space_for_new_elems(pos, count) };
-
-            // create objects in range [pos, pos + count]
-            iterator new_iter{ new_pos };
-            while (first != last)
-            {
-                std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, *first);
-                ++new_iter;
-                ++first;
-            }
-
-            return new_pos;
-        }
+        constexpr auto insert(const_iterator pos, InputIt first, InputIt last) -> iterator;
 
         /**
          * @brief Insert constent of \p init_list before \p pos
@@ -793,21 +527,7 @@ namespace dsa
          * @note if no reallocation occurs, all iterators and references before \p pos remains valid
          *       if reallocation occurs, all iterators and references are invalidated
          */
-        constexpr auto insert(const_iterator pos, std::initializer_list<T> init_list) -> iterator
-        {
-            const size_type count = init_list.size();
-            iterator new_pos{ insert_make_space_for_new_elems(pos, count) };
-
-            // create objects in range [pos, pos + count]
-            iterator new_iter{ new_pos };
-            for (const auto& value : init_list)
-            {
-                std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, value);
-                ++new_iter;
-            }
-
-            return new_pos;
-        }
+        constexpr auto insert(const_iterator pos, std::initializer_list<T> init_list) -> iterator;
 
         /**
          * @brief Insert new element into the container before \p pos
@@ -821,15 +541,7 @@ namespace dsa
          *       if reallocation occurs, all iterators and references are invalidated
          */
         template<typename... Args>
-        constexpr auto emplace(const_iterator pos, Args&&... args) -> iterator
-        {
-            iterator new_pos{ insert_make_space_for_new_elems(pos, 1) };
-
-            // emplace new element
-            std::allocator_traits<allocator_type>::construct(m_allocator, new_pos, std::forward<Args>(args)...);
-
-            return new_pos;
-        }
+        constexpr auto emplace(const_iterator pos, Args&&... args) -> iterator;
 
         /**
          * @brief Appends a copy of \p value at the end of the container
@@ -839,25 +551,7 @@ namespace dsa
          * @return reference to emplaced element
          */
         template<typename... Args>
-        constexpr auto emplace_back(Args&&... args) -> reference
-        {
-            /*
-            * If an exception is thrown for any reason, this function has no effect
-            * strong exception guarantee by:
-            * - reallocate
-            * - if construction of new element fails, state of object does not change
-            */
-
-            if (m_size >= m_capacity)
-            {
-                reallocate(calc_new_capacity());
-            }
-            std::allocator_traits<allocator_type>::construct(m_allocator, end(), std::forward<Args>(args)...);
-            ++m_size;
-
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            return m_data[m_size - 1];
-        }
+        constexpr auto emplace_back(Args&&... args) -> reference;
 
         /**
          * @brief Erases specified element from the container
@@ -868,10 +562,7 @@ namespace dsa
          * @note iterator \p pos must be valid and dereferencable
          *       iterators and references at and after \p pos are invalidated
          */
-        constexpr auto erase(iterator pos) -> iterator
-        {
-            return erase(pos, pos + 1);
-        }
+        constexpr auto erase(iterator pos) -> iterator;
 
         /**
          * @brief Erases specified element from the container
@@ -882,10 +573,7 @@ namespace dsa
          * @note iterator \p pos must be valid and dereferencable
          *       iterators and references at and after \p pos are invalidated
          */
-        constexpr auto erase(const_iterator pos) -> iterator
-        {
-            return erase(pos, pos + 1);
-        }
+        constexpr auto erase(const_iterator pos) -> iterator;
 
         /**
          * @brief Erases elements in range [ \p first , \p last ) from the container
@@ -897,10 +585,7 @@ namespace dsa
          * @note iterator \p first does not need to be dereferencable
          *       iterators and references at and after \p first are invalidated
          */
-        constexpr auto erase(iterator first, iterator last) -> iterator
-        {
-            return erase(static_cast<const_iterator>(first), static_cast<const_iterator>(last));
-        }
+        constexpr auto erase(iterator first, iterator last) -> iterator;
 
         /**
          * @brief Erases elements in range [ \p first , \p last ) from the container
@@ -912,73 +597,28 @@ namespace dsa
          * @note iterator \p first does not need to be dereferencable
          *       iterators and references at and after \p first are invalidated
          */
-        constexpr auto erase(const_iterator first, const_iterator last) -> iterator
-        {
-            const auto offset_last = static_cast<size_type>(last - cbegin());
-            const auto offset_first = static_cast<size_type>(first - cbegin());
-            const size_type count{ offset_last - offset_first };
-
-            // destroy objects in range [first, last)
-            while (first != last)
-            {
-                std::allocator_traits<allocator_type>::destroy(m_allocator, first);
-                ++first;
-            }
-
-            // move remaining objects into empty space
-            // this moves memory in range [last, end()] to addres pointed by `first`, that was already released
-            std::move(begin() + offset_last, end(), begin() + offset_first);
-
-            m_size -= count;
-            return begin() + offset_first;
-        }
+        constexpr auto erase(const_iterator first, const_iterator last) -> iterator;
 
         /**
          * @brief Appends a copy of \p value at the end of the container
          *
          * @param[in] value the value of the element to append
          */
-        constexpr void push_back(const T& value)
-        {
-            if (m_size >= m_capacity)
-            {
-                reallocate(calc_new_capacity());
-            }
-
-            std::allocator_traits<allocator_type>::construct(m_allocator, end(), value);
-            ++m_size;
-        }
+        constexpr void push_back(const T& value);
 
         /**
          * @brief Appends a copy of \p value at the end of the container
          *
          * @param[in] value the value of the element to append
          */
-        constexpr void push_back(T&& value)
-        {
-            // Some implementations throw std::lengt_error when push_back causes a reallocation that exceeds mas_size()
-            if (m_size >= m_capacity)
-            {
-                reallocate(calc_new_capacity());
-            }
-
-            std::allocator_traits<allocator_type>::construct(m_allocator, end(), std::move(value));
-            ++m_size;
-        }
+        constexpr void push_back(T&& value);
 
         /**
          * @brief Removes the last element of the container
          *
          * @note iterators and references to the last element are invalidated
          */
-        constexpr void pop_back()
-        {
-            if (m_size > 0)
-            {
-                std::allocator_traits<allocator_type>::destroy(m_allocator, end());
-                --m_size;
-            }
-        }
+        constexpr void pop_back();
 
         /**
          * @brief Resizez the container to contain \p count elements
@@ -988,10 +628,7 @@ namespace dsa
          *
          * @param[in] count new size of the container
          */
-        constexpr void resize(size_type count)
-        {
-            resize(count, T{});
-        }
+        constexpr void resize(size_type count);
 
         /**
          * @brief Resizes the container to contain \p count elements
@@ -1002,46 +639,14 @@ namespace dsa
          * @param[in] count new size of the container
          * @param[in] value the value to initialize the new element with
          */
-        constexpr void resize(size_type count, const value_type& value)
-        {
-            if (count >= max_size())
-            {
-                throw std::length_error("Capacity required by new vector would exceed maximum allowed size");
-            }
-
-            if (count == m_size)
-            {
-                return;
-            }
-
-            if (m_size > count)
-            {
-                // container is reduced to its count elements
-                while (m_size > count)
-                {
-                    pop_back();
-                }
-            }
-
-            if (m_size < count)
-            {
-                // additional copies of value are appended
-                while (m_size < count)
-                {
-                    push_back(value);
-                }
-            }
-        }
+        constexpr void resize(size_type count, const value_type& value);
 
         /**
          * @brief Exchanges content of current container with \p other container
          *
          * @param[in] other container to exchange content with
          */
-        constexpr void swap(dsa::Vector<T>& other) noexcept
-        {
-            std::swap(*this, other);
-        }
+        constexpr void swap(dsa::Vector<T>& other) noexcept;
 
     private:
 
@@ -1122,26 +727,6 @@ namespace dsa
         }
 
         /**
-         * @brief Underlaying dynamic size memory containing all elements
-         */
-        value_type* m_data{};
-
-        /**
-         * @brief Number of created elements
-         */
-        size_type m_size{};
-
-        /**
-         * @brief Number of elements that can be stored with corrent memory allocation
-         */
-        size_type m_capacity{};
-
-        /**
-         * @brief Allocator for memory management
-         */
-        allocator_type m_allocator{};
-
-        /**
          * @brief Function increase memory allocation of the container to hold \p new_cap number of elements
          *
          * @param[in] new_cap new capacity of container as maximum number of elements the container can store
@@ -1198,7 +783,615 @@ namespace dsa
                 m_capacity = 0;
             }
         }
+
+        /**
+         * @brief Underlaying dynamic size memory containing all elements
+         */
+        value_type* m_data{};
+
+        /**
+         * @brief Number of created elements
+         */
+        size_type m_size{};
+
+        /**
+         * @brief Number of elements that can be stored with corrent memory allocation
+         */
+        size_type m_capacity{};
+
+        /**
+         * @brief Allocator for memory management
+         */
+        allocator_type m_allocator{};
     };
+
+    template<typename T>
+    constexpr Vector<T>::Vector() = default;
+
+    template<typename T>
+    constexpr Vector<T>::Vector(size_type count)
+        : Vector(count, T())
+    {
+    }
+
+    template<typename T>
+    constexpr Vector<T>::Vector(size_type count, const T& value)
+    {
+        for (size_t i = 0; i < count; i++)
+        {
+            push_back(value);
+        }
+    }
+
+    template<typename T>
+    template<typename InputIt>
+        requires std::input_iterator<InputIt>
+    constexpr Vector<T>::Vector(InputIt first, InputIt last)
+    {
+        // do not use const reference to keep arguments the same as in std
+        // NOLINTNEXTLINE(performance-unnecessary-value-param)
+        assign(first, last);
+    }
+
+    template<typename T>
+    constexpr Vector<T>::Vector(const Vector<T>& other)
+    {
+        reserve(other.size());
+        for (const auto& item : other)
+        {
+            push_back(item);
+        }
+    }
+
+    template<typename T>
+    constexpr Vector<T>::Vector(Vector<T>&& other) noexcept
+    {
+        operator=(std::move(other));
+    }
+
+    template<typename T>
+    constexpr Vector<T>::Vector(std::initializer_list<T> init_list)
+    {
+        assign(init_list);
+    }
+
+    template<typename T>
+    Vector<T>::~Vector()
+    {
+        clear_allocation();
+    }
+
+    template<typename T>
+    constexpr auto Vector<T>::operator=(const Vector<T>& other) -> Vector<T>&
+    {
+        if (&other != this)
+        {
+            clear_allocation();
+            m_capacity = 0;
+            m_size = 0;
+
+            m_data = allocator_type().allocate(other.size());
+            for (const auto& item : other)
+            {
+                push_back(item);
+            }
+        }
+
+        return *this;
+    }
+
+    template<typename T>
+    constexpr auto Vector<T>::operator=(Vector<T>&& other) noexcept -> Vector<T>&
+    {
+        if (&other != this)
+        {
+            clear_allocation();
+
+            m_data = other.m_data;
+            m_capacity = other.m_capacity;
+            m_size = other.m_size;
+
+            other.m_data = nullptr;
+            other.m_capacity = 0;
+            other.m_size = 0;
+        }
+
+        return *this;
+    }
+
+    template<typename T>
+    constexpr auto Vector<T>::operator=(std::initializer_list<T> init_list) -> Vector<T>&
+    {
+        clear_allocation();
+        m_capacity = 0;
+        m_size = 0;
+
+        m_data = allocator_type().allocate(init_list.size());
+        for (auto const& item : init_list)
+        {
+            push_back(item);
+        }
+
+        return *this;
+    }
+
+    template<typename T>
+    constexpr void Vector<T>::assign(size_type count, const T& value)
+    {
+        clear_allocation();
+        m_capacity = 0;
+        m_size = 0;
+
+        m_data = allocator_type().allocate(count);
+        for (size_t i = 0; i < count; i++)
+        {
+            push_back(value);
+        }
+    }
+
+    template<typename T>
+    template<typename InputIt>
+        requires std::input_iterator<InputIt>
+    // do not use `last` as const reference to keep arguments the same as in std
+    // NOLINTNEXTLINE(performance-unnecessary-value-param)
+    constexpr void Vector<T>::assign(InputIt first, InputIt last)
+    {
+        const auto count = static_cast<size_type>(std::distance(first, last));
+
+        clear_allocation();
+        m_capacity = 0;
+        m_size = 0;
+
+        m_data = allocator_type().allocate(count);
+        while (first != last)
+        {
+            push_back(*first);
+            first++;
+        }
+    }
+
+    template<typename T>
+    constexpr void Vector<T>::assign(std::initializer_list<T> init_list)
+    {
+        clear_allocation();
+        m_capacity = 0;
+        m_size = 0;
+
+        m_data = allocator_type().allocate(init_list.size());
+        for (auto const& item : init_list)
+        {
+            push_back(item);
+        }
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::get_allocator() const -> allocator_type
+    {
+        return m_allocator;
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::at(size_type pos) -> reference
+    {
+        if (pos >= m_size)
+        {
+            throw std::out_of_range("Pos argument outside of container range");
+        }
+
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        return m_data[pos];
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::at(size_type pos) const -> const_reference
+    {
+        if (pos >= m_size)
+        {
+            throw std::out_of_range("Pos argument outside of container range");
+        }
+
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        return m_data[pos];
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::operator[](size_type pos) -> reference
+    {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        return m_data[pos];
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::operator[](size_type pos) const -> const_reference
+    {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        return m_data[pos];
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::front() -> reference
+    {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        return m_data[0];
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::front() const -> const_reference
+    {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        return m_data[0];
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::back() -> reference
+    {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        return m_data[m_size - 1];
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::back() const -> const_reference
+    {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        return m_data[m_size - 1];
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::data() noexcept -> pointer
+    {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        return &m_data[0];
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::data() const noexcept -> const_pointer
+    {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        return &m_data[0];
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::begin() noexcept -> iterator
+    {
+        return m_data;
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::begin() const noexcept -> const_iterator
+    {
+        return m_data;
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::cbegin() const noexcept -> const_iterator
+    {
+        return m_data;
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::end() noexcept -> iterator
+    {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        return m_data + m_size;
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::end() const noexcept -> const_iterator
+    {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        return m_data + m_size;
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::cend() const noexcept -> const_iterator
+    {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        return m_data + m_size;
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::rbegin() -> reverse_iterator
+    {
+        return reverse_iterator(end());
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::rbegin() const -> const_reverse_iterator
+    {
+        return const_reverse_iterator(end());
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::crbegin() const noexcept -> const_reverse_iterator
+    {
+        return const_reverse_iterator(end());
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::rend() -> reverse_iterator
+    {
+        return reverse_iterator(begin());
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::rend() const -> const_reverse_iterator
+    {
+        return const_reverse_iterator(begin());
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::crend() const noexcept -> const_reverse_iterator
+    {
+        return const_reverse_iterator(begin());
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::empty() const -> bool
+    {
+        return m_size == 0;
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::size() const noexcept -> size_type
+    {
+        return m_size;
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto Vector<T>::max_size() const noexcept -> size_type
+    {
+        return std::allocator_traits<allocator_type>::max_size(get_allocator());
+    }
+
+    template<typename T>
+    constexpr void Vector<T>::reserve(size_type new_cap)
+    {
+        if (new_cap > capacity())
+        {
+            // strong exception guarantee by reallocate
+            reallocate(new_cap);
+        }
+    }
+
+    template<typename T>
+    constexpr auto Vector<T>::capacity() -> size_type
+    {
+        return m_capacity;
+    }
+
+    template<typename T>
+    constexpr void Vector<T>::shrink_to_fit()
+    {
+        if (m_capacity > m_size)
+        {
+            reallocate(m_size);
+        }
+    }
+
+    template<typename T>
+    constexpr void Vector<T>::clear()
+    {
+        destroy_elements();
+        m_size = 0;
+    }
+
+    template<typename T>
+    constexpr auto Vector<T>::insert(const_iterator pos, const T& value) -> iterator
+    {
+        return insert(pos, 1, value);
+    }
+
+    template<typename T>
+    constexpr auto Vector<T>::insert(const_iterator pos, T&& value) -> iterator
+    {
+        return insert(pos, 1, std::move(value));
+    }
+
+    template<typename T>
+    constexpr auto Vector<T>::insert(const_iterator pos, size_type count, const T& value) -> iterator
+    {
+        iterator new_pos{ insert_make_space_for_new_elems(pos, count) };
+
+        // create objects in range [pos, pos + count]
+        iterator new_iter{ new_pos };
+        for (size_t i = 0; i < count; i++)
+        {
+            std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, value);
+            ++new_iter;
+        }
+
+        return new_pos;
+    }
+
+    template<typename T>
+    template<typename InputIt>
+        requires std::input_iterator<InputIt>
+    constexpr auto Vector<T>::insert(const_iterator pos, InputIt first, InputIt last) -> iterator
+    {
+        const auto count = static_cast<size_type>(std::distance(first, last));
+        iterator new_pos{ insert_make_space_for_new_elems(pos, count) };
+
+        // create objects in range [pos, pos + count]
+        iterator new_iter{ new_pos };
+        while (first != last)
+        {
+            std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, *first);
+            ++new_iter;
+            ++first;
+        }
+
+        return new_pos;
+    }
+
+    template<typename T>
+    constexpr auto Vector<T>::insert(const_iterator pos, std::initializer_list<T> init_list) -> iterator
+    {
+        const size_type count = init_list.size();
+        iterator new_pos{ insert_make_space_for_new_elems(pos, count) };
+
+        // create objects in range [pos, pos + count]
+        iterator new_iter{ new_pos };
+        for (const auto& value : init_list)
+        {
+            std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, value);
+            ++new_iter;
+        }
+
+        return new_pos;
+    }
+
+    template<typename T>
+    template<typename... Args>
+    constexpr auto Vector<T>::emplace(const_iterator pos, Args&&... args) -> iterator
+    {
+        iterator new_pos{ insert_make_space_for_new_elems(pos, 1) };
+
+        // emplace new element
+        std::allocator_traits<allocator_type>::construct(m_allocator, new_pos, std::forward<Args>(args)...);
+
+        return new_pos;
+    }
+
+    template<typename T>
+    template<typename... Args>
+    constexpr auto Vector<T>::emplace_back(Args&&... args) -> reference
+    {
+        /*
+        * If an exception is thrown for any reason, this function has no effect
+        * strong exception guarantee by:
+        * - reallocate
+        * - if construction of new element fails, state of object does not change
+        */
+
+        if (m_size >= m_capacity)
+        {
+            reallocate(calc_new_capacity());
+        }
+        std::allocator_traits<allocator_type>::construct(m_allocator, end(), std::forward<Args>(args)...);
+        ++m_size;
+
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+        return m_data[m_size - 1];
+    }
+
+    template<typename T>
+    constexpr auto Vector<T>::erase(iterator pos) -> iterator
+    {
+        return erase(pos, pos + 1);
+    }
+
+    template<typename T>
+    constexpr auto Vector<T>::erase(const_iterator pos) -> iterator
+    {
+        return erase(pos, pos + 1);
+    }
+
+    template<typename T>
+    constexpr auto Vector<T>::erase(iterator first, iterator last) -> iterator
+    {
+        return erase(static_cast<const_iterator>(first), static_cast<const_iterator>(last));
+    }
+
+    template<typename T>
+    constexpr auto Vector<T>::erase(const_iterator first, const_iterator last) -> iterator
+    {
+        const auto offset_last = static_cast<size_type>(last - cbegin());
+        const auto offset_first = static_cast<size_type>(first - cbegin());
+        const size_type count{ offset_last - offset_first };
+
+        // destroy objects in range [first, last)
+        while (first != last)
+        {
+            std::allocator_traits<allocator_type>::destroy(m_allocator, first);
+            ++first;
+        }
+
+        // move remaining objects into empty space
+        // this moves memory in range [last, end()] to addres pointed by `first`, that was already released
+        std::move(begin() + offset_last, end(), begin() + offset_first);
+
+        m_size -= count;
+        return begin() + offset_first;
+    }
+
+    template<typename T>
+    constexpr void Vector<T>::push_back(const T& value)
+    {
+        if (m_size >= m_capacity)
+        {
+            reallocate(calc_new_capacity());
+        }
+
+        std::allocator_traits<allocator_type>::construct(m_allocator, end(), value);
+        ++m_size;
+    }
+
+    template<typename T>
+    constexpr void Vector<T>::push_back(T&& value)
+    {
+        // Some implementations throw std::lengt_error when push_back causes a reallocation that exceeds mas_size()
+        if (m_size >= m_capacity)
+        {
+            reallocate(calc_new_capacity());
+        }
+
+        std::allocator_traits<allocator_type>::construct(m_allocator, end(), std::move(value));
+        ++m_size;
+    }
+
+    template<typename T>
+    constexpr void Vector<T>::pop_back()
+    {
+        if (m_size > 0)
+        {
+            std::allocator_traits<allocator_type>::destroy(m_allocator, end());
+            --m_size;
+        }
+    }
+
+    template<typename T>
+    constexpr void Vector<T>::resize(size_type count)
+    {
+        resize(count, T{});
+    }
+
+    template<typename T>
+    constexpr void Vector<T>::resize(size_type count, const value_type& value)
+    {
+        if (count >= max_size())
+        {
+            throw std::length_error("Capacity required by new vector would exceed maximum allowed size");
+        }
+
+        if (count == m_size)
+        {
+            return;
+        }
+
+        if (m_size > count)
+        {
+            // container is reduced to its count elements
+            while (m_size > count)
+            {
+                pop_back();
+            }
+        }
+
+        if (m_size < count)
+        {
+            // additional copies of value are appended
+            while (m_size < count)
+            {
+                push_back(value);
+            }
+        }
+    }
+
+    template<typename T>
+    constexpr void Vector<T>::swap(dsa::Vector<T>& other) noexcept
+    {
+        std::swap(*this, other);
+    }
 
     /**
      * @brief Exchanges content of two Vector containers
