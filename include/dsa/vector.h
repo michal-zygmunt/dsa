@@ -655,10 +655,7 @@ namespace dsa
          *
          * @return size_type proposition of new capacity
          */
-        auto calc_new_capacity() -> size_type
-        {
-            return m_capacity == 0 ? 1 : m_capacity * 2;
-        }
+        auto calc_new_capacity() -> size_type;
 
         /**
          * @brief Function creates empty space for new elements during insert
@@ -668,63 +665,7 @@ namespace dsa
          *
          * @return iterator to first empty space to insert new element
          */
-        auto insert_make_space_for_new_elems(const_iterator pos, size_type count) -> iterator
-        {
-            iterator new_pos{};
-
-            if (size() + count > capacity())
-            {
-                // allocate memory to store new content
-                const size_type new_capacity = m_capacity + count;
-                pointer new_data = allocator_type().allocate(new_capacity);
-
-                // use iterator to move all objects from original vector to new allocated memory
-                iterator iter{ begin() };
-                iterator new_iter = new_data;
-
-                // move all objects before pos from original memory
-                while (iter != pos)
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
-                    ++iter;
-                    ++new_iter;
-                }
-
-                // make space for new elements
-                new_pos = new_iter;
-                for (size_t i = 0; i < count; i++)
-                {
-                    ++new_iter;
-                }
-
-                // move all remaining objects from original memory
-                while (iter != end())
-                {
-                    std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
-                    ++iter;
-                    ++new_iter;
-                }
-
-                clear_allocation();
-                m_data = new_data;
-                m_capacity = new_capacity;
-                m_size += count;
-            }
-            else
-            {
-                // store address to insert new elements
-                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
-                iterator iter{ const_cast<iterator>(pos) };
-                new_pos = iter;
-
-                // move object to the right
-                std::move(iter, end(), iter + count);
-
-                m_size += count;
-            }
-
-            return new_pos;
-        }
+        auto insert_make_space_for_new_elems(const_iterator pos, size_type count) -> iterator;
 
         /**
          * @brief Function increase memory allocation of the container to hold \p new_cap number of elements
@@ -733,56 +674,17 @@ namespace dsa
          *
          * @note After reallocation all iterators and all references are invalidated
          */
-        void reallocate(size_type new_cap)
-        {
-            /*
-            * strong exception guarantee by:
-            * - throwing exception in case container is too large
-            * - using std::move_if_noexcept during reallocation
-            */
-
-            if (new_cap > max_size())
-            {
-                throw std::length_error("Pos argument outside of container range");
-            }
-
-            pointer new_data = allocator_type().allocate(new_cap);
-            for (size_t i = 0; i < m_size; i++)
-            {
-                // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                std::allocator_traits<allocator_type>::construct(m_allocator, new_data + i, std::move_if_noexcept(m_data[i]));
-            }
-            clear_allocation();
-            m_data = new_data;
-            m_capacity = new_cap;
-            // m_size stay the same as before reallocation
-        }
+        void reallocate(size_type new_cap);
 
         /**
          * @brief Destroys all objects in container
          */
-        void destroy_elements()
-        {
-            iterator iter{ begin() };
-            while (iter != end())
-            {
-                std::allocator_traits<allocator_type>::destroy(m_allocator, iter);
-                ++iter;
-            }
-        }
+        void destroy_elements();
 
         /**
          * @brief Destroys all objects in container and deallocates memory
          */
-        void clear_allocation()
-        {
-            if (m_data)
-            {
-                destroy_elements();
-                std::allocator_traits<allocator_type>::deallocate(m_allocator, m_data, m_capacity);
-                m_capacity = 0;
-            }
-        }
+        void clear_allocation();
 
         /**
          * @brief Underlaying dynamic size memory containing all elements
@@ -1391,6 +1293,119 @@ namespace dsa
     constexpr void Vector<T>::swap(dsa::Vector<T>& other) noexcept
     {
         std::swap(*this, other);
+    }
+
+    template<typename T>
+    inline auto Vector<T>::calc_new_capacity() -> size_type
+    {
+        return m_capacity == 0 ? 1 : m_capacity * 2;
+    }
+
+    template<typename T>
+    auto Vector<T>::insert_make_space_for_new_elems(const_iterator pos, size_type count) -> iterator
+    {
+        iterator new_pos{};
+
+        if (size() + count > capacity())
+        {
+            // allocate memory to store new content
+            const size_type new_capacity = m_capacity + count;
+            pointer new_data = allocator_type().allocate(new_capacity);
+
+            // use iterator to move all objects from original vector to new allocated memory
+            iterator iter{ begin() };
+            iterator new_iter = new_data;
+
+            // move all objects before pos from original memory
+            while (iter != pos)
+            {
+                std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
+                ++iter;
+                ++new_iter;
+            }
+
+            // make space for new elements
+            new_pos = new_iter;
+            for (size_t i = 0; i < count; i++)
+            {
+                ++new_iter;
+            }
+
+            // move all remaining objects from original memory
+            while (iter != end())
+            {
+                std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
+                ++iter;
+                ++new_iter;
+            }
+
+            clear_allocation();
+            m_data = new_data;
+            m_capacity = new_capacity;
+            m_size += count;
+        }
+        else
+        {
+            // store address to insert new elements
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+            iterator iter{ const_cast<iterator>(pos) };
+            new_pos = iter;
+
+            // move object to the right
+            std::move(iter, end(), iter + count);
+
+            m_size += count;
+        }
+
+        return new_pos;
+    }
+
+    template<typename T>
+    void Vector<T>::reallocate(size_type new_cap)
+    {
+        /*
+        * strong exception guarantee by:
+        * - throwing exception in case container is too large
+        * - using std::move_if_noexcept during reallocation
+        */
+
+        if (new_cap > max_size())
+        {
+            throw std::length_error("Pos argument outside of container range");
+        }
+
+        pointer new_data = allocator_type().allocate(new_cap);
+        for (size_t i = 0; i < m_size; i++)
+        {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+            std::allocator_traits<allocator_type>::construct(m_allocator, new_data + i, std::move_if_noexcept(m_data[i]));
+        }
+        clear_allocation();
+        m_data = new_data;
+        m_capacity = new_cap;
+        // m_size stay the same as before reallocation
+    }
+
+    template<typename T>
+    void Vector<T>::destroy_elements()
+    {
+        iterator iter{ begin() };
+        while (iter != end())
+        {
+            std::allocator_traits<allocator_type>::destroy(m_allocator, iter);
+            ++iter;
+        }
+    }
+
+    template<typename T>
+    void Vector<T>::clear_allocation()
+    {
+        if (m_data)
+        {
+            destroy_elements();
+            std::allocator_traits<allocator_type>::deallocate(m_allocator, m_data, m_capacity);
+            m_capacity = 0;
+        }
     }
 
     /**
