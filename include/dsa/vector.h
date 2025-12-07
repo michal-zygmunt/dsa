@@ -698,12 +698,7 @@ namespace dsa
          */
         constexpr void clear()
         {
-            iterator iter{ begin() };
-            while (iter != end())
-            {
-                std::allocator_traits<allocator_type>::destroy(m_allocator, iter);
-                ++iter;
-            }
+            destroy_elements();
             m_size = 0;
         }
 
@@ -1179,22 +1174,28 @@ namespace dsa
         }
 
         /**
+         * @brief Destroys all objects in container
+         */
+        void destroy_elements()
+        {
+            iterator iter{ begin() };
+            while (iter != end())
+            {
+                std::allocator_traits<allocator_type>::destroy(m_allocator, iter);
+                ++iter;
+            }
+        }
+
+        /**
          * @brief Destroys all objects in container and deallocates memory
          */
         void clear_allocation()
         {
             if (m_data)
             {
-                //clear();
-                iterator iter{ begin() };
-                while (iter != end())
-                {
-                    std::allocator_traits<allocator_type>::destroy(m_allocator, iter);
-                    ++iter;
-                }
+                destroy_elements();
                 std::allocator_traits<allocator_type>::deallocate(m_allocator, m_data, m_capacity);
                 m_capacity = 0;
-                //m_size = 0;
             }
         }
     };
