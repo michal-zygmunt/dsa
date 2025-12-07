@@ -93,4 +93,16 @@
 		</Expand>
 	</Type>
 
+	
+	<Type Name="dsa::Vector&lt;*&gt;">
+		<DisplayString Condition="m_data==nullptr">uninitialized</DisplayString>
+		<DisplayString Condition="m_data!=nullptr">size = {m_size}, capacity={m_capacity}</DisplayString>
+		<Expand>
+			<ArrayItems>
+				<Size>m_size</Size>
+				<ValuePointer>m_data</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
 </AutoVisualizer>

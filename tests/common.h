@@ -17,6 +17,7 @@
 #include "dsa/list.h"
 #include "dsa/queue.h"
 #include "dsa/stack.h"
+#include "dsa/vector.h"
 
 #include <forward_list>
 #include <initializer_list>
@@ -44,9 +45,10 @@ namespace tests
         BadAlloc = -1,          ///< Memory allocation error
         OutOfRange = -2,        ///< Accesing wrong range
         RuntimeError = -3,      ///< Exception generated during program execution
-        Exception = -4,         ///< General exception, exception reason should be moved into separate catch block
-        Unknown = -5,           ///< Unhandled exception from (...) block
-        Nullopt = -6            ///< Optional exception is invalid
+        LengthError = -4,       ///< Maximum allowed size exceeded
+        Exception = -5,         ///< General exception, exception reason should be moved into separate catch block
+        Unknown = -6,           ///< Unhandled exception from (...) block
+        Nullopt = -7            ///< Optional exception is invalid
     };
 
     /**
@@ -295,6 +297,42 @@ namespace tests
     }
 
     /**
+     * @brief Function compares values of List and initializer list
+     *
+     * @tparam T type of elements to compare
+     * @param[in] container input List
+     * @param[in] test_values input initializer list
+     * @return true if compared containers are different
+     * @return false if containers are equal
+     */
+    template<typename T>
+    auto cmp(dsa::Vector<T> vector, const std::initializer_list<T>& test_values) -> bool
+    {
+        const auto size{ (test_values.size()) };
+        tests::total_count() += static_cast<int>(size);
+
+        if (if_error(vector.size(), size))
+        {
+            std::cout << "Objects of different length!\n";
+            return true;
+        }
+
+        auto vector_iter = vector.begin();
+
+        for (const auto& item : test_values)
+        {
+            if (if_error(*vector_iter, item))
+            {
+                return true;
+            }
+
+            ++vector_iter;
+        }
+
+        return false;
+    }
+
+    /**
      * @brief Function compares values of ForwardList and forward_list
      *
      * @tparam T type of elements to compare
@@ -366,7 +404,7 @@ namespace tests
      * @brief Function compares values of Queue and queue
      *
      * @tparam T type of elements to compare
-     * @param[in] container input Queue
+     * @param[in] queue input Queue
      * @param[in] test_values input queue
      * @return true if compared containers are different
      * @return false if containers are equal
@@ -400,7 +438,7 @@ namespace tests
      * @brief Function compares values of Stack and stack
      *
      * @tparam T type of elements to compare
-     * @param[in] container input Stack
+     * @param[in] stack input Stack
      * @param[in] test_values input stack
      * @return true if compared containers are different
      * @return false if containers are equal
@@ -435,7 +473,7 @@ namespace tests
      *
      * @tparam T type of elements to compare
      * @tparam N number of elements in Array
-     * @param[in] stack input Array
+     * @param[in] array input Array
      * @param[in] test_values input array
      * @return true if compared containers are different
      * @return false if containers are equal
@@ -472,7 +510,7 @@ namespace tests
      *
      * @tparam T type of elements to compare
      * @tparam N number of elements in Array
-     * @param[in] stack input Array
+     * @param[in] array input Array
      * @param[in] test_values input vector
      * @return true if compared containers are different
      * @return false if containers are equal
@@ -499,6 +537,42 @@ namespace tests
             }
 
             ++array_iter;
+        }
+
+        return false;
+    }
+
+    /**
+     * @brief Function compares values of Vector and vector
+     *
+     * @tparam T type of elements to compare
+     * @param[in] vector input Vector
+     * @param[in] test_values input vector
+     * @return true if compared containers are different
+     * @return false if containers are equal
+     */
+    template<typename T>
+    auto cmp(dsa::Vector<T> vector, const std::vector<T>& test_values) -> bool
+    {
+        const auto size{ (test_values.size()) };
+        tests::total_count() += static_cast<int>(size);
+
+        if (if_error(vector.size(), size))
+        {
+            std::cout << "Objects of different length!\n";
+            return true;
+        }
+
+        auto vector_iter = vector.begin();
+
+        for (const auto& item : test_values)
+        {
+            if (if_error(*vector_iter, item))
+            {
+                return true;
+            }
+
+            ++vector_iter;
         }
 
         return false;

@@ -14,6 +14,7 @@ with documentation, unit tests and code coverage reports.
 - [Array](@ref dsa::Array)
 - [ForwardList](@ref dsa::ForwardList)
 - [List](@ref dsa::List)
+- [Vector](@ref dsa::Vector)
 
 ### Container Adaptors
 - [Stack](@ref dsa::Stack)
