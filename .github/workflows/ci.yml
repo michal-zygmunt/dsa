@@ -45,6 +45,8 @@ jobs:
           - os: ubuntu-latest
             c_compiler: cl
 
+    name: ${{ matrix.os }}-${{ matrix.cpp_compiler }}
+
     steps:
     - uses: actions/checkout@v4
 
