@@ -1,5 +1,7 @@
 # DSA - Data Structures and Algorithms
 
+[![CI](https://github.com/michal-zygmunt/dsa/actions/workflows/ci.yml/badge.svg?branch=coverage)](https://github.com/michal-zygmunt/dsa/actions/workflows/ci.yml)
+
 Educational project that aims to recreate selected data structures
 and algorithms from C++ Standard Template Library as a means to better
 understand STL internal logic, design choices, impact on performance
