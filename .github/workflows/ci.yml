@@ -57,6 +57,12 @@ jobs:
       with:
         python-version: '3.13.5'
 
+    - name: Install Clang 19 on Ubuntu
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang-19 lldb-19 lld-19
+
     - name: Install LLVM on Ubuntu
       if: runner.os == 'Linux'
       run: |
