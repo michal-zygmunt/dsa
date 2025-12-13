@@ -57,6 +57,35 @@ jobs:
       with:
         python-version: '3.13.5'
 
+    - name: Install LLVM on Ubuntu
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget gnupg lsb-release
+
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 19
+
+    - name: Set LLVM 19 as default on Ubuntu
+      if: runner.os == 'Linux'
+      run: |
+        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 200
+        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-19 200
+        sudo update-alternatives --auto clang
+        sudo update-alternatives --auto clang++
+        sudo update-alternatives --install /usr/bin/llvm-cov llvm-cov /usr/bin/llvm-cov-19 200
+        sudo update-alternatives --install /usr/bin/llvm-profdata llvm-profdata /usr/bin/llvm-profdata-19 200
+        sudo update-alternatives --auto llvm-cov
+        sudo update-alternatives --auto llvm-profdata
+
+    - name: Check LLVM version on Ubuntu
+      if: runner.os == 'Linux'
+      run: |
+        clang --version
+        llvm-cov --version
+        llvm-profdata --version
+
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
       id: strings
