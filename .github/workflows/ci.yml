@@ -86,6 +86,16 @@ jobs:
         llvm-cov --version
         llvm-profdata --version
 
+    - name: Install LCOV on Ubuntu
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y lcov
+
+    - name: Check LCOV version on Ubuntu
+      if: runner.os == 'Linux'
+      run: lcov --version
+
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
       id: strings
