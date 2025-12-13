@@ -57,6 +57,12 @@ jobs:
       with:
         python-version: '3.13.5'
 
+    - name: Install gcovr 7 on Ubuntu
+      if: runner.os == 'Linux'
+      run: |
+          pip3 install gcovr==7.0
+          gcovr --version
+
     - name: Install Clang 19 on Ubuntu
       if: runner.os == 'Linux'
       run: |
