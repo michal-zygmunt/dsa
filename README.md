@@ -1,6 +1,6 @@
 # DSA - Data Structures and Algorithms
 
-[![CI](https://github.com/michal-zygmunt/dsa/actions/workflows/ci.yml/badge.svg?branch=coverage)](https://github.com/michal-zygmunt/dsa/actions/workflows/ci.yml)
+[![CI](https://github.com/michal-zygmunt/dsa/actions/workflows/ci.yml/badge.svg?branch=coverage)](https://github.com/michal-zygmunt/dsa/actions/workflows/ci.yml) &nbsp; [![codecov](https://codecov.io/github/michal-zygmunt/dsa/branch/coverage/graph/badge.svg?token=T26A93WPMR)](https://codecov.io/github/michal-zygmunt/dsa)
 
 Educational project that aims to recreate selected data structures
 and algorithms from C++ Standard Template Library as a means to better
