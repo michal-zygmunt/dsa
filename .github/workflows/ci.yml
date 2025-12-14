@@ -145,3 +145,11 @@ jobs:
       if: runner.os == 'Linux' && matrix.cpp_compiler == 'clang++'
       working-directory: ${{ github.workspace }}
       run: python ./coverage_report.py -c clang -t lcov --verbose
+
+    - name: Upload coverage reports to Codecov
+      if: runner.os == 'Linux' && (matrix.cpp_compiler == 'clang++' || matrix.cpp_compiler == 'g++')
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ${{ github.workspace }}/docs/coverage/coverage.info
+        fail_ci_if_error: true
