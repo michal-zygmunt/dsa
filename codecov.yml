@@ -1,0 +1,39 @@
+codecov:
+  notify:
+    wait_for_ci: true
+  require_ci_to_pass: true
+
+comment:
+  behavior: default
+  layout: reach,diff,flags,tree
+  show_carryforward_flags: false
+
+parsers:
+  gcov:
+    branch_detection:
+      conditional: true
+      loop: true
+      method: true
+      macro: true
+
+coverage:
+  precision: 2
+  range:
+  - 75.0
+  - 90.0
+  round: down
+
+  status:
+    changes: true
+    default_rules:
+      flag_coverage_not_uploaded_behavior: exclude
+    
+    project:
+      default:
+        target: 90%
+        threshold: 0%
+
+    patch:
+      default:
+        target: 90%
+        threshold: 0%
