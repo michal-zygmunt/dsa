@@ -29,8 +29,10 @@ namespace dsa
      * @note This template intentionally does not implement a bit-packed
      *       specialization for `bool`, as found in `std::vector<bool>`.
      *       The standard container's specialization breaks reference semantics
-     *       and replace `bool&` with proxy objects. `dsa::Vector<bool>` behaves
-     *       like a regular container, without bit-packing.
+     *       and replaces `bool&` with proxy objects.
+     *       `dsa::Vector<bool>` behaves like a regular container,
+     *       without bit-packing. This design choice prioritizes correctness
+     *       and predictable semantics over memory optimization.
      */
     template<typename T>
     class Vector
