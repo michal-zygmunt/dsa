@@ -154,6 +154,13 @@ def run_test_apps(applications, compiler : str):
         subprocess.run(str(app), cwd=Path(app).parent, env=env, check=True)
 
 
+def exclude_path(arguments : list, exclude_name : str):
+    if exclude_name != "":
+        arguments += ["--exclude", exclude_name]
+
+    return arguments
+
+
 def generate_profdata(start_path=".", verbose = False):
     print(f"Merge .profraw into .profdata")
 
@@ -270,7 +277,8 @@ def generate_info(start_path, compiler : str, coverage_report_dir : str, coverag
                 output_file.write(line)
 
 
-def generate_gcovr_report(start_path, coverage_report_dir : str, use_wsl = False, verbose = False):
+def generate_gcovr_report(start_path, coverage_report_dir : str, exclude_name : str,
+                          use_wsl = False, verbose = False):
     
     print(f"Merge .gcda and .gcno into html report")
 
@@ -288,18 +296,23 @@ def generate_gcovr_report(start_path, coverage_report_dir : str, use_wsl = False
         output_file = abs_path_in_wsl(output_file)
     
     args = ["gcovr", "-r", start_path, "--html", "--html-details", "-o", output_file, "--txt-metric", "branch"]
+
+    args = exclude_path(args, exclude_name)
     
     log(verbose, args)
     subprocess.run(args, check=True)
 
 
-def generate_html_report(coverage_report_dir : str, coverage_report_name : str, use_wsl = False, verbose = False):
+def generate_html_report(coverage_report_dir : str, coverage_report_name : str, exclude_name : str,
+                         use_wsl = False, verbose = False):
 
     print(f"Generate html report")
 
     input_file = os.path.join(coverage_report_dir, coverage_report_name)
     output_dir = os.path.join(coverage_report_dir)
     args = ["genhtml", "--function-coverage", "--branch-coverage"]
+
+    args = exclude_path(args, exclude_name)
 
     if use_wsl:
         args.insert(0, "wsl")
@@ -335,6 +348,7 @@ def get_user_args():
     default_c = Compiler.CLANG
     default_i = '.'
     default_o = os.path.join("docs", "coverage")
+    default_e = ""
     default_n = "coverage.info"
 
     parser = argparse.ArgumentParser(prog="Coverage Report",
@@ -359,6 +373,10 @@ def get_user_args():
     parser.add_argument("-o", dest="coverage_report_dir", type=str,
                         help=f"Folder name to store coverage data. " +
                         f"Default: '{default_o}' directory in script directory", default=default_o)
+    parser.add_argument("-e", dest="exclude_name", type=str,
+                        help=f"Directory name to exclude from coverage statistics. " +
+                        f"Default: '{default_e}'. " + 
+                        f"NOTE: 'lcov' excludes by pattern, 'gcovr' excludes by exact name", default=default_e)
     parser.add_argument("-n", dest="coverage_report_name", type=str,
                         help=f"File name for merged .lcov files: Default: {default_n}", default=default_n)
     parser.add_argument("-v", "--verbose",
@@ -414,11 +432,14 @@ def main():
                       coverage_report_name=args.coverage_report_name, use_wsl=use_wsl, verbose=args.verbose)
         
         generate_html_report(coverage_report_dir=args.coverage_report_dir,
-                             coverage_report_name=args.coverage_report_name, use_wsl=use_wsl, verbose=args.verbose)
+                             coverage_report_name=args.coverage_report_name,
+                             exclude_name=args.exclude_name,
+                             use_wsl=use_wsl, verbose=args.verbose)
 
     if(args.tool == Tool.GCOVR):
         if args.compiler == Compiler.GCC:
             generate_gcovr_report(start_path=args.root_dir, coverage_report_dir=args.coverage_report_dir,
+                                  exclude_name=args.exclude_name,
                                   use_wsl=use_wsl, verbose=args.verbose)
         else:
             sys.exit(f"Unsupported combination of compiler {args.compiler} and coverage tool {args.tool}. Exiting!")
