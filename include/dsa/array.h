@@ -409,7 +409,7 @@ namespace dsa
          *
          * @param[in] other container to exchange content with
          */
-        constexpr void swap(dsa::Array<T, N>& other) noexcept
+        constexpr void swap(Array<T, N>& other) noexcept
         {
             if (*this != other)
             {
@@ -436,7 +436,7 @@ namespace dsa
      * @return T& reference to Ith element of array container
      */
     template<std::size_t I, typename T, std::size_t N>
-    constexpr auto get(dsa::Array<T, N>& array) noexcept -> T&
+    constexpr auto get(Array<T, N>& array) noexcept -> T&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
         return array[I];
@@ -452,7 +452,7 @@ namespace dsa
      * @return const T& reference to Ith element of array container
      */
     template<std::size_t I, typename T, std::size_t N>
-    constexpr auto get(const dsa::Array<T, N>& array) noexcept -> const T&
+    constexpr auto get(const Array<T, N>& array) noexcept -> const T&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
         return array[I];
@@ -474,7 +474,7 @@ namespace dsa
      */
     template<std::size_t I, typename T, std::size_t N>
     // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
-    constexpr auto get(dsa::Array<T, N>&& array) noexcept -> T&&
+    constexpr auto get(Array<T, N>&& array) noexcept -> T&&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
         return std::move(array[I]);
@@ -490,7 +490,7 @@ namespace dsa
      * @return const T&& reference to Ith element of array container
      */
     template<std::size_t I, typename T, std::size_t N>
-    constexpr auto get(const dsa::Array<T, N>&& array) noexcept -> const T&&
+    constexpr auto get(const Array<T, N>&& array) noexcept -> const T&&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
         return std::move(array[I]);
@@ -505,7 +505,7 @@ namespace dsa
      * @param[in] array2 container to swap content
      */
     template<typename T, std::size_t N>
-    void swap(dsa::Array<T, N>& array1, dsa::Array<T, N>& array2) noexcept
+    void swap(Array<T, N>& array1, Array<T, N>& array2) noexcept
     {
         /// @todo check noexcept
         if (array1 != array2)
