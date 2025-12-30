@@ -118,7 +118,7 @@ namespace dsa
          */
         [[nodiscard]] constexpr auto at(size_type pos) const -> const_reference
         {
-            if (pos < 0 || pos >= N)
+            if (pos >= N)
             {
                 throw std::out_of_range("Pos argument outside of container range");
             }
