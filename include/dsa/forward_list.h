@@ -335,7 +335,7 @@ namespace dsa
             {
                 if (Node* node = dynamic_cast<Node*>(m_current_node))
                 {
-                    return node->value();
+                    return &node->value();
                 }
                 throw std::runtime_error("Invalid iterator pointer");
             }
