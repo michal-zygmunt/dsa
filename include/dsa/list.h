@@ -1068,7 +1068,9 @@ namespace dsa
          * @param[in] last const_iterator until which elements of \p other will be taken
          * @details Content of other object will be taken by constructed object
          */
-        void transfer(const_iterator pos, List<T>& other, const_iterator first, const const_iterator& last);
+         // transfers ownership of nodes, moving entire container is not necessary
+         // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+        void transfer(const_iterator pos, List<T>&& other, const_iterator first, const const_iterator& last);
 
         std::unique_ptr<NodeBase> m_head{};
         NodeBase* m_tail{};
@@ -1590,7 +1592,9 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::transfer(const_iterator pos, List<T>& other, const_iterator first, const const_iterator& last)
+    // transfers ownership of nodes, moving entire container is not necessary
+    // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+    void List<T>::transfer(const_iterator pos, List<T>&& other, const_iterator first, const const_iterator& last)
     {
         if (&other != this && other.m_size > 0)
         {
@@ -1645,7 +1649,7 @@ namespace dsa
     template<typename T>
     void List<T>::splice(const const_iterator& pos, List<T>& other)
     {
-        transfer(pos, other, other.begin(), other.end());
+        transfer(pos, std::move(other), other.begin(), other.end());
     }
 
     template<typename T>
@@ -1657,20 +1661,20 @@ namespace dsa
     template<typename T>
     void List<T>::splice(const const_iterator& pos, List<T>& other, const const_iterator& iter)
     {
-        transfer(pos, other, iter, iter.m_current_node->m_next.get());
+        transfer(pos, std::move(other), iter, iter.m_current_node->m_next.get());
     }
 
     template<typename T>
     void List<T>::splice(const_iterator pos, List<T>&& other, const_iterator iter)
     {
-        transfer(pos, std::move(other), iter, iter.m_current_node->m_next);
+        transfer(pos, std::move(other), iter, iter.m_current_node->m_next.get());
     }
 
     template<typename T>
     void List<T>::splice(const const_iterator& pos, List<T>& other,
         const const_iterator& first, const const_iterator& last)
     {
-        transfer(pos, other, first, last);
+        transfer(pos, std::move(other), first, last);
     }
 
     template<typename T>
