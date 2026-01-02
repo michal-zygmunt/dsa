@@ -927,11 +927,6 @@ namespace dsa
          */
         auto erase_element_after(iterator pos) -> iterator
         {
-            if (!if_valid_iterator(pos))
-            {
-                return nullptr;
-            }
-
             NodeBase* temp{ pos.m_current_node };
             NodeBase* to_remove{ temp->m_next.get() };
 
@@ -953,11 +948,6 @@ namespace dsa
         */
         auto insert_element_after(iterator& pos, const_reference value) -> iterator
         {
-            if (!if_valid_iterator(pos))
-            {
-                return nullptr;
-            }
-
             auto newNode = std::make_unique<Node>(value);
             newNode->m_next = std::move(pos.m_current_node->m_next);
             pos.m_current_node->m_next = std::move(newNode);
