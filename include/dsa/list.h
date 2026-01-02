@@ -1803,17 +1803,10 @@ namespace dsa
 
         // select list end to look for selected index
         enum Mode : std::uint8_t { FRONT, BACK, AUTO };
+        constexpr Mode mode = Mode::AUTO;
 
-#ifdef _MSC_VER
-        // clang-tidy recommends the variable as const
-        // but MSVC generates C4127 'conditional expression is constant' error
-        // NOLINTNEXTLINE(misc-const-correctness)
-        Mode mode = Mode::AUTO;
-#else
-        const Mode mode = Mode::AUTO;
-#endif // !_MSC_VER
 
-        if (mode == FRONT)
+        if constexpr (mode == FRONT)
         {
             // count nodes from front
             temp = m_head.get();
@@ -1822,7 +1815,7 @@ namespace dsa
                 temp = temp->m_next.get();
             }
         }
-        else if (mode == BACK)
+        else if constexpr (mode == BACK)
         {
             // count nodes from back
             temp = m_tail->m_prev;
