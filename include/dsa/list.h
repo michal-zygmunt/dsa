@@ -778,6 +778,8 @@ namespace dsa
          * @param[in,out] other container to take elements from
          * @details Content of other object will be taken by constructed object
          */
+         // transfers ownership of nodes, moving entire container is not necessary
+         // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
         void merge(List<T>&& other);
 
         /**
@@ -1494,6 +1496,14 @@ namespace dsa
     template<typename T>
     void List<T>::merge(List<T>& other)
     {
+        merge(std::move(other));
+    }
+
+    template<typename T>
+    // transfers ownership of nodes, moving entire container is not necessary
+    // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+    void List<T>::merge(List<T>&& other)
+    {
         if (&other != this)
         {
             if (m_size != 0)
@@ -1564,12 +1574,6 @@ namespace dsa
                 swap(other);
             }
         }
-    }
-
-    template<typename T>
-    void List<T>::merge(List<T>&& other)
-    {
-        merge(std::move(other));
     }
 
     template<typename T>
