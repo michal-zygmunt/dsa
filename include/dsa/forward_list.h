@@ -1415,11 +1415,8 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::swap(ForwardList<T>& other) noexcept
     {
-        if (&other != this)
-        {
-            std::swap(m_head->m_next, other.m_head->m_next);
-            std::swap(m_size, other.m_size);
-        }
+        std::swap(m_head->m_next, other.m_head->m_next);
+        std::swap(m_size, other.m_size);
     }
 
     template<typename T>
