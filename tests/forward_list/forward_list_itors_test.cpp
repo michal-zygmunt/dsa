@@ -17,6 +17,8 @@
 #include <forward_list>
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
+#include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -226,6 +228,53 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("cit_13", *cit_13, 30);
         cit_13++;
         std::cout << '\n';
+
+        // test throwing 'runtime_error' exception from dereferencing invalid iterator
+        try
+        {
+            const dsa::ForwardList<int> list14;
+            std::cout << *list14.begin();
+        }
+        catch (const std::runtime_error&)
+        {
+            std::cout << "list14 runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::ForwardList<int> list15{ 1, 2, 3 };
+            std::cout << *list15.end();
+        }
+        catch (const std::runtime_error&)
+        {
+            std::cout << "list15 runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::ForwardList<int> list16;
+            std::cout << list16.begin().operator->();
+        }
+        catch (const std::runtime_error&)
+        {
+            std::cout << "list16 runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::ForwardList<int> list17{ 1, 2, 3 };
+            std::cout << *list17.begin().operator->();
+            std::cout << *list17.end().operator->();
+        }
+        catch (const std::runtime_error&)
+        {
+            std::cout << "list17 runtime error exception handled correctly\n\n";
+        }
+
+        const dsa::ForwardList<int> list18;
+        auto iter18 = list18.begin();
+        std::advance(iter18, 1);
+        tests::compare("iter18 == nullptr", iter18 == nullptr, true);
 
 
         std::cout << "Compare operations results with std container\n\n";
