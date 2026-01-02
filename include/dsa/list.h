@@ -960,7 +960,7 @@ namespace dsa
                 return iterator(begin());
             }
 
-            if (pos == end() || pos == m_tail)
+            if (pos == (--end()))
             {
                 pop_back();
                 return iterator(end());
@@ -1587,7 +1587,7 @@ namespace dsa
         if (&other != this && other.m_size > 0)
         {
             const size_t dist = distance(first, last);
-            if (first == last || dist == 0)
+            if (dist == 0)
             {
                 return;
             }
