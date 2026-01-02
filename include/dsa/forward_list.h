@@ -1006,7 +1006,9 @@ namespace dsa
          * @param[in] iter const_iterator after which elements of \p other will be taken
          * @details Content of other object will be taken by constructed object
          */
-        void transfer(const const_iterator& pos, ForwardList<T>& other, const const_iterator& iter);
+         // transfers ownership of nodes, moving entire container is not necessary
+         // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+        void transfer(const const_iterator& pos, ForwardList<T>&& other, const const_iterator& iter);
 
         /**
          * @brief Function moves elements from other ForwardList object
@@ -1017,7 +1019,9 @@ namespace dsa
          * @param[in] last const_iterator until which elements of \p other will be taken
          * @details Content of other object will be taken by constructed object
          */
-        void transfer(const const_iterator& pos, ForwardList<T>& other,
+         // transfers ownership of nodes, moving entire container is not necessary
+         // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+        void transfer(const const_iterator& pos, ForwardList<T>&& other,
             const const_iterator& first, const const_iterator& last);
 
         std::unique_ptr<NodeBase> m_head{};
@@ -1493,7 +1497,9 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::transfer(const const_iterator& pos, ForwardList<T>& other, const const_iterator& iter)
+    // transfers ownership of nodes, moving entire container is not necessary
+    // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+    void ForwardList<T>::transfer(const const_iterator& pos, ForwardList<T>&& other, const const_iterator& iter)
     {
         if (&other != this && other.m_size > 0)
         {
@@ -1515,7 +1521,9 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::transfer(const const_iterator& pos, ForwardList<T>& other,
+    // transfers ownership of nodes, moving entire container is not necessary
+    // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+    void ForwardList<T>::transfer(const const_iterator& pos, ForwardList<T>&& other,
         const const_iterator& first, const const_iterator& last)
     {
         if (&other != this && other.m_size > 0)
@@ -1556,7 +1564,7 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::splice_after(const const_iterator& pos, ForwardList<T>& other)
     {
-        transfer(pos, other, other.before_begin(), other.end());
+        transfer(pos, std::move(other), other.before_begin(), other.end());
     }
 
     template<typename T>
@@ -1568,7 +1576,7 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::splice_after(const const_iterator& pos, ForwardList<T>& other, const const_iterator& iter)
     {
-        transfer(pos, other, iter);
+        transfer(pos, std::move(other), iter);
     }
 
     template<typename T>
@@ -1581,7 +1589,7 @@ namespace dsa
     void ForwardList<T>::splice_after(const const_iterator& pos, ForwardList<T>& other,
         const const_iterator& first, const const_iterator& last)
     {
-        transfer(pos, other, first, last);
+        transfer(pos, std::move(other), first, last);
     }
 
     template<typename T>
