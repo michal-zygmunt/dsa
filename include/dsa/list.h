@@ -1928,7 +1928,7 @@ namespace dsa
         auto list1_iter = list1.cbegin();
         auto list2_iter = list2.cbegin();
 
-        while (list1_iter != list1.cend() && list2_iter != list2.cend())
+        while (list1_iter != list1.cend())
         {
             if (*list1_iter != *list2_iter)
             {
