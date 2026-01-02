@@ -953,10 +953,6 @@ namespace dsa
          */
         auto erase_element(iterator pos) -> iterator
         {
-            if (!if_valid_iterator(pos))
-            {
-                return nullptr;
-            }
 
             if (pos == begin())
             {
@@ -991,11 +987,6 @@ namespace dsa
         */
         auto insert_element_before(iterator pos, const_reference value) -> iterator
         {
-            if (!if_valid_iterator(pos))
-            {
-                return nullptr;
-            }
-
             if (pos == begin())
             {
                 push_front(value);
@@ -1689,10 +1680,6 @@ namespace dsa
         while (temp->m_next.get())
         {
             next = temp->m_next.get();
-            if (next == nullptr)
-            {
-                return;
-            }
 
             if (Node* node = dynamic_cast<Node*>(m_head.get()))
             {
