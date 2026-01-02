@@ -1487,12 +1487,9 @@ namespace dsa
     template<typename T>
     void List<T>::swap(List<T>& other) noexcept
     {
-        if (&other != this)
-        {
-            std::swap(m_head, other.m_head);
-            std::swap(m_tail, other.m_tail);
-            std::swap(m_size, other.m_size);
-        }
+        std::swap(m_head, other.m_head);
+        std::swap(m_tail, other.m_tail);
+        std::swap(m_size, other.m_size);
     }
 
     template<typename T>
