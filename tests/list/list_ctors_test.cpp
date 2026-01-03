@@ -60,17 +60,32 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list5 = list1;
         tests::compare("List5", list5, expected);
 
+        std::cout << "Copy self assignment ctor\n";
+        dsa::List<int> list6{ 0, 10, 20 };
+        auto* pointer6 = &list6;
+        list6 = *pointer6;
+        tests::compare("List6", list6, expected);
+
         std::cout << "Move ctor\n";
         dsa::List<int> temp_1(list1);
-        const dsa::List<int> list6 = std::move(temp_1);
-        tests::compare("List6", list6, expected);
+        const dsa::List<int> list7 = std::move(temp_1);
+        tests::compare("List7", list7, expected);
 
         std::cout << "Move assignment ctor\n";
         dsa::List<int> temp_2(list1);
-        dsa::List<int> list7(1, 0);
-        list7 = std::move(temp_2);
-        tests::compare("List7", list7, expected);
+        dsa::List<int> list8(1, 0);
+        list8 = std::move(temp_2);
+        tests::compare("List8", list8, expected);
 
+        std::cout << "Move self assignment ctor\n";
+        dsa::List<int> list9{ 0, 10, 20 };
+        auto* pointer9 = &list9;
+        list9 = std::move(*pointer9);
+        tests::compare("List9", list9, expected);
+
+        const dsa::List<int> list10(5);
+        const std::initializer_list<int> expected10{ 0, 0, 0, 0, 0 };
+        tests::compare("List10", list10, expected10);
 
         std::cout << "Compare operations results with std container\n\n";
 

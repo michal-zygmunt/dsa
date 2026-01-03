@@ -16,7 +16,9 @@
 #include <exception>
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
 #include <list>
+#include <stdexcept>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -246,6 +248,53 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         --cit_15;
         tests::compare("cit_15", *cit_15, 10);
         --cit_15;
+
+        // test throwing 'runtime_error' exception from dereferencing invalid iterator
+        try
+        {
+            const dsa::List<int> list16;
+            std::cout << *list16.begin();
+        }
+        catch (const std::runtime_error&)
+        {
+            std::cout << "list16 runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::List<int> list17{ 1, 2, 3 };
+            std::cout << *list17.end();
+        }
+        catch (const std::runtime_error&)
+        {
+            std::cout << "list17 runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::List<int> list18;
+            std::cout << list18.begin().operator->();
+        }
+        catch (const std::runtime_error&)
+        {
+            std::cout << "list18 runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::List<int> list19{ 1, 2, 3 };
+            std::cout << list19.begin().operator->();
+            std::cout << list19.end().operator->();
+        }
+        catch (const std::runtime_error&)
+        {
+            std::cout << "list19 runtime error exception handled correctly\n\n";
+        }
+
+        const dsa::List<int> list20;
+        auto iter20 = list20.begin();
+        std::advance(iter20, 1);
+        tests::compare("iter20 == nullptr", iter20 == nullptr, true);
 
 
         std::cout << "Compare operations results with std container\n\n";
