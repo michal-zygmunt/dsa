@@ -106,11 +106,15 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector10 size()", vector10.size(), static_cast<std::size_t>(0));
 
         dsa::Vector<int> vector11{ 0, 1, 2, 3 };
+        vector11.shrink_to_fit();
+        tests::compare("Vector11 size()", vector11.size(), static_cast<std::size_t>(4));
+        tests::compare("Vector11 capacity()", vector11.capacity(), static_cast<std::size_t>(4));
         vector11.push_back(5);
         tests::compare("Vector11 size()", vector11.size(), static_cast<std::size_t>(5));
         tests::compare("Vector11 capacity()", vector11.capacity(), static_cast<std::size_t>(8));
         vector11.shrink_to_fit();
-        tests::compare("Vector11 capacity()", vector11.size(), static_cast<std::size_t>(5));
+        tests::compare("Vector11 size()", vector11.size(), static_cast<std::size_t>(5));
+        tests::compare("Vector11 capacity()", vector11.capacity(), static_cast<std::size_t>(5));
 
 
         std::cout << "Compare operations results with std container\n\n";
