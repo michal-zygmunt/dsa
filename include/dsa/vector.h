@@ -1420,10 +1420,7 @@ namespace dsa
     template<typename T>
     void swap(Vector<T>& vector1, Vector<T>& vector2) noexcept
     {
-        if (vector1 != vector2)
-        {
-            std::swap(vector1, vector2);
-        }
+        vector1.swap(vector2);
     }
 
     /**
