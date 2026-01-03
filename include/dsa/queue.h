@@ -20,6 +20,14 @@
 
 namespace dsa
 {
+    template<typename T>
+    class Queue;
+
+    template<typename T>
+    auto operator==(const Queue<T>& queue1, const Queue<T>& queue2) -> bool;
+
+    template<typename T>
+    auto operator<(const Queue<T>& queue1, const Queue<T>& queue2) -> bool;
 
     /**
      * @brief Implements Queue class using List as underlaying data structore
@@ -189,6 +197,16 @@ namespace dsa
 
     private:
 
+        /**
+         * @brief Forward friend declaration to access internal container comparison operator
+         */
+        friend auto operator==<T>(const Queue<T>& queue1, const Queue<T>& queue2) -> bool;
+
+        /**
+         * @brief Forward friend declaration to access internal container comparison operator
+         */
+        friend auto operator< <T>(const Queue<T>& queue1, const Queue<T>& queue2) -> bool;
+
         List<T> container{};
     };
 
@@ -357,26 +375,7 @@ namespace dsa
     template<typename T>
     auto operator==(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
     {
-        if (queue1.size() != queue2.size())
-        {
-            return false;
-        }
-
-        Queue<T> temp_1{ queue1 };
-        Queue<T> temp_2{ queue2 };
-
-        while (!temp_1.empty() && !temp_2.empty())
-        {
-            if (temp_1.front() != temp_2.front())
-            {
-                return false;
-            }
-
-            temp_1.pop();
-            temp_2.pop();
-        }
-
-        return true;
+        return queue1.container == queue2.container;
     }
 
     /**
@@ -407,27 +406,7 @@ namespace dsa
     template<typename T>
     auto operator<(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
     {
-        Queue<T> temp_1{ queue1 };
-        Queue<T> temp_2{ queue2 };
-
-        while (!temp_1.empty() && !temp_2.empty())
-        {
-            if (temp_1.front() > temp_2.front())
-            {
-                return false;
-            }
-            if (temp_1.front() < temp_2.front())
-            {
-                return true;
-            }
-
-            temp_1.pop();
-            temp_2.pop();
-        }
-
-        // first n elements are equal
-        // check sizes
-        return queue1.size() < queue2.size();
+        return queue1.container < queue2.container;
     }
 
     /**
