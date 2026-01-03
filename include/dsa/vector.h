@@ -648,7 +648,7 @@ namespace dsa
          *
          * @param[in] other container to exchange content with
          */
-        constexpr void swap(dsa::Vector<T>& other) noexcept;
+        constexpr void swap(Vector<T>& other) noexcept;
 
     private:
 
@@ -1292,7 +1292,7 @@ namespace dsa
     }
 
     template<typename T>
-    constexpr void Vector<T>::swap(dsa::Vector<T>& other) noexcept
+    constexpr void Vector<T>::swap(Vector<T>& other) noexcept
     {
         std::swap(*this, other);
     }
@@ -1418,7 +1418,7 @@ namespace dsa
      * @param[in] vector2 container to swap content
      */
     template<typename T>
-    void swap(dsa::Vector<T>& vector1, dsa::Vector<T>& vector2) noexcept
+    void swap(Vector<T>& vector1, Vector<T>& vector2) noexcept
     {
         if (vector1 != vector2)
         {
