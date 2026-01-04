@@ -32,9 +32,25 @@ namespace dsa
 
     /**
      * @brief Implements List using Node with pointer to adjacent
-     *        element as internal base
+     *        elements as internal base
      *
      * @tparam T type of data stored in List Node
+     *
+     * @todo add get_allocator
+     * @todo add rbegin
+     * @todo add crbegin
+     * @todo add rend
+     * @todo add crend
+     * @todo add emplace
+     * @todo add emplace_back
+     * @todo add emplace_front
+     * @todo add remove_if
+     * @todo add sort
+     * @todo add operator<=>
+     * @todo add non-member specialized swap function
+     * @todo add non-member specialized erase function
+     * @todo add non-member specialized erase_if function
+     * @todo remove public functions / operators not supported by std::forward_list
      */
     template<typename T>
     class List
@@ -515,10 +531,6 @@ namespace dsa
          */
         void assign(const std::initializer_list<T>& init_list);
 
-        /// @todo add assign_range
-
-        /// @todo add get_allocator
-
         /**
          * @brief Function returns reference to value stored in List first Node
          *
@@ -589,14 +601,6 @@ namespace dsa
          */
         [[nodiscard]] auto cend() const -> const_iterator;
 
-        /// @todo add rbegin
-
-        /// @todo add crbegin
-
-        /// @todo add rend
-
-        /// @todo add crend
-
         /**
          * @brief Function checks if container has no elements
          *
@@ -658,10 +662,6 @@ namespace dsa
          */
         auto insert(const const_iterator& pos, std::initializer_list<T> init_list) -> iterator;
 
-        /// @todo add insert_range
-
-        /// @todo add emplace
-
         /**
         * @brief Function erases Node object at specified \p pos
         *
@@ -715,10 +715,6 @@ namespace dsa
          */
         void push_back(T value);
 
-        /// @todo add emplace_back
-
-        /// @todo add append_range
-
         /**
          * @brief Function removes last Node of List
          */
@@ -730,10 +726,6 @@ namespace dsa
          * @param[in] value element of type T
          */
         void push_front(T value);
-
-        /// @todo add emplace_front
-
-        /// @todo add prepend_range
 
         /**
          * @brief Function removes first Node of List
@@ -847,8 +839,6 @@ namespace dsa
          */
         void remove(const_reference value);
 
-        /// @todo add remove_if
-
         /**
          * @brief Function reverts in place Nodes of List
          */
@@ -859,8 +849,6 @@ namespace dsa
          * @details Only the first occurrence of given element in each group is preserved
          */
         void unique();
-
-        /// @todo add sort
 
         /**
          * @brief Append elements of another List to base container
@@ -2025,13 +2013,6 @@ namespace dsa
     {
         return !(operator<(list1, list2));
     }
-
-    /// @todo implement non-member specialized swap function
-
-    /// @todo implement non-member specialized erase function
-
-    /// @todo implement non-member specialized erase_if function
-
 }
 
 #endif // !LIST_H

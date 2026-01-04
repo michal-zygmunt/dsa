@@ -21,10 +21,10 @@ namespace dsa
     /**
      * @brief Implements Array class template for fixed size container
      *
-     * @todo add dsa::to_array()
-     *
      * @tparam T type of data stored in container
      * @tparam N number of elements in container
+     *
+     * @todo add non-member to_array()
      */
     template<typename T, std::size_t N>
     struct Array

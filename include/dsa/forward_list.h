@@ -35,6 +35,18 @@ namespace dsa
      *        as internal base
      *
      * @tparam T type of data stored in ForwardList Node
+     *
+     * @todo add get_allocator
+     * @todo add emplace_after
+     * @todo add emplace_front
+     * @todo add remove
+     * @todo add remove_if
+     * @todo add sort
+     * @todo add operator<=>
+     * @todo add non-member specialized swap function
+     * @todo add non-member specialized erase function
+     * @todo add non-member specialized erase_if function
+     * @todo remove public functions / operators not supported by std::forward_list
      */
     template<typename T>
     class ForwardList
@@ -613,8 +625,6 @@ namespace dsa
          */
         auto insert_after(const const_iterator& pos, std::initializer_list<T> init_list) -> iterator;
 
-        /// @todo add emplace_after
-
         /**
         * @brief Function erases Node after specified ForwardList const_iterator
         *
@@ -642,8 +652,6 @@ namespace dsa
          * @param[in] value element of type T
          */
         void push_front(T value);
-
-        /// @todo add emplace_front
 
         /**
          * @brief Function removes first Node of ForwardList
@@ -758,8 +766,6 @@ namespace dsa
          */
         void remove(const_reference value);
 
-        /// @todo add remove_if
-
         /**
          * @brief Function reverts in place Nodes of ForwardList
          */
@@ -770,8 +776,6 @@ namespace dsa
          * @details Only the first occurrence of given element in each group is preserved
          */
         void unique();
-
-        /// @todo add sort
 
         /**
          * @brief push elements of another ForwardList to base container back
@@ -1846,13 +1850,6 @@ namespace dsa
     {
         return !(operator<(list1, list2));
     }
-
-    /// @todo implement non-member specialized swap function
-
-    /// @todo implement non-member specialized erase function
-
-    /// @todo implement non-member specialized erase_if function
-
 }
 
 #endif // !FORWARD_LIST_H

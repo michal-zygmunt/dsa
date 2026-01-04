@@ -31,9 +31,13 @@ namespace dsa
     auto operator<(const Stack<T>& stack1, const Stack<T>& stack2) -> bool;
 
     /**
-     * @brief Implements Stack class using Node with pointer to next element
+     * @brief Implements Stack class
      *
-     * @tparam T type of data stored in Stack Node
+     * @tparam T type of data stored in Stack
+     *
+     * @todo add operator<=>
+     * @todo add emplace
+     * @todo add non-member specialized swap function
      */
     template<typename T>
     class Stack

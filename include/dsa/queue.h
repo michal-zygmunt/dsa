@@ -30,9 +30,13 @@ namespace dsa
     auto operator<(const Queue<T>& queue1, const Queue<T>& queue2) -> bool;
 
     /**
-     * @brief Implements Queue class using List as underlaying data structore
+     * @brief Implements Queue class
      *
      * @tparam T type of data stored in Queue
+     *
+     * @todo add operator<=>
+     * @todo add emplace
+     * @todo add non-member specialized swap function
      */
     template<typename T>
     class Queue
