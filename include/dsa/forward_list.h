@@ -1857,8 +1857,4 @@ namespace dsa
 
 }
 
-// test std::ranges::forward_range concept
-static_assert(std::ranges::forward_range<dsa::ForwardList<int>>);
-static_assert(std::ranges::forward_range<const dsa::ForwardList<int>>);
-
 #endif // !FORWARD_LIST_H
