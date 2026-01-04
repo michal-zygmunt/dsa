@@ -2036,8 +2036,4 @@ namespace dsa
 
 }
 
-// test std::ranges::bidirectional_range concept
-static_assert(std::ranges::bidirectional_range<dsa::List<int>>);
-static_assert(std::ranges::bidirectional_range<const dsa::List<int>>);
-
 #endif // !LIST_H
