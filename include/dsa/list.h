@@ -12,8 +12,6 @@
 #ifndef LIST_H
 #define LIST_H
 
-#include "memory.h"
-
 #include <cstddef>
 #include <cstdint>
 #include <initializer_list>
@@ -34,9 +32,25 @@ namespace dsa
 
     /**
      * @brief Implements List using Node with pointer to adjacent
-     *        element as internal base
+     *        elements as internal base
      *
      * @tparam T type of data stored in List Node
+     *
+     * @todo add get_allocator
+     * @todo add rbegin
+     * @todo add crbegin
+     * @todo add rend
+     * @todo add crend
+     * @todo add emplace
+     * @todo add emplace_back
+     * @todo add emplace_front
+     * @todo add remove_if
+     * @todo add sort
+     * @todo add operator<=>
+     * @todo add non-member specialized swap function
+     * @todo add non-member specialized erase function
+     * @todo add non-member specialized erase_if function
+     * @todo remove public functions / operators not supported by std::forward_list
      */
     template<typename T>
     class List
@@ -517,10 +531,6 @@ namespace dsa
          */
         void assign(const std::initializer_list<T>& init_list);
 
-        /// @todo add assign_range
-
-        /// @todo add get_allocator
-
         /**
          * @brief Function returns reference to value stored in List first Node
          *
@@ -591,14 +601,6 @@ namespace dsa
          */
         [[nodiscard]] auto cend() const -> const_iterator;
 
-        /// @todo add rbegin
-
-        /// @todo add crbegin
-
-        /// @todo add rend
-
-        /// @todo add crend
-
         /**
          * @brief Function checks if container has no elements
          *
@@ -660,10 +662,6 @@ namespace dsa
          */
         auto insert(const const_iterator& pos, std::initializer_list<T> init_list) -> iterator;
 
-        /// @todo add insert_range
-
-        /// @todo add emplace
-
         /**
         * @brief Function erases Node object at specified \p pos
         *
@@ -717,10 +715,6 @@ namespace dsa
          */
         void push_back(T value);
 
-        /// @todo add emplace_back
-
-        /// @todo add append_range
-
         /**
          * @brief Function removes last Node of List
          */
@@ -732,10 +726,6 @@ namespace dsa
          * @param[in] value element of type T
          */
         void push_front(T value);
-
-        /// @todo add emplace_front
-
-        /// @todo add prepend_range
 
         /**
          * @brief Function removes first Node of List
@@ -778,6 +768,8 @@ namespace dsa
          * @param[in,out] other container to take elements from
          * @details Content of other object will be taken by constructed object
          */
+         // transfers ownership of nodes, moving entire container is not necessary
+         // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
         void merge(List<T>&& other);
 
         /**
@@ -847,8 +839,6 @@ namespace dsa
          */
         void remove(const_reference value);
 
-        /// @todo add remove_if
-
         /**
          * @brief Function reverts in place Nodes of List
          */
@@ -859,8 +849,6 @@ namespace dsa
          * @details Only the first occurrence of given element in each group is preserved
          */
         void unique();
-
-        /// @todo add sort
 
         /**
          * @brief Append elements of another List to base container
@@ -951,10 +939,6 @@ namespace dsa
          */
         auto erase_element(iterator pos) -> iterator
         {
-            if (!if_valid_iterator(pos))
-            {
-                return nullptr;
-            }
 
             if (pos == begin())
             {
@@ -962,7 +946,7 @@ namespace dsa
                 return iterator(begin());
             }
 
-            if (pos == end() || pos == m_tail)
+            if (pos == (--end()))
             {
                 pop_back();
                 return iterator(end());
@@ -989,11 +973,6 @@ namespace dsa
         */
         auto insert_element_before(iterator pos, const_reference value) -> iterator
         {
-            if (!if_valid_iterator(pos))
-            {
-                return nullptr;
-            }
-
             if (pos == begin())
             {
                 push_front(value);
@@ -1066,7 +1045,9 @@ namespace dsa
          * @param[in] last const_iterator until which elements of \p other will be taken
          * @details Content of other object will be taken by constructed object
          */
-        void transfer(const_iterator pos, List<T>& other, const_iterator first, const const_iterator& last);
+         // transfers ownership of nodes, moving entire container is not necessary
+         // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+        void transfer(const_iterator pos, List<T>&& other, const_iterator first, const const_iterator& last);
 
         std::unique_ptr<NodeBase> m_head{};
         NodeBase* m_tail{};
@@ -1483,16 +1464,21 @@ namespace dsa
     template<typename T>
     void List<T>::swap(List<T>& other) noexcept
     {
-        if (&other != this)
-        {
-            std::swap(m_head, other.m_head);
-            std::swap(m_tail, other.m_tail);
-            std::swap(m_size, other.m_size);
-        }
+        std::swap(m_head, other.m_head);
+        std::swap(m_tail, other.m_tail);
+        std::swap(m_size, other.m_size);
     }
 
     template<typename T>
     void List<T>::merge(List<T>& other)
+    {
+        merge(std::move(other));
+    }
+
+    template<typename T>
+    // transfers ownership of nodes, moving entire container is not necessary
+    // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+    void List<T>::merge(List<T>&& other)
     {
         if (&other != this)
         {
@@ -1567,12 +1553,6 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::merge(List<T>&& other)
-    {
-        merge(std::move(other));
-    }
-
-    template<typename T>
     auto List<T>::distance(const_iterator first, const const_iterator& last) -> size_t
     {
         size_t dist{};
@@ -1586,12 +1566,14 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::transfer(const_iterator pos, List<T>& other, const_iterator first, const const_iterator& last)
+    // transfers ownership of nodes, moving entire container is not necessary
+    // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+    void List<T>::transfer(const_iterator pos, List<T>&& other, const_iterator first, const const_iterator& last)
     {
         if (&other != this && other.m_size > 0)
         {
             const size_t dist = distance(first, last);
-            if (first == last || dist == 0)
+            if (dist == 0)
             {
                 return;
             }
@@ -1641,7 +1623,7 @@ namespace dsa
     template<typename T>
     void List<T>::splice(const const_iterator& pos, List<T>& other)
     {
-        transfer(pos, other, other.begin(), other.end());
+        transfer(pos, std::move(other), other.begin(), other.end());
     }
 
     template<typename T>
@@ -1653,20 +1635,20 @@ namespace dsa
     template<typename T>
     void List<T>::splice(const const_iterator& pos, List<T>& other, const const_iterator& iter)
     {
-        transfer(pos, other, iter, iter.m_current_node->m_next.get());
+        transfer(pos, std::move(other), iter, iter.m_current_node->m_next.get());
     }
 
     template<typename T>
     void List<T>::splice(const_iterator pos, List<T>&& other, const_iterator iter)
     {
-        transfer(pos, std::move(other), iter, iter.m_current_node->m_next);
+        transfer(pos, std::move(other), iter, iter.m_current_node->m_next.get());
     }
 
     template<typename T>
     void List<T>::splice(const const_iterator& pos, List<T>& other,
         const const_iterator& first, const const_iterator& last)
     {
-        transfer(pos, other, first, last);
+        transfer(pos, std::move(other), first, last);
     }
 
     template<typename T>
@@ -1684,10 +1666,6 @@ namespace dsa
         while (temp->m_next.get())
         {
             next = temp->m_next.get();
-            if (next == nullptr)
-            {
-                return;
-            }
 
             if (Node* node = dynamic_cast<Node*>(m_head.get()))
             {
@@ -1798,17 +1776,10 @@ namespace dsa
 
         // select list end to look for selected index
         enum Mode : std::uint8_t { FRONT, BACK, AUTO };
+        constexpr Mode mode = Mode::AUTO;
 
-#ifdef _MSC_VER
-        // clang-tidy recommends the variable as const
-        // but MSVC generates C4127 'conditional expression is constant' error
-        // NOLINTNEXTLINE(misc-const-correctness)
-        Mode mode = Mode::AUTO;
-#else
-        const Mode mode = Mode::AUTO;
-#endif // !_MSC_VER
 
-        if (mode == FRONT)
+        if constexpr (mode == FRONT)
         {
             // count nodes from front
             temp = m_head.get();
@@ -1817,7 +1788,7 @@ namespace dsa
                 temp = temp->m_next.get();
             }
         }
-        else if (mode == BACK)
+        else if constexpr (mode == BACK)
         {
             // count nodes from back
             temp = m_tail->m_prev;
@@ -1930,7 +1901,7 @@ namespace dsa
         auto list1_iter = list1.cbegin();
         auto list2_iter = list2.cbegin();
 
-        while (list1_iter != list1.cend() && list2_iter != list2.cend())
+        while (list1_iter != list1.cend())
         {
             if (*list1_iter != *list2_iter)
             {
@@ -2042,17 +2013,6 @@ namespace dsa
     {
         return !(operator<(list1, list2));
     }
-
-    /// @todo implement non-member specialized swap function
-
-    /// @todo implement non-member specialized erase function
-
-    /// @todo implement non-member specialized erase_if function
-
 }
-
-// test std::ranges::bidirectional_range concept
-static_assert(std::ranges::bidirectional_range<dsa::List<int>>);
-static_assert(std::ranges::bidirectional_range<const dsa::List<int>>);
 
 #endif // !LIST_H

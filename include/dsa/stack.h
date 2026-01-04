@@ -21,10 +21,23 @@
 namespace dsa
 {
 
+    template<typename T>
+    class Stack;
+
+    template<typename T>
+    auto operator==(const Stack<T>& stack1, const Stack<T>& stack2) -> bool;
+
+    template<typename T>
+    auto operator<(const Stack<T>& stack1, const Stack<T>& stack2) -> bool;
+
     /**
-     * @brief Implements Stack class using Node with pointer to next element
+     * @brief Implements Stack class
      *
-     * @tparam T type of data stored in Stack Node
+     * @tparam T type of data stored in Stack
+     *
+     * @todo add operator<=>
+     * @todo add emplace
+     * @todo add non-member specialized swap function
      */
     template<typename T>
     class Stack
@@ -151,6 +164,16 @@ namespace dsa
         void swap(Stack<T>& other) noexcept;
 
     private:
+
+        /**
+         * @brief Forward friend declaration to access internal container comparison operator
+         */
+        friend auto operator==<T>(const Stack<T>& stack1, const Stack<T>& stack2) -> bool;
+
+        /**
+         * @brief Forward friend declaration to access internal container comparison operator
+         */
+        friend auto operator< <T>(const Stack<T>& stack1, const Stack<T>& stack2) -> bool;
 
         List<T> container{};
     };
@@ -291,26 +314,7 @@ namespace dsa
     template<typename T>
     auto operator==(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
     {
-        if (stack1.size() != stack2.size())
-        {
-            return false;
-        }
-
-        Stack<T> temp_1{ stack1 };
-        Stack<T> temp_2{ stack2 };
-
-        while (!temp_1.empty() && !temp_2.empty())
-        {
-            if (temp_1.top() != temp_2.top())
-            {
-                return false;
-            }
-
-            temp_1.pop();
-            temp_2.pop();
-        }
-
-        return true;
+        return stack1.container == stack2.container;
     }
 
     /**
@@ -341,27 +345,7 @@ namespace dsa
     template<typename T>
     auto operator<(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
     {
-        Stack<T> temp_1{ stack1 };
-        Stack<T> temp_2{ stack2 };
-
-        while (!temp_1.empty() && !temp_2.empty())
-        {
-            if (temp_1.top() > temp_2.top())
-            {
-                return false;
-            }
-            if (temp_1.top() < temp_2.top())
-            {
-                return true;
-            }
-
-            temp_1.pop();
-            temp_2.pop();
-        }
-
-        // first n elements are equal
-        // check sizes
-        return stack1.size() < stack1.size();
+        return stack1.container < stack2.container;
     }
 
     /**

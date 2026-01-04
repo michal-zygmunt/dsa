@@ -33,6 +33,9 @@ namespace dsa
      *       `dsa::Vector<bool>` behaves like a regular container,
      *       without bit-packing. This design choice prioritizes correctness
      *       and predictable semantics over memory optimization.
+     *
+     * @todo add non-member specialized erase function
+     * @todo add non-member specialized erase_if function
      */
     template<typename T>
     class Vector
@@ -648,7 +651,7 @@ namespace dsa
          *
          * @param[in] other container to exchange content with
          */
-        constexpr void swap(dsa::Vector<T>& other) noexcept;
+        constexpr void swap(Vector<T>& other) noexcept;
 
     private:
 
@@ -1292,7 +1295,7 @@ namespace dsa
     }
 
     template<typename T>
-    constexpr void Vector<T>::swap(dsa::Vector<T>& other) noexcept
+    constexpr void Vector<T>::swap(Vector<T>& other) noexcept
     {
         std::swap(*this, other);
     }
@@ -1418,12 +1421,9 @@ namespace dsa
      * @param[in] vector2 container to swap content
      */
     template<typename T>
-    void swap(dsa::Vector<T>& vector1, dsa::Vector<T>& vector2) noexcept
+    void swap(Vector<T>& vector1, Vector<T>& vector2) noexcept
     {
-        if (vector1 != vector2)
-        {
-            std::swap(vector1, vector2);
-        }
+        vector1.swap(vector2);
     }
 
     /**

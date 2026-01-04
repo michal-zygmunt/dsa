@@ -151,12 +151,12 @@ jobs:
     - name: Generate coverage.info from gcc
       if: runner.os == 'Linux' && matrix.cpp_compiler == 'g++'
       working-directory: ${{ github.workspace }}
-      run: python ./coverage_report.py -c gcc -t lcov --verbose
+      run: python ./coverage_report.py -c gcc -t lcov -e tests --verbose
 
     - name: Generate coverage.info from clang
       if: runner.os == 'Linux' && matrix.cpp_compiler == 'clang++'
       working-directory: ${{ github.workspace }}
-      run: python ./coverage_report.py -c clang -t lcov --verbose
+      run: python ./coverage_report.py -c clang -t lcov -e tests --verbose
 
     - name: Upload coverage reports to Codecov
       if: runner.os == 'Linux' && (matrix.cpp_compiler == 'clang++' || matrix.cpp_compiler == 'g++')

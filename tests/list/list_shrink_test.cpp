@@ -56,38 +56,54 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected4 = { 0, 50 };
         tests::compare("List4", list4, expected4);
 
-        dsa::List<int> list5 = dsa::List<int>({ 0, 10, 0, 0, 40, 0 });
-        list5.remove(0);
-        const std::initializer_list<int> expected5 = { 10, 40 };
-        tests::compare("List5", list5, expected5);
+        dsa::List<int> list5;
+        auto iter5 = list5.begin();
+        std::advance(iter5, 1);
+        iter5 = list5.erase(iter5, iter5);
+        tests::compare("iter5 == nullptr", iter5 == nullptr, true);
 
-        dsa::List<int> list6 = dsa::List<int>({ 0, 0, 0, 0, 0, 0 });
-        list6.remove(0);
-        const std::initializer_list<int> expected6 = { };
-        tests::compare("List6", list6, expected6);
+        dsa::List<int> list6;
+        auto iter6 = list6.end();
+        std::advance(iter6, 1);
+        iter6 = list5.erase(iter6, iter6);
+        tests::compare("iter6 == nullptr", iter6 == nullptr, true);
 
-        dsa::List<int> list7 = dsa::List<int>({ 0 });
-        tests::compare(list7.empty(), false);
-        list7.clear();
-        tests::compare(list7.empty(), true);
-        const std::initializer_list<int> expected7 = { };
-        tests::compare("List7", list7, expected7);
+        dsa::List<int> list7{ 1, 2, 3 };
+        auto iter7 = list7.erase(list7.end(), list7.end());
+        tests::compare("iter7 == end()", iter7 == list7.end(), true);
 
-        dsa::List<int> list8 = dsa::List<int>({ 10, 20, 30 });
-        list8.pop_front();
-        list8.pop_front();
-        list8.pop_front();
-        list8.pop_front();
-        const std::initializer_list<int> expected8 = { };
+        dsa::List<int> list8 = dsa::List<int>({ 0, 10, 0, 0, 40, 0 });
+        list8.remove(0);
+        const std::initializer_list<int> expected8 = { 10, 40 };
         tests::compare("List8", list8, expected8);
 
-        dsa::List<int> list9 = dsa::List<int>({ 10, 20, 30 });
-        list9.pop_back();
-        list9.pop_back();
-        list9.pop_back();
-        list9.pop_back();
+        dsa::List<int> list9 = dsa::List<int>({ 0, 0, 0, 0, 0, 0 });
+        list9.remove(0);
         const std::initializer_list<int> expected9 = { };
         tests::compare("List9", list9, expected9);
+
+        dsa::List<int> list10 = dsa::List<int>({ 0 });
+        tests::compare(list10.empty(), false);
+        list10.clear();
+        tests::compare(list10.empty(), true);
+        const std::initializer_list<int> expected10 = { };
+        tests::compare("List10", list10, expected10);
+
+        dsa::List<int> list11 = dsa::List<int>({ 10, 20, 30 });
+        list11.pop_front();
+        list11.pop_front();
+        list11.pop_front();
+        list11.pop_front();
+        const std::initializer_list<int> expected11 = { };
+        tests::compare("List11", list11, expected11);
+
+        dsa::List<int> list12 = dsa::List<int>({ 10, 20, 30 });
+        list12.pop_back();
+        list12.pop_back();
+        list12.pop_back();
+        list12.pop_back();
+        const std::initializer_list<int> expected12 = { };
+        tests::compare("List12", list12, expected12);
 
 
         std::cout << "Compare operations results with std container\n\n";
@@ -123,13 +139,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_list4.erase(iter_start_4, iter_end_4);
         tests::compare("List4 vs std", list4, std_list4);
 
-        std::list<int> std_list5{ 0, 10, 0, 0, 40, 0 };
-        std_list5.remove(0);
-        tests::compare("List5 vs std", list5, std_list5);
+        std::list<int> std_list8{ 0, 10, 0, 0, 40, 0 };
+        std_list8.remove(0);
+        tests::compare("List8 vs std", list8, std_list8);
 
-        std::list<int> std_list6{ 0, 0, 0, 0, 0, 0 };
-        std_list6.remove(0);
-        tests::compare("List6 vs std", list6, std_list6);
+        std::list<int> std_list9{ 0, 0, 0, 0, 0, 0 };
+        std_list9.remove(0);
+        tests::compare("List9 vs std", list9, std_list9);
 
 
         tests::print_stats();

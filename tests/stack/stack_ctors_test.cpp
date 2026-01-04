@@ -63,16 +63,28 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         stack5 = stack1;
         tests::compare("Stack5", stack5, expected);
 
+        std::cout << "Copy self assignment ctor\n";
+        dsa::Stack<int> stack6{ 0, 10, 20 };
+        auto* pointer6 = &stack6;
+        stack6 = *pointer6;
+        tests::compare("Stack6", stack6, expected);
+
         std::cout << "Move ctor\n";
         dsa::Stack<int> temp_1(stack1);
-        const dsa::Stack<int> stack6 = std::move(temp_1);
-        tests::compare("Stack6", stack6, expected);
+        const dsa::Stack<int> stack7 = std::move(temp_1);
+        tests::compare("Stack7", stack7, expected);
 
         std::cout << "Move assignment ctor\n";
         dsa::Stack<int> temp_2(stack1);
-        dsa::Stack<int> stack7({ 0 });
-        stack7 = std::move(temp_2);
-        tests::compare("Stack7", stack7, expected);
+        dsa::Stack<int> stack8({ 0 });
+        stack8 = std::move(temp_2);
+        tests::compare("Stack8", stack8, expected);
+
+        std::cout << "Move self assignment ctor\n";
+        dsa::Stack<int> stack9{ 0, 10, 20 };
+        auto* pointer9 = &stack9;
+        stack9 = std::move(*pointer9);
+        tests::compare("Stack9", stack9, expected);
 
 
         std::cout << "Compare operations results with std container\n\n";

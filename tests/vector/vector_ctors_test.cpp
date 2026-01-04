@@ -60,29 +60,41 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         vector5 = vector1;
         tests::compare("Vector5", vector5, expected);
 
+        std::cout << "Copy self assignment ctor\n";
+        dsa::Vector<int> vector6{ 0, 10, 20 };
+        auto* pointer6 = &vector6;
+        vector6 = *pointer6;
+        tests::compare("Vector6", vector6, expected);
+
         std::cout << "Move ctor\n";
         dsa::Vector<int> temp_1(vector1);
-        const dsa::Vector<int> vector6 = std::move(temp_1);
-        tests::compare("Vector6", vector6, expected);
+        const dsa::Vector<int> vector7 = std::move(temp_1);
+        tests::compare("Vector7", vector7, expected);
 
         std::cout << "Move assignment ctor\n";
         dsa::Vector<int> temp_2(vector1);
-        dsa::Vector<int> vector7(1, 0);
-        vector7 = std::move(temp_2);
-        tests::compare("Vector7", vector7, expected);
-
-        std::cout << "Initializer list ctor\n";
-        const dsa::Vector<int> vector8{ 0, 10, 20 };
+        dsa::Vector<int> vector8(1, 0);
+        vector8 = std::move(temp_2);
         tests::compare("Vector8", vector8, expected);
 
-        const dsa::Vector<int> vector9 = { 0, 10, 20 };
+        std::cout << "Move self assignment ctor\n";
+        dsa::Vector<int> vector9{ 0, 10, 20 };
+        auto* pointer9 = &vector9;
+        vector9 = std::move(*pointer9);
         tests::compare("Vector9", vector9, expected);
 
+        std::cout << "Initializer list ctor\n";
+        const dsa::Vector<int> vector10{ 0, 10, 20 };
+        tests::compare("Vector10", vector10, expected);
+
+        const dsa::Vector<int> vector11 = { 0, 10, 20 };
+        tests::compare("Vector11", vector11, expected);
+
         std::cout << "Construct from other Vector\n";
-        dsa::Vector<int> temp10 = { 0, 10, 20, 30, 40, 50 };
-        const dsa::Vector<int> vector10(temp10.begin() + 1, temp10.begin() + 4);
-        const std::initializer_list<int> expected10{ 10, 20, 30 };
-        tests::compare("Vector10", vector10, expected10);
+        dsa::Vector<int> temp12 = { 0, 10, 20, 30, 40, 50 };
+        const dsa::Vector<int> vector12(temp12.begin() + 1, temp12.begin() + 4);
+        const std::initializer_list<int> expected12{ 10, 20, 30 };
+        tests::compare("Vector12", vector12, expected12);
 
 
         std::cout << "Compare operations results with std container\n\n";
@@ -122,15 +134,15 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_vector7 = std::move(std_temp_2);
         tests::compare("Vector7 vs std", vector7, expected);
 
-        const std::vector<int> std_vector8{ 0, 10, 20 };
-        tests::compare("Vector8 vs std", vector8, std_vector8);
-
-        const std::vector<int> std_vector9 = { 0, 10, 20 };
-        tests::compare("Vector9 vs std", vector9, std_vector9);
-
-        const std::vector<int> std_temp10 = { 0, 10, 20, 30, 40, 50 };
-        const dsa::Vector<int> std_vector10(std_temp10.begin() + 1, std_temp10.begin() + 4);
+        const std::vector<int> std_vector10{ 0, 10, 20 };
         tests::compare("Vector10 vs std", vector10, std_vector10);
+
+        const std::vector<int> std_vector11 = { 0, 10, 20 };
+        tests::compare("Vector11 vs std", vector11, std_vector11);
+
+        const std::vector<int> std_temp12 = { 0, 10, 20, 30, 40, 50 };
+        const dsa::Vector<int> std_vector12(std_temp12.begin() + 1, std_temp12.begin() + 4);
+        tests::compare("Vector12 vs std", vector12, std_vector12);
 
         tests::print_stats();
     }

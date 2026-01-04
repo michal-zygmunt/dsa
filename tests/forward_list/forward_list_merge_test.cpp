@@ -16,6 +16,7 @@
 #include <forward_list>
 #include <initializer_list>
 #include <iostream>
+#include <utility>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -73,11 +74,21 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list11 = dsa::ForwardList<int>(il_3);
         dsa::ForwardList<int> list12 = dsa::ForwardList<int>(il_2);
-        list11.merge(list12);
+        list11.merge(std::move(list12));
         const std::initializer_list<int> expected11 = { 1, 1, 3, 5, 7, 10, 20, 30, 40, 50 };
         tests::compare("ForwardList11", list11, expected11);
         const std::initializer_list<int> expected12 = {};
+        // NOLINTNEXTLINE(bugprone-use-after-move)
         tests::compare("ForwardList12", list12, expected12);
+
+        // self merge
+        dsa::ForwardList<int> list13{ il_1 };
+        list13.merge(list13);
+        tests::compare("ForwardList13", list13, il_1);
+
+        dsa::ForwardList<int> list14;
+        list14.merge(list14);
+        tests::compare("ForwardList14", list14, {});
 
 
         std::cout << "Compare operations results with std container\n\n";

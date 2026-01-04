@@ -27,7 +27,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     {
         std::cout << "Start queue_ctors_test:\n";
 
-        const std::initializer_list<int> expected{ 0,10,20 };
+        const std::initializer_list<int> expected{ 0, 10, 20 };
 
         std::cout << "Default ctor\n";
         dsa::Queue<int> queue1;
@@ -63,17 +63,29 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         queue5 = queue1;
         tests::compare("Queue5", queue5, expected);
 
+        std::cout << "Copy self assignment ctor\n";
+        dsa::Queue<int> queue6{ 0, 10, 20 };
+        auto* pointer6 = &queue6;
+        queue6 = *pointer6;
+        tests::compare("Queue6", queue6, expected);
+
         std::cout << "Move ctor\n";
         dsa::Queue<int> temp_1(queue1);
-        const dsa::Queue<int> queue6 = std::move(temp_1);
-        tests::compare("Queue6", queue6, expected);
+        const dsa::Queue<int> queue7 = std::move(temp_1);
+        tests::compare("Queue7", queue7, expected);
 
         std::cout << "Move assignment ctor\n";
         dsa::Queue<int> temp_2(queue1);
-        dsa::Queue<int> queue7;
-        queue7.push(0);
-        queue7 = std::move(temp_2);
-        tests::compare("Queue7", queue7, expected);
+        dsa::Queue<int> queue8;
+        queue8.push(0);
+        queue8 = std::move(temp_2);
+        tests::compare("Queue8", queue8, expected);
+
+        std::cout << "Move self assignment ctor\n";
+        dsa::Queue<int> queue9{ 0, 10, 20 };
+        auto* pointer9 = &queue9;
+        queue9 = std::move(*pointer9);
+        tests::compare("Queue9", queue9, expected);
 
 
         std::cout << "Compare operations results with std container\n\n";

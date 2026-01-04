@@ -26,7 +26,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::cout << "Start queue_operators_test:\n";
 
         const dsa::Queue<int> queue1({ 1, 2, 3 });
-        const dsa::Queue<int> queue2({ 4, 5, 6 });
+        const dsa::Queue<int> queue2({ 1, 2, 6 });
         const dsa::Queue<int> queue3({ 1, 2, 3, 4 });
         std::cout << "Queue1:\t" << queue1 << '\n';
         std::cout << "Queue2:\t" << queue2 << '\n';
@@ -82,7 +82,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::cout << "Compare operations results with std container\n\n";
 
         const std::queue<int> std_queue1({ 1, 2, 3 });
-        const std::queue<int> std_queue2({ 4, 5, 6 });
+        const std::queue<int> std_queue2({ 1, 2, 6 });
         const std::queue<int> std_queue3({ 1, 2, 3, 4 });
 
         // intentional self-comparison, an object should be equal to itself

@@ -81,6 +81,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected8 = { };
         tests::compare("ForwardList8", list8, expected8);
 
+        dsa::ForwardList<int> list9;
+        auto iter9 = list9.erase_after(list9.begin(), list9.end());
+        tests::compare("iter9 == nullptr", iter9 == nullptr, true);
+
 
         std::cout << "Compare operations results with std container\n\n";
 

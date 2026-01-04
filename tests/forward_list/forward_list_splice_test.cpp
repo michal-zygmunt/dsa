@@ -17,6 +17,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <iterator>
+#include <utility>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -303,6 +304,59 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         expected59.splice_after(iter_expected59, expected60, expected60.begin(), iter_expected60);
         tests::compare("ForwardList59 vs std", list59, expected59);
         tests::compare("ForwardList60 vs std", list60, expected60);
+
+        std::cout << "Test invalid range\n";
+
+        dsa::ForwardList<int> list61 = dsa::ForwardList<int>(il_1);
+        dsa::ForwardList<int> list62 = dsa::ForwardList<int>(il_2);
+        list61.splice_after(list61.begin(), list62, list62.begin(), list62.begin());
+        tests::compare("ForwardList61", list61, il_1);
+        tests::compare("ForwardList62", list62, il_2);
+
+
+        std::cout << "Testing moving other list\n\n";
+
+        dsa::ForwardList<int> list63 = dsa::ForwardList<int>(il_1);
+        dsa::ForwardList<int> list64 = dsa::ForwardList<int>(il_2);
+        list63.splice_after(list63.begin(), std::move(list64));
+        const std::initializer_list<int> expected63 = { 1, 10, 20, 30, 40, 50, 2, 3, 4, 5 };
+        tests::compare("ForwardList1", list63, expected63);
+        const std::initializer_list<int> expected64 = {};
+        // NOLINTNEXTLINE(bugprone-use-after-move)
+        tests::compare("ForwardList2", list64, expected64);
+
+        std::cout << "Testing moving empty list\n\n";
+
+        dsa::ForwardList<int> list65 = dsa::ForwardList<int>(il_1);
+        dsa::ForwardList<int> list66;
+        list65.splice_after(list65.begin()[list65.size() - 1], std::move(list66));
+        const std::initializer_list<int> expected65 = il_1;
+        tests::compare("ForwardList65", list65, expected65);
+        const std::initializer_list<int> expected66 = {};
+        // NOLINTNEXTLINE(bugprone-use-after-move)
+        tests::compare("ForwardList66", list66, expected66);
+
+        std::cout << "Testing moving one element from other list\n\n";
+
+        dsa::ForwardList<int> list67 = dsa::ForwardList<int>(il_1);
+        dsa::ForwardList<int> list68 = dsa::ForwardList<int>(il_2);
+        list67.splice_after(list67.begin(), std::move(list68), list68.begin());
+        const std::initializer_list<int> expected67 = { 1, 20, 2, 3, 4, 5 };
+        tests::compare("ForwardList67", list67, expected67);
+        const std::initializer_list<int> expected68 = { 10, 30, 40, 50 };
+        // NOLINTNEXTLINE(bugprone-use-after-move)
+        tests::compare("ForwardList68", list68, expected68);
+
+        std::cout << "Testing moving range of element from other list\n\n";
+
+        dsa::ForwardList<int> list69 = dsa::ForwardList<int>(il_1);
+        dsa::ForwardList<int> list70 = dsa::ForwardList<int>(il_2);
+        list69.splice_after(list69.begin(), std::move(list70), list70.begin(), list70.begin()[1]);
+        const std::initializer_list<int> expected69 = { 1, 2, 3, 4, 5 };
+        tests::compare("ForwardList69", list69, expected69);
+        const std::initializer_list<int> expected70 = { 10, 20, 30, 40, 50 };
+        // NOLINTNEXTLINE(bugprone-use-after-move)
+        tests::compare("ForwardList70", list70, expected70);
 
 
         tests::print_stats();

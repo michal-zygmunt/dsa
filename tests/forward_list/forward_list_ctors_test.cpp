@@ -47,8 +47,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList3", list3, expected);
 
         std::cout << "Copy ctor\n";
-        // intentionally make a copy to test copy constructor
-        // NOLINTNEXTLINE(performance-unnecessary-copy-initialization)
         const dsa::ForwardList<int> list4{ list1 };
         tests::compare("ForwardList4", list4, expected);
 
@@ -62,16 +60,32 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list5 = list1;
         tests::compare("ForwardList5", list5, expected);
 
+        std::cout << "Copy self assignment ctor\n";
+        dsa::ForwardList<int> list6{ 0, 10, 20 };
+        auto* pointer6 = &list6;
+        list6 = *pointer6;
+        tests::compare("ForwardList6", list6, expected);
+
         std::cout << "Move ctor\n";
         dsa::ForwardList<int> temp_1(list1);
-        const dsa::ForwardList<int> list6 = std::move(temp_1);
-        tests::compare("ForwardList6", list6, expected);
+        const dsa::ForwardList<int> list7 = std::move(temp_1);
+        tests::compare("ForwardList7", list7, expected);
 
         std::cout << "Move assignment ctor\n";
         dsa::ForwardList<int> temp_2(list1);
-        dsa::ForwardList<int> list7(1, 0);
-        list7 = std::move(temp_2);
-        tests::compare("ForwardList7", list7, expected);
+        dsa::ForwardList<int> list8(1, 0);
+        list8 = std::move(temp_2);
+        tests::compare("ForwardList8", list8, expected);
+
+        std::cout << "Move self assignment ctor\n";
+        dsa::ForwardList<int> list9{ 0, 10, 20 };
+        auto* pointer9 = &list9;
+        list9 = std::move(*pointer9);
+        tests::compare("ForwardList9", list9, expected);
+
+        const dsa::ForwardList<int> list10(5);
+        const std::initializer_list<int> expected10{ 0, 0, 0, 0, 0 };
+        tests::compare("ForwardList10", list10, expected10);
 
 
         std::cout << "Compare operations results with std container\n\n";

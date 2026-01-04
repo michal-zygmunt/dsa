@@ -12,6 +12,7 @@
 #include "common.h"
 #include "dsa/array.h"
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <exception>
@@ -45,8 +46,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array3 front()", array3.front(), 10);
         tests::compare("Array3[0]", array3[0], 10);
         tests::compare("Array3[1]", array3[1], 20);
-        tests::compare("Array3 at(1)", array3.at(1), 20);
         tests::compare("Array3 back()", array3.back(), 30);
+        tests::compare("Array3 at(0)", array3.at(0), 10);
+        tests::compare("Array3 at(1)", array3.at(1), 20);
+        tests::compare("Array3 at(2)", array3.at(2), 30);
         const std::array<int, 3> expected3{ 10, 20, 30 };
         tests::compare("Array3()", array3, expected3);
 
@@ -70,12 +73,214 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         // Test throwing 'out of range' exception
         try
         {
-            dsa::Array<int, 5> array4{};
-            tests::compare("Array4 at(10)", array4.at(10), 0);
+            dsa::Array<int, 0> array4a{};
+            tests::compare("Array4a at(0)", array4a.at(0), 0);
         }
         catch (const std::out_of_range&)
         {
-            std::cout << "Array4 out of range exception handled correctly\n\n";
+            std::cout << "Array4a out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::Array<int, 0> array4b{};
+            tests::compare("Array4b at(0)", array4b.at(0), 0);
+            tests::compare("Array4b at(1)", array4b.at(1), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "Array4b out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::Array<int, 0> array4c{};
+            tests::compare("Array4c at(2)", array4c.at(2), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "Array4c out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::Array<int, 1> array4d{ 1 };
+            tests::compare("Array4d at(0)", array4d.at(0), 1);
+            tests::compare("Array4d at(1)", array4d.at(1), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "Array4d out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::Array<int, 1> array4e{ 1 };
+            tests::compare("Array4e at(0)", array4e.at(0), 1);
+            tests::compare("Array4e at(2)", array4e.at(2), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "Array4e out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::Array<int, 2> array4f{ 1, 2 };
+            tests::compare("Array4f at(0)", array4f.at(0), 1);
+            tests::compare("Array4f at(1)", array4f.at(1), 2);
+            tests::compare("Array4f at(2)", array4f.at(2), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "Array4f out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::Array<int, 2> array4g{ 1, 2 };
+            tests::compare("Array4g at(0)", array4g.at(0), 1);
+            tests::compare("Array4g at(1)", array4g.at(1), 2);
+            tests::compare("Array4g at(10)", array4g.at(10), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "Array4g out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::Array<int, 5> array4h{ 1, 2 };
+            tests::compare("Array4h at(0)", array4h.at(0), 1);
+            tests::compare("Array4h at(1)", array4h.at(1), 2);
+            tests::compare("Array4h at(2)", array4h.at(2), 0);
+            tests::compare("Array4h at(10)", array4h.at(10), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "Array4h out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::Array<int, 5> array4i{};
+            tests::compare("Array4i at(0)", array4i.at(0), 0);
+            tests::compare("Array4i at(1)", array4i.at(1), 0);
+            tests::compare("Array4i at(2)", array4i.at(2), 0);
+            tests::compare("Array4i at(3)", array4i.at(3), 0);
+            tests::compare("Array4i at(4)", array4i.at(4), 0);
+            tests::compare("Array4i at(10)", array4i.at(10), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "Array4i out of range exception handled correctly\n\n";
+        }
+
+        // Test throwing 'out of range' exception for const Array
+
+        try
+        {
+            const dsa::Array<int, 0> array4a{};
+            tests::compare("const Array4a at(0)", array4a.at(0), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "const Array4a out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::Array<int, 0> array4b{};
+            tests::compare("const Array4b at(0)", array4b.at(0), 0);
+            tests::compare("const Array4b at(1)", array4b.at(1), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "const Array4b out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::Array<int, 0> array4c{};
+            tests::compare("const Array4c at(2)", array4c.at(2), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "const Array4c out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::Array<int, 1> array4d{ 1 };
+            tests::compare("const Array4d at(0)", array4d.at(0), 1);
+            tests::compare("const Array4d at(1)", array4d.at(1), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "const Array4d out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::Array<int, 1> array4e{ 1 };
+            tests::compare("const Array4e at(0)", array4e.at(0), 1);
+            tests::compare("const Array4e at(2)", array4e.at(2), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "const Array4e out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::Array<int, 2> array4f{ 1, 2 };
+            tests::compare("const Array4f at(0)", array4f.at(0), 1);
+            tests::compare("const Array4f at(1)", array4f.at(1), 2);
+            tests::compare("const Array4f at(2)", array4f.at(2), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "const Array4f out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::Array<int, 2> array4g{ 1, 2 };
+            tests::compare("const Array4g at(0)", array4g.at(0), 1);
+            tests::compare("const Array4g at(1)", array4g.at(1), 2);
+            tests::compare("const Array4g at(10)", array4g.at(10), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "const Array4g out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::Array<int, 5> array4h{ 1, 2 };
+            tests::compare("const Array4h at(0)", array4h.at(0), 1);
+            tests::compare("const Array4h at(1)", array4h.at(1), 2);
+            tests::compare("const Array4h at(2)", array4h.at(2), 0);
+            tests::compare("const Array4h at(10)", array4h.at(10), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "const Array4h out of range exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::Array<int, 5> array4i{};
+            tests::compare("const Array4i at(0)", array4i.at(0), 0);
+            tests::compare("const Array4i at(1)", array4i.at(1), 0);
+            tests::compare("const Array4i at(2)", array4i.at(2), 0);
+            tests::compare("const Array4i at(3)", array4i.at(3), 0);
+            tests::compare("const Array4i at(4)", array4i.at(4), 0);
+            tests::compare("const Array4i at(10)", array4i.at(10), 0);
+        }
+        catch (const std::out_of_range&)
+        {
+            std::cout << "const Array4i out of range exception handled correctly\n\n";
         }
 
         // Test iterators traversal
@@ -133,13 +338,27 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array10 fill(5)", array10, { 5, 5, 5, 5 });
 
         std::cout << "Swapping arrays\n";
-        dsa::Array<int, 4> array11{ 1, 2, 3, 4 };
-        dsa::Array<int, 4> array12{ 9, 8, 7, 6 };
-        array11.swap(array12);
-        tests::compare("Array11", array11, { 9, 8, 7, 6 });
-        tests::compare("Array12", array12, { 1, 2, 3, 4 });
+        dsa::Array<int, 4> array11a{ 1, 2, 3, 4 };
+        dsa::Array<int, 4> array12a{ 9, 8, 7, 6 };
+        array11a.swap(array12a);
+        tests::compare("Array11a", array11a, { 9, 8, 7, 6 });
+        tests::compare("Array12a", array12a, { 1, 2, 3, 4 });
+
+        dsa::Array<int, 4> array11b{ 1, 2, 3, 4 };
+        dsa::Array<int, 4> array12b{ 9, 8, 7, 6 };
+        dsa::swap(array11b, array12b);
+        tests::compare("Array11b", array11b, { 9, 8, 7, 6 });
+        tests::compare("Array12b", array12b, { 1, 2, 3, 4 });
 
         std::cout << "Swapping self\n";
+        dsa::Array<int, 4> array13a{ 1, 2, 3, 4 };
+        array13a.swap(array13a);
+        tests::compare("Array13a", array13a, { 1, 2, 3, 4 });
+
+        dsa::Array<int, 4> array13b{ 1, 2, 3, 4 };
+        dsa::swap(array13b, array13b);
+        tests::compare("Array13b", array13b, { 1, 2, 3, 4 });
+
         dsa::Array<int, 4> array13{ 1, 2, 3, 4 };
         array13.swap(array13);
         tests::compare("Array13", array13, { 1, 2, 3, 4 });
@@ -155,6 +374,17 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array14 size()", array14.size(), static_cast<std::size_t>(0));
         tests::compare("Array14 max_size()", array14.max_size(), static_cast<std::size_t>(0));
         tests::compare("Array14 empty()", array14.empty(), true);
+
+        const dsa::Array<int, 0> array14b;
+        tests::compare("Array14 begin() == cbegin()", array14b.begin() == array14b.cbegin(), true);
+        tests::compare("Array14 begin() == end()", array14b.begin() == array14b.end(), true);
+        tests::compare("Array14 end() == cend()", array14b.end() == array14b.cend(), true);
+        tests::compare("Array14 rbegin() == crbegin()", array14b.rbegin() == array14b.crbegin(), true);
+        tests::compare("Array14 rbegin() == rend()", array14b.rbegin() == array14b.rend(), true);
+        tests::compare("Array14 rend() == crend()", array14b.rend() == array14b.crend(), true);
+        tests::compare("Array14 size()", array14b.size(), static_cast<std::size_t>(0));
+        tests::compare("Array14 max_size()", array14b.max_size(), static_cast<std::size_t>(0));
+        tests::compare("Array14 empty()", array14b.empty(), true);
 
         // Test constexpr-compatibility
 
@@ -295,16 +525,26 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array10 vs std fill(5)", array10, std_array10);
 
         std::cout << "Swapping arrays\n";
-        std::array<int, 4> std_array11{ 1, 2, 3, 4 };
-        std::array<int, 4> std_array12{ 9, 8, 7, 6 };
-        std_array11.swap(std_array12);
-        tests::compare("Array11 vs std", array11, std_array11);
-        tests::compare("Array12 vs std", array12, std_array12);
+        std::array<int, 4> std_array11a{ 1, 2, 3, 4 };
+        std::array<int, 4> std_array12a{ 9, 8, 7, 6 };
+        std_array11a.swap(std_array12a);
+        tests::compare("Array11a vs std", array11a, std_array11a);
+        tests::compare("Array12a vs std", array12a, std_array12a);
+
+        std::array<int, 4> std_array11b{ 1, 2, 3, 4 };
+        std::array<int, 4> std_array12b{ 9, 8, 7, 6 };
+        std::swap(std_array11b, std_array12b);
+        tests::compare("Array11b vs std", array11b, std_array11b);
+        tests::compare("Array12b vs std", array12b, std_array12b);
 
         std::cout << "Swapping self\n";
-        std::array<int, 4> std_array13{ 1, 2, 3, 4 };
-        std_array13.swap(std_array13);
-        tests::compare("Array13 vs std", array13, std_array13);
+        std::array<int, 4> std_array13a{ 1, 2, 3, 4 };
+        std_array13a.swap(std_array13a);
+        tests::compare("Array13a vs std", array13a, std_array13a);
+
+        std::array<int, 4> std_array13b{ 1, 2, 3, 4 };
+        std_array13b.swap(std_array13b);
+        tests::compare("Array13b vs std", array13b, std_array13b);
 
         // Test empty array
         std::array<int, 0> std_array14{};

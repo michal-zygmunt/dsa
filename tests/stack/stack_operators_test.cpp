@@ -26,7 +26,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::cout << "Start stack_operators_test:\n";
 
         const dsa::Stack<int> stack1({ 1, 2, 3 });
-        const dsa::Stack<int> stack2({ 4, 5, 6 });
+        const dsa::Stack<int> stack2({ 1, 2, 6 });
         const dsa::Stack<int> stack3({ 1, 2, 3, 4 });
         std::cout << "Stack1:\t" << stack1 << '\n';
         std::cout << "Stack2:\t" << stack2 << '\n';
@@ -82,7 +82,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::cout << "Compare operations results with std container\n\n";
 
         const std::stack<int> std_stack1({ 1, 2, 3 });
-        const std::stack<int> std_stack2({ 4, 5, 6 });
+        const std::stack<int> std_stack2({ 1, 2, 6 });
         const std::stack<int> std_stack3({ 1, 2, 3, 4 });
 
         // intentional self-comparison, an object should be equal to itself
