@@ -12,8 +12,6 @@
 #ifndef FORWARD_LIST_H
 #define FORWARD_LIST_H
 
-#include "memory.h"
-
 #include <cstddef>
 #include <initializer_list>
 #include <iostream>
