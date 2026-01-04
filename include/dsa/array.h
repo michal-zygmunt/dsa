@@ -507,10 +507,7 @@ namespace dsa
     template<typename T, std::size_t N>
     void swap(Array<T, N>& array1, Array<T, N>& array2) noexcept
     {
-        if (array1 != array2)
-        {
-            array1.swap(array2);
-        }
+        array1.swap(array2);
     }
 
     /**
