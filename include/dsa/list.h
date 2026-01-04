@@ -12,8 +12,6 @@
 #ifndef LIST_H
 #define LIST_H
 
-#include "memory.h"
-
 #include <cstddef>
 #include <cstdint>
 #include <initializer_list>
