@@ -5,8 +5,11 @@ name: Doxygen Workflow
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -56,3 +59,18 @@ jobs:
         name: doxygen-docs-artifact
         path: docs/html/
         retention-days: 5
+
+    - name: Upload Pages
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: docs/html/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deploy
+      uses: actions/deploy-pages@v4

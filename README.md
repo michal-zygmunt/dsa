@@ -1,6 +1,6 @@
 # DSA - Data Structures and Algorithms
 
-[![CI](https://github.com/michal-zygmunt/dsa/actions/workflows/ci.yml/badge.svg)](https://github.com/michal-zygmunt/dsa/actions/workflows/ci.yml) &nbsp; [![codecov](https://codecov.io/github/michal-zygmunt/dsa/graph/badge.svg?token=T26A93WPMR)](https://codecov.io/github/michal-zygmunt/dsa)
+[![CI](https://github.com/michal-zygmunt/dsa/actions/workflows/ci.yml/badge.svg)](https://github.com/michal-zygmunt/dsa/actions/workflows/ci.yml) &nbsp; [![codecov](https://codecov.io/github/michal-zygmunt/dsa/graph/badge.svg?token=T26A93WPMR)](https://codecov.io/github/michal-zygmunt/dsa) &nbsp; [![Documentation](https://img.shields.io/badge/docs-Doxygen-blue?style=flat)](https://michal-zygmunt.github.io/dsa/)
 
 ## Project Description
 
@@ -83,7 +83,7 @@ with output from STL containers.
 ## Usage Example
 
 ```cpp
-#include <dsa/vector.h>
+#include "dsa/vector.h"
 
 #include <iostream>
 #include <numeric>
