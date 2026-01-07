@@ -16,6 +16,9 @@ parsers:
       method: true
       macro: true
 
+ignore:
+  - "tests/**"
+
 coverage:
   precision: 2
   range:
