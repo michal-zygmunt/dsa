@@ -81,6 +81,11 @@ jobs:
           pip3 install gcovr==7.0
           gcovr --version
 
+    - name: Check GCC version on Ubuntu
+      if: runner.os == 'Linux'
+      run: |
+        gcc --version
+
     - name: Install Clang 19 on Ubuntu
       if: runner.os == 'Linux'
       run: |
