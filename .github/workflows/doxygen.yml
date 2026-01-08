@@ -24,6 +24,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+  
+    - name: Show Ubuntu version
+      if: runner.os == 'Linux'
+      run: lsb_release -a
 
     # Install dependencies
     - name: Install Doxygen 1.14
