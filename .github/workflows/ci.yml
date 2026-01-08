@@ -59,6 +59,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+  
+    - name: Show Ubuntu version
+      if: runner.os == 'Linux'
+      run: lsb_release -a
+
+    - name: Show Windows version
+      if: runner.os == 'Windows'
+      run: systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
 
     # Install dependencies
     - name: Install Python on Ubuntu
