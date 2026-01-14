@@ -97,6 +97,8 @@ jobs:
         gcc --version
 
     - name: Install Clang 19 on Ubuntu
+      # Ubuntu 24.04 has installed Clang versions: 16.0.6, 17.0.6, 18.1.3
+      # Install Clang 19 as it was used initially on local Ubuntu OS
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
@@ -117,12 +119,13 @@ jobs:
       run: |
         sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 200
         sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-19 200
-        sudo update-alternatives --auto clang
-        sudo update-alternatives --auto clang++
+        sudo update-alternatives --set clang /usr/bin/clang-19
+        sudo update-alternatives --set clang++ /usr/bin/clang++-19
+
         sudo update-alternatives --install /usr/bin/llvm-cov llvm-cov /usr/bin/llvm-cov-19 200
         sudo update-alternatives --install /usr/bin/llvm-profdata llvm-profdata /usr/bin/llvm-profdata-19 200
-        sudo update-alternatives --auto llvm-cov
-        sudo update-alternatives --auto llvm-profdata
+        sudo update-alternatives --set llvm-cov /usr/bin/llvm-cov-19
+        sudo update-alternatives --set llvm-profdata /usr/bin/llvm-profdata-19
 
     - name: Check LLVM version on Ubuntu
       if: runner.os == 'Linux'
