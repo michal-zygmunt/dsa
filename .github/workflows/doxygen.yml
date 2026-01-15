@@ -37,8 +37,9 @@ jobs:
 
     - name: Install Graphviz
       run: |
-        sudo apt-get update
-        sudo apt-get install -y graphviz
+        wget https://archive.ubuntu.com/ubuntu/pool/universe/g/graphviz/graphviz_2.42.2-9ubuntu0.1_amd64.deb
+        sudo dpkg -i graphviz_2.42.2-9ubuntu0.1_amd64.deb || true
+        sudo apt-get -f install -y --no-install-recommends
         dot -V
 
     # Configure CMake to generate doxygen using existing CMakeLists.txt
