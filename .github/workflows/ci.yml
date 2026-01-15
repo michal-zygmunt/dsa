@@ -137,8 +137,9 @@ jobs:
     - name: Install LCOV on Ubuntu
       if: runner.os == 'Linux'
       run: |
-        sudo apt-get update
-        sudo apt-get install -y lcov
+        wget https://archive.ubuntu.com/ubuntu/pool/universe/l/lcov/lcov_2.0-4ubuntu2_all.deb
+        sudo dpkg -i lcov_2.0-4ubuntu2_all.deb || true
+        sudo apt-get -f install -y --no-install-recommends
 
     - name: Check LCOV version on Ubuntu
       if: runner.os == 'Linux'
