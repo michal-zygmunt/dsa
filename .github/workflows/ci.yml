@@ -58,7 +58,7 @@ jobs:
     name: ${{ matrix.os }}-${{ matrix.cpp_compiler }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
   
     - name: Show Ubuntu version
       if: runner.os == 'Linux'
