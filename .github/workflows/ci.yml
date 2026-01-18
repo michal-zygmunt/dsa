@@ -178,7 +178,7 @@ jobs:
     - name: Generate coverage.info from gcc
       if: runner.os == 'Linux' && matrix.cpp_compiler == 'g++'
       working-directory: ${{ github.workspace }}
-      run: python ./coverage_report.py -c gcc -t lcov -e tests --verbose
+      run: python ./coverage_report.py -c gcc -t gcovr -e tests --verbose
 
     - name: Generate coverage.info from clang
       if: runner.os == 'Linux' && matrix.cpp_compiler == 'clang++'
