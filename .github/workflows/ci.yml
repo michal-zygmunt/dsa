@@ -84,7 +84,7 @@ jobs:
     - name: Set g++ 13.3 as default on Ubuntu
       # Ubuntu 24.04 has installed GNU C++ versions: 12.4.0, 13.3.0, 14.2.0
       # Set g++ 13.3 as default
-      if: runner.os == 'Linux'
+      if: runner.os == 'Linux'  && matrix.c_compiler == 'gcc'
       run: |
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 200
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 200
@@ -92,7 +92,7 @@ jobs:
         sudo update-alternatives --set g++ /usr/bin/g++-13
 
     - name: Check GCC version on Ubuntu
-      if: runner.os == 'Linux'
+      if: runner.os == 'Linux'  && matrix.c_compiler == 'gcc'
       run: |
         gcc --version
 
