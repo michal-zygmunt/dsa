@@ -84,7 +84,7 @@ jobs:
     - name: Install gcovr 7 on Ubuntu
       if: runner.os == 'Linux'
       run: |
-          pip3 install gcovr==7.0
+          python -m pip install gcovr==7.0
           gcovr --version
 
     - name: Set g++ 13.3 as default on Ubuntu
