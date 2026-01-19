@@ -75,6 +75,12 @@ jobs:
       with:
         python-version: '3.13.5'
 
+    - name: Check Python version on Ubuntu
+      if: runner.os == 'Linux'
+      run: |
+        python --version
+        pip --version
+
     - name: Install gcovr 7 on Ubuntu
       if: runner.os == 'Linux'
       run: |
