@@ -20,10 +20,14 @@ jobs:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
+  
+    - name: Show Ubuntu version
+      if: runner.os == 'Linux'
+      run: lsb_release -a
 
     # Install dependencies
     - name: Install Doxygen 1.14
@@ -33,8 +37,14 @@ jobs:
 
     - name: Install Graphviz
       run: |
-        sudo apt-get update
-        sudo apt-get install -y graphviz
+        wget https://archive.ubuntu.com/ubuntu/pool/universe/g/graphviz/graphviz_2.42.2-9ubuntu0.1_amd64.deb
+        sudo dpkg -i graphviz_2.42.2-9ubuntu0.1_amd64.deb || true
+        sudo apt-get -f install -y --no-install-recommends
+
+    - name: Check Doxygen version
+      run: |
+        doxygen --version
+        dot -V
 
     # Configure CMake to generate doxygen using existing CMakeLists.txt
     - name: Configure CMake
@@ -54,14 +64,14 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Save Doxygen HTML as Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: doxygen-docs-artifact
         path: docs/html/
         retention-days: 5
 
     - name: Upload Pages
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-pages-artifact@v4
       with:
         path: docs/html/
 

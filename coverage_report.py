@@ -65,14 +65,15 @@ def check_if_app_exists(executable_name : str, use_wsl = False, verbose = False)
     log(verbose, result.stdout)
     return True
 
-def detect_tools(tool : str, verbose : bool) -> bool:
+def detect_tools(compiler : str, tool : str, verbose : bool) -> bool:
     use_wsl = False
 
     # check for clang
-    if(check_if_app_exists("llvm-profdata", verbose=verbose) and check_if_app_exists("llvm-cov", verbose=verbose)):
-        print("Clang tools found!")
-    else:
-        sys.exit("Clang tools not found! Make sure clang tools are added to system path.")
+    if compiler == Compiler.CLANG:
+        if(check_if_app_exists("llvm-profdata", verbose=verbose) and check_if_app_exists("llvm-cov", verbose=verbose)):
+            print("Clang tools found!")
+        else:
+            sys.exit("Clang tools not found! Make sure clang tools are added to system path.")
 
     # running script on Windows require wsl to use Linux tools
     if(platform.system() == "Windows"):
@@ -415,7 +416,7 @@ def main():
 
     args = get_user_args()
 
-    use_wsl = detect_tools(args.tool, args.verbose)
+    use_wsl = detect_tools(args.compiler, args.tool, args.verbose)
     test_apps = find_test_apps(args.root_dir, verbose=args.verbose)
 
     clean_artifacts()
