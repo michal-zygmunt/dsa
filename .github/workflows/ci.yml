@@ -260,3 +260,41 @@ jobs:
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config Release
+
+
+
+  windows-clang-tidy:
+    name: windows-2025-clang-tidy
+    runs-on: windows-2025
+    needs: build
+
+    steps:
+    - uses: actions/checkout@v6
+  
+    - name: Show Windows version
+      if: runner.os == 'Windows'
+      run: systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
+
+    - name: Set reusable strings
+      # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
+      id: strings
+      shell: bash
+      run: |
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+    - name: Configure CMake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: >
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        -DCMAKE_CXX_COMPILER=clang-cl
+        -DCMAKE_C_COMPILER=clang-cl
+        -DCMAKE_BUILD_TYPE=Release
+        -S ${{ github.workspace }}
+        -G Ninja
+        -DENABLE_CLANG_TIDY=ON
+        -DDOCS_ENABLED=OFF
+
+    - name: Build
+      # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config Release
