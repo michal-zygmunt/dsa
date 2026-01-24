@@ -102,43 +102,11 @@ jobs:
       run: |
         gcc --version
 
-    - name: Install Clang 19 on Ubuntu
+    - name: Install LLVM/Clang 19 on Ubuntu
       # Ubuntu 24.04 has installed Clang versions: 16.0.6, 17.0.6, 18.1.3
       # Install Clang 19 as it was used initially on local Ubuntu OS
       if: runner.os == 'Linux' && matrix.c_compiler == 'clang'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y clang-19 lldb-19 lld-19
-
-    - name: Install LLVM on Ubuntu
-      if: runner.os == 'Linux' && matrix.c_compiler == 'clang'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y wget gnupg lsb-release
-
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 19
-
-    - name: Set LLVM 19 as default on Ubuntu
-      if: runner.os == 'Linux' && matrix.c_compiler == 'clang'
-      run: |
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 200
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-19 200
-        sudo update-alternatives --set clang /usr/bin/clang-19
-        sudo update-alternatives --set clang++ /usr/bin/clang++-19
-
-        sudo update-alternatives --install /usr/bin/llvm-cov llvm-cov /usr/bin/llvm-cov-19 200
-        sudo update-alternatives --install /usr/bin/llvm-profdata llvm-profdata /usr/bin/llvm-profdata-19 200
-        sudo update-alternatives --set llvm-cov /usr/bin/llvm-cov-19
-        sudo update-alternatives --set llvm-profdata /usr/bin/llvm-profdata-19
-
-    - name: Check LLVM version on Ubuntu
-      if: runner.os == 'Linux' && matrix.c_compiler == 'clang'
-      run: |
-        clang --version
-        llvm-cov --version
-        llvm-profdata --version
+      uses: ./.github/actions/setup-llvm-19
 
     - name: Install LCOV on Ubuntu
       if: runner.os == 'Linux'
@@ -212,30 +180,11 @@ jobs:
       if: runner.os == 'Linux'
       run: lsb_release -a
 
-    - name: Install Clang 19 on Ubuntu
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y clang-19 lldb-19 lld-19
-
-    - name: Install LLVM on Ubuntu
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y wget gnupg lsb-release
-
-        wget https://apt.llvm.org/llvm.sh
-        chmod +x llvm.sh
-        sudo ./llvm.sh 19
-
-    - name: Set LLVM 19 as default on Ubuntu
-      run: |
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 200
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-19 200
-        sudo update-alternatives --set clang /usr/bin/clang-19
-        sudo update-alternatives --set clang++ /usr/bin/clang++-19
-
-    - name: Check Clang version on Ubuntu
-      run: |
-        clang --version
+    - name: Install LLVM/Clang 19 on Ubuntu
+      # Ubuntu 24.04 has installed Clang versions: 16.0.6, 17.0.6, 18.1.3
+      # Install Clang 19 as it was used initially on local Ubuntu OS
+      if: runner.os == 'Linux'
+      uses: ./.github/actions/setup-llvm-19
 
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
