@@ -224,6 +224,12 @@ jobs:
       if: runner.os == 'Windows'
       run: systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
 
+    - name: Check clang-tidy version
+      if: runner.os == 'Windows'
+      run: |
+        clang-tidy --version
+        where clang-tidy
+
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
       id: strings
