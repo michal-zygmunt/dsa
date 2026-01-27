@@ -26,7 +26,6 @@ jobs:
     - uses: actions/checkout@v6
   
     - name: Show Ubuntu version
-      if: runner.os == 'Linux'
       run: lsb_release -a
 
     # Install dependencies
