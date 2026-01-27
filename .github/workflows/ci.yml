@@ -195,6 +195,7 @@ jobs:
         -S ${{ github.workspace }}
         -G Ninja
         -DENABLE_CLANG_TIDY=ON
+        -DENABLE_CLANG_TIDY_STRICT=ON
         -DDOCS_ENABLED=OFF
 
     - name: Build
@@ -237,6 +238,7 @@ jobs:
         -S ${{ github.workspace }}
         -G Ninja
         -DENABLE_CLANG_TIDY=ON
+        -DENABLE_CLANG_TIDY_STRICT=ON
         -DDOCS_ENABLED=OFF
 
     - name: Build
