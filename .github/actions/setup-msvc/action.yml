@@ -1,0 +1,27 @@
+name: Setup MSVC toolchain
+description: Install LLVM/Clang 19 on Ubuntu and set as default
+runs:
+  using: composite
+  steps:
+    - name: Setup MSVC toolchain
+      if: runner.os == 'Windows'
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        toolset: "14.44"
+        arch: x64
+
+    - name: Check MSVC toolchain
+      shell: pwsh
+      run: |
+        echo "::group::MSVC (cl)"
+        cl 2>&1 | findstr Version
+        echo "::endgroup::"
+
+        echo "::group::clang-cl"
+        clang-cl --version
+        where clang-cl
+        echo "::endgroup::"
+
+        echo "::group::clang-tidy"
+        clang-tidy --version
+        echo "::endgroup::"
