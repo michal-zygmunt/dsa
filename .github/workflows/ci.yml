@@ -166,6 +166,9 @@ jobs:
     runs-on: ubuntu-24.04
     needs: build
 
+    # run clang-tidy only in PR
+    if: github.event_name == 'pull_request'
+
     steps:
     - uses: actions/checkout@v6
   
@@ -208,6 +211,9 @@ jobs:
     name: windows-2025-clang-tidy
     runs-on: windows-2025
     needs: build
+
+    # run clang-tidy only in PR
+    if: github.event_name == 'pull_request'
 
     steps:
     - uses: actions/checkout@v6
