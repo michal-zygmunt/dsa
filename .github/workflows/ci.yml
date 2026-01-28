@@ -112,6 +112,10 @@ jobs:
         sudo apt-get -f install -y --no-install-recommends
         lcov --version
 
+    - name: Setup MSVC toolchain
+      if: runner.os == 'Windows'
+      uses: ./.github/actions/setup-msvc
+
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
       id: strings
@@ -221,10 +225,8 @@ jobs:
     - name: Show Windows version
       run: systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
 
-    - name: Check clang-tidy version
-      run: |
-        clang-tidy --version
-        where clang-tidy
+    - name: Setup MSVC toolchain
+      uses: ./.github/actions/setup-msvc
 
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
