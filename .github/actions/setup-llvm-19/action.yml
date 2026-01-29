@@ -7,13 +7,13 @@ runs:
       run: |
         # Install LLVM/Clang 19 on Ubuntu
         sudo apt-get update
-        sudo apt-get install -y wget gnupg lsb-release
+        sudo apt-get install -y wget gnupg lsb-release --no-install-recommends
 
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
         sudo ./llvm.sh 19
 
-        sudo apt-get install -y clang-19 lldb-19 lld-19 clang-tidy-19
+        sudo apt-get install -y clang-19 lldb-19 lld-19 clang-tidy-19 --no-install-recommends
 
         # Set LLVM/Clang 19 as default on Ubuntu
         sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 200
