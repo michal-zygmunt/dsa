@@ -1,0 +1,38 @@
+name: Install LLVM/lang 19
+description: Install LLVM/Clang 19 on Ubuntu and set as default
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        # Install LLVM/Clang 19 on Ubuntu
+        sudo apt-get update
+        sudo apt-get install -y wget gnupg lsb-release --no-install-recommends
+
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 19
+
+        sudo apt-get install -y clang-19 lldb-19 lld-19 clang-tidy-19 --no-install-recommends
+
+        # Set LLVM/Clang 19 as default on Ubuntu
+        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 200
+        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-19 200
+        sudo update-alternatives --set clang /usr/bin/clang-19
+        sudo update-alternatives --set clang++ /usr/bin/clang++-19
+
+        # Set LLVM/Clang tools used for coverage
+        sudo update-alternatives --install /usr/bin/llvm-cov llvm-cov /usr/bin/llvm-cov-19 200
+        sudo update-alternatives --install /usr/bin/llvm-profdata llvm-profdata /usr/bin/llvm-profdata-19 200
+        sudo update-alternatives --set llvm-cov /usr/bin/llvm-cov-19
+        sudo update-alternatives --set llvm-profdata /usr/bin/llvm-profdata-19
+
+        # Set LLVM/Clang tools used for clang-tidy
+        sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-19 200
+        sudo update-alternatives --set clang-tidy /usr/bin/clang-tidy-19
+
+        # Check LLVM/Clang version
+        clang --version
+        llvm-cov --version
+        llvm-profdata --version
+        clang-tidy --version

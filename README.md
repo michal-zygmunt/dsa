@@ -80,6 +80,60 @@ on your local system.
 Unit tests compare output of various operations on implemented containers
 with output from STL containers.
 
+## Static Analysis
+
+The project is checked using `clang-tidy` in GitHub Actions CI workflow.
+
+The runner image and tool versions are set explicitly in CI where possible.
+Local execution of `clang-tidy` with different compilers or tools
+may yield different results.
+
+> [!CAUTION]
+> Since GitHub Actions runner images follow a "rolling update" model,
+> the installed version of Visual Studio may be updated by the provider
+> at any time. If the build fails with an error indicating that the toolset
+> is missing, it likely means the image has been upgraded to a newer version
+> (e.g. Visual Studio 2026).
+>
+> In such an event
+> 1. Update the toolset parameter in the `setup-msvc` GitHub Actions workflow
+>   to the latest available version
+> 2. Review the logs for any new `clang-tidy` warnings that may require
+>   code adjustments.
+
+`clang-tidy` is run per translation unit, so header-only libraries
+may be analysed multiple times in unit tests.
+Because `clang-tidy` checks can take long time, CI jobs are run
+only on pull requests, after unit tests have passed successfully.
+
+The configuration is based on the `.clang-tidy` file
+in the project root directory.
+
+In CI, `clang-tidy` runs in strict mode, threating all warnings as errors.
+The build will fail immediately if any issue is detected.
+Locally, `clang-tidy` can be enabled without failing the build,
+unless the strict mode flag is manually set.
+
+### Requirements
+
+- **Windows:** `clang-cl` must be installed and available in PATH.
+  You may need to run the Visual Studio Developer Command Prompt
+  or execute `vcvarsall.bat` to set up the environment.
+
+- **Linux:** `clang` from LLVM must be installed and available in PATH.
+
+- `clang-tidy` must be installed and available in PATH.
+
+### Running Locally
+
+```bash
+cmake -S . -B build \
+  -DCMAKE_CXX_COMPILER=clang-cl \
+  -DCMAKE_C_COMPILER=clang-cl \
+  -DENABLE_CLANG_TIDY=ON
+cmake --build build --config Release
+```
+
 ## Usage Example
 
 ```cpp

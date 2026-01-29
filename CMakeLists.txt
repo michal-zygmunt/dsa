@@ -21,6 +21,7 @@ target_link_libraries(dsa_testing INTERFACE dsa)
 option(ENABLE_WARNINGS "Enable strict compiler flags" ON)
 option(ENABLE_SANITIZERS "Enable sanitizers ASan/UBSan" ON)
 option(ENABLE_CLANG_TIDY "Enable clang-tidy static code analysis" OFF)
+option(ENABLE_CLANG_TIDY_STRICT "Fail on first clang-tidy warning/error" OFF)
 option(DOCS_ENABLED "Enable documentation generation" ON)
 option(CODE_TESTING "Enable code testing" ON)
 option(CODE_COVERAGE "Enable coverage reporting" ON)
@@ -33,31 +34,19 @@ if(ENABLE_CLANG_TIDY)
 	
 	if(CLANG_TIDY_EXE)
 		message(STATUS "clang-tidy found " ${CLANG_TIDY_EXE})
-		set(CMAKE_CXX_CLANG_TIDY
-			"${CLANG_TIDY_EXE}"
-			"--config-file=${CMAKE_SOURCE_DIR}/.clang-tidy"
-		)
-	else()
-		message(WARNING "clang-tidy not found")
-	endif()
-endif()
-
-
-if(ENABLE_CLANG_TIDY)
-	message(STATUS "Static analysis with clang-tidy option enabled")
-
-	find_program(CLANG_TIDY_EXE NAMES clang-tidy)
-	
-	if(CLANG_TIDY_EXE)
-		message(STATUS "clang-tidy found " ${CLANG_TIDY_EXE})
+		
+		set (CLANG_TIDY_EXTRA_ARGS "")
 		if(MSVC)
 			# /EHs standard c++ stack unwinding, catches c++ exceptions when using catch(...) syntax.
 			# /EHc functions declared as extern c never throw a c++ exception.
 			# option prevents clang-tools error "cannot use 'throw' with exceptions disabled"
-			set(CLANG_TIDY_EXTRA_ARGS "--extra-arg=/EHsc")
-		else()
-			set(CLANG_TIDY_EXTRA_ARGS "")
+			list(APPEND CLANG_TIDY_EXTRA_ARGS "--extra-arg=/EHsc")
 		endif()
+		if(ENABLE_CLANG_TIDY_STRICT)
+		    # Fail on first clang-tidy warning/error
+			list(APPEND CLANG_TIDY_EXTRA_ARGS "-warnings-as-errors=*")
+		endif()
+		
 		set(CMAKE_CXX_CLANG_TIDY
 			"${CLANG_TIDY_EXE}"
 			"--config-file=${CMAKE_SOURCE_DIR}/.clang-tidy"
