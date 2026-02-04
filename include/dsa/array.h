@@ -12,6 +12,7 @@
 #ifndef ARRAY_H
 #define ARRAY_H
 
+#include <cstddef>
 #include <iostream>
 #include <iterator>
 
@@ -42,6 +43,13 @@ namespace dsa
          * @tparam T size type
          */
         using size_type = std::size_t;
+
+        /**
+         * @brief Alias for pointer difference type
+         *
+         * Used by STL to define distance between two pointers
+         */
+        using difference_type = std::ptrdiff_t;
 
         /**
          * @brief Alias for pointer to data type used in class
