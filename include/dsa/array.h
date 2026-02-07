@@ -519,42 +519,6 @@ namespace dsa
     }
 
     /**
-     * @brief Helper function counts C-style array elements at compile time
-     * @tparam T data type stored in containers
-     * @tparam N number of elements in containers
-     * @tparam I compile-time index sequence used to expand array elements
-     * @param[in] array C-style array
-     * @param[in] items sequence of array indexes
-     * @return Array container of size N
-     */
-    template<typename T, std::size_t N, std::size_t... I>
-    // Intentional use of C-style array: the array bound must be part of the type
-    // to enable compile-time size deduction
-    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
-    constexpr auto to_array_helper(T(&array)[N], std::index_sequence<I...> /* seq */) -> dsa::Array<std::remove_cv_t<T>, N>
-    {
-        return { {array[I]...} };
-    }
-
-    /**
-     * @brief Helper function counts C-style array elements at compile time
-     * @tparam T data type stored in containers
-     * @tparam N number of elements in containers
-     * @tparam I compile-time index sequence used to expand array elements
-     * @param[in] array C-style array
-     * @param[in] items sequence of array indexes
-     * @return Array container of size N
-     */
-    template<typename T, std::size_t N, std::size_t... I>
-    // Intentional use of C-style array: the array bound must be part of the type
-    // to enable compile-time size deduction
-    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-rvalue-reference-param-not-moved)
-    constexpr auto to_array_helper(T(&& array)[N], std::index_sequence<I...> /* seq */) -> dsa::Array<std::remove_cv_t<T>, N>
-    {
-        return { {std::move(array[I])...} };
-    }
-
-    /**
      * @brief Creates Array from one dimensional C-style array using copy semantics
      * @tparam T data type stored in containers
      * @tparam N number of elements in containers
@@ -567,7 +531,11 @@ namespace dsa
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
     constexpr auto to_array(T(&array)[N]) -> Array<std::remove_cv_t<T>, N>
     {
-        return to_array_helper(array, std::make_index_sequence<N>{});
+        return[&]<std::size_t... I>(std::index_sequence<I...>)
+        {
+            // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
+            return dsa::Array<std::remove_cv_t<T>, N>{array[I]...};
+        }(std::make_index_sequence<N>{});
     }
 
     /**
@@ -580,10 +548,14 @@ namespace dsa
     template<typename T, std::size_t N>
     // Intentional use of C-style array: the array bound must be part of the type
     // to enable compile-time size deduction
-    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-rvalue-reference-param-not-moved)
     constexpr auto to_array(T(&& array)[N]) -> Array<std::remove_cv_t<T>, N>
     {
-        return to_array_helper(std::move(array), std::make_index_sequence<N>{});
+        return[&]<std::size_t... I>(std::index_sequence<I...>)
+        {
+            // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
+            return dsa::Array<std::remove_cv_t<T>, N>{std::move(array[I])...};
+        }(std::make_index_sequence<N>{});
     }
 
     /**
