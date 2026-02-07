@@ -444,7 +444,7 @@ namespace dsa
      * @return T& reference to Ith element of array container
      */
     template<std::size_t I, typename T, std::size_t N>
-    constexpr auto get(Array<T, N>& array) noexcept -> T&
+    [[nodiscard]] constexpr auto get(Array<T, N>& array) noexcept -> T&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
         return array[I];
@@ -460,7 +460,7 @@ namespace dsa
      * @return const T& reference to Ith element of array container
      */
     template<std::size_t I, typename T, std::size_t N>
-    constexpr auto get(const Array<T, N>& array) noexcept -> const T&
+    [[nodiscard]] constexpr auto get(const Array<T, N>& array) noexcept -> const T&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
         return array[I];
@@ -482,7 +482,7 @@ namespace dsa
      */
     template<std::size_t I, typename T, std::size_t N>
     // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
-    constexpr auto get(Array<T, N>&& array) noexcept -> T&&
+    [[nodiscard]] constexpr auto get(Array<T, N>&& array) noexcept -> T&&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
         return std::move(array[I]);
@@ -498,7 +498,7 @@ namespace dsa
      * @return const T&& reference to Ith element of array container
      */
     template<std::size_t I, typename T, std::size_t N>
-    constexpr auto get(const Array<T, N>&& array) noexcept -> const T&&
+    [[nodiscard]] constexpr auto get(const Array<T, N>&& array) noexcept -> const T&&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
         return std::move(array[I]);
@@ -530,7 +530,7 @@ namespace dsa
     // Intentional use of C-style array: the array bound must be part of the type
     // to enable compile-time size deduction
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
-    constexpr auto to_array(T(&array)[N]) -> Array<std::remove_cv_t<T>, N>
+    [[nodiscard]] constexpr auto to_array(T(&array)[N]) -> Array<std::remove_cv_t<T>, N>
     {
         return[&]<std::size_t... I>(std::index_sequence<I...>)
         {
@@ -551,7 +551,7 @@ namespace dsa
     // Intentional use of C-style array: the array bound must be part of the type
     // to enable compile-time size deduction
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-rvalue-reference-param-not-moved)
-    constexpr auto to_array(T(&& array)[N]) -> Array<std::remove_cv_t<T>, N>
+    [[nodiscard]] constexpr auto to_array(T(&& array)[N]) -> Array<std::remove_cv_t<T>, N>
     {
         return[&]<std::size_t... I>(std::index_sequence<I...>)
         {
@@ -588,7 +588,7 @@ namespace dsa
      * @retval false if containers are not equal
      */
     template<typename T, std::size_t N>
-    auto operator==(const Array<T, N>& array1, const Array<T, N>& array2) -> bool
+    [[nodiscard]] auto operator==(const Array<T, N>& array1, const Array<T, N>& array2) -> bool
     {
         auto array1_iter = array1.cbegin();
         auto array2_iter = array2.cbegin();
@@ -617,7 +617,7 @@ namespace dsa
      * @retval +1 if the content of \p array1 is lexicographically greater than the content of \p array2
      */
     template<typename T, std::size_t N>
-    auto operator<=>(const Array<T, N>& array1, const Array<T, N>& array2)
+    [[nodiscard]] auto operator<=>(const Array<T, N>& array1, const Array<T, N>& array2)
     {
         auto array1_iter = array1.cbegin();
         auto array2_iter = array2.cbegin();
