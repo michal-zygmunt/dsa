@@ -13,6 +13,7 @@
 #include "dsa/array.h"
 
 #include <array>
+#include <compare>
 #include <exception>
 #include <iostream>
 

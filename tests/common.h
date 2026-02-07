@@ -19,17 +19,24 @@
 #include "dsa/stack.h"
 #include "dsa/vector.h"
 
-#include <concepts>
+#include <algorithm>
+#include <array>
+#include <cstdint>
+#include <exception>
 #include <forward_list>
 #include <initializer_list>
 #include <iomanip>
+#include <ios>
 #include <iostream>
+#include <iterator>
 #include <list>
 #include <optional>
 #include <queue>
 #include <ranges>
 #include <source_location>
 #include <stack>
+#include <string>
+#include <vector>
 
  /**
   * @brief Namespace with test results

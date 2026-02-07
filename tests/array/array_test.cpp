@@ -12,7 +12,6 @@
 #include "common.h"
 #include "dsa/array.h"
 
-#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <exception>
@@ -20,6 +19,7 @@
 #include <iostream>
 #include <iterator>
 #include <stdexcept>
+#include <string>
 #include <type_traits>
 #include <utility>
 #include <vector>
