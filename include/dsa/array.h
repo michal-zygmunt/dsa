@@ -526,6 +526,7 @@ namespace dsa
      * @return Array container
      */
     template<typename T, std::size_t N>
+        requires(!std::is_array_v<T>)
     // Intentional use of C-style array: the array bound must be part of the type
     // to enable compile-time size deduction
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
@@ -546,6 +547,7 @@ namespace dsa
      * @return Array container
      */
     template<typename T, std::size_t N>
+        requires(!std::is_array_v<T> && !std::is_const_v<T>)
     // Intentional use of C-style array: the array bound must be part of the type
     // to enable compile-time size deduction
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-rvalue-reference-param-not-moved)
