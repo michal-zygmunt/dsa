@@ -13,9 +13,12 @@
 #include "dsa/array.h"
 
 #include <array>
+#include <cassert>
 #include <compare>
 #include <exception>
 #include <iostream>
+#include <limits>
+#include <type_traits>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -75,6 +78,19 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array1 <=> Array3 ==", (Array1 <=> Array3) == std::weak_ordering::equivalent, true);
         tests::compare("Array1 <=> Array3 <=", (Array1 <=> Array3) != std::weak_ordering::greater, true);
 
+        // test comparison categories
+        static_assert(std::is_same_v<std::compare_three_way_result_t<dsa::Array<int, 3>>, std::strong_ordering>,
+            "Int array should support strong ordering");
+
+        static_assert(std::is_same_v<std::compare_three_way_result_t<dsa::Array<double, 3>>, std::partial_ordering>,
+            "Double array should support strong ordering");
+
+        // test partial ordering
+        const dsa::Array<double, 3> Array4{ 1.0, 2.0, 3.0 };
+        const dsa::Array<double, 3> Array5{ 1.0, 2.0, std::numeric_limits<double>::quiet_NaN() };
+        assert((Array4 <=> Array5) == std::partial_ordering::unordered);
+        tests::compare("Array4 <=> Array5 weak ordering", (Array1 <=> Array3) != std::weak_ordering::less, true);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -127,6 +143,23 @@ int main() // NOLINT(modernize-use-trailing-return-type)
             (Array1 <=> Array3) == std::weak_ordering::equivalent, (std_Array1 <=> std_Array3) == std::weak_ordering::equivalent);
         tests::compare("Array1 <=> Array3 vs std <= ",
             (Array1 <=> Array3) != std::weak_ordering::greater, (std_Array1 <=> std_Array3) != std::weak_ordering::greater);
+
+        // test comparison categories
+        static_assert(std::is_same_v<std::compare_three_way_result_t<std::array<int, 3>>, std::strong_ordering>,
+            "Int array should support strong ordering");
+
+        static_assert(std::is_same_v<std::compare_three_way_result_t<std::array<double, 3>>, std::partial_ordering>,
+            "Double array should support strong ordering");
+
+        // test partial ordering
+        const std::array<double, 3> std_Array4{ 1.0, 2.0, 3.0 };
+        const std::array<double, 3> std_Array5{ 1.0, 2.0, std::numeric_limits<double>::quiet_NaN() };
+        assert((std_Array4 <=> std_Array5) == std::partial_ordering::unordered);
+        assert((Array4 <=> Array5) == (std_Array4 <=> std_Array5));
+        tests::compare("std_Array4 <=> std_Array5 weak ordering",
+            (std_Array4 <=> std_Array5) == std::partial_ordering::unordered, true);
+        tests::compare("(Array4 <=> Array5) == (std_Array4 <=> std_Array5)",
+            (Array4 <=> Array5) == (std_Array4 <=> std_Array5), true);
 
 
         tests::print_stats();
