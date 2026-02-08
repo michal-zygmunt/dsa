@@ -509,13 +509,13 @@ namespace dsa
      *
      * @tparam T data type stored in containers
      * @tparam N number of elements in containers
-     * @param[in] array1 container to swap content
-     * @param[in] array2 container to swap content
+     * @param[in] lhs container to swap content
+     * @param[in] rhs container to swap content
      */
     template<typename T, std::size_t N>
-    void swap(Array<T, N>& array1, Array<T, N>& array2) noexcept
+    void swap(Array<T, N>& lhs, Array<T, N>& rhs) noexcept
     {
-        array1.swap(array2);
+        lhs.swap(rhs);
     }
 
     /**
@@ -582,26 +582,26 @@ namespace dsa
     /**
      * @brief The relational operator compares two Array objects
      *
-     * @param[in] array1 input container
-     * @param[in] array2 input container
-     * @retval true if containers are equal
-     * @retval false if containers are not equal
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @retval true if input containers are equal
+     * @retval false if input containers are not equal
      */
     template<typename T, std::size_t N>
-    [[nodiscard]] auto operator==(const Array<T, N>& array1, const Array<T, N>& array2) -> bool
+    [[nodiscard]] auto operator==(const Array<T, N>& lhs, const Array<T, N>& rhs) -> bool
     {
-        auto array1_iter = array1.cbegin();
-        auto array2_iter = array2.cbegin();
+        auto lhs_iter = lhs.cbegin();
+        auto rhs_iter = rhs.cbegin();
 
         for (size_t i = 0; i < N; i++)
         {
-            if (*array1_iter != *array2_iter)
+            if (*lhs_iter != *rhs_iter)
             {
                 return false;
             }
 
-            array1_iter++;
-            array2_iter++;
+            lhs_iter++;
+            rhs_iter++;
         }
 
         return true;
@@ -610,31 +610,31 @@ namespace dsa
     /**
      * @brief The relational operator compares two Array objects
      *
-     * @param[in] array1 input container
-     * @param[in] array2 input container
-     * @retval -1 if the content of \p array1 is lexicographically lesser than the content of \p array2
-     * @retval  0 if the content of \p array1 and \p array2 is equal
-     * @retval +1 if the content of \p array1 is lexicographically greater than the content of \p array2
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @retval -1 if the content of \p lhs is lexicographically lesser than the content of \p rhs
+     * @retval  0 if the content of \p lhs and \p rhs is equal
+     * @retval +1 if the content of \p lhs is lexicographically greater than the content of \p rhs
      */
     template<typename T, std::size_t N>
-    [[nodiscard]] auto operator<=>(const Array<T, N>& array1, const Array<T, N>& array2)
+    [[nodiscard]] auto operator<=>(const Array<T, N>& lhs, const Array<T, N>& rhs)
     {
-        auto array1_iter = array1.cbegin();
-        auto array2_iter = array2.cbegin();
+        auto lhs_iter = lhs.cbegin();
+        auto rhs_iter = rhs.cbegin();
 
         for (size_t i = 0; i < N; i++)
         {
-            if (*array1_iter < *array2_iter)
+            if (*lhs_iter < *rhs_iter)
             {
                 return std::strong_ordering::less;
             }
-            if (*array1_iter > *array2_iter)
+            if (*lhs_iter > *rhs_iter)
             {
                 return std::strong_ordering::greater;
             }
 
-            array1_iter++;
-            array2_iter++;
+            lhs_iter++;
+            rhs_iter++;
         }
 
         return std::strong_ordering::equivalent;
