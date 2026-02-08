@@ -588,7 +588,7 @@ namespace dsa
      * @retval false if input containers are not equal
      */
     template<typename T, std::size_t N>
-    [[nodiscard]] auto operator==(const Array<T, N>& lhs, const Array<T, N>& rhs) -> bool
+    [[nodiscard]] constexpr auto operator==(const Array<T, N>& lhs, const Array<T, N>& rhs) -> bool
     {
         auto lhs_iter = lhs.cbegin();
         auto rhs_iter = rhs.cbegin();
@@ -621,7 +621,7 @@ namespace dsa
      * @return three way comparison result type
      */
     template<typename T, std::size_t N>
-    [[nodiscard]] auto operator<=>(const Array<T, N>& lhs, const Array<T, N>& rhs)
+    [[nodiscard]] constexpr auto operator<=>(const Array<T, N>& lhs, const Array<T, N>& rhs)
         -> std::compare_three_way_result_t<T>
     {
         auto lhs_iter = lhs.cbegin();
