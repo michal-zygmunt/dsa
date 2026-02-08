@@ -610,34 +610,36 @@ namespace dsa
     /**
      * @brief The relational operator compares two Array objects
      *
+     * Depending on type T, function returns one of following objects:
+     * std::strong_ordering::less / equal / greater
+     * std::weak_ordering::less / equivalent / greater
+     * std::partial_ordering::less / equivalent / greater / unordered
+     * It is best to compare results with 0 to determine if lhs is <, >, or == to rhs
+     *
      * @param[in] lhs input container
      * @param[in] rhs input container
-     * @retval -1 if the content of \p lhs is lexicographically lesser than the content of \p rhs
-     * @retval  0 if the content of \p lhs and \p rhs is equal
-     * @retval +1 if the content of \p lhs is lexicographically greater than the content of \p rhs
+     * @return three way comparison result type
      */
     template<typename T, std::size_t N>
     [[nodiscard]] auto operator<=>(const Array<T, N>& lhs, const Array<T, N>& rhs)
+        -> std::compare_three_way_result_t<T>
     {
         auto lhs_iter = lhs.cbegin();
         auto rhs_iter = rhs.cbegin();
 
         for (size_t i = 0; i < N; i++)
         {
-            if (*lhs_iter < *rhs_iter)
+            auto cmp = *lhs_iter <=> *rhs_iter;
+            if (cmp != 0)
             {
-                return std::strong_ordering::less;
-            }
-            if (*lhs_iter > *rhs_iter)
-            {
-                return std::strong_ordering::greater;
+                return cmp;
             }
 
             lhs_iter++;
             rhs_iter++;
         }
 
-        return std::strong_ordering::equivalent;
+        return std::compare_three_way_result_t<T>::equivalent;
     }
 }
 
