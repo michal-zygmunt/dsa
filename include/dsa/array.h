@@ -417,7 +417,7 @@ namespace dsa
          *
          * @param[in] other container to exchange content with
          */
-        constexpr void swap(Array<T, N>& other) noexcept
+        constexpr void swap(Array<T, N>& other) noexcept(std::is_nothrow_swappable_v<T>)
         {
             if (*this != other)
             {
@@ -513,7 +513,7 @@ namespace dsa
      * @param[in] rhs container to swap content
      */
     template<typename T, std::size_t N>
-    void swap(Array<T, N>& lhs, Array<T, N>& rhs) noexcept
+    void swap(Array<T, N>& lhs, Array<T, N>& rhs) noexcept(noexcept(lhs.swap(rhs)))
     {
         lhs.swap(rhs);
     }
@@ -588,7 +588,8 @@ namespace dsa
      * @retval false if input containers are not equal
      */
     template<typename T, std::size_t N>
-    [[nodiscard]] constexpr auto operator==(const Array<T, N>& lhs, const Array<T, N>& rhs) -> bool
+    [[nodiscard]] constexpr auto operator==(const Array<T, N>& lhs, const Array<T, N>& rhs)
+        noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> bool
     {
         auto lhs_iter = lhs.cbegin();
         auto rhs_iter = rhs.cbegin();
@@ -622,7 +623,7 @@ namespace dsa
      */
     template<typename T, std::size_t N>
     [[nodiscard]] constexpr auto operator<=>(const Array<T, N>& lhs, const Array<T, N>& rhs)
-        -> std::compare_three_way_result_t<T>
+        noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> std::compare_three_way_result_t<T>
     {
         auto lhs_iter = lhs.cbegin();
         auto rhs_iter = rhs.cbegin();
