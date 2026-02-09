@@ -42,6 +42,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const dsa::Array<int, 3> array2 = { 0, 10, 20 };
         tests::compare("Array2", array2, { 0, 10, 20 });
 
+        dsa::Array<int, 3> array2b = { 0, 10, 20 };
+        array2b = array1;
+        tests::compare("Array2b = Array1", array2b, { 0, 1, 2 });
+
         // Test element access
         dsa::Array<int, 3> array3{ 10, 20, 30 };
         tests::compare("Array3 front()", array3.front(), 10);
@@ -467,6 +471,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         const std::array<int, 3> std_array2 = { 0, 10, 20 };
         tests::compare("Array2 vs std", array2, std_array2);
+
+        std::array<int, 3> std_array2b = { 0, 10, 20 };
+        std_array2b = std_array1;
+        tests::compare("Array2b = Array1", array2b, std_array2b);
 
         // Test element access
         std::array<int, 3> std_array3{ 10, 20, 30 };
