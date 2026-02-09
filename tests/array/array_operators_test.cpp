@@ -19,6 +19,7 @@
 #include <iostream>
 #include <limits>
 #include <type_traits>
+#include <utility>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -90,6 +91,49 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const dsa::Array<double, 3> Array5{ 1.0, 2.0, std::numeric_limits<double>::quiet_NaN() };
         assert((Array4 <=> Array5) == std::partial_ordering::unordered);
         tests::compare("Array4 <=> Array5 weak ordering", (Array1 <=> Array3) != std::weak_ordering::less, true);
+
+        // test noexcept
+
+        struct ThrowingType
+        {
+            ThrowingType() = default;
+            ~ThrowingType() = default;
+            ThrowingType(const ThrowingType&) = default;
+            ThrowingType(ThrowingType&&) = default;
+
+            auto operator=(ThrowingType&& /*other*/) noexcept(false) -> ThrowingType&
+            {
+                return *this;
+            }
+
+            auto operator=(const ThrowingType& other) noexcept(false) -> ThrowingType&
+            {
+                // empty if statement silences clang-tidy warning for copy assignment operator in mock struct
+                if (this != &other) {}
+                return *this;
+            }
+
+            auto operator==(const ThrowingType& /* unused */) const -> bool
+            {
+                return true;
+            }
+
+            auto operator<=>(const ThrowingType& /* unused */) const noexcept(false)
+            {
+                return std::strong_ordering::equal;
+            }
+        };
+
+        // swap safe type
+        static_assert(noexcept(swap(std::declval<dsa::Array<int, 3>&>(),
+            std::declval<dsa::Array<int, 3>&>())));
+        // swap throwing type
+        static_assert(!noexcept(swap(std::declval<dsa::Array<ThrowingType, 3>&>(),
+            std::declval<dsa::Array<ThrowingType, 3>&>())));
+
+        // operators
+        static_assert(!noexcept(dsa::Array<ThrowingType, 3>{} == dsa::Array<ThrowingType, 3>{}));
+        static_assert(!noexcept(dsa::Array<ThrowingType, 3>{} <=> dsa::Array<ThrowingType, 3>{}));
 
 
         std::cout << "Compare operations results with std container\n\n";
