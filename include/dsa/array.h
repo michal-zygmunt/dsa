@@ -12,8 +12,11 @@
 #ifndef ARRAY_H
 #define ARRAY_H
 
+#include <cstddef>
 #include <iostream>
 #include <iterator>
+#include <type_traits>
+#include <utility>
 
 namespace dsa
 {
@@ -23,8 +26,6 @@ namespace dsa
      *
      * @tparam T type of data stored in container
      * @tparam N number of elements in container
-     *
-     * @todo add non-member to_array()
      */
     template<typename T, std::size_t N>
     struct Array
@@ -42,6 +43,13 @@ namespace dsa
          * @tparam T size type
          */
         using size_type = std::size_t;
+
+        /**
+         * @brief Alias for pointer difference type
+         *
+         * Used by STL to define distance between two pointers
+         */
+        using difference_type = std::ptrdiff_t;
 
         /**
          * @brief Alias for pointer to data type used in class
@@ -409,7 +417,7 @@ namespace dsa
          *
          * @param[in] other container to exchange content with
          */
-        constexpr void swap(Array<T, N>& other) noexcept
+        constexpr void swap(Array<T, N>& other) noexcept(std::is_nothrow_swappable_v<T>)
         {
             if (*this != other)
             {
@@ -436,7 +444,7 @@ namespace dsa
      * @return T& reference to Ith element of array container
      */
     template<std::size_t I, typename T, std::size_t N>
-    constexpr auto get(Array<T, N>& array) noexcept -> T&
+    [[nodiscard]] constexpr auto get(Array<T, N>& array) noexcept -> T&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
         return array[I];
@@ -452,7 +460,7 @@ namespace dsa
      * @return const T& reference to Ith element of array container
      */
     template<std::size_t I, typename T, std::size_t N>
-    constexpr auto get(const Array<T, N>& array) noexcept -> const T&
+    [[nodiscard]] constexpr auto get(const Array<T, N>& array) noexcept -> const T&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
         return array[I];
@@ -474,7 +482,7 @@ namespace dsa
      */
     template<std::size_t I, typename T, std::size_t N>
     // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
-    constexpr auto get(Array<T, N>&& array) noexcept -> T&&
+    [[nodiscard]] constexpr auto get(Array<T, N>&& array) noexcept -> T&&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
         return std::move(array[I]);
@@ -490,7 +498,7 @@ namespace dsa
      * @return const T&& reference to Ith element of array container
      */
     template<std::size_t I, typename T, std::size_t N>
-    constexpr auto get(const Array<T, N>&& array) noexcept -> const T&&
+    [[nodiscard]] constexpr auto get(const Array<T, N>&& array) noexcept -> const T&&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
         return std::move(array[I]);
@@ -501,13 +509,55 @@ namespace dsa
      *
      * @tparam T data type stored in containers
      * @tparam N number of elements in containers
-     * @param[in] array1 container to swap content
-     * @param[in] array2 container to swap content
+     * @param[in] lhs container to swap content
+     * @param[in] rhs container to swap content
      */
     template<typename T, std::size_t N>
-    void swap(Array<T, N>& array1, Array<T, N>& array2) noexcept
+    void swap(Array<T, N>& lhs, Array<T, N>& rhs) noexcept(noexcept(lhs.swap(rhs)))
     {
-        array1.swap(array2);
+        lhs.swap(rhs);
+    }
+
+    /**
+     * @brief Creates Array from one dimensional C-style array using copy semantics
+     * @tparam T data type stored in containers
+     * @tparam N number of elements in containers
+     * @param[in] array C-style array
+     * @return Array container
+     */
+    template<typename T, std::size_t N>
+        requires(!std::is_array_v<T>)
+    // Intentional use of C-style array: the array bound must be part of the type
+    // to enable compile-time size deduction
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
+    [[nodiscard]] constexpr auto to_array(T(&array)[N]) -> Array<std::remove_cv_t<T>, N>
+    {
+        return[&]<std::size_t... I>(std::index_sequence<I...>)
+        {
+            // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
+            return dsa::Array<std::remove_cv_t<T>, N>{array[I]...};
+        }(std::make_index_sequence<N>{});
+    }
+
+    /**
+     * @brief Creates Array from one dimensional C-style array using move semantics
+     * @tparam T data type stored in containers
+     * @tparam N number of elements in containers
+     * @param[in] array C-style array
+     * @return Array container
+     */
+    template<typename T, std::size_t N>
+        requires(!std::is_array_v<T> && !std::is_const_v<T>)
+    // Intentional use of C-style array: the array bound must be part of the type
+    // to enable compile-time size deduction
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-rvalue-reference-param-not-moved)
+    [[nodiscard]] constexpr auto to_array(T(&& array)[N]) -> Array<std::remove_cv_t<T>, N>
+    {
+        return[&]<std::size_t... I>(std::index_sequence<I...>)
+        {
+            // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
+            return dsa::Array<std::remove_cv_t<T>, N>{std::move(array[I])...};
+        }(std::make_index_sequence<N>{});
     }
 
     /**
@@ -532,26 +582,27 @@ namespace dsa
     /**
      * @brief The relational operator compares two Array objects
      *
-     * @param[in] array1 input container
-     * @param[in] array2 input container
-     * @retval true if containers are equal
-     * @retval false if containers are not equal
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @retval true if input containers are equal
+     * @retval false if input containers are not equal
      */
     template<typename T, std::size_t N>
-    auto operator==(const Array<T, N>& array1, const Array<T, N>& array2) -> bool
+    [[nodiscard]] constexpr auto operator==(const Array<T, N>& lhs, const Array<T, N>& rhs)
+        noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> bool
     {
-        auto array1_iter = array1.cbegin();
-        auto array2_iter = array2.cbegin();
+        auto lhs_iter = lhs.cbegin();
+        auto rhs_iter = rhs.cbegin();
 
         for (size_t i = 0; i < N; i++)
         {
-            if (*array1_iter != *array2_iter)
+            if (*lhs_iter != *rhs_iter)
             {
                 return false;
             }
 
-            array1_iter++;
-            array2_iter++;
+            lhs_iter++;
+            rhs_iter++;
         }
 
         return true;
@@ -560,34 +611,36 @@ namespace dsa
     /**
      * @brief The relational operator compares two Array objects
      *
-     * @param[in] array1 input container
-     * @param[in] array2 input container
-     * @retval -1 if the content of \p array1 is lexicographically lesser than the content of \p array2
-     * @retval  0 if the content of \p array1 and \p array2 is equal
-     * @retval +1 if the content of \p array1 is lexicographically greater than the content of \p array2
+     * Depending on type T, function returns one of following objects:
+     * std::strong_ordering::less / equal / greater
+     * std::weak_ordering::less / equivalent / greater
+     * std::partial_ordering::less / equivalent / greater / unordered
+     * It is best to compare results with 0 to determine if lhs is <, >, or == to rhs
+     *
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @return three way comparison result type
      */
     template<typename T, std::size_t N>
-    auto operator<=>(const Array<T, N>& array1, const Array<T, N>& array2)
+    [[nodiscard]] constexpr auto operator<=>(const Array<T, N>& lhs, const Array<T, N>& rhs)
+        noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> std::compare_three_way_result_t<T>
     {
-        auto array1_iter = array1.cbegin();
-        auto array2_iter = array2.cbegin();
+        auto lhs_iter = lhs.cbegin();
+        auto rhs_iter = rhs.cbegin();
 
         for (size_t i = 0; i < N; i++)
         {
-            if (*array1_iter < *array2_iter)
+            auto cmp = *lhs_iter <=> *rhs_iter;
+            if (cmp != 0)
             {
-                return std::strong_ordering::less;
-            }
-            if (*array1_iter > *array2_iter)
-            {
-                return std::strong_ordering::greater;
+                return cmp;
             }
 
-            array1_iter++;
-            array2_iter++;
+            lhs_iter++;
+            rhs_iter++;
         }
 
-        return std::strong_ordering::equivalent;
+        return std::compare_three_way_result_t<T>::equivalent;
     }
 }
 

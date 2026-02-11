@@ -21,9 +21,7 @@
 #include <list>
 #include <numeric>
 #include <ranges>
-#include <tuple>
 #include <type_traits>
-#include <utility>
 #include <vector>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -183,7 +181,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const int sum = std::accumulate(array3.begin(), array3.end(), 0);
         tests::compare("Array3 sum", sum, 80);
         std::list<int> expected3;
-        std::ranges::for_each(array3, [&](int item) {expected3.push_back(item); });
+        std::ranges::for_each(array3, [&](int item) { expected3.push_back(item); });
         tests::compare("Array3 for_each() equal()",
             std::ranges::equal(expected3, std::list{ 30, 10, 40 }), true);
 

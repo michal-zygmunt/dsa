@@ -12,7 +12,6 @@
 #include "common.h"
 #include "dsa/array.h"
 
-#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <exception>
@@ -20,7 +19,9 @@
 #include <iostream>
 #include <iterator>
 #include <stdexcept>
+#include <string>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -40,6 +41,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         const dsa::Array<int, 3> array2 = { 0, 10, 20 };
         tests::compare("Array2", array2, { 0, 10, 20 });
+
+        dsa::Array<int, 3> array2b = { 0, 10, 20 };
+        array2b = array1;
+        tests::compare("Array2b = Array1", array2b, { 0, 1, 2 });
 
         // Test element access
         dsa::Array<int, 3> array3{ 10, 20, 30 };
@@ -427,6 +432,36 @@ int main() // NOLINT(modernize-use-trailing-return-type)
             }();
         static_assert(array20[0] == 100);
 
+        // Test to_array
+        // Intentional use of C-style array
+        // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
+        const int temp21[] = { 1, 2, 3, 4 };
+        const dsa::Array<int, 4> array21 = dsa::to_array(temp21);
+        const std::initializer_list<int> expected21{ 1, 2, 3, 4 };
+        tests::compare("Array21", array21, expected21);
+
+        // Intentional use of C-style array
+        // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
+        const std::string temp22[] = { "A", "B", "C" };
+        auto array22 = dsa::to_array(temp22);
+        const std::initializer_list<std::string> expected22{ "A", "B", "C" };
+        tests::compare("Array22", array22, expected22);
+
+        auto array23 = dsa::to_array<std::string>({ std::string{"A"}, std::string{"B"}, std::string{"C"} });
+        const std::initializer_list<std::string> expected23{ "A", "B", "C" };
+        tests::compare("Array23", array23, expected23);
+
+        // Intentional use of C-style arrays
+        // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
+        auto array24 = dsa::to_array<std::string>({ std::string{"A"}, std::string{"B"}, std::string{"C"} });
+        // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
+        std::string array25[] = { "X", "Y", "Z" };
+        array24 = dsa::to_array(std::move(array25));
+        const std::initializer_list<std::string> expected24{ "X", "Y", "Z" };
+        const std::initializer_list<std::string> expected25{ "", "", "" };
+        tests::compare("Array24", array24, expected24);
+        tests::compare("Array25", dsa::to_array(array25), expected25);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -436,6 +471,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         const std::array<int, 3> std_array2 = { 0, 10, 20 };
         tests::compare("Array2 vs std", array2, std_array2);
+
+        std::array<int, 3> std_array2b = { 0, 10, 20 };
+        std_array2b = std_array1;
+        tests::compare("Array2b = Array1", array2b, std_array2b);
 
         // Test element access
         std::array<int, 3> std_array3{ 10, 20, 30 };
@@ -602,6 +641,16 @@ int main() // NOLINT(modernize-use-trailing-return-type)
                 return std_tmp;
             }();
         static_assert(std_array20[0] == 100);
+
+        // Test to_array
+        const std::array<int, 4> std_array21 = std::to_array(temp21);
+        tests::compare("Array21 vs std", array21, std_array21);
+
+        auto std_array22 = std::to_array(temp22);
+        tests::compare("Array22 vs std", array22, std_array22);
+
+        auto std_array23 = std::to_array<std::string>({ std::string{"A"}, std::string{"B"}, std::string{"C"} });
+        tests::compare("Array23 vs std", array23, std_array23);
 
 
         tests::print_stats();
