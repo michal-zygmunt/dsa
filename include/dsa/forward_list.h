@@ -895,6 +895,7 @@ namespace dsa
         {
             if (m_head == nullptr)
             {
+                // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
                 m_head = new NodeBase;
             }
         }
