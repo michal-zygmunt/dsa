@@ -36,7 +36,6 @@ namespace dsa
      *
      * @tparam T type of data stored in ForwardList Node
      *
-     * @todo add get_allocator
      * @todo add emplace_after
      * @todo add emplace_front
      * @todo add remove
@@ -376,6 +375,11 @@ namespace dsa
         using value_type = T;
 
         /**
+         * @brief Alias for memory allocator
+         */
+        using allocator_type = std::allocator<value_type>;
+
+        /**
          * @brief Alias for pointer to data type used in class
          *
          * @tparam T* pointer to data type
@@ -493,6 +497,13 @@ namespace dsa
          * @param[in] init_list values to replace ForwardList with
          */
         void assign(const std::initializer_list<T>& init_list);
+
+        /**
+         * @brief Get the allocator object
+         *
+         * @return allocator_type type of memory allocator
+         */
+        [[nodiscard]] constexpr auto get_allocator() const -> allocator_type;
 
         /**
          * @brief Function returns reference to value stored in ForwardList first Node
@@ -1021,6 +1032,11 @@ namespace dsa
 
         NodeBase* m_head{};
         size_t m_size{};
+
+        /**
+         * @brief Allocator for memory management
+         */
+        allocator_type m_allocator{};
     };
 
     template<typename T>
@@ -1151,6 +1167,12 @@ namespace dsa
         {
             iter = insert_after(iter, item);
         }
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr auto ForwardList<T>::get_allocator() const -> allocator_type
+    {
+        return m_allocator;
     }
 
     template<typename T>
