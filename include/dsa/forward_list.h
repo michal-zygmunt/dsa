@@ -945,10 +945,50 @@ namespace dsa
             NodeBase* to_remove{ temp->m_next };
 
             temp->m_next = to_remove->m_next;
-            delete to_remove;
+            destroy_node(to_remove);
 
             m_size--;
             return iterator(temp->m_next);
+        }
+
+        /**
+         * @brief Function allocate and construct ForwardList node
+         *
+         * @param[in] value element of type T to be inserted
+         * @param[in] next_ptr pointer to next Node
+         * @return pointer to created Node
+         */
+        auto construct_node(const_reference value, NodeBase* next_ptr = nullptr) -> Node*
+        {
+            Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
+            try
+            {
+                node_alloc_traits::construct(node_alloc, newNode, Node(value));
+            }
+            catch (...)
+            {
+                node_alloc_traits::deallocate(node_alloc, newNode, 1);
+                throw;
+            }
+
+            newNode->m_next = next_ptr;
+
+            return newNode;
+        }
+
+        /**
+         * @brief Function destroys and deallocates memory used by Node
+         *
+         * @param[in] node_to_destroy pointer to Node to delete
+         */
+        void destroy_node(NodeBase* node_to_destroy)
+        {
+            Node* node_dyn = dynamic_cast<Node*>(node_to_destroy);
+            if (node_dyn)
+            {
+                node_alloc_traits::destroy(node_alloc, node_dyn);
+                node_alloc_traits::deallocate(node_alloc, node_dyn, 1);
+            }
         }
 
         /**
@@ -963,10 +1003,7 @@ namespace dsa
         auto insert_element_after(iterator& pos, const_reference value) -> iterator
         {
             NodeBase* temp{ pos.m_current_node };
-
-            Node* newNode = new Node(value);
-            newNode->m_next = temp->m_next;
-
+            Node* newNode = construct_node(value, temp->m_next);
             temp->m_next = newNode;
             m_size++;
             return iterator(newNode);
@@ -1037,6 +1074,21 @@ namespace dsa
          * @brief Allocator for memory management
          */
         allocator_type m_allocator{};
+
+        /**
+         * @brief Rebind allocator to create new objects of type Node
+         */
+        using node_allocator = typename std::allocator_traits<std::allocator<T>>::template rebind_alloc<Node>;
+
+        /**
+         * @brief Setup allocator traits used for Node creation and deletion
+         */
+        using node_alloc_traits = std::allocator_traits<node_allocator>;
+
+        /**
+         * @brief Initialize allocator rebind to Node objects
+         */
+        node_allocator node_alloc{};
     };
 
     template<typename T>
@@ -1263,7 +1315,7 @@ namespace dsa
             while (temp)
             {
                 m_head->m_next = temp->m_next;
-                delete temp;
+                destroy_node(temp);
                 temp = m_head->m_next;
             }
 
@@ -1351,7 +1403,7 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::push_front(T value)
     {
-        Node* newNode = new Node(value);
+        Node* newNode = construct_node(value);
         if (!m_head->m_next)
         {
             m_head->m_next = newNode;
@@ -1382,7 +1434,7 @@ namespace dsa
         {
             m_head->m_next = temp->m_next;
         }
-        delete temp;
+        destroy_node(temp);
 
         m_size--;
     }
@@ -1454,7 +1506,7 @@ namespace dsa
         {
             if (m_size != 0)
             {
-                NodeBase* temp_head = new NodeBase;
+                Node* temp_head = construct_node(0);
                 NodeBase* temp_tail = temp_head;
 
                 NodeBase* to_move{};
@@ -1498,7 +1550,7 @@ namespace dsa
                 }
 
                 m_head->m_next = temp_head->m_next;
-                delete temp_head;
+                destroy_node(temp_head);
 
                 m_size += other.m_size;
                 other.m_size = 0;
@@ -1640,7 +1692,7 @@ namespace dsa
                 {
                     NodeBase* to_remove = temp->m_next;
                     temp->m_next = to_remove->m_next;
-                    delete to_remove;
+                    destroy_node(to_remove);
 
                     m_size--;
                     continue;
@@ -1699,7 +1751,7 @@ namespace dsa
                     {
                         NodeBase* to_remove = next;
                         prev->m_next = to_remove->m_next;
-                        delete to_remove;
+                        destroy_node(to_remove);
 
                         m_size--;
                         continue;
