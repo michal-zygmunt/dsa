@@ -35,8 +35,8 @@
 		<Expand>
 			<LinkedListItems>
 				<Size>m_size</Size>
-				<HeadPointer>m_head._Mypair._Myval2->m_next._Mypair._Myval2</HeadPointer>
-				<NextPointer>m_next._Mypair._Myval2</NextPointer>
+				<HeadPointer>m_head->m_next</HeadPointer>
+				<NextPointer>m_next</NextPointer>
 				<ValueNode>(*this)</ValueNode>
 			</LinkedListItems>
 		</Expand>
@@ -45,10 +45,6 @@
 	
 	<Type Name="dsa::ForwardList&lt;*&gt;::Node">
 		<DisplayString>{m_value}</DisplayString>
-		<Expand>
-			<Item Name="Value">m_value</Item>
-			<Item Name="NextPtr">m_next._Mypair._Myval2</Item>
-		</Expand>
 	</Type>
 	
 	
