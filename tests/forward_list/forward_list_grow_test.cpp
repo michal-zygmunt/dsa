@@ -93,6 +93,34 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         auto iter8 = list8.insert_after(list8.end(), { 4, 5, 6 });
         tests::compare("iter8 == nullptr", iter8 == nullptr, true);
 
+        dsa::ForwardList<int> list9{};
+        list9.emplace_front(30);
+        list9.emplace_front(20);
+        list9.emplace_front(10);
+        list9.emplace_front(5);
+        list9.emplace_front(0);
+        const std::initializer_list<int> expected9 = { 0, 5, 10, 20, 30 };
+        tests::compare("list9", list9, expected9);
+
+        dsa::ForwardList<int> list10{ 0, 10, 20, 30 };
+        list10.emplace_after(list10.before_begin(), -10);
+        const std::initializer_list<int> expected10 = { -10, 0, 10, 20, 30 };
+        tests::compare("list10", list10, expected10);
+
+        dsa::ForwardList<int> list11{ 0, 10, 20, 30 };
+        auto iter11 = list11.begin();
+        std::advance(iter11, 2);
+        list11.emplace_after(iter11, 25);
+        const std::initializer_list<int> expected11 = { 0, 10, 20, 25, 30 };
+        tests::compare("list11", list11, expected11);
+
+        dsa::ForwardList<int> list12{ 0, 10, 20, 30 };
+        auto iter12 = list12.begin();
+        std::advance(iter12, 3);
+        list12.emplace_after(iter12, 40);
+        const std::initializer_list<int> expected12 = { 0, 10, 20, 30, 40 };
+        tests::compare("list12", list12, expected12);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
