@@ -36,8 +36,6 @@ namespace dsa
      *
      * @tparam T type of data stored in ForwardList Node
      *
-     * @todo add emplace_after
-     * @todo add emplace_front
      * @todo add remove
      * @todo add remove_if
      * @todo add sort
@@ -637,6 +635,21 @@ namespace dsa
         auto insert_after(const const_iterator& pos, std::initializer_list<T> init_list) -> iterator;
 
         /**
+         * @brief Insert new element into the container after \p pos
+         *
+         * @tparam ...Args
+         * @param[in] pos iterator before which new element will be inserted
+         * @param[in] ...args args arguments to forward to the constructor of the element
+         * @return iterator pointing to the emplaced element
+         *
+         * @note no iterators or references are invalidated,
+         *       if construction of new element fails or an exception is thrown for any reason
+         *       state of the object does not change and this function has no effect
+         */
+        template<typename... Args>
+        auto emplace_after(const_iterator pos, Args&&... args) -> iterator;
+
+        /**
         * @brief Function erases Node after specified ForwardList const_iterator
         *
         * @param[in] pos const_iterator after which element will be erased
@@ -663,6 +676,20 @@ namespace dsa
          * @param[in] value element of type T
          */
         void push_front(T value);
+
+        /**
+         * @brief Inserts a new element to the beginning of the container
+         *
+         * @tparam ...Args
+         * @param[in] ...args arguments to forward to the constructor of the element
+         * @return reference to emplaced element
+         *
+         * @note no iterators or references are invalidated,
+         *       if construction of new element fails or an exception is thrown for any reason
+         *       state of the object does not change and this function has no effect
+         */
+        template<typename... Args>
+        auto emplace_front(Args&&... args) -> reference;
 
         /**
          * @brief Function removes first Node of ForwardList
@@ -1368,6 +1395,29 @@ namespace dsa
     }
 
     template<typename T>
+    template<typename... Args>
+    auto ForwardList<T>::emplace_after(const_iterator pos, Args&&... args) -> iterator
+    {
+        const iterator current{ pos.m_current_node };
+
+        Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
+        try
+        {
+            node_alloc_traits::construct(node_alloc, newNode, std::forward<Args>(args)...);
+            newNode->m_next = current.m_current_node->m_next;
+        }
+        catch (...)
+        {
+            node_alloc_traits::deallocate(node_alloc, newNode, 1);
+            throw;
+        }
+
+        current.m_current_node->m_next = newNode;
+        ++m_size;
+        return iterator(newNode);
+    }
+
+    template<typename T>
     auto ForwardList<T>::erase_after(const const_iterator& pos) -> typename ForwardList<T>::iterator
     {
         if (!if_valid_iterator(pos))
@@ -1415,6 +1465,14 @@ namespace dsa
         }
 
         m_size++;
+    }
+
+    template<typename T>
+    template<typename... Args>
+    auto ForwardList<T>::emplace_front(Args&&... args) -> reference
+    {
+        emplace_after(before_begin(), std::forward<Args>(args)...);
+        return front();
     }
 
     template<typename T>
