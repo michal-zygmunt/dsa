@@ -57,14 +57,16 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList4", list4, expected4);
 
         dsa::ForwardList<int> list5 = dsa::ForwardList<int>({ 0, 10, 0, 0, 40, 0 });
-        list5.remove(0);
+        auto cnt5 = list5.remove(0);
         const std::initializer_list<int> expected5 = { 10, 40 };
         tests::compare("ForwardList5", list5, expected5);
+        tests::compare("ForwardList5 removed count", cnt5, std::size_t{ 4 });
 
         dsa::ForwardList<int> list6 = dsa::ForwardList<int>({ 0, 0, 0, 0, 0, 0 });
-        list6.remove(0);
+        auto cnt6 = list6.remove(0);
         const std::initializer_list<int> expected6 = { };
         tests::compare("ForwardList6", list6, expected6);
+        tests::compare("ForwardList6 removed count", cnt6, std::size_t{ 6 });
 
         dsa::ForwardList<int> list7 = dsa::ForwardList<int>({ 0 });
         tests::compare(list7.empty(), false);
@@ -120,12 +122,14 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList4 vs std", list4, std_list4);
 
         std::forward_list<int> std_list5{ 0, 10, 0, 0, 40, 0 };
-        std_list5.remove(0);
+        auto std_cnt5 = std_list5.remove(0);
         tests::compare("ForwardList5 vs std", list5, std_list5);
+        tests::compare("ForwardList5 removed count vs std", cnt5, std_cnt5);
 
         std::forward_list<int> std_list6{ 0, 0, 0, 0, 0, 0 };
-        std_list6.remove(0);
+        auto std_cnt6 = std_list6.remove(0);
         tests::compare("ForwardList6 vs std", list6, std_list6);
+        tests::compare("ForwardList6 removed count vs std", cnt6, std_cnt6);
 
 
         tests::print_stats();
