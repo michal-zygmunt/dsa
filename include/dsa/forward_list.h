@@ -307,11 +307,11 @@ namespace dsa
              * @retval valid ForwardListIterator if index is valid
              * @retval nullptr if index is invalid
              */
-            auto operator[](size_t index) -> ForwardListIterator
+            auto operator[](size_type index) -> ForwardListIterator
             {
                 NodeBase* temp{ m_current_node };
 
-                for (size_t i = 0; i < index; i++)
+                for (size_type i = 0; i < index; i++)
                 {
                     if (temp->m_next)
                     {
@@ -440,7 +440,7 @@ namespace dsa
          *
          * @param[in] count element count
          */
-        ForwardList(size_t count);
+        ForwardList(size_type count);
 
         /**
          * @brief Construct a new ForwardList object of size \p count,
@@ -449,7 +449,7 @@ namespace dsa
          * @param[in] count element count
          * @param[in] value value for all nodes
          */
-        ForwardList(size_t count, const T& value);
+        ForwardList(size_type count, const T& value);
 
         /**
          * @brief Construct a new ForwardList object using initializer list
@@ -501,7 +501,7 @@ namespace dsa
          * @param[in] count new size of the container
          * @param[in] value value to initialize elements of the container with
          */
-        void assign(size_t count, const_reference value);
+        void assign(size_type count, const_reference value);
 
         /**
          * @brief Function assign values to the ForwardList
@@ -605,9 +605,9 @@ namespace dsa
         /**
          * @brief Function returns maximum number of elements container can hold
          *
-         * @return size_t maximum number of elements
+         * @return size_type maximum number of elements
          */
-        [[nodiscard]] auto max_size() const noexcept -> size_t;
+        [[nodiscard]] auto max_size() const noexcept -> size_type;
 
         /**
          * @brief Function removes all elements of ForwardList
@@ -635,7 +635,7 @@ namespace dsa
          * @retval iterator pointer to last inserted element
          * @retval pos if no element was inserted
          */
-        auto insert_after(const const_iterator& pos, size_t count, const_reference value) -> iterator;
+        auto insert_after(const const_iterator& pos, size_type count, const_reference value) -> iterator;
 
         /**
          * @brief Function inserts new Node after specified ForwardList const_iterator
@@ -715,7 +715,7 @@ namespace dsa
          *
          * @param[in] count new size of container
          */
-        void resize(size_t count);
+        void resize(size_type count);
 
         /**
          * @brief Function resize ForwardList to specified number of elements
@@ -723,7 +723,7 @@ namespace dsa
          * @param[in] count count new size of container
          * @param[in] value value to initialize new elements
          */
-        void resize(size_t count, const_reference value);
+        void resize(size_type count, const_reference value);
 
         /**
          * @brief Function swaps content of two ForwardList objects
@@ -874,7 +874,7 @@ namespace dsa
          * @retval Node* if index is valid
          * @retval nullptr if invalid index
          */
-        [[nodiscard]] auto get(size_t index) const -> Node*
+        [[nodiscard]] auto get(size_type index) const -> Node*
         {
             if (index > m_size)
             {
@@ -882,7 +882,7 @@ namespace dsa
             }
 
             Node* temp = dynamic_cast<Node*>(m_head->m_next);
-            for (size_t i = 0; i < index; i++)
+            for (size_type i = 0; i < index; i++)
             {
                 temp = dynamic_cast<Node*>(temp->m_next);
                 if (temp == nullptr)
@@ -903,7 +903,7 @@ namespace dsa
          * @retval true if value of Node was overwritten
          * @retval false if invalid index
          */
-        auto set(size_t index, T value) -> bool
+        auto set(size_type index, T value) -> bool
         {
             Node* temp = get(index);
             if (temp)
@@ -918,9 +918,9 @@ namespace dsa
         /**
          * @brief Function returns ForwardList size
          *
-         * @return size_t number of elements in container
+         * @return size_type number of elements in container
          */
-        [[nodiscard]] auto size() const -> size_t
+        [[nodiscard]] auto size() const -> size_type
         {
             return m_size;
         }
@@ -1078,9 +1078,9 @@ namespace dsa
          * @tparam T type of input objects
          * @param[in] first const_iterator pointing first element
          * @param[in] last const_iterator pointing to last (inclusive) element
-         * @return size_t number of elements between input elements
+         * @return size_type number of elements between input elements
          */
-        auto distance(const_iterator first, const const_iterator& last) -> size_t;
+        auto distance(const_iterator first, const const_iterator& last) -> size_type;
 
         /**
          * @brief Function moves elements from other ForwardList object
@@ -1109,7 +1109,7 @@ namespace dsa
             const const_iterator& first, const const_iterator& last);
 
         NodeBase* m_head{};
-        size_t m_size{};
+        size_type m_size{};
 
         /**
          * @brief Allocator for memory management
@@ -1139,17 +1139,17 @@ namespace dsa
     }
 
     template<typename T>
-    ForwardList<T>::ForwardList(size_t count)
+    ForwardList<T>::ForwardList(size_type count)
         : ForwardList(count, T{})
     {
     }
 
     template<typename T>
-    ForwardList<T>::ForwardList(size_t count, const T& value)
+    ForwardList<T>::ForwardList(size_type count, const T& value)
     {
         init_node();
 
-        for (size_t i = 0; i < count; i++)
+        for (size_type i = 0; i < count; i++)
         {
             push_front(value);
         }
@@ -1233,7 +1233,7 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::assign(size_t count, const_reference value)
+    void ForwardList<T>::assign(size_type count, const_reference value)
     {
         while (m_head->m_next)
         {
@@ -1241,7 +1241,7 @@ namespace dsa
         }
 
         auto iter = before_begin();
-        for (size_t i = 0; i < count; i++)
+        for (size_type i = 0; i < count; i++)
         {
             iter = insert_after(iter, value);
         }
@@ -1342,9 +1342,9 @@ namespace dsa
     }
 
     template<typename T>
-    auto ForwardList<T>::max_size() const noexcept -> size_t
+    auto ForwardList<T>::max_size() const noexcept -> size_type
     {
-        return std::numeric_limits<size_t>::max();
+        return std::numeric_limits<size_type>::max();
     }
 
     template<typename T>
@@ -1373,7 +1373,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto ForwardList<T>::insert_after(const const_iterator& pos, size_t count, const_reference value)
+    auto ForwardList<T>::insert_after(const const_iterator& pos, size_type count, const_reference value)
         -> typename ForwardList<T>::iterator
     {
         if (!if_valid_iterator(pos))
@@ -1382,7 +1382,7 @@ namespace dsa
         }
 
         iterator iter{ pos.m_current_node };
-        for (size_t i = 0; i < count; i++)
+        for (size_type i = 0; i < count; i++)
         {
             iter = insert_element_after(iter, value);
         }
@@ -1455,8 +1455,8 @@ namespace dsa
         }
 
         const iterator iter(first.m_current_node);
-        const size_t dist = distance(first, last);
-        for (size_t i = 0; i < dist - 1; i++)
+        const size_type dist = distance(first, last);
+        for (size_type i = 0; i < dist - 1; i++)
         {
             erase_element_after(iter);
         }
@@ -1512,13 +1512,13 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::resize(size_t count)
+    void ForwardList<T>::resize(size_type count)
     {
         resize(count, T{});
     }
 
     template<typename T>
-    void ForwardList<T>::resize(size_t count, const_reference value)
+    void ForwardList<T>::resize(size_type count, const_reference value)
     {
         init_node();
 
@@ -1530,7 +1530,7 @@ namespace dsa
         if (m_size > count)
         {
             auto iter = begin();
-            for (size_t i = 0; i < count - 1; i++)
+            for (size_type i = 0; i < count - 1; i++)
             {
                 ++iter;
             }
@@ -1635,9 +1635,9 @@ namespace dsa
     }
 
     template<typename T>
-    auto ForwardList<T>::distance(const_iterator first, const const_iterator& last) -> size_t
+    auto ForwardList<T>::distance(const_iterator first, const const_iterator& last) -> size_type
     {
-        size_t dist{};
+        size_type dist{};
         while (first != last)
         {
             ++first;
@@ -1679,7 +1679,7 @@ namespace dsa
     {
         if (&other != this && other.m_size > 0)
         {
-            const size_t dist = distance(first, last) - 1;
+            const size_type dist = distance(first, last) - 1;
 
             if (first == last || dist == 0)
             {
@@ -1691,7 +1691,7 @@ namespace dsa
 
             NodeBase* first_to_move{ temp_next->m_next };
             NodeBase* last_to_move{ temp_next };
-            for (size_t i = 0; i < dist; i++)
+            for (size_type i = 0; i < dist; i++)
             {
                 if (last_to_move)
                 {
@@ -1789,7 +1789,7 @@ namespace dsa
         NodeBase* prev{};
         NodeBase* next{};
 
-        for (size_t i = 0; i < m_size; i++)
+        for (size_type i = 0; i < m_size; i++)
         {
             next = temp->m_next;
             temp->m_next = prev;
