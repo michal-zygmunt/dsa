@@ -36,7 +36,6 @@ namespace dsa
      *
      * @tparam T type of data stored in ForwardList Node
      *
-     * @todo add remove
      * @todo add remove_if
      * @todo add sort
      * @todo add operator<=>
@@ -815,8 +814,11 @@ namespace dsa
          * @brief Function removes all elements equal to \p value
          *
          * @param[in] value value of elements to remove
+         * @return size_type number of elements removed
+         *
+         * @note invalidates only the iterators and references to the removed elements
          */
-        void remove(const_reference value);
+        auto remove(const_reference value) -> size_type;
 
         /**
          * @brief Function reverts in place Nodes of ForwardList
@@ -1749,10 +1751,12 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::remove(const_reference value)
+    auto ForwardList<T>::remove(const_reference value) -> size_type
     {
         NodeBase* temp{ m_head };
         NodeBase* next{};
+
+        size_type removed_count{};
 
         while (temp)
         {
@@ -1766,6 +1770,7 @@ namespace dsa
                     temp->m_next = to_remove->m_next;
                     destroy_node(to_remove);
 
+                    removed_count++;
                     m_size--;
                     continue;
                 }
@@ -1773,6 +1778,8 @@ namespace dsa
 
             temp = temp->m_next;
         }
+
+        return removed_count;
     }
 
     template<typename T>
