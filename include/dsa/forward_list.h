@@ -36,7 +36,6 @@ namespace dsa
      *
      * @tparam T type of data stored in ForwardList Node
      *
-     * @todo add remove_if
      * @todo add sort
      * @todo add operator<=>
      * @todo add non-member specialized swap function
@@ -819,6 +818,18 @@ namespace dsa
          * @note invalidates only the iterators and references to the removed elements
          */
         auto remove(const_reference value) -> size_type;
+
+        /**
+         * @brief Function removes all elements for which \p predicate returns \p true
+         *
+         * @tparam UnaryPred
+         * @param[in] predicate to remove elements
+         * @return size_type number of elements removed
+         *
+         * @note invalidates only the iterators and references to the removed elements
+         */
+        template<typename UnaryPred>
+        auto remove_if(UnaryPred predicate) -> size_type;
 
         /**
          * @brief Function reverts in place Nodes of ForwardList
@@ -1753,6 +1764,13 @@ namespace dsa
     template<typename T>
     auto ForwardList<T>::remove(const_reference value) -> size_type
     {
+        return remove_if([value](T node_val) { return node_val == value; });
+    }
+
+    template<typename T>
+    template<typename UnaryPred>
+    auto ForwardList<T>::remove_if(UnaryPred predicate) -> size_type
+    {
         NodeBase* temp{ m_head };
         NodeBase* next{};
 
@@ -1764,7 +1782,7 @@ namespace dsa
 
             if (Node* node = dynamic_cast<Node*>(next))
             {
-                if (node->value() == value)
+                if (predicate(node->value()))
                 {
                     NodeBase* to_remove = temp->m_next;
                     temp->m_next = to_remove->m_next;
