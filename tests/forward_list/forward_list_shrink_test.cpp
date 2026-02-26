@@ -68,24 +68,48 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList6", list6, expected6);
         tests::compare("ForwardList6 removed count", cnt6, std::size_t{ 6 });
 
-        dsa::ForwardList<int> list7 = dsa::ForwardList<int>({ 0 });
-        tests::compare(list7.empty(), false);
-        list7.clear();
-        tests::compare(list7.empty(), true);
-        const std::initializer_list<int> expected7 = { };
+        dsa::ForwardList<int> list7 = dsa::ForwardList<int>({ 0, 10, 0, 0, 40, 0 });
+        auto cnt7 = list7.remove_if([](int val) { return val == 0; });
+        const std::initializer_list<int> expected7 = { 10, 40 };
         tests::compare("ForwardList7", list7, expected7);
+        tests::compare("ForwardList7 removed count", cnt7, std::size_t{ 4 });
 
-        dsa::ForwardList<int> list8 = dsa::ForwardList<int>({ 10, 20, 30 });
-        list8.pop_front();
-        list8.pop_front();
-        list8.pop_front();
-        list8.pop_front();
+        dsa::ForwardList<int> list8 = dsa::ForwardList<int>({ 0, 0, 0, 0, 0, 0 });
+        auto cnt8 = list8.remove_if([](int val) { return val == 0; });
         const std::initializer_list<int> expected8 = { };
         tests::compare("ForwardList8", list8, expected8);
+        tests::compare("ForwardList8 removed count", cnt8, std::size_t{ 6 });
 
-        dsa::ForwardList<int> list9;
-        auto iter9 = list9.erase_after(list9.begin(), list9.end());
-        tests::compare("iter9 == nullptr", iter9 == nullptr, true);
+        dsa::ForwardList<int> list9 = dsa::ForwardList<int>({ 0, 1, 2, 3, 4, 5 });
+        auto cnt9 = list9.remove_if([](int val) { return val % 2 == 0; });
+        const std::initializer_list<int> expected9 = { 1, 3, 5 };
+        tests::compare("ForwardList9", list9, expected9);
+        tests::compare("ForwardList9 removed count", cnt9, std::size_t{ 3 });
+
+        dsa::ForwardList<int> list10 = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt10 = list10.remove_if([](int val) { return val <= 5; });
+        const std::initializer_list<int> expected10 = { 10, 7, 9 };
+        tests::compare("ForwardList10", list10, expected10);
+        tests::compare("ForwardList10 removed count", cnt10, std::size_t{ 3 });
+
+        dsa::ForwardList<int> list11 = dsa::ForwardList<int>({ 0 });
+        tests::compare(list11.empty(), false);
+        list11.clear();
+        tests::compare(list11.empty(), true);
+        const std::initializer_list<int> expected11 = { };
+        tests::compare("ForwardList11", list11, expected11);
+
+        dsa::ForwardList<int> list12 = dsa::ForwardList<int>({ 10, 20, 30 });
+        list12.pop_front();
+        list12.pop_front();
+        list12.pop_front();
+        list12.pop_front();
+        const std::initializer_list<int> expected12 = { };
+        tests::compare("ForwardList12", list12, expected12);
+
+        dsa::ForwardList<int> list13;
+        auto iter13 = list13.erase_after(list13.begin(), list13.end());
+        tests::compare("iter13 == nullptr", iter13 == nullptr, true);
 
 
         std::cout << "Compare operations results with std container\n\n";
@@ -130,6 +154,26 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         auto std_cnt6 = std_list6.remove(0);
         tests::compare("ForwardList6 vs std", list6, std_list6);
         tests::compare("ForwardList6 removed count vs std", cnt6, std_cnt6);
+
+        std::forward_list<int> std_list7{ 0, 10, 0, 0, 40, 0 };
+        auto std_cnt7 = std_list7.remove_if([](int val) { return val == 0; });
+        tests::compare("ForwardList7 vs std", list7, std_list7);
+        tests::compare("ForwardList7 removed count vs std", cnt7, std_cnt7);
+
+        std::forward_list<int> std_list8{ 0, 0, 0, 0, 0, 0 };
+        auto std_cnt8 = std_list8.remove_if([](int val) { return val == 0; });
+        tests::compare("ForwardList8 vs std", list8, std_list8);
+        tests::compare("ForwardList8 removed count vs std", cnt8, std_cnt8);
+
+        std::forward_list<int> std_list9{ 0, 1, 2, 3, 4, 5 };
+        auto std_cnt9 = std_list9.remove_if([](int val) { return val % 2 == 0; });
+        tests::compare("ForwardList9 vs std", list9, std_list9);
+        tests::compare("ForwardList9 removed count vs std", cnt9, std_cnt9);
+
+        std::forward_list<int> std_list10{ 0, 10, 2, 5, 7, 9 };
+        auto std_cnt10 = std_list10.remove_if([](int val) { return val <= 5; });
+        tests::compare("ForwardList10 vs std", list10, std_list10);
+        tests::compare("ForwardList10 removed count vs std", cnt10, std_cnt10);
 
 
         tests::print_stats();
