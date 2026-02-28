@@ -59,3 +59,7 @@ add_test(NAME forward_list_itors_test COMMAND forward_list_itors_test)
 add_executable(forward_list_ranges_test forward_list_ranges_test.cpp ${SRC_DIR}/common.cpp)
 target_link_libraries(forward_list_ranges_test PRIVATE dsa_testing)
 add_test(NAME forward_list_ranges_test COMMAND forward_list_ranges_test)
+
+add_executable(forward_list_sort_test forward_list_sort_test.cpp ${SRC_DIR}/common.cpp)
+target_link_libraries(forward_list_sort_test PRIVATE dsa_testing)
+add_test(NAME forward_list_sort_test COMMAND forward_list_sort_test)
