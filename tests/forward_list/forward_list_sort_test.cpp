@@ -62,6 +62,22 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected6{ 50, 40, 30, 20, 10, 1, 1, 1, 1, 1 };
         tests::compare("ForwardList6", list6, expected6);
 
+        // empty
+        dsa::ForwardList<int> list7{};
+        list7.sort();
+        const std::initializer_list<int> expected7{};
+        tests::compare("ForwardList7", list7, expected7);
+
+        dsa::ForwardList<int> list8{ 1 };
+        list8.sort();
+        const std::initializer_list<int> expected8{ 1 };
+        tests::compare("ForwardList8", list8, expected8);
+
+        dsa::ForwardList<int> list9{ 0, -10 };
+        list9.sort();
+        const std::initializer_list<int> expected9{ -10, 0 };
+        tests::compare("ForwardList9", list9, expected9);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -89,6 +105,18 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::forward_list<int> std_list6{ il_2 };
         std_list6.sort(std::greater<>());
         tests::compare("ForwardList6", list6, std_list6);
+
+        std::forward_list<int> std_list7{};
+        std_list7.sort();
+        tests::compare("ForwardList7", list7, std_list7);
+
+        std::forward_list<int> std_list8{ 1 };
+        std_list8.sort();
+        tests::compare("ForwardList8", list8, std_list8);
+
+        std::forward_list<int> std_list9{ 0, -10 };
+        std_list9.sort();
+        tests::compare("ForwardList9", list9, std_list9);
 
 
         tests::print_stats();
