@@ -16,6 +16,7 @@
 #include <forward_list>
 #include <initializer_list>
 #include <iostream>
+#include <utility>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -44,6 +45,49 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList3", list3, expected3);
         const std::initializer_list<int> expected4 = il_1;
         tests::compare("ForwardList4", list4, expected4);
+
+        dsa::ForwardList<int> list5 = dsa::ForwardList<int>(il_1);
+        dsa::ForwardList<int> list6 = dsa::ForwardList<int>(il_2);
+        dsa::swap(list5, list6);
+        const std::initializer_list<int> expected5 = il_2;
+        tests::compare("ForwardList5", list5, expected5);
+        const std::initializer_list<int> expected6 = il_1;
+        tests::compare("ForwardList6", list6, expected6);
+
+        dsa::ForwardList<int> list7 = dsa::ForwardList<int>(il_1);
+        dsa::ForwardList<int> list8;
+        dsa::swap(list7, list8);
+        const std::initializer_list<int> expected7 = { };
+        tests::compare("ForwardList7", list7, expected7);
+        const std::initializer_list<int> expected8 = il_1;
+        tests::compare("ForwardList8", list8, expected8);
+
+        struct ThrowingType
+        {
+            ThrowingType() = default;
+            ~ThrowingType() = default;
+            ThrowingType(const ThrowingType&) = default;
+            ThrowingType(ThrowingType&&) = default;
+
+            auto operator=(ThrowingType&& /*other*/) noexcept(false) -> ThrowingType&
+            {
+                return *this;
+            }
+
+            auto operator=(const ThrowingType& other) noexcept(false) -> ThrowingType&
+            {
+                // empty if statement silences clang-tidy warning for copy assignment operator in mock struct
+                if (this != &other) {}
+                return *this;
+            }
+        };
+
+        // swap safe type
+        static_assert(noexcept(swap(std::declval<dsa::ForwardList<int>&>(),
+            std::declval<dsa::ForwardList<int>&>())));
+        // swap throwing type
+        static_assert(!noexcept(swap(std::declval<dsa::ForwardList<ThrowingType>&>(),
+            std::declval<dsa::ForwardList<ThrowingType>&>())));
 
 
         std::cout << "Compare operations results with std container\n\n";
