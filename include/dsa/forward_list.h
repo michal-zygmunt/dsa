@@ -37,7 +37,6 @@ namespace dsa
      *
      * @tparam T type of data stored in ForwardList Node
      *
-     * @todo add non-member specialized swap function
      * @todo add non-member specialized erase function
      * @todo add non-member specialized erase_if function
      * @todo remove public functions / operators not supported by std::forward_list
@@ -727,7 +726,7 @@ namespace dsa
          *
          * @param[in,out] other object to swap content with
          */
-        void swap(ForwardList<T>& other) noexcept;
+        void swap(ForwardList<T>& other) noexcept(std::is_nothrow_swappable_v<T>);
 
         /**
          * @brief Function combines two sorted ForwardLists into one sorted ForwardList
@@ -1617,7 +1616,7 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::swap(ForwardList<T>& other) noexcept
+    void ForwardList<T>::swap(ForwardList<T>& other) noexcept(std::is_nothrow_swappable_v<T>)
     {
         std::swap(m_head->m_next, other.m_head->m_next);
         std::swap(m_size, other.m_size);
@@ -2120,6 +2119,19 @@ namespace dsa
         // first n elements are equal
         // check sizes
         return lhs.size() <=> rhs.size();
+    }
+
+    /**
+     * @brief Exchanges content of two ForwardList containers
+     *
+     * @tparam T data type stored in containers
+     * @param[in] lhs container to swap content
+     * @param[in] rhs container to swap content
+     */
+    template<typename T>
+    void swap(ForwardList<T>& lhs, ForwardList<T>& rhs) noexcept(noexcept(lhs.swap(rhs)))
+    {
+        lhs.swap(rhs);
     }
 }
 
