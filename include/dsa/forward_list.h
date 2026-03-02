@@ -37,7 +37,6 @@ namespace dsa
      *
      * @tparam T type of data stored in ForwardList Node
      *
-     * @todo add operator<=>
      * @todo add non-member specialized swap function
      * @todo add non-member specialized erase function
      * @todo add non-member specialized erase_if function
@@ -2055,31 +2054,32 @@ namespace dsa
      * @brief The relational operator compares two ForwardList objects
      *
      * @tparam T type of data stored in ForwardList
-     * @param[in] list1 input container
-     * @param[in] list2 input container
+     * @param[in] lhs input container
+     * @param[in] rhs input container
      * @retval true if containers are equal
      * @retval false if containers are not equal
      */
     template<typename T>
-    auto operator==(const ForwardList<T>& list1, const ForwardList<T>& list2) -> bool
+    [[nodiscard]] auto operator==(const ForwardList<T>& lhs, const ForwardList<T>& rhs)
+        noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> bool
     {
-        if (list1.size() != list2.size())
+        if (lhs.size() != rhs.size())
         {
             return false;
         }
 
-        auto list1_iter = list1.cbegin();
-        auto list2_iter = list2.cbegin();
+        auto lhs_iter = lhs.cbegin();
+        auto rhs_iter = rhs.cbegin();
 
-        while (list1_iter != list1.cend())
+        while (lhs_iter != lhs.cend())
         {
-            if (*list1_iter != *list2_iter)
+            if (*lhs_iter != *rhs_iter)
             {
                 return false;
             }
 
-            list1_iter++;
-            list2_iter++;
+            lhs_iter++;
+            rhs_iter++;
         }
 
         return true;
@@ -2088,100 +2088,38 @@ namespace dsa
     /**
      * @brief The relational operator compares two ForwardList objects
      *
-     * @tparam T type of data stored in ForwardList
-     * @param[in] list1 input container
-     * @param[in] list2 input container
-     * @retval true if containers are not equal
-     * @retval false if containers are equal
-     */
-    template<typename T>
-    auto operator!=(const ForwardList<T>& list1, const ForwardList<T>& list2) -> bool
-    {
-        return !(operator==(list1, list2));
-    }
-
-    /**
-     * @brief The relational operator compares two ForwardList objects
+     * Depending on type T, function returns one of following objects:
+     * std::strong_ordering::less / equal / greater
+     * std::weak_ordering::less / equivalent / greater
+     * std::partial_ordering::less / equivalent / greater / unordered
+     * It is best to compare results with 0 to determine if lhs is <, >, or == to rhs
      *
-     * @tparam T type of data stored in ForwardList
-     * @param[in] list1 input container
-     * @param[in] list2 input container
-     * @retval true if the content of \p list1 are lexicographically
-     *         less than the content of \p list2
-     * @retval false otherwise
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @return three way comparison result type
      */
     template<typename T>
-    auto operator<(const ForwardList<T>& list1, const ForwardList<T>& list2) -> bool
+    [[nodiscard]] auto operator<=>(const ForwardList<T>& lhs, const ForwardList<T>& rhs)
+        noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> std::compare_three_way_result_t<T>
     {
-        auto list1_iter = list1.cbegin();
-        auto list2_iter = list2.cbegin();
+        auto lhs_iter = lhs.cbegin();
+        auto rhs_iter = rhs.cbegin();
 
-        while (list1_iter != list1.cend() && list2_iter != list2.cend())
+        while (lhs_iter != lhs.cend() && rhs_iter != rhs.cend())
         {
-            if (*list1_iter > *list2_iter)
+            auto cmp = *lhs_iter <=> *rhs_iter;
+            if (cmp != 0)
             {
-                return false;
-            }
-            if (*list1_iter < *list2_iter)
-            {
-                return true;
+                return cmp;
             }
 
-            list1_iter++;
-            list2_iter++;
+            lhs_iter++;
+            rhs_iter++;
         }
 
         // first n elements are equal
         // check sizes
-        return list1.size() < list2.size();
-    }
-
-    /**
-     * @brief The relational operator compares two ForwardList objects
-     *
-     * @tparam T type of data stored in ForwardList
-     * @param[in] list1 input container
-     * @param[in] list2 input container
-     * @retval true if the content of \p list1 are lexicographically
-     *         greater than the content of \p list2
-     * @retval false otherwise
-     */
-    template<typename T>
-    auto operator>(const ForwardList<T>& list1, const ForwardList<T>& list2) -> bool
-    {
-        return operator<(list2, list1);
-    }
-
-    /**
-     * @brief The relational operator compares two ForwardList objects
-     *
-     * @tparam T type of data stored in ForwardList
-     * @param[in] list1 input container
-     * @param[in] list2 input container
-     * @retval true if the content of \p list1 are lexicographically
-     *         less or equal than the content of \p list2
-     * @retval false otherwise
-     */
-    template<typename T>
-    auto operator<=(const ForwardList<T>& list1, const ForwardList<T>& list2) -> bool
-    {
-        return !(operator>(list1, list2));
-    }
-
-    /**
-     * @brief The relational operator compares two ForwardList objects
-     *
-     * @tparam T type of data stored in ForwardList
-     * @param[in] list1 input container
-     * @param[in] list2 input container
-     * @retval true if the content of \p list1 are lexicographically
-     *         greater or equal than the content of \p list2
-     * @retval false otherwise
-     */
-    template<typename T>
-    auto operator>=(const ForwardList<T>& list1, const ForwardList<T>& list2) -> bool
-    {
-        return !(operator<(list1, list2));
+        return lhs.size() <=> rhs.size();
     }
 }
 
