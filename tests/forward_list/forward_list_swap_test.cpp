@@ -62,32 +62,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected8 = il_1;
         tests::compare("ForwardList8", list8, expected8);
 
-        struct ThrowingType
-        {
-            ThrowingType() = default;
-            ~ThrowingType() = default;
-            ThrowingType(const ThrowingType&) = default;
-            ThrowingType(ThrowingType&&) = default;
-
-            auto operator=(ThrowingType&& /*other*/) noexcept(false) -> ThrowingType&
-            {
-                return *this;
-            }
-
-            auto operator=(const ThrowingType& other) noexcept(false) -> ThrowingType&
-            {
-                // empty if statement silences clang-tidy warning for copy assignment operator in mock struct
-                if (this != &other) {}
-                return *this;
-            }
-        };
-
         // swap safe type
         static_assert(noexcept(swap(std::declval<dsa::ForwardList<int>&>(),
             std::declval<dsa::ForwardList<int>&>())));
         // swap throwing type
-        static_assert(!noexcept(swap(std::declval<dsa::ForwardList<ThrowingType>&>(),
-            std::declval<dsa::ForwardList<ThrowingType>&>())));
+        static_assert(!noexcept(swap(std::declval<dsa::ForwardList<tests::ThrowingType>&>(),
+            std::declval<dsa::ForwardList<tests::ThrowingType>&>())));
 
 
         std::cout << "Compare operations results with std container\n\n";

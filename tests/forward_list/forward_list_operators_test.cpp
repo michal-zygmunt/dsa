@@ -136,39 +136,9 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // test noexcept
 
-        struct ThrowingType
-        {
-            ThrowingType() = default;
-            ~ThrowingType() = default;
-            ThrowingType(const ThrowingType&) = default;
-            ThrowingType(ThrowingType&&) = default;
-
-            auto operator=(ThrowingType&& /*other*/) noexcept(false) -> ThrowingType&
-            {
-                return *this;
-            }
-
-            auto operator=(const ThrowingType& other) noexcept(false) -> ThrowingType&
-            {
-                // empty if statement silences clang-tidy warning for copy assignment operator in mock struct
-                if (this != &other) {}
-                return *this;
-            }
-
-            auto operator==(const ThrowingType& /* unused */) const -> bool
-            {
-                return true;
-            }
-
-            auto operator<=>(const ThrowingType& /* unused */) const noexcept(false)
-            {
-                return std::strong_ordering::equal;
-            }
-        };
-
         // operators
-        static_assert(!noexcept(dsa::ForwardList<ThrowingType>{1} == dsa::ForwardList<ThrowingType>{1}));
-        static_assert(!noexcept(dsa::ForwardList<ThrowingType>{1} <=> dsa::ForwardList<ThrowingType>{1}));
+        static_assert(!noexcept(dsa::ForwardList<tests::ThrowingType>{1} == dsa::ForwardList<tests::ThrowingType>{1}));
+        static_assert(!noexcept(dsa::ForwardList<tests::ThrowingType>{1} <=> dsa::ForwardList<tests::ThrowingType>{1}));
 
 
         std::cout << "Compare operations results with std container\n\n";

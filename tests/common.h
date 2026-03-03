@@ -43,6 +43,36 @@
   */
 namespace tests
 {
+    struct ThrowingType
+    {
+        ThrowingType() = default;
+        ~ThrowingType() = default;
+        ThrowingType(const ThrowingType&) = default;
+        ThrowingType(ThrowingType&&) = default;
+
+        auto operator=(ThrowingType&& /*other*/) noexcept(false) -> ThrowingType&
+        {
+            return *this;
+        }
+
+        auto operator=(const ThrowingType& other) noexcept(false) -> ThrowingType&
+        {
+            // empty if statement silences clang-tidy warning for copy assignment operator in mock struct
+            if (this != &other) {}
+            return *this;
+        }
+
+        auto operator==(const ThrowingType& /* unused */) const -> bool
+        {
+            return true;
+        }
+
+        auto operator<=>(const ThrowingType& /* unused */) const noexcept(false)
+        {
+            return std::strong_ordering::equal;
+        }
+    };
+
     /**
      * @enum ExceptionCode
      * @brief Determines return codes for exceptions in tests
