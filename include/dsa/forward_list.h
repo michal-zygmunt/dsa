@@ -900,55 +900,6 @@ namespace dsa
         }
 
         /**
-         * @brief Function returns pointer to specific Node of ForwardList
-         *
-         * @param[in] index index of element
-         * @return Node*
-         * @retval Node* if index is valid
-         * @retval nullptr if invalid index
-         */
-        [[nodiscard]] auto get(size_type index) const -> Node*
-        {
-            if (index > m_size)
-            {
-                return nullptr;
-            }
-
-            Node* temp = dynamic_cast<Node*>(m_head->m_next);
-            for (size_type i = 0; i < index; i++)
-            {
-                temp = dynamic_cast<Node*>(temp->m_next);
-                if (temp == nullptr)
-                {
-                    break;
-                }
-            }
-
-            return temp;
-        }
-
-        /**
-         * @brief Function sets value of specified Node of ForwardList
-         *
-         * @param[in] index index of element to be modified
-         * @param[in] value to overwrite Node at index
-         * @return operation status
-         * @retval true if value of Node was overwritten
-         * @retval false if invalid index
-         */
-        auto set(size_type index, T value) -> bool
-        {
-            Node* temp = get(index);
-            if (temp)
-            {
-                temp->m_value = value;
-                return true;
-            }
-
-            return false;
-        }
-
-        /**
          * @brief Function returns ForwardList size
          *
          * @return size_type number of elements in container
