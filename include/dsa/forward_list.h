@@ -28,9 +28,6 @@ namespace dsa
     template<typename T>
     class ForwardList;
 
-    template<typename T>
-    auto operator+(const ForwardList<T>& list1, const ForwardList<T>& list2) -> ForwardList<T>;
-
     /**
      * @brief Implements ForwardList using Node with pointer to next element
      *        as internal base
@@ -863,43 +860,6 @@ namespace dsa
         void sort(Compare comp);
 
         /**
-         * @brief push elements of another ForwardList to base container back
-         *
-         * @param[in] other ForwardList to read elements from
-         * @return ForwardList<T>&
-         */
-        auto operator+=(const ForwardList<T>& other) -> ForwardList<T>&
-        {
-            auto before_last = find_iter_before_last();
-
-            for (auto it = other.cbegin(); it != other.cend(); ++it)
-            {
-                T value = *it;
-                before_last = insert_after(before_last, value);
-            }
-
-            return *this;
-        }
-
-        /**
-         * @brief push elements of another ForwardList to base container back
-         *
-         * @param[in] init_list initializer_list to read elements from
-         * @return ForwardList<T>&
-         */
-        auto operator+=(const std::initializer_list<T> init_list) -> ForwardList<T>&
-        {
-            auto before_last = find_iter_before_last();
-
-            for (const auto& item : init_list)
-            {
-                before_last = insert_after(before_last, item);
-            }
-
-            return *this;
-        }
-
-        /**
          * @brief Function returns ForwardList size
          *
          * @return size_type number of elements in container
@@ -910,18 +870,6 @@ namespace dsa
         }
 
     private:
-
-        /**
-         * @brief Construct new object based on two ForwardList objects
-         *
-         * Forward friend declaration of ForwardList operator+
-         *
-         * @tparam T type of data stored in ForwardList Node
-         * @param[in] list1 input ForwardList
-         * @param[in] list2 input ForwardList
-         * @return ForwardList<T> with content of two input lists
-         */
-        friend auto operator+<>(const ForwardList<T>& list1, const ForwardList<T>& list2)->ForwardList<T>;
 
         /**
          * @brief Function initialize ForwardList pointer located just before user added data
@@ -1947,30 +1895,6 @@ namespace dsa
     void ForwardList<T>::sort(Compare comp)
     {
         m_head->m_next = merge_sort(m_head->m_next, comp);
-    }
-
-    /**
-     * @brief Construct new object based on two ForwardList objects
-     *
-     * @tparam T type of data stored in ForwardList Node
-     * @param[in] list1 input ForwardList
-     * @param[in] list2 input ForwardList
-     * @return ForwardList<T> with content of two input lists
-     */
-    template<typename T>
-    auto operator+(const ForwardList<T>& list1, const ForwardList<T>& list2) -> ForwardList<T>
-    {
-        ForwardList<T> temp(list1);
-        auto before_last = temp.find_iter_before_last();
-        ++before_last;
-
-        for (auto iter = list2.cbegin(); iter != list2.cend(); ++iter)
-        {
-            T value = *iter;
-            before_last = temp.insert_after(before_last, value);
-        }
-
-        return temp;
     }
 
     /**
