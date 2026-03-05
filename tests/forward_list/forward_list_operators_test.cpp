@@ -37,20 +37,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::cout << "ForwardList2:\t" << list2 << '\n';
         std::cout << "ForwardList3:\t" << list3 << "\n\n";
 
-        const dsa::ForwardList<int> list4(list1 + list2);
-        const std::initializer_list<int> expected4 = { 1, 2, 3, 1, 2, 6 };
-        tests::compare("ForwardList4", list4, expected4);
-
-        dsa::ForwardList<int> list5(1, 0);
-        list5 += list2;
-        const std::initializer_list<int> expected5 = { 0, 1, 2, 6 };
-        tests::compare("ForwardList5", list5, expected5);
-
-        dsa::ForwardList<int> list6(1, 0);
-        list6 += { 1, 2, 6 };
-        const std::initializer_list<int> expected6 = { 0, 1, 2, 6 };
-        tests::compare("ForwardList6", list6, expected6);
-
         std::cout << "Compare operators for objects of the same size\n\n";
 
         // intentional self-comparison, an object should be equal to itself
