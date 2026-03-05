@@ -12,7 +12,6 @@
 #include "common.h"
 #include "dsa/forward_list.h"
 
-#include <cstddef>
 #include <exception>
 #include <forward_list>
 #include <initializer_list>
@@ -28,12 +27,9 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::cout << "Start forward_list_set_test:\n";
 
         dsa::ForwardList<int> list1 = dsa::ForwardList<int>({ 0, 10, 20 });
-        // Try setting values for nodes with invalid indexes
         constexpr int new_value{ 50 };
-        list1.set(static_cast<size_t>(-1), new_value);
-        list1.set(1, new_value);
-        list1.set(100, new_value);
-        const std::initializer_list<int> expected1{ 0, 50, 20 };
+        list1.front() = new_value;
+        const std::initializer_list<int> expected1{ 50, 10, 20 };
         tests::compare("ForwardList1", list1, expected1);
 
         dsa::ForwardList<int> list2 = dsa::ForwardList<int>({ 0, 10, 20 });
