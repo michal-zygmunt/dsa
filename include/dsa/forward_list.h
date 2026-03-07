@@ -443,6 +443,17 @@ namespace dsa
         ForwardList(size_type count, const T& value);
 
         /**
+         * @brief Construct a new ForwardList object using elements from range [ \p first , \p last )
+         *
+         * @tparam InputIt
+         * @param[in] first element defining range of elements to insert
+         * @param[in] last element definig range of elements to insert
+         */
+        template<typename InputIt>
+            requires std::input_iterator<InputIt>
+        ForwardList(InputIt first, InputIt last);
+
+        /**
          * @brief Construct a new ForwardList object using initializer list
          *
          * @param[in] init_list initializer list of values of type T
@@ -1120,6 +1131,16 @@ namespace dsa
         {
             push_front(value);
         }
+    }
+
+    template<typename T>
+    template<typename InputIt>
+        requires std::input_iterator<InputIt>
+    ForwardList<T>::ForwardList(InputIt first, InputIt last)
+    {
+        init_node();
+
+        assign(first, last);
     }
 
     template<typename T>
