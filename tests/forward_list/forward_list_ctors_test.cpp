@@ -16,6 +16,7 @@
 #include <forward_list>
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
 #include <utility>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -87,6 +88,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected10{ 0, 0, 0, 0, 0 };
         tests::compare("ForwardList10", list10, expected10);
 
+        std::cout << "Construct from other ForwardList\n";
+        dsa::ForwardList<int> temp11 = { 0, 10, 20, 30, 40, 50 };
+        const dsa::ForwardList<int> list11(std::next(temp11.begin(), 1), std::next(temp11.begin(), 4));
+        const std::initializer_list<int> expected11{ 10, 20, 30 };
+        tests::compare("ForwardList11", list11, expected11);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -116,14 +123,26 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_list5 = std_list1;
         tests::compare("ForwardList5 vs std", list5, expected);
 
-        std::forward_list<int> std_temp_1(std_list1);
-        const std::forward_list<int> std_list6 = std::move(std_temp_1);
-        tests::compare("ForwardList6 vs std", list6, expected);
+        std::forward_list<int> std_list6{ 0, 10, 20 };
+        auto* std_pointer6 = &std_list6;
+        std_list6 = *std_pointer6;
+        tests::compare("ForwardList6 vs std", list6, std_list6);
 
-        std::forward_list<int> std_temp_2(std_list1);
-        std::forward_list<int> std_list7(0);
-        std_list7 = std::move(std_temp_2);
-        tests::compare("ForwardList7 vs std", list7, expected);
+        std::forward_list<int> std_temp_7(std_list1);
+        const std::forward_list<int> std_list7 = std::move(std_temp_7);
+        tests::compare("ForwardList7 vs std", list7, std_list7);
+
+        std::forward_list<int> std_temp_8(std_list1);
+        std::forward_list<int> std_list8(1, 0);
+        std_list8 = std::move(std_temp_8);
+        tests::compare("ForwardList8 vs std", list8, std_list8);
+
+        const std::forward_list<int> std_list10(5);
+        tests::compare("ForwardList10 vs std", list10, std_list10);
+
+        std::forward_list<int> std_temp11 = { 0, 10, 20, 30, 40, 50 };
+        const std::forward_list<int> std_list11(std::next(std_temp11.begin(), 1), std::next(std_temp11.begin(), 4));
+        tests::compare("ForwardList11 vs std", list11, std_list11);
 
 
         tests::print_stats();
