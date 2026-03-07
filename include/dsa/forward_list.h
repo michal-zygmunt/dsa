@@ -495,6 +495,17 @@ namespace dsa
         void assign(size_type count, const_reference value);
 
         /**
+         * @brief Function assign elements from range [ \p first , \p last ) to ForwardList object
+         *
+         * @tparam InputIt
+         * @param[in] first element defining range of elements to insert
+         * @param[in] last element definig range of elements to insert
+         */
+        template<typename InputIt>
+            requires std::input_iterator<InputIt>
+        void assign(InputIt first, InputIt last);
+
+        /**
          * @brief Function assign values to the ForwardList
          *
          * @param[in] init_list values to replace ForwardList with
@@ -1200,6 +1211,21 @@ namespace dsa
         for (size_type i = 0; i < count; i++)
         {
             iter = insert_after(iter, value);
+        }
+    }
+
+    template<typename T>
+    template<typename InputIt>
+        requires std::input_iterator<InputIt>
+    void ForwardList<T>::assign(InputIt first, InputIt last)
+    {
+        clear();
+
+        auto iter = before_begin();
+        while (first != last)
+        {
+            iter = insert_after(iter, *first);
+            first++;
         }
     }
 
