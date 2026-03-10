@@ -112,10 +112,9 @@ namespace dsa
              *
              * @param[in] value to store in Node object
              */
-            Node(T value)
+            Node(const T& value)
                 : m_value{ value }
-            {
-            }
+            {}
 
             /**
              * @brief Function returns value stored in Node object
