@@ -981,6 +981,31 @@ namespace dsa
         }
 
         /**
+         * @brief Function allocate and construct ForwardList node
+         *
+         * @param[in] value element of type T to be inserted
+         * @param[in] next_ptr pointer to next Node
+         * @return pointer to created Node
+         */
+        auto construct_node(T&& value, NodeBase* next_ptr = nullptr) -> Node*
+        {
+            Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
+            try
+            {
+                node_alloc_traits::construct(node_alloc, newNode, Node(std::move(value)));
+            }
+            catch (...)
+            {
+                node_alloc_traits::deallocate(node_alloc, newNode, 1);
+                throw;
+            }
+
+            newNode->m_next = next_ptr;
+
+            return newNode;
+        }
+
+        /**
          * @brief Function destroys and deallocates memory used by Node
          *
          * @param[in] node_to_destroy pointer to Node to delete
