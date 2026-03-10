@@ -117,6 +117,16 @@ namespace dsa
             {}
 
             /**
+             * @brief Construct a new Node object with initial value using move semantics
+             * @details \p value will be taken by constructed object
+             *
+             * @param[in] value to store in Node object
+             */
+            Node(T&& value)
+                : m_value{ std::move(value) }
+            {}
+
+            /**
              * @brief Function returns value stored in Node object
              *
              * @return T& reference to value stored in Node
