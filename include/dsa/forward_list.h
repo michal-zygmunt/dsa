@@ -648,6 +648,17 @@ namespace dsa
         auto insert_after(const const_iterator& pos, const_reference value) -> iterator;
 
         /**
+         * @brief Function inserts new Node after specified ForwardList iterator
+         *
+         * @param[in] pos const_iterator to insert element after
+         * @param[in] value element of type T to be inserted after \p pos
+         * @return pointer to ForwardList element
+         * @retval iterator to inserted \p value
+         * @retval pos if no element was inserted
+         */
+        auto insert_after(const const_iterator& pos, T&& value) -> iterator;
+
+        /**
          * @brief Function inserts new Node after specified ForwardList const_iterator
          *
          * @param[in] pos const_iterator to insert element after
@@ -1425,6 +1436,21 @@ namespace dsa
         -> typename ForwardList<T>::iterator
     {
         return insert_after(pos, 1, value);
+    }
+
+    template<typename T>
+    auto ForwardList<T>::insert_after(const const_iterator& pos, T&& value)
+        -> typename ForwardList<T>::iterator
+    {
+        if (!if_valid_iterator(pos))
+        {
+            return nullptr;
+        }
+
+        iterator iter{ pos.m_current_node };
+        iter = insert_element_after(iter, std::move(value));
+
+        return iter;
     }
 
     template<typename T>
