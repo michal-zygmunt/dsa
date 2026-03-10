@@ -1021,18 +1021,36 @@ namespace dsa
         }
 
         /**
-        * @brief Function inserts new Node after specified ForwardList iterator
-        *
-        * @param[in] pos iterator to insert element after
-        * @param[in] value element of type T to be inserted
-        * @return pointer to next element
-        * @retval iterator to iterator inserted after \pos
-        * @retval nullptr if invalid iterator
-        */
+         * @brief Function inserts new Node after specified ForwardList iterator
+         *
+         * @param[in] pos iterator to insert element after
+         * @param[in] value element of type T to be inserted
+         * @return pointer to next element
+         * @retval iterator to iterator inserted after \pos
+         * @retval nullptr if invalid iterator
+         */
         auto insert_element_after(iterator& pos, const_reference value) -> iterator
         {
             NodeBase* temp{ pos.m_current_node };
             Node* newNode = construct_node(value, temp->m_next);
+            temp->m_next = newNode;
+            m_size++;
+            return iterator(newNode);
+        }
+
+        /**
+         * @brief Function inserts new Node after specified ForwardList iterator
+         *
+         * @param[in] pos iterator to insert element after
+         * @param[in] value element of type T to be inserted
+         * @return pointer to next element
+         * @retval iterator to iterator inserted after \pos
+         * @retval nullptr if invalid iterator
+         */
+        auto insert_element_after(iterator& pos, T&& value) -> iterator
+        {
+            NodeBase* temp{ pos.m_current_node };
+            Node* newNode = construct_node(std::move(value), temp->m_next);
             temp->m_next = newNode;
             m_size++;
             return iterator(newNode);
