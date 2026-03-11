@@ -17,6 +17,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <iterator>
+#include <utility>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -93,33 +94,58 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         auto iter8 = list8.insert_after(list8.end(), { 4, 5, 6 });
         tests::compare("iter8 == nullptr", iter8 == nullptr, true);
 
-        dsa::ForwardList<int> list9{};
-        list9.emplace_front(30);
-        list9.emplace_front(20);
-        list9.emplace_front(10);
-        list9.emplace_front(5);
-        list9.emplace_front(0);
-        const std::initializer_list<int> expected9 = { 0, 5, 10, 20, 30 };
-        tests::compare("list9", list9, expected9);
+        dsa::ForwardList<std::unique_ptr<int>> list9{};
+        auto ptr9 = std::make_unique<int>(1);
+        list9.insert_after(list9.before_begin(), std::move(ptr9));
+        constexpr int expected9{ 1 };
+        tests::compare("ForwardList9 front()", *list9.front(), expected9);
+        tests::compare("ptr9 == nullptr", ptr9 == nullptr, true);
 
-        dsa::ForwardList<int> list10{ 0, 10, 20, 30 };
-        list10.emplace_after(list10.before_begin(), -10);
-        const std::initializer_list<int> expected10 = { -10, 0, 10, 20, 30 };
-        tests::compare("list10", list10, expected10);
+        dsa::ForwardList<int> list10{};
+        const dsa::ForwardList<int> temp10{ 0, 10, 20, 30, 40, 50 };
+        auto temp10_it = std::next(temp10.begin(), 3);
+        auto list10_it = list10.insert_after(
+            list10.before_begin(), std::next(temp10.begin(), 1), std::next(temp10.begin(), 4));
+        const std::initializer_list<int> expected10{ 10, 20, 30 };
+        tests::compare("ForwardList10", list10, expected10);
+        tests::compare("ForwardList10 it", *list10_it, *temp10_it);
 
-        dsa::ForwardList<int> list11{ 0, 10, 20, 30 };
-        auto iter11 = list11.begin();
-        std::advance(iter11, 2);
-        list11.emplace_after(iter11, 25);
-        const std::initializer_list<int> expected11 = { 0, 10, 20, 25, 30 };
-        tests::compare("list11", list11, expected11);
+        dsa::ForwardList<int> list11{ 0, 10, 20 };
+        const dsa::ForwardList<int> temp11{ 30, 40, 50 };
+        auto temp11_it = std::next(temp11.begin(), 2);
+        auto list11_it = list11.insert_after(std::next(list11.begin(), 2), temp11.begin(), temp11.end());
+        const std::initializer_list<int> expected11{ 0, 10, 20, 30, 40, 50 };
+        tests::compare("ForwardList11", list11, expected11);
+        tests::compare("ForwardList11 it", *list11_it, *temp11_it);
 
-        dsa::ForwardList<int> list12{ 0, 10, 20, 30 };
-        auto iter12 = list12.begin();
-        std::advance(iter12, 3);
-        list12.emplace_after(iter12, 40);
-        const std::initializer_list<int> expected12 = { 0, 10, 20, 30, 40 };
-        tests::compare("list12", list12, expected12);
+        dsa::ForwardList<int> list12{};
+        list12.emplace_front(30);
+        list12.emplace_front(20);
+        list12.emplace_front(10);
+        list12.emplace_front(5);
+        list12.emplace_front(0);
+        const std::initializer_list<int> expected12 = { 0, 5, 10, 20, 30 };
+        tests::compare("ForwardList12", list12, expected12);
+
+        dsa::ForwardList<int> list13{ 0, 10, 20, 30 };
+        list13.emplace_after(list13.before_begin(), -10);
+        const std::initializer_list<int> expected13 = { -10, 0, 10, 20, 30 };
+        tests::compare("ForwardList13", list13, expected13);
+
+        dsa::ForwardList<int> list14{ 0, 10, 20, 30 };
+        auto iter14 = list14.begin();
+        std::advance(iter14, 2);
+        list14.emplace_after(iter14, 25);
+        const std::initializer_list<int> expected14 = { 0, 10, 20, 25, 30 };
+        tests::compare("ForwardList14", list14, expected14);
+
+        dsa::ForwardList<int> list15{ 0, 10, 20, 30 };
+        auto iter15 = list15.begin();
+        std::advance(iter15, 3);
+        list15.emplace_after(iter15, 40);
+        const std::initializer_list<int> expected15 = { 0, 10, 20, 30, 40 };
+        tests::compare("ForwardList15", list15, expected15);
+
 
 
         std::cout << "Compare operations results with std container\n\n";
@@ -140,6 +166,37 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::forward_list<int> std_list7{ 40 };
         std_list7.insert_after(std_list7.before_begin(), { 10, 20, 30 });
         tests::compare("ForwardList7 vs std", list7, std_list7);
+
+        std::forward_list<std::unique_ptr<int>> std_list9{};
+        auto std_ptr9 = std::make_unique<int>(1);
+        std_list9.insert_after(std_list9.before_begin(), std::move(std_ptr9));
+        tests::compare("ForwardList9 front() vs std", *list9.front(), *std_list9.front());
+        tests::compare("ptr9 == nullptr vs std", ptr9 == nullptr, std_ptr9 == nullptr);
+
+        std::forward_list<int> std_list10{};
+        const std::forward_list<int> std_temp10{ 0, 10, 20, 30, 40, 50 };
+        auto std_temp10_it = std::next(std_temp10.begin(), 3);
+        auto std_list10_it = std_list10.insert_after(
+            std_list10.before_begin(), std::next(std_temp10.begin(), 1), std::next(std_temp10.begin(), 4));
+        tests::compare("ForwardList10 vs std", list10, std_list10);
+        tests::compare("ForwardList10 it vs std", *list10_it, *std_list10_it);
+        tests::compare("ForwardList10 temp it vs std", *temp10_it, *std_temp10_it);
+
+        std::forward_list<int> std_list11{ 0, 10, 20 };
+        const std::forward_list<int> std_temp11{ 30, 40, 50 };
+        auto std_temp11_it = std::next(std_temp11.begin(), 2);
+        auto std_list11_it = std_list11.insert_after(
+            std::next(std_list11.begin(), 2), std_temp11.begin(), std_temp11.end());
+        tests::compare("ForwardList11 vs std", list11, std_list11);
+        tests::compare("ForwardList11 it vs std", *list11_it, *std_list11_it);
+        tests::compare("ForwardList11 temp it vs std", *temp11_it, *std_temp11_it);
+
+
+
+
+
+
+
 
 
         tests::print_stats();
