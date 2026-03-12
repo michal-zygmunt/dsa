@@ -17,6 +17,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <iterator>
+#include <memory>
 #include <utility>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -146,6 +147,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected15 = { 0, 10, 20, 30, 40 };
         tests::compare("ForwardList15", list15, expected15);
 
+        dsa::ForwardList<std::unique_ptr<int>> list16{};
+        auto ptr16 = std::make_unique<int>(1);
+        list16.push_front(std::move(ptr16));
+        constexpr int expected16{ 1 };
+        tests::compare("ForwardList16", *list16.front(), expected16);
+        tests::compare("ptr16 == nullptr", ptr16 == nullptr, true);
 
 
         std::cout << "Compare operations results with std container\n\n";
@@ -191,12 +198,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList11 it vs std", *list11_it, *std_list11_it);
         tests::compare("ForwardList11 temp it vs std", *temp11_it, *std_temp11_it);
 
-
-
-
-
-
-
+        std::forward_list<std::unique_ptr<int>> std_list16{};
+        auto std_ptr16 = std::make_unique<int>(1);
+        std_list16.push_front(std::move(std_ptr16));
+        tests::compare("ForwardList17 vs std", *list16.front(), expected16);
+        tests::compare("ptr16 == nullptr vs std", ptr16 == nullptr, std_ptr16 == nullptr);
 
 
         tests::print_stats();
