@@ -736,7 +736,7 @@ namespace dsa
          *
          * @param[in] value element of type T
          */
-        void push_front(T value);
+        void push_front(const_reference value);
 
         /**
          * @brief Inserts a new element to the beginning of the container
@@ -1581,7 +1581,7 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::push_front(T value)
+    void ForwardList<T>::push_front(const_reference value)
     {
         Node* newNode = construct_node(value);
         if (!m_head->m_next)
