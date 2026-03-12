@@ -735,8 +735,23 @@ namespace dsa
          * @brief Function adds new Node at the beginning of ForwardList
          *
          * @param[in] value element of type T
+         *
+         * @note no iterators or references are invalidated,
+         *       if construction of new element fails or an exception is thrown for any reason
+         *       state of the object does not change and this function has no effect
          */
         void push_front(const_reference value);
+
+        /**
+         * @brief Function adds new Node at the beginning of ForwardList
+         *
+         * @param[in] value element of type T
+         *
+         * @note no iterators or references are invalidated,
+         *       if construction of new element fails or an exception is thrown for any reason
+         *       state of the object does not change and this function has no effect
+         */
+        void push_front(T&& value);
 
         /**
          * @brief Inserts a new element to the beginning of the container
@@ -1584,6 +1599,23 @@ namespace dsa
     void ForwardList<T>::push_front(const_reference value)
     {
         Node* newNode = construct_node(value);
+        if (!m_head->m_next)
+        {
+            m_head->m_next = newNode;
+        }
+        else
+        {
+            newNode->m_next = m_head->m_next;
+            m_head->m_next = newNode;
+        }
+
+        m_size++;
+    }
+
+    template<typename T>
+    void ForwardList<T>::push_front(T&& value)
+    {
+        Node* newNode = construct_node(std::move(value));
         if (!m_head->m_next)
         {
             m_head->m_next = newNode;
