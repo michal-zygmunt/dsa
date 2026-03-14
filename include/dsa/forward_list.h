@@ -799,6 +799,10 @@ namespace dsa
          *
          * @param[in,out] other container to take elements from
          * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
          */
         void merge(ForwardList<T>& other);
 
@@ -807,10 +811,42 @@ namespace dsa
          *
          * @param[in,out] other container to take elements from
          * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
          */
-         // transfers ownership of nodes, moving entire container is not necessary
-         // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
         void merge(ForwardList<T>&& other);
+
+        /**
+         * @brief Function combines two sorted ForwardLists into one sorted ForwardList
+         *
+         * @param[in,out] other container to take elements from
+         * @param[in] comp comparison function object
+         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
+         */
+        template<typename Compare>
+        void merge(ForwardList<T>& other, Compare comp);
+
+        /**
+         * @brief Function combines two sorted ForwardLists into one sorted ForwardList
+         *
+         * @param[in,out] other container to take elements from
+         * @param[in] comp comparison function object
+         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
+         */
+        template<typename Compare>
+        // transfers ownership of nodes, moving entire container is not necessary
+        // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+        void merge(ForwardList<T>&& other, Compare comp);
 
         /**
          * @brief Function moves elements from other ForwardList object
@@ -1718,9 +1754,23 @@ namespace dsa
     }
 
     template<typename T>
+    void ForwardList<T>::merge(ForwardList<T>&& other)
+    {
+        merge(std::move(other), std::less<>());
+    }
+
+    template<typename T>
+    template<typename Compare>
+    void ForwardList<T>::merge(ForwardList<T>& other, Compare comp)
+    {
+        merge(std::move(other), comp);
+    }
+
+    template<typename T>
+    template<typename Compare>
     // transfers ownership of nodes, moving entire container is not necessary
     // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
-    void ForwardList<T>::merge(ForwardList<T>&& other)
+    void ForwardList<T>::merge(ForwardList<T>&& other, Compare comp)
     {
         if (&other != this)
         {
@@ -1739,7 +1789,7 @@ namespace dsa
 
                     if (node_this && node_other)
                     {
-                        if (node_this->value() <= node_other->value())
+                        if (comp(node_this->value(), node_other->value()))
                         {
                             to_move = m_head->m_next;
                             to_return = to_move->m_next;
