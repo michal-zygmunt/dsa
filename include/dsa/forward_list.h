@@ -963,8 +963,10 @@ namespace dsa
         /**
          * @brief Function removes consecutive duplicated elements
          * @details Only the first occurrence of given element in each group is preserved
+         *
+         * @return size_type number of elements removed
          */
-        void unique();
+        auto unique() -> size_type;
 
         /**
          * @brief Function sorts the elements and preserves the order of equivalent elements
@@ -2036,11 +2038,14 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::unique()
+    auto ForwardList<T>::unique() -> size_type
     {
         NodeBase* temp{ m_head };
         NodeBase* prev{};
         NodeBase* next{};
+
+        size_type removed_count{};
+
         while (temp)
         {
             prev = temp;
@@ -2059,6 +2064,7 @@ namespace dsa
                         prev->m_next = to_remove->m_next;
                         destroy_node(to_remove);
 
+                        removed_count++;
                         m_size--;
                         continue;
                     }
@@ -2072,6 +2078,8 @@ namespace dsa
                 temp = temp->m_next;
             }
         }
+
+        return removed_count;
     }
 
     template<typename T>
