@@ -12,6 +12,7 @@
 #include "common.h"
 #include "dsa/forward_list.h"
 
+#include <cmath>
 #include <cstddef>
 #include <exception>
 #include <forward_list>
@@ -69,6 +70,24 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList7", list7, expected7);
         tests::compare("ForwardList7 removed", removed7, size_t{ 0 });
 
+        // find unique values using predicate
+        auto predicate = [](const int& input_a, const int& input_b)
+            {
+                return std::abs(input_a - input_b) <= 5;
+            };
+
+        dsa::ForwardList<int> list8 = dsa::ForwardList<int>({ 1, 5, 7, 15, 25 });
+        auto removed8 = list8.unique(predicate);
+        const std::initializer_list<int> expected8 = { 1, 7, 15, 25 };
+        tests::compare("ForwardList8", list8, expected8);
+        tests::compare("ForwardList8 removed", removed8, size_t{ 1 });
+
+        dsa::ForwardList<int> list9 = dsa::ForwardList<int>({ 1, 4, 12, 13, 12, 14, 3, 15, 1 });
+        auto removed9 = list9.unique(predicate);
+        const std::initializer_list<int> expected9 = { 1, 12, 3, 15, 1 };
+        tests::compare("ForwardList9", list9, expected9);
+        tests::compare("ForwardList9 removed", removed9, size_t{ 4 });
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -106,6 +125,16 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         auto std_removed7 = std_list7.unique();
         tests::compare("ForwardList7 vs std", list7, std_list7);
         tests::compare("ForwardList7 removed vs std", removed7, std_removed7);
+
+        std::forward_list<int> std_list8{ 1, 5, 7, 15, 25 };
+        auto std_removed8 = std_list8.unique(predicate);
+        tests::compare("ForwardList8 vs std", list8, std_list8);
+        tests::compare("ForwardList8 removed vs std", removed8, std_removed8);
+
+        std::forward_list<int> std_list9{ 1, 4, 12, 13, 12, 14, 3, 15, 1 };
+        auto std_removed9 = std_list9.unique(predicate);
+        tests::compare("ForwardList9 vs std", list9, std_list9);
+        tests::compare("ForwardList9 removed vs std", removed9, std_removed9);
 
 
         tests::print_stats();
