@@ -969,6 +969,17 @@ namespace dsa
         auto unique() -> size_type;
 
         /**
+         * @brief Function removes consecutive duplicated elements
+         * @details Only the first occurrence of given element in each group is preserved
+         *
+         * @tparam BinaryPred
+         * @param[in] predicate binary predicate which returns \p true if the element should be treated as equal
+         * @return size_type number of elements removed
+         */
+        template<typename BinaryPred>
+        auto unique(BinaryPred predicate) -> size_type;
+
+        /**
          * @brief Function sorts the elements and preserves the order of equivalent elements
          *
          * @details elements are compared using \p operator<
@@ -2040,6 +2051,13 @@ namespace dsa
     template<typename T>
     auto ForwardList<T>::unique() -> size_type
     {
+        return unique(std::equal_to<>());
+    }
+
+    template<typename T>
+    template<typename BinaryPred>
+    auto ForwardList<T>::unique(BinaryPred predicate) -> size_type
+    {
         NodeBase* temp{ m_head };
         NodeBase* prev{};
         NodeBase* next{};
@@ -2058,7 +2076,7 @@ namespace dsa
                 Node* node_temp = dynamic_cast<Node*>(temp);
                 if (node_next && node_temp)
                 {
-                    if (node_next->value() == node_temp->value())
+                    if (predicate(node_next->value(), node_temp->value()))
                     {
                         NodeBase* to_remove = next;
                         prev->m_next = to_remove->m_next;
