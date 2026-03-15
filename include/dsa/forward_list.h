@@ -850,62 +850,86 @@ namespace dsa
 
         /**
          * @brief Function moves elements from other ForwardList object
+         * @details Content of other object will be taken by constructed object
          *
          * @param[in] pos const_iterator after which content of other container will be inserted
          * @param[in,out] other container to take elements from
-         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
          */
         void splice_after(const const_iterator& pos, ForwardList<T>& other);
 
         /**
          * @brief Function moves elements from other ForwardList object
+         * @details Content of other object will be taken by constructed object
          *
          * @param[in] pos const_iterator after which content of other container will be inserted
          * @param[in,out] other container to take elements from
-         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
          */
         void splice_after(const_iterator pos, ForwardList<T>&& other);
 
         /**
          * @brief Function moves elements from other ForwardList object
+         * @details Content of other object will be taken by constructed object
          *
          * @param[in] pos const_iterator after which content of other container will be inserted
          * @param[in,out] other container to take elements from
          * @param[in] iter const_iterator after which elements of \p other will be taken
-         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
          */
         void splice_after(const const_iterator& pos, ForwardList<T>& other, const const_iterator& iter);
 
         /**
          * @brief Function moves elements from other ForwardList object
+         * @details Content of other object will be taken by constructed object
          *
          * @param[in] pos const_iterator after which content of other container will be inserted
          * @param[in,out] other container to take elements from
          * @param[in] iter const_iterator after which elements of \p other will be taken
-         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
          */
         void splice_after(const_iterator pos, ForwardList<T>&& other, const_iterator iter);
 
         /**
          * @brief Function moves elements from other ForwardList object
+         * @details Content of other object will be taken by constructed object
          *
          * @param[in] pos const_iterator after which content of other container will be inserted
          * @param[in,out] other container to take elements from
          * @param[in] first const_iterator after which elements of \p other will be taken
          * @param[in] last const_iterator until which elements of \p other will be taken
-         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
          */
         void splice_after(const const_iterator& pos, ForwardList<T>& other,
             const const_iterator& first, const const_iterator& last);
 
         /**
          * @brief Function moves elements from other ForwardList object
+         * @details Content of other object will be taken by constructed object
          *
          * @param[in] pos const_iterator after which content of other container will be inserted
          * @param[in,out] other container to take elements from
          * @param[in] first const_iterator after which elements of \p other will be taken
          * @param[in] last const_iterator until which elements of \p other will be taken
-         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
          */
         void splice_after(const_iterator pos, ForwardList<T>&& other, const_iterator first, const_iterator last);
 
