@@ -231,8 +231,7 @@ namespace dsa
              */
             ForwardListIterator(NodeBase* node) noexcept
                 : m_current_node{ node }
-            {
-            }
+            {}
 
             /**
              * @brief Overload operator= to assign \p node to currently pointed ForwardListIterator
@@ -721,7 +720,7 @@ namespace dsa
         auto erase_after(const const_iterator& pos) -> iterator;
 
         /**
-         * @brief Function erases Node between specified ForwardList Const_Iterators
+         * @brief Function erases Node between specified ForwardList const_iterators
          *
          * @param[in] first element after which element will be erased
          * @param[in] last element after last erased element
@@ -1019,36 +1018,14 @@ namespace dsa
          * @brief Function initialize ForwardList pointer located just before user added data
          * It is used be before begin iterator
          */
-        void init_node()
-        {
-            if (m_head == nullptr)
-            {
-                // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
-                m_head = new NodeBase;
-            }
-        }
+        void init_node();
 
         /**
          * @brief Function iterates ForwardList to find iterator to Node before last one
          *
          * @return iterator to Node before last one
          */
-        [[nodiscard]] auto find_iter_before_last() -> iterator
-        {
-            NodeBase* temp{ m_head->m_next };
-            while (temp && temp->m_next && temp->m_next->m_next)
-            {
-                temp = temp->m_next;
-            }
-
-            auto iter = iterator(temp);
-            if (!iter.m_current_node)
-            {
-                iter = before_begin();
-            }
-
-            return iter;
-        }
+        [[nodiscard]] auto find_iter_before_last() -> iterator;
 
         /**
          * @brief Function remove next element
@@ -1056,17 +1033,7 @@ namespace dsa
          * @param[in] pos iterator after which element will be erased
          * @return iterator to element following deleted one
          */
-        auto erase_element_after(iterator pos) -> iterator
-        {
-            NodeBase* temp{ pos.m_current_node };
-            NodeBase* to_remove{ temp->m_next };
-
-            temp->m_next = to_remove->m_next;
-            destroy_node(to_remove);
-
-            m_size--;
-            return iterator(temp->m_next);
-        }
+        auto erase_element_after(iterator pos) -> iterator;
 
         /**
          * @brief Function allocate and construct ForwardList node
@@ -1075,23 +1042,7 @@ namespace dsa
          * @param[in] next_ptr pointer to next Node
          * @return pointer to created Node
          */
-        [[nodiscard]] auto construct_node(const_reference value, NodeBase* next_ptr = nullptr) -> Node*
-        {
-            Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
-            try
-            {
-                node_alloc_traits::construct(node_alloc, newNode, Node(value));
-            }
-            catch (...)
-            {
-                node_alloc_traits::deallocate(node_alloc, newNode, 1);
-                throw;
-            }
-
-            newNode->m_next = next_ptr;
-
-            return newNode;
-        }
+        [[nodiscard]] auto construct_node(const_reference value, NodeBase* next_ptr = nullptr) -> Node*;
 
         /**
          * @brief Function allocate and construct ForwardList node
@@ -1100,38 +1051,14 @@ namespace dsa
          * @param[in] next_ptr pointer to next Node
          * @return pointer to created Node
          */
-        [[nodiscard]] auto construct_node(T&& value, NodeBase* next_ptr = nullptr) -> Node*
-        {
-            Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
-            try
-            {
-                node_alloc_traits::construct(node_alloc, newNode, Node(std::move(value)));
-            }
-            catch (...)
-            {
-                node_alloc_traits::deallocate(node_alloc, newNode, 1);
-                throw;
-            }
-
-            newNode->m_next = next_ptr;
-
-            return newNode;
-        }
+        [[nodiscard]] auto construct_node(T&& value, NodeBase* next_ptr = nullptr) -> Node*;
 
         /**
          * @brief Function destroys and deallocates memory used by Node
          *
          * @param[in] node_to_destroy pointer to Node to delete
          */
-        void destroy_node(NodeBase* node_to_destroy)
-        {
-            Node* node_dyn = dynamic_cast<Node*>(node_to_destroy);
-            if (node_dyn)
-            {
-                node_alloc_traits::destroy(node_alloc, node_dyn);
-                node_alloc_traits::deallocate(node_alloc, node_dyn, 1);
-            }
-        }
+        void destroy_node(NodeBase* node_to_destroy);
 
         /**
          * @brief Function inserts new Node after specified ForwardList iterator
@@ -1142,14 +1069,7 @@ namespace dsa
          * @retval iterator to iterator inserted after \pos
          * @retval nullptr if invalid iterator
          */
-        auto insert_element_after(iterator& pos, const_reference value) -> iterator
-        {
-            NodeBase* temp{ pos.m_current_node };
-            Node* newNode = construct_node(value, temp->m_next);
-            temp->m_next = newNode;
-            m_size++;
-            return iterator(newNode);
-        }
+        auto insert_element_after(iterator& pos, const_reference value) -> iterator;
 
         /**
          * @brief Function inserts new Node after specified ForwardList iterator
@@ -1160,14 +1080,7 @@ namespace dsa
          * @retval iterator to iterator inserted after \pos
          * @retval nullptr if invalid iterator
          */
-        auto insert_element_after(iterator& pos, T&& value) -> iterator
-        {
-            NodeBase* temp{ pos.m_current_node };
-            Node* newNode = construct_node(std::move(value), temp->m_next);
-            temp->m_next = newNode;
-            m_size++;
-            return iterator(newNode);
-        }
+        auto insert_element_after(iterator& pos, T&& value) -> iterator;
 
         /**
          * @brief Function checks ForwardList contains iterator
@@ -1177,19 +1090,7 @@ namespace dsa
          * @return true if \p pos belong to ForwardList
          * @return false if otherwise
          */
-        [[nodiscard]] auto if_valid_iterator(const const_iterator& pos) -> bool
-        {
-            bool valid_iterator{};
-            for (auto it = cbefore_begin(); it != cend(); ++it)
-            {
-                if (it == pos)
-                {
-                    valid_iterator = true;
-                    break;
-                }
-            }
-            return valid_iterator;
-        }
+        [[nodiscard]] auto if_valid_iterator(const const_iterator& pos) -> bool;
 
         /**
          * @brief Function calculate number of elements from first to last
@@ -1284,8 +1185,7 @@ namespace dsa
     template<typename T>
     ForwardList<T>::ForwardList(size_type count)
         : ForwardList(count, T{})
-    {
-    }
+    {}
 
     template<typename T>
     ForwardList<T>::ForwardList(size_type count, const T& value)
@@ -1870,83 +1770,6 @@ namespace dsa
     }
 
     template<typename T>
-    auto ForwardList<T>::distance(const_iterator first, const const_iterator& last) -> size_type
-    {
-        size_type dist{};
-        while (first != last)
-        {
-            ++first;
-            ++dist;
-        }
-
-        return dist;
-    }
-
-    template<typename T>
-    // transfers ownership of nodes, moving entire container is not necessary
-    // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
-    void ForwardList<T>::transfer(const const_iterator& pos, ForwardList<T>&& other, const const_iterator& iter)
-    {
-        if (&other != this && other.m_size > 0)
-        {
-            NodeBase* temp_prev{ pos.m_current_node };  // to append to
-            NodeBase* temp_next{ iter.m_current_node }; // does not move
-
-            NodeBase* to_move{ temp_next->m_next };
-
-            if (to_move)
-            {
-                temp_next->m_next = to_move->m_next;
-                to_move->m_next = temp_prev->m_next;
-                temp_prev->m_next = to_move;
-
-                m_size += 1;
-                other.m_size -= 1;
-            }
-        }
-    }
-
-    template<typename T>
-    // transfers ownership of nodes, moving entire container is not necessary
-    // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
-    void ForwardList<T>::transfer(const const_iterator& pos, ForwardList<T>&& other,
-        const const_iterator& first, const const_iterator& last)
-    {
-        if (&other != this && other.m_size > 0)
-        {
-            const size_type dist = distance(first, last) - 1;
-
-            if (first == last || dist == 0)
-            {
-                return;
-            }
-
-            NodeBase* temp_prev{ pos.m_current_node };     // to append to
-            NodeBase* temp_next{ first.m_current_node };   // does not move
-
-            NodeBase* first_to_move{ temp_next->m_next };
-            NodeBase* last_to_move{ temp_next };
-            for (size_type i = 0; i < dist; i++)
-            {
-                if (last_to_move)
-                {
-                    last_to_move = last_to_move->m_next;
-                }
-            }
-
-            if (temp_next)
-            {
-                temp_next->m_next = last_to_move->m_next;
-                last_to_move->m_next = temp_prev->m_next;
-                temp_prev->m_next = first_to_move;
-
-                m_size += dist;
-                other.m_size -= dist;
-            }
-        }
-    }
-
-    template<typename T>
     void ForwardList<T>::splice_after(const const_iterator& pos, ForwardList<T>& other)
     {
         transfer(pos, std::move(other), other.before_begin(), other.end());
@@ -2101,82 +1924,6 @@ namespace dsa
     }
 
     template<typename T>
-    template<typename Compare>
-    // Intentional recursive call for sorting nodes in top-down algorithm implementation
-    // NOLINTNEXTLINE(misc-no-recursion)
-    auto ForwardList<T>::merge_sort(NodeBase* source, Compare comp) -> NodeBase*
-    {
-        // Stop condition, one element list is already sorted
-        if (source == nullptr || source->m_next == nullptr)
-        {
-            return source;
-        }
-
-        // Divide list into equal-sized sublists consisting of first and second half of the list
-        NodeBase* left{ source };
-        NodeBase* right{};
-
-        // Use slow and fast pointer to find half of list
-        NodeBase* slow{ source };
-        NodeBase* fast{ source->m_next };
-        while (fast && fast->m_next)
-        {
-            slow = slow->m_next;
-            fast = fast->m_next->m_next;
-        }
-
-        // Split input list into two halfs
-        right = slow->m_next;
-        slow->m_next = nullptr;
-
-        // Recursively sort both sub-lists
-        left = merge_sort(left, comp);
-        right = merge_sort(right, comp);
-
-        // Merge sorted sublists
-        NodeBase* result{ merge(left, right, comp) };
-        return result;
-    }
-
-    template<typename T>
-    template<typename Compare>
-    // Intentional recursive call for merging nodes in top-down merge_sort algorithm implementation
-    // NOLINTNEXTLINE(misc-no-recursion)
-    auto ForwardList<T>::merge(NodeBase* left, NodeBase* right, Compare comp) -> NodeBase*
-    {
-        // Stop condition, empty element list is already sorted
-        if (left == nullptr)
-        {
-            return right;
-        }
-        if (right == nullptr)
-        {
-            return left;
-        }
-
-        NodeBase* result{};
-        Node* node_left = dynamic_cast<Node*>(left);
-        Node* node_right = dynamic_cast<Node*>(right);
-        if (node_left && node_right)
-        {
-            // Recursively merge nodes
-            //if (node_left->m_value <= node_right->m_value)
-            if (comp(node_left->m_value, node_right->m_value))
-            {
-                result = left;
-                result->m_next = merge(left->m_next, right, comp);
-            }
-            else
-            {
-                result = right;
-                result->m_next = merge(left, right->m_next, comp);
-            }
-        }
-
-        return result;
-    }
-
-    template<typename T>
     void ForwardList<T>::sort()
     {
         m_head->m_next = merge_sort(m_head->m_next, std::less<>());
@@ -2327,6 +2074,285 @@ namespace dsa
     auto erase_if(ForwardList<T>& container, Pred pred) -> ForwardList<T>::size_type
     {
         return container.remove_if(pred);
+    }
+
+    // definitions of private methods
+
+    template<typename T>
+    void ForwardList<T>::init_node()
+    {
+        if (m_head == nullptr)
+        {
+            // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
+            m_head = new NodeBase;
+        }
+    }
+
+    template<typename T>
+    auto ForwardList<T>::find_iter_before_last() -> iterator
+    {
+        NodeBase* temp{ m_head->m_next };
+        while (temp && temp->m_next && temp->m_next->m_next)
+        {
+            temp = temp->m_next;
+        }
+
+        auto iter = iterator(temp);
+        if (!iter.m_current_node)
+        {
+            iter = before_begin();
+        }
+
+        return iter;
+    }
+
+    template<typename T>
+    auto ForwardList<T>::erase_element_after(iterator pos) -> iterator
+    {
+        NodeBase* temp{ pos.m_current_node };
+        NodeBase* to_remove{ temp->m_next };
+
+        temp->m_next = to_remove->m_next;
+        destroy_node(to_remove);
+
+        m_size--;
+        return iterator(temp->m_next);
+    }
+
+    template<typename T>
+    auto ForwardList<T>::construct_node(const_reference value, NodeBase* next_ptr) -> Node*
+    {
+        Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
+        try
+        {
+            node_alloc_traits::construct(node_alloc, newNode, Node(value));
+        }
+        catch (...)
+        {
+            node_alloc_traits::deallocate(node_alloc, newNode, 1);
+            throw;
+        }
+
+        newNode->m_next = next_ptr;
+
+        return newNode;
+    }
+
+    template<typename T>
+    auto ForwardList<T>::construct_node(T&& value, NodeBase* next_ptr) -> Node*
+    {
+        Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
+        try
+        {
+            node_alloc_traits::construct(node_alloc, newNode, Node(std::move(value)));
+        }
+        catch (...)
+        {
+            node_alloc_traits::deallocate(node_alloc, newNode, 1);
+            throw;
+        }
+
+        newNode->m_next = next_ptr;
+
+        return newNode;
+    }
+
+    template<typename T>
+    void ForwardList<T>::destroy_node(NodeBase* node_to_destroy)
+    {
+        Node* node_dyn = dynamic_cast<Node*>(node_to_destroy);
+        if (node_dyn)
+        {
+            node_alloc_traits::destroy(node_alloc, node_dyn);
+            node_alloc_traits::deallocate(node_alloc, node_dyn, 1);
+        }
+    }
+
+    template<typename T>
+    auto ForwardList<T>::insert_element_after(iterator& pos, const_reference value) -> iterator
+    {
+        NodeBase* temp{ pos.m_current_node };
+        Node* newNode = construct_node(value, temp->m_next);
+        temp->m_next = newNode;
+        m_size++;
+        return iterator(newNode);
+    }
+
+    template<typename T>
+    auto ForwardList<T>::insert_element_after(iterator& pos, T&& value) -> iterator
+    {
+        NodeBase* temp{ pos.m_current_node };
+        Node* newNode = construct_node(std::move(value), temp->m_next);
+        temp->m_next = newNode;
+        m_size++;
+        return iterator(newNode);
+    }
+
+    template<typename T>
+    auto ForwardList<T>::if_valid_iterator(const const_iterator& pos) -> bool
+    {
+        bool valid_iterator{};
+        for (auto it = cbefore_begin(); it != cend(); ++it)
+        {
+            if (it == pos)
+            {
+                valid_iterator = true;
+                break;
+            }
+        }
+        return valid_iterator;
+    }
+
+    template<typename T>
+    auto ForwardList<T>::distance(const_iterator first, const const_iterator& last) -> size_type
+    {
+        size_type dist{};
+        while (first != last)
+        {
+            ++first;
+            ++dist;
+        }
+
+        return dist;
+    }
+
+    template<typename T>
+    // transfers ownership of nodes, moving entire container is not necessary
+    // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+    void ForwardList<T>::transfer(const const_iterator& pos, ForwardList<T>&& other, const const_iterator& iter)
+    {
+        if (&other != this && other.m_size > 0)
+        {
+            NodeBase* temp_prev{ pos.m_current_node };  // to append to
+            NodeBase* temp_next{ iter.m_current_node }; // does not move
+
+            NodeBase* to_move{ temp_next->m_next };
+
+            if (to_move)
+            {
+                temp_next->m_next = to_move->m_next;
+                to_move->m_next = temp_prev->m_next;
+                temp_prev->m_next = to_move;
+
+                m_size += 1;
+                other.m_size -= 1;
+            }
+        }
+    }
+
+    template<typename T>
+    // transfers ownership of nodes, moving entire container is not necessary
+    // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+    void ForwardList<T>::transfer(const const_iterator& pos, ForwardList<T>&& other,
+        const const_iterator& first, const const_iterator& last)
+    {
+        if (&other != this && other.m_size > 0)
+        {
+            const size_type dist = distance(first, last) - 1;
+
+            if (first == last || dist == 0)
+            {
+                return;
+            }
+
+            NodeBase* temp_prev{ pos.m_current_node };     // to append to
+            NodeBase* temp_next{ first.m_current_node };   // does not move
+
+            NodeBase* first_to_move{ temp_next->m_next };
+            NodeBase* last_to_move{ temp_next };
+            for (size_type i = 0; i < dist; i++)
+            {
+                if (last_to_move)
+                {
+                    last_to_move = last_to_move->m_next;
+                }
+            }
+
+            if (temp_next)
+            {
+                temp_next->m_next = last_to_move->m_next;
+                last_to_move->m_next = temp_prev->m_next;
+                temp_prev->m_next = first_to_move;
+
+                m_size += dist;
+                other.m_size -= dist;
+            }
+        }
+    }
+
+    template<typename T>
+    template<typename Compare>
+    // Intentional recursive call for sorting nodes in top-down algorithm implementation
+    // NOLINTNEXTLINE(misc-no-recursion)
+    auto ForwardList<T>::merge_sort(NodeBase* source, Compare comp) -> NodeBase*
+    {
+        // Stop condition, one element list is already sorted
+        if (source == nullptr || source->m_next == nullptr)
+        {
+            return source;
+        }
+
+        // Divide list into equal-sized sublists consisting of first and second half of the list
+        NodeBase* left{ source };
+        NodeBase* right{};
+
+        // Use slow and fast pointer to find half of list
+        NodeBase* slow{ source };
+        NodeBase* fast{ source->m_next };
+        while (fast && fast->m_next)
+        {
+            slow = slow->m_next;
+            fast = fast->m_next->m_next;
+        }
+
+        // Split input list into two halfs
+        right = slow->m_next;
+        slow->m_next = nullptr;
+
+        // Recursively sort both sub-lists
+        left = merge_sort(left, comp);
+        right = merge_sort(right, comp);
+
+        // Merge sorted sublists
+        NodeBase* result{ merge(left, right, comp) };
+        return result;
+    }
+
+    template<typename T>
+    template<typename Compare>
+    // Intentional recursive call for merging nodes in top-down merge_sort algorithm implementation
+    // NOLINTNEXTLINE(misc-no-recursion)
+    auto ForwardList<T>::merge(NodeBase* left, NodeBase* right, Compare comp) -> NodeBase*
+    {
+        // Stop condition, empty element list is already sorted
+        if (left == nullptr)
+        {
+            return right;
+        }
+        if (right == nullptr)
+        {
+            return left;
+        }
+
+        NodeBase* result{};
+        Node* node_left = dynamic_cast<Node*>(left);
+        Node* node_right = dynamic_cast<Node*>(right);
+        if (node_left && node_right)
+        {
+            // Recursively merge nodes
+            if (comp(node_left->m_value, node_right->m_value))
+            {
+                result = left;
+                result->m_next = merge(left->m_next, right, comp);
+            }
+            else
+            {
+                result = right;
+                result->m_next = merge(left, right->m_next, comp);
+            }
+        }
+
+        return result;
     }
 }
 
