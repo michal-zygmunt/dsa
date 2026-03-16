@@ -131,7 +131,7 @@ namespace dsa
              *
              * @return T& reference to value stored in Node
              */
-            auto value() -> T&
+            [[nodiscard]] auto value() -> T&
             {
                 return m_value;
             }
@@ -544,7 +544,7 @@ namespace dsa
          *
          * @return reference to data stored in ForwardList first Node
          */
-        auto front() -> reference;
+        [[nodiscard]] auto front() -> reference;
 
         /**
          * @brief Function returns const reference value stored in ForwardList first Node
@@ -558,7 +558,7 @@ namespace dsa
          *
          * @return iterator iterator just before ForwardList first Node
          */
-        auto before_begin() noexcept -> iterator;
+        [[nodiscard]] auto before_begin() noexcept -> iterator;
 
         /**
          * @brief Function returns const_iterator just before ForwardList first Node
@@ -579,14 +579,14 @@ namespace dsa
          *
          * @return iterator iterator to ForwardList first Node
          */
-        auto begin() noexcept -> iterator;
+        [[nodiscard]] auto begin() noexcept -> iterator;
 
         /**
          * @brief Function returns const pointer to ForwardList first Node
          *
          * @return const_iterator const iterator to ForwardList first Node
          */
-        auto begin() const noexcept -> const_iterator;
+        [[nodiscard]] auto begin() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns const pointer to ForwardList first Node
@@ -600,14 +600,14 @@ namespace dsa
          *
          * @return iterator iterator to ForwardList last Node
          */
-        auto end() noexcept -> iterator;
+        [[nodiscard]] auto end() noexcept -> iterator;
 
         /**
          * @brief Function returns pointer to ForwardList last Node
          *
          * @return const_iterator const iterator to ForwardList last Node
          */
-        auto end() const noexcept -> const_iterator;
+        [[nodiscard]] auto end() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns pointer to ForwardList last Node
@@ -1033,7 +1033,7 @@ namespace dsa
          *
          * @return iterator to Node before last one
          */
-        auto find_iter_before_last() -> iterator
+        [[nodiscard]] auto find_iter_before_last() -> iterator
         {
             NodeBase* temp{ m_head->m_next };
             while (temp && temp->m_next && temp->m_next->m_next)
@@ -1075,7 +1075,7 @@ namespace dsa
          * @param[in] next_ptr pointer to next Node
          * @return pointer to created Node
          */
-        auto construct_node(const_reference value, NodeBase* next_ptr = nullptr) -> Node*
+        [[nodiscard]] auto construct_node(const_reference value, NodeBase* next_ptr = nullptr) -> Node*
         {
             Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
             try
@@ -1100,7 +1100,7 @@ namespace dsa
          * @param[in] next_ptr pointer to next Node
          * @return pointer to created Node
          */
-        auto construct_node(T&& value, NodeBase* next_ptr = nullptr) -> Node*
+        [[nodiscard]] auto construct_node(T&& value, NodeBase* next_ptr = nullptr) -> Node*
         {
             Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
             try
@@ -1177,7 +1177,7 @@ namespace dsa
          * @return true if \p pos belong to ForwardList
          * @return false if otherwise
          */
-        auto if_valid_iterator(const const_iterator& pos) -> bool
+        [[nodiscard]] auto if_valid_iterator(const const_iterator& pos) -> bool
         {
             bool valid_iterator{};
             for (auto it = cbefore_begin(); it != cend(); ++it)
@@ -1199,7 +1199,7 @@ namespace dsa
          * @param[in] last const_iterator pointing to last (inclusive) element
          * @return size_type number of elements between input elements
          */
-        auto distance(const_iterator first, const const_iterator& last) -> size_type;
+        [[nodiscard]] auto distance(const_iterator first, const const_iterator& last) -> size_type;
 
         /**
          * @brief Function moves elements from other ForwardList object
