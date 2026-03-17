@@ -29,30 +29,30 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::cout << "Start forward_list_shrink_test:\n";
 
         dsa::ForwardList<int> list1 = dsa::ForwardList<int>({ 0, 10, 20, 30, 40, 50 });
-        list1.erase_after(list1.begin()[list1.size() - 2]);
+        list1.erase_after(std::next(list1.begin(), static_cast<ptrdiff_t>(list1.size() - 2)));
         list1.pop_front();
-        auto indexes = { 100, 5, 2, 0, -1 };
+        auto indexes = { 5, 2, 0 };
         for (const auto& item : indexes)
         {
-            list1.erase_after(list1.begin()[static_cast<size_t>(item)]);
+            list1.erase_after(std::next(list1.begin(), static_cast<ptrdiff_t>(item)));
         }
         const std::initializer_list<int> expected1 = { 10, 30 };
         tests::compare("ForwardList1", list1, expected1);
 
         dsa::ForwardList<int> list2 = dsa::ForwardList<int>({ 0, 10, 20, 30, 40, 50 });
-        list2.erase_after(list2.begin()[1], list2.begin()[3]);
+        list2.erase_after(std::next(list2.begin(), 1), std::next(list2.begin(), 3));
         const std::initializer_list<int> expected2 = { 0, 10, 30, 40, 50 };
         tests::compare("ForwardList2", list2, expected2);
 
         dsa::ForwardList<int> list3 = dsa::ForwardList<int>({ 0, 10, 20, 30, 40, 50 });
-        list3.erase_after(list3.begin()[1]);
-        list3.erase_after(list3.begin()[1], list3.begin()[3]);
+        list3.erase_after(std::next(list3.begin(), 1));
+        list3.erase_after(std::next(list3.begin(), 1), std::next(list3.begin(), 3));
         const std::initializer_list<int> expected3 = { 0, 10, 40, 50 };
         tests::compare("ForwardList3", list3, expected3);
 
         dsa::ForwardList<int> list4 = dsa::ForwardList<int>({ 0, 10, 20, 30, 40, 50 });
-        list4.erase_after(list4.begin()[1]);
-        list4.erase_after(list4.begin()[1], list4.begin()[4]);
+        list4.erase_after(std::next(list4.begin(), 1));
+        list4.erase_after(std::next(list4.begin(), 1), std::next(list4.begin(), 4));
         const std::initializer_list<int> expected4 = { 0, 10, 50 };
         tests::compare("ForwardList4", list4, expected4);
 

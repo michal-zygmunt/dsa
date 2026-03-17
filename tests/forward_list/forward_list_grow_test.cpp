@@ -12,6 +12,7 @@
 #include "common.h"
 #include "dsa/forward_list.h"
 
+#include <cstddef>
 #include <exception>
 #include <forward_list>
 #include <initializer_list>
@@ -59,7 +60,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list3.push_front(10);
         iterator = list3.insert_after(list3.cbegin(), 20);
         list3.insert_after(iterator, { 1, 2, 3 });
-        list3.insert_after(list3.cbegin()[list3.size() - 1], 60);
+        list3.insert_after(std::next(list3.cbegin(), static_cast<ptrdiff_t>(list3.size() - 1)), 60);
         const std::initializer_list<int> expected3 = { 10, 20, 1, 2, 3, 30, 40, 50, 60 };
         tests::compare("ForwardList3", list3, expected3);
 
