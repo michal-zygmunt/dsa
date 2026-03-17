@@ -299,33 +299,6 @@ namespace dsa
             }
 
             /**
-             * @brief Overload operator[] for ForwardListIterator iterator access
-             *
-             * @param[in] index number of Node to move forward
-             * @return ForwardListIterator to Node pointed by \p index from ForwardList front
-             * @retval valid ForwardListIterator if index is valid
-             * @retval nullptr if index is invalid
-             */
-            auto operator[](size_type index) -> ForwardListIterator
-            {
-                NodeBase* temp{ m_current_node };
-
-                for (size_type i = 0; i < index; i++)
-                {
-                    if (temp->m_next)
-                    {
-                        temp = temp->m_next;
-                    }
-                    else
-                    {
-                        return nullptr;
-                    }
-                }
-
-                return temp;
-            }
-
-            /**
              * @brief Overload operator* to dereference Node value / data
              *
              * @return T& reference or const reference to data stored in Node
