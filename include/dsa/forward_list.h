@@ -33,8 +33,6 @@ namespace dsa
      *        as internal base
      *
      * @tparam T type of data stored in ForwardList Node
-     *
-     * @todo remove public functions / operators not supported by std::forward_list
      */
     template<typename T>
     class ForwardList
