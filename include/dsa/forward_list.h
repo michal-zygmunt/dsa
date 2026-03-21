@@ -1549,35 +1549,13 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::push_front(const_reference value)
     {
-        Node* newNode = construct_node(value);
-        if (!m_head->m_next)
-        {
-            m_head->m_next = newNode;
-        }
-        else
-        {
-            newNode->m_next = m_head->m_next;
-            m_head->m_next = newNode;
-        }
-
-        m_size++;
+        emplace_after(before_begin(), value);
     }
 
     template<typename T>
     void ForwardList<T>::push_front(T&& value)
     {
-        Node* newNode = construct_node(std::move(value));
-        if (!m_head->m_next)
-        {
-            m_head->m_next = newNode;
-        }
-        else
-        {
-            newNode->m_next = m_head->m_next;
-            m_head->m_next = newNode;
-        }
-
-        m_size++;
+        emplace_after(before_begin(), std::move(value));
     }
 
     template<typename T>
