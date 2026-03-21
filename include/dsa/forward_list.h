@@ -1428,7 +1428,7 @@ namespace dsa
         }
 
         iterator iter{ pos.m_current_node };
-        iter = insert_element_after(iter, std::move(value));
+        iter = emplace_after(iter, std::move(value));
 
         return iter;
     }
@@ -1445,7 +1445,7 @@ namespace dsa
         iterator iter{ pos.m_current_node };
         for (size_type i = 0; i < count; i++)
         {
-            iter = insert_element_after(iter, value);
+            iter = emplace_after(iter, value);
         }
 
         return iter;
@@ -1484,7 +1484,7 @@ namespace dsa
         iterator iter{ pos.m_current_node };
         for (const auto val : init_list)
         {
-            iter = insert_element_after(iter, val);
+            iter = emplace_after(iter, val);
         }
 
         return iter;
