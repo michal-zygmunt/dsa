@@ -43,18 +43,56 @@
   */
 namespace tests
 {
-    struct ThrowingType
-    {
-        ThrowingType() = default;
-        ~ThrowingType() = default;
-        ThrowingType(const ThrowingType&) = default;
-        ThrowingType(ThrowingType&&) = default;
+    constexpr size_t throwing_type_size_limit = 5;
 
-        auto operator=(ThrowingType&& /*other*/) noexcept(false) -> ThrowingType&
+    /**
+     * @brief Class used to test exception handling
+     */
+    class ThrowingType
+    {
+    public:
+
+        /**
+         * @brief Default ctor of ThrowingType
+         */
+        ThrowingType()
         {
-            return *this;
+            conditional_exception("ThrowingType size limit reached in ctor");
         }
 
+        /**
+         * @brief Copy ctor of ThrowingType
+         *
+         * @param[in] other unused parameter
+         */
+        ThrowingType(const ThrowingType& /*other*/)
+        {
+            conditional_exception("ThrowingType size limit reached in copy ctor");
+        }
+
+        /**
+         * @brief Move ctor of ThrowingType
+         *
+         * @param[in] other unused parameter
+         */
+         // move constructors intentionally throw exception
+         // NOLINTNEXTLINE(cppcoreguidelines-noexcept-move-operations,performance-noexcept-move-constructor,bugprone-exception-escape)
+        ThrowingType(ThrowingType&& /*other*/)
+        {
+            conditional_exception("ThrowingType size limit reached in move ctor");
+        }
+
+        /**
+         * @brief Default dtor of ThrowingType
+         */
+        ~ThrowingType() = default;
+
+        /**
+         * @brief Copy assignment of ThrowingType
+         *
+         * @param[in] other unused parameter
+         * @return source ThrowingType object
+         */
         auto operator=(const ThrowingType& other) noexcept(false) -> ThrowingType&
         {
             // empty if statement silences clang-tidy warning for copy assignment operator in mock struct
@@ -62,15 +100,64 @@ namespace tests
             return *this;
         }
 
-        auto operator==(const ThrowingType& /* unused */) const -> bool
+        /**
+         * @brief Move assignment of ThrowingType
+         *
+         * @param[in] other unused parameter
+         * @return source ThrowingType object
+         */
+        auto operator=(ThrowingType&& /*other*/) noexcept(false) -> ThrowingType&
+        {
+            return *this;
+        }
+
+        /**
+         * @brief Operator used to check if two objects of ThrowingType are equal
+         *
+         * @param[in] other unused parameter
+         * @return true
+         */
+        auto operator==(const ThrowingType& /* other */) const -> bool
         {
             return true;
         }
 
-        auto operator<=>(const ThrowingType& /* unused */) const noexcept(false)
+        /**
+         * @brief Operator used to compare two objects of ThrowingType
+         *
+         * @param[in] other unused parameter
+         * @return std::strong_ordering::equal
+         */
+        auto operator<=>(const ThrowingType& /* other */) const noexcept(false)
         {
             return std::strong_ordering::equal;
         }
+
+    private:
+
+        /**
+         * @brief Function throws exception
+         *
+         * @param[in] msg message to print to standard output
+         */
+        void conditional_exception(const std::string& msg) const
+        {
+            if (++m_counter >= m_size_limit)
+            {
+                m_counter = 0;
+                throw std::runtime_error(msg);
+            }
+        }
+
+        /**
+         * @brief Internal counter for throwing exceptions
+         */
+        static inline size_t m_counter{ 0 };
+
+        /**
+         * @brief Internal size limit for throwing exceptions
+         */
+        size_t m_size_limit{ throwing_type_size_limit };
     };
 
     /**
