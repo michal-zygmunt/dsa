@@ -1016,20 +1016,13 @@ namespace dsa
         /**
          * @brief Function allocate and construct ForwardList node
          *
-         * @param[in] value element of type T to be inserted
+         * @tparam ...Args
          * @param[in] next_ptr pointer to next Node
+         * @param[in] value element of type T to be inserted
          * @return pointer to created Node
          */
-        [[nodiscard]] auto construct_node(const_reference value, NodeBase* next_ptr = nullptr) -> Node*;
-
-        /**
-         * @brief Function allocate and construct ForwardList node
-         *
-         * @param[in] value element of type T to be inserted
-         * @param[in] next_ptr pointer to next Node
-         * @return pointer to created Node
-         */
-        [[nodiscard]] auto construct_node(T&& value, NodeBase* next_ptr = nullptr) -> Node*;
+        template<typename... Args>
+        auto construct_node(NodeBase* next_ptr, Args&&... args) -> Node*;
 
         /**
          * @brief Function destroys and deallocates memory used by Node
@@ -1650,15 +1643,8 @@ namespace dsa
 
         if (m_size != 0)
         {
-            Node* temp_head = construct_node(T{});
-            if (!temp_head)
-            {
-                // if temporary node could not be allocated
-                // do not modify object state
-                return;
-            }
-
-            NodeBase* temp_tail = temp_head;
+            Node* temp_head{ construct_node(nullptr, T{}) };
+            NodeBase* temp_tail{ temp_head };
 
             NodeBase* to_move{};
             NodeBase* to_return{};
@@ -2063,36 +2049,20 @@ namespace dsa
     }
 
     template<typename T>
-    auto ForwardList<T>::construct_node(const_reference value, NodeBase* next_ptr) -> Node*
+    template<typename... Args>
+    auto ForwardList<T>::construct_node(NodeBase* next_ptr, Args&&... args) -> Node*
     {
         Node* newNode{};
         try
         {
             newNode = node_alloc_traits::allocate(node_alloc, 1);
-            node_alloc_traits::construct(node_alloc, newNode, Node(value));
+            node_alloc_traits::construct(node_alloc, newNode, std::forward<Args>(args)...);
             newNode->m_next = next_ptr;
         }
         catch (...)
         {
             node_alloc_traits::deallocate(node_alloc, newNode, 1);
-        }
-
-        return newNode;
-    }
-
-    template<typename T>
-    auto ForwardList<T>::construct_node(T&& value, NodeBase* next_ptr) -> Node*
-    {
-        Node* newNode{};
-        try
-        {
-            newNode = node_alloc_traits::allocate(node_alloc, 1);
-            node_alloc_traits::construct(node_alloc, newNode, Node(std::move(value)));
-            newNode->m_next = next_ptr;
-        }
-        catch (...)
-        {
-            node_alloc_traits::deallocate(node_alloc, newNode, 1);
+            throw;
         }
 
         return newNode;
