@@ -232,6 +232,19 @@ int main() // NOLINT(modernize-use-trailing-return-type)
             std::cout << "List19 runtime error exception handled correctly\n\n";
         }
 
+        dsa::ForwardList<int> list20{ 0, 10, 20 };
+        dsa::ForwardList<int> temp20{ 30, 40, 50 };
+        auto list20_it = list20.insert_after(std::next(list20.end(), 1), temp20.begin(), temp20.end());
+        const std::initializer_list<int> expected20{ 0, 10, 20 };
+        tests::compare("ForwardList20", list20, expected20);
+        tests::compare("ForwardList20 it", list20_it == nullptr, true);
+
+        dsa::ForwardList<int> list21{ 0, 10, 20 };
+        auto list21_it = list21.insert_after(std::next(list21.end(), 1), 30);
+        const std::initializer_list<int> expected21{ 0, 10, 20 };
+        tests::compare("ForwardList21", list21, expected21);
+        tests::compare("ForwardList21 it", list21_it == nullptr, true);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
