@@ -1467,20 +1467,10 @@ namespace dsa
     {
         const iterator current{ pos.m_current_node };
 
-        Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
-        try
-        {
-            node_alloc_traits::construct(node_alloc, newNode, std::forward<Args>(args)...);
-            newNode->m_next = current.m_current_node->m_next;
-        }
-        catch (...)
-        {
-            node_alloc_traits::deallocate(node_alloc, newNode, 1);
-            throw;
-        }
-
+        Node* newNode{ construct_node(current.m_current_node->m_next, std::forward<Args>(args)...) };
         current.m_current_node->m_next = newNode;
         ++m_size;
+
         return iterator(newNode);
     }
 
