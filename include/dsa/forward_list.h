@@ -1643,63 +1643,72 @@ namespace dsa
     // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
     void ForwardList<T>::merge(ForwardList<T>&& other, Compare comp)
     {
-        if (&other != this)
+        if (&other == this)
         {
-            if (m_size != 0)
+            return;
+        }
+
+        if (m_size != 0)
+        {
+            Node* temp_head = construct_node(T{});
+            if (!temp_head)
             {
-                Node* temp_head = construct_node(0);
-                NodeBase* temp_tail = temp_head;
+                // if temporary node could not be allocated
+                // do not modify object state
+                return;
+            }
 
-                NodeBase* to_move{};
-                NodeBase* to_return{};
+            NodeBase* temp_tail = temp_head;
 
-                while (m_head->m_next && other.m_head->m_next)
+            NodeBase* to_move{};
+            NodeBase* to_return{};
+
+            while (m_head->m_next && other.m_head->m_next)
+            {
+                Node* node_this = dynamic_cast<Node*>(m_head->m_next);
+                Node* node_other = dynamic_cast<Node*>(other.m_head->m_next);
+
+                if (node_this && node_other)
                 {
-                    Node* node_this = dynamic_cast<Node*>(m_head->m_next);
-                    Node* node_other = dynamic_cast<Node*>(other.m_head->m_next);
-
-                    if (node_this && node_other)
+                    if (comp(node_this->value(), node_other->value()))
                     {
-                        if (comp(node_this->value(), node_other->value()))
-                        {
-                            to_move = m_head->m_next;
-                            to_return = to_move->m_next;
-                            temp_tail->m_next = to_move;
-                            m_head->m_next = to_return;
-                        }
-                        else
-                        {
-                            to_move = other.m_head->m_next;
-                            to_return = to_move->m_next;
-                            temp_tail->m_next = to_move;
-                            other.m_head->m_next = to_return;
-                        }
-
-                        temp_tail = temp_tail->m_next;
+                        to_move = m_head->m_next;
+                        to_return = to_move->m_next;
+                        temp_tail->m_next = to_move;
+                        m_head->m_next = to_return;
                     }
-                }
+                    else
+                    {
+                        to_move = other.m_head->m_next;
+                        to_return = to_move->m_next;
+                        temp_tail->m_next = to_move;
+                        other.m_head->m_next = to_return;
+                    }
 
-                if (m_head->m_next == nullptr)
-                {
-                    temp_tail->m_next = other.m_head->m_next;
-                    other.m_head->m_next = nullptr;
+                    temp_tail = temp_tail->m_next;
                 }
-                else
-                {
-                    temp_tail->m_next = m_head->m_next;
-                    m_head->m_next = nullptr;
-                }
+            }
 
-                m_head->m_next = temp_head->m_next;
-                destroy_node(temp_head);
-
-                m_size += other.m_size;
-                other.m_size = 0;
+            if (m_head->m_next == nullptr)
+            {
+                temp_tail->m_next = other.m_head->m_next;
+                other.m_head->m_next = nullptr;
             }
             else
             {
-                swap(other);
+                temp_tail->m_next = m_head->m_next;
+                m_head->m_next = nullptr;
             }
+
+            m_head->m_next = temp_head->m_next;
+            destroy_node(temp_head);
+
+            m_size += other.m_size;
+            other.m_size = 0;
+        }
+        else
+        {
+            swap(other);
         }
     }
 
@@ -2056,18 +2065,17 @@ namespace dsa
     template<typename T>
     auto ForwardList<T>::construct_node(const_reference value, NodeBase* next_ptr) -> Node*
     {
-        Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
+        Node* newNode{};
         try
         {
+            newNode = node_alloc_traits::allocate(node_alloc, 1);
             node_alloc_traits::construct(node_alloc, newNode, Node(value));
+            newNode->m_next = next_ptr;
         }
         catch (...)
         {
             node_alloc_traits::deallocate(node_alloc, newNode, 1);
-            throw;
         }
-
-        newNode->m_next = next_ptr;
 
         return newNode;
     }
@@ -2075,18 +2083,17 @@ namespace dsa
     template<typename T>
     auto ForwardList<T>::construct_node(T&& value, NodeBase* next_ptr) -> Node*
     {
-        Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
+        Node* newNode{};
         try
         {
+            newNode = node_alloc_traits::allocate(node_alloc, 1);
             node_alloc_traits::construct(node_alloc, newNode, Node(std::move(value)));
+            newNode->m_next = next_ptr;
         }
         catch (...)
         {
             node_alloc_traits::deallocate(node_alloc, newNode, 1);
-            throw;
         }
-
-        newNode->m_next = next_ptr;
 
         return newNode;
     }
