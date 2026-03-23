@@ -328,7 +328,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList61", list61, il_1);
         tests::compare("ForwardList62", list62, il_2);
 
-
         std::cout << "Testing moving other list\n\n";
 
         dsa::ForwardList<int> list63 = dsa::ForwardList<int>(il_1);
@@ -372,6 +371,24 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected70 = { 10, 20, 30, 40, 50 };
         // NOLINTNEXTLINE(bugprone-use-after-move)
         tests::compare("ForwardList70", list70, expected70);
+
+        dsa::ForwardList<int> list71{ il_1 };
+        list71.splice_after(list71.begin(), list71, list71.begin());
+        const std::initializer_list<int> expected71 = { 1, 2, 3, 4, 5 };
+        tests::compare("ForwardList71", list71, expected71);
+
+        dsa::ForwardList<int> list72{ il_1 };
+        dsa::ForwardList<int> list73{};
+        list72.splice_after(list72.begin(), list73, list73.before_begin());
+        const std::initializer_list<int> expected72 = { 1, 2, 3, 4, 5 };
+        const std::initializer_list<int> expected73{};
+        tests::compare("ForwardList72", list72, expected72);
+        tests::compare("ForwardList73", list73, expected73);
+
+        dsa::ForwardList<int> list74{ il_1 };
+        list74.splice_after(list74.begin(), list74, list74.begin(), list74.end());
+        const std::initializer_list<int> expected74 = { 1, 2, 3, 4, 5 };
+        tests::compare("ForwardList74", list74, expected74);
 
 
         tests::print_stats();
