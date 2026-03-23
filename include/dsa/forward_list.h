@@ -1367,7 +1367,7 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::clear()
     {
-        if (m_head && m_head->m_next)
+        if (m_head)
         {
             NodeBase* temp{ m_head->m_next };
             while (temp)
@@ -1830,11 +1830,7 @@ namespace dsa
                     }
                 }
 
-                if (prev)
-                {
-                    prev = prev->m_next;
-                }
-
+                prev = prev->m_next;
                 temp = temp->m_next;
             }
         }
@@ -2061,8 +2057,7 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::destroy_node(NodeBase* node_to_destroy)
     {
-        Node* node_dyn = dynamic_cast<Node*>(node_to_destroy);
-        if (node_dyn)
+        if (Node* node_dyn = dynamic_cast<Node*>(node_to_destroy))
         {
             node_alloc_traits::destroy(node_alloc, node_dyn);
             node_alloc_traits::deallocate(node_alloc, node_dyn, 1);
@@ -2109,15 +2104,12 @@ namespace dsa
 
             NodeBase* to_move{ temp_next->m_next };
 
-            if (to_move)
-            {
-                temp_next->m_next = to_move->m_next;
-                to_move->m_next = temp_prev->m_next;
-                temp_prev->m_next = to_move;
+            temp_next->m_next = to_move->m_next;
+            to_move->m_next = temp_prev->m_next;
+            temp_prev->m_next = to_move;
 
-                m_size += 1;
-                other.m_size -= 1;
-            }
+            m_size += 1;
+            other.m_size -= 1;
         }
     }
 
@@ -2143,21 +2135,15 @@ namespace dsa
             NodeBase* last_to_move{ temp_next };
             for (size_type i = 0; i < dist; i++)
             {
-                if (last_to_move)
-                {
-                    last_to_move = last_to_move->m_next;
-                }
+                last_to_move = last_to_move->m_next;
             }
 
-            if (temp_next)
-            {
-                temp_next->m_next = last_to_move->m_next;
-                last_to_move->m_next = temp_prev->m_next;
-                temp_prev->m_next = first_to_move;
+            temp_next->m_next = last_to_move->m_next;
+            last_to_move->m_next = temp_prev->m_next;
+            temp_prev->m_next = first_to_move;
 
-                m_size += dist;
-                other.m_size -= dist;
-            }
+            m_size += dist;
+            other.m_size -= dist;
         }
     }
 
