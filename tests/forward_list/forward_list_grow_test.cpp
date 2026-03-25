@@ -245,6 +245,26 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList21", list21, expected21);
         tests::compare("ForwardList21 it", list21_it == nullptr, true);
 
+        dsa::ForwardList<int> list22{ 0, 10, 20 };
+        auto list22_it = list22.insert_after(list22.begin(), list22.begin(), list22.begin());
+        const std::initializer_list<int> expected22{ 0, 10, 20 };
+        tests::compare("ForwardList22", list22, expected22);
+        tests::compare("ForwardList22 it", *list22_it, *list22.begin());
+
+        dsa::ForwardList<std::unique_ptr<int>> list23{};
+        auto ptr23 = std::make_unique<int>(1);
+        auto list23_it = list23.insert_after(list23.end(), std::move(ptr23));
+        tests::compare("ForwardList23 it", list23_it == nullptr, true);
+
+        dsa::ForwardList<int> list24{ 0, 10, 20 };
+        dsa::ForwardList<int> list25{ 30, 40, 50 };
+        auto list24_it = list24.insert_after(list24.begin(), list25.begin(), std::next(list25.begin()));
+        const std::initializer_list<int> expected24{ 0, 30, 10, 20 };
+        const std::initializer_list<int> expected28{ 30, 40, 50 };
+        tests::compare("ForwardList24", list24, expected24);
+        tests::compare("ForwardList24 it", *list24_it, list25.front());
+        tests::compare("ForwardList25", list25, expected28);
+
 
         std::cout << "Compare operations results with std container\n\n";
 

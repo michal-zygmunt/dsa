@@ -147,6 +147,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList19", list19, expected19);
         tests::compare("ForwardList19 erase_if count", cnt19, std::size_t{ 3 });
 
+        dsa::ForwardList<int> list20{ 0, 1, 2, 3, 4, 5 };
+        auto iter20 = list20.erase_after(std::next(list20.end()), std::next(list20.end()));
+        tests::compare("iter20 == nullptr", iter20 == nullptr, true);
+        iter20 = list20.erase_after(list20.begin(), std::next(list20.end()));
+        tests::compare("iter20 == nullptr", iter20 == nullptr, true);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
