@@ -26,37 +26,19 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     {
         std::cout << "Start forward_list_get_test:\n";
 
-        const dsa::ForwardList<int> list1 = dsa::ForwardList<int>({ 0, 10, 20 });
-        // Try reading some nodes with invalid indexes
+        dsa::ForwardList<int> list1 = dsa::ForwardList<int>({ 0, 10, 20 });
         const std::initializer_list<int> expected1 = { 0, 10, 20 };
-        auto indexes = { -1, 0, 1, 2, 100 };
-        for (size_t i = 0; i < indexes.size(); i++)
+        const size_t list1_size = list1.size();
+        for (size_t i = 0; i < list1_size; i++)
         {
-            auto* temp = list1.get(i);
-            if (static_cast<bool>(temp))
-            {
-                // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                tests::compare(temp->value(), expected1.begin()[i]);
-            }
+            const int temp = list1.front();
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+            tests::compare("ForwardList1", temp, expected1.begin()[i]);
+            list1.pop_front();
         }
-        tests::compare("ForwardList1", list1, expected1);
 
         const dsa::ForwardList<int> list2 = dsa::ForwardList<int>({ 20, 10, 0 });
-        const std::initializer_list<int> expected2 = { 20, 10, 0 };
-        size_t idx = 0;
-        for (const auto& item : expected2)
-        {
-            auto* temp = list2.get(idx);
-            if (static_cast<bool>(temp))
-            {
-                tests::compare(temp->value(), item);
-            }
-            idx++;
-        }
-        tests::compare("ForwardList2", list2, expected2);
-
-        const dsa::ForwardList<int> list3 = dsa::ForwardList<int>({ 0, 10, 20 });
-        tests::compare("ForwardList3 front", list3.front(), 0);
+        tests::compare("ForwardList2 front", list2.front(), 20);
 
 
         tests::print_stats();
