@@ -54,8 +54,8 @@
 		<Expand>
 			<LinkedListItems>
 				<Size>m_size</Size>
-				<HeadPointer>m_head._Mypair._Myval2</HeadPointer>
-				<NextPointer>m_next._Mypair._Myval2</NextPointer>
+				<HeadPointer>m_head</HeadPointer>
+				<NextPointer>m_next</NextPointer>
 				<ValueNode>(*this)</ValueNode>
 			</LinkedListItems>
 		</Expand>
@@ -66,7 +66,7 @@
 		<DisplayString>{m_value}</DisplayString>
 		<Expand>
 			<Item Name="Value">m_value</Item>
-			<Item Name="NextPtr">m_next._Mypair._Myval2</Item>
+			<Item Name="NextPtr">m_next</Item>
 			<Item Name="PrevPtr">m_prev</Item>
 		</Expand>
 	</Type>

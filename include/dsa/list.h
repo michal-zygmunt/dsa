@@ -113,7 +113,7 @@ namespace dsa
             /**
              * @brief Pointer to next node
              */
-            std::unique_ptr<NodeBase> m_next{};
+            NodeBase* m_next{};
 
             /**
              * @brief Pointer to previous node
@@ -135,8 +135,7 @@ namespace dsa
              */
             Node(T value)
                 : m_value{ value }
-            {
-            }
+            {}
 
             /**
              * @brief Function returns value stored in Node object
@@ -237,8 +236,7 @@ namespace dsa
              */
             ListIterator(NodeBase* node) noexcept
                 : m_current_node{ node }
-            {
-            }
+            {}
 
             /**
              * @brief Overload operator= to assign \p node to currently pointed ListIterator
@@ -261,7 +259,7 @@ namespace dsa
             {
                 if (m_current_node)
                 {
-                    m_current_node = m_current_node->m_next.get();
+                    m_current_node = m_current_node->m_next;
                 }
 
                 return *this;
@@ -348,7 +346,7 @@ namespace dsa
                 {
                     if (temp->m_next)
                     {
-                        temp = temp->m_next.get();
+                        temp = temp->m_next;
                     }
                     else
                     {
@@ -926,8 +924,8 @@ namespace dsa
         {
             if (m_head == nullptr)
             {
-                m_head = std::make_unique<NodeBase>();
-                m_tail = m_head.get();
+                m_head = new NodeBase;
+                m_tail = m_head;
             }
         }
 
@@ -953,13 +951,14 @@ namespace dsa
             }
 
             NodeBase* temp{ pos.m_current_node->m_prev };
-            NodeBase* to_remove{ temp->m_next.get() };
+            NodeBase* to_remove{ temp->m_next };
 
-            temp->m_next = std::move(to_remove->m_next);
+            temp->m_next = to_remove->m_next;
             temp->m_next->m_prev = temp;
+            delete to_remove;
 
             m_size--;
-            return iterator(temp->m_next.get());
+            return iterator(temp->m_next);
         }
 
         /**
@@ -987,15 +986,15 @@ namespace dsa
 
             NodeBase* temp{ pos.m_current_node->m_prev };
 
-            auto newNode = std::make_unique<Node>(value);
-            newNode->m_next = std::move(temp->m_next);
+            Node* newNode = new Node(value);
+            newNode->m_next = temp->m_next;
             newNode->m_prev = temp;
 
-            temp->m_next = std::move(newNode);
-            temp->m_next->m_next->m_prev = temp->m_next.get();
+            temp->m_next->m_prev = newNode;
+            temp->m_next = newNode;
 
             m_size++;
-            return iterator(temp->m_next.get());
+            return iterator(newNode);
         }
 
         /**
@@ -1049,7 +1048,7 @@ namespace dsa
          // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
         void transfer(const_iterator pos, List<T>&& other, const_iterator first, const const_iterator& last);
 
-        std::unique_ptr<NodeBase> m_head{};
+        NodeBase* m_head{};
         NodeBase* m_tail{};
         size_t m_size{};
     };
@@ -1063,8 +1062,7 @@ namespace dsa
     template<typename T>
     List<T>::List(size_t count)
         : List(count, T{})
-    {
-    }
+    {}
 
     template<typename T>
     List<T>::List(size_t count, const T& value)
@@ -1126,13 +1124,14 @@ namespace dsa
         if (&other != this)
         {
             clear();
+            NodeBase* temp{ m_head };
 
-            m_head = std::move(other.m_head);
-            m_tail = std::move(other.m_tail);
+            m_head = other.m_head;
+            m_tail = other.m_tail;
             m_size = other.m_size;
 
-            other.m_head = nullptr;
-            other.m_tail = nullptr;
+            other.m_head = temp;
+            other.m_tail = other.m_head;
             other.m_size = 0;
         }
 
@@ -1143,6 +1142,7 @@ namespace dsa
     List<T>::~List()
     {
         clear();
+        delete m_head;
     }
 
     template<typename T>
@@ -1194,13 +1194,13 @@ namespace dsa
     template<typename T>
     auto List<T>::begin() -> typename List<T>::iterator
     {
-        return iterator(m_head.get());
+        return iterator(m_head);
     }
 
     template<typename T>
     auto List<T>::begin() const -> typename List<T>::const_iterator
     {
-        return const_iterator(m_head.get());
+        return const_iterator(m_head);
     }
 
     template<typename T>
@@ -1250,9 +1250,13 @@ namespace dsa
     {
         if (m_head && m_head->m_next)
         {
-            while (m_head->m_next)
+            NodeBase* temp{ m_head };
+            while (temp->m_next)
             {
-                m_head = std::move(m_head->m_next);
+                m_head->m_prev = nullptr;
+                m_head = temp->m_next;
+                delete temp;
+                temp = m_head;
             }
 
             m_size = 0;
@@ -1342,18 +1346,18 @@ namespace dsa
     {
         init_node();
 
-        auto newNode = std::make_unique<Node>(value);
+        Node* newNode = new Node(value);
         if (!m_head->m_next)
         {
-            newNode->m_next = std::move(m_head);
-            m_head = std::move(newNode);
-            m_tail->m_prev = m_head.get();
+            newNode->m_next = m_head;
+            m_head = newNode;
+            m_tail->m_prev = m_head;
         }
         else
         {
-            m_head->m_prev = newNode.get();
-            newNode->m_next = std::move(m_head);
-            m_head = std::move(newNode);
+            m_head->m_prev = newNode;
+            newNode->m_next = m_head;
+            m_head = newNode;
         }
 
         m_size++;
@@ -1367,16 +1371,17 @@ namespace dsa
             return;
         }
 
+        NodeBase* temp{ m_head };
+        m_head = m_head->m_next;
         if (m_size == 1)
         {
-            m_head = std::move(m_head->m_next);
             m_tail->m_prev = nullptr;
         }
         else
         {
-            m_head = std::move(m_head->m_next);
             m_head->m_prev = nullptr;
         }
+        delete temp;
 
         m_size--;
     }
@@ -1386,20 +1391,20 @@ namespace dsa
     {
         init_node();
 
-        auto newNode = std::make_unique<Node>(value);
+        Node* newNode = new Node(value);
 
         if (!m_head->m_next) // only sentinel exists
         {
-            newNode->m_next = std::move(m_head);
-            m_head = std::move(newNode);
-            m_tail->m_prev = m_head.get();
+            newNode->m_next = m_head;
+            m_head = newNode;
+            m_tail->m_prev = m_head;
         }
         else
         {
             newNode->m_prev = m_tail->m_prev;
-            newNode->m_next = std::move(m_tail->m_prev->m_next);
-            m_tail->m_prev = newNode.get();
-            m_tail->m_prev->m_prev->m_next = std::move(newNode);
+            newNode->m_next = m_tail->m_prev->m_next;
+            m_tail->m_prev = newNode;
+            m_tail->m_prev->m_prev->m_next = newNode;
         }
 
         m_size++;
@@ -1413,17 +1418,20 @@ namespace dsa
             return;
         }
 
+        NodeBase* temp{};
         if (m_size == 1)
         {
-            m_head = std::move(m_head->m_next);
+            temp = m_head;
+            m_head = m_head->m_next;
             m_tail->m_prev = nullptr;
         }
         else
         {
-            NodeBase* temp{ m_tail->m_prev->m_prev };
-            m_tail->m_prev->m_prev->m_next = std::move(m_tail->m_prev->m_next);
-            m_tail->m_prev = temp;
+            temp = m_tail->m_prev;
+            temp->m_prev->m_next = temp->m_next;
+            m_tail->m_prev = temp->m_prev;
         }
+        delete temp;
 
         m_size--;
     }
@@ -1484,63 +1492,68 @@ namespace dsa
         {
             if (m_size != 0)
             {
-                auto temp_head = std::make_unique<Node>(0);
-                NodeBase* temp_tail = temp_head.get();
+                Node* temp_head = new Node(0);
+                NodeBase* temp_tail = temp_head;
 
-                std::unique_ptr<NodeBase> to_move{};
-                std::unique_ptr<NodeBase> to_return{};
+                NodeBase* to_move{};
+                NodeBase* to_return{};
 
-                std::unique_ptr<NodeBase> sentinel_this{ std::move(m_tail->m_prev->m_next) };
-                const std::unique_ptr<NodeBase> sentinel_other{ std::move(other.m_tail->m_prev->m_next) };
+                NodeBase* sentinel_this{ m_tail->m_prev->m_next };
+                NodeBase* sentinel_other{ other.m_tail->m_prev->m_next };
 
-                while (m_head && other.m_head)
+                while (m_head->m_next && other.m_head->m_next)
                 {
-                    Node* node_this = dynamic_cast<Node*>(m_head.get());
-                    Node* node_other = dynamic_cast<Node*>(other.m_head.get());
+                    Node* node_this = dynamic_cast<Node*>(m_head);
+                    Node* node_other = dynamic_cast<Node*>(other.m_head);
 
                     if (node_this && node_other)
                     {
                         if (node_this->value() <= node_other->value())
                         {
-                            to_move = std::move(m_head);
+                            to_move = m_head;
                             to_move->m_prev = temp_tail;
 
-                            to_return = std::move(to_move->m_next);
-                            temp_tail->m_next = std::move(to_move);
-                            m_head = std::move(to_return);
+                            to_return = to_move->m_next;
+                            temp_tail->m_next = to_move;
+                            m_head = to_return;
                         }
                         else
                         {
-                            to_move = std::move(other.m_head);
+                            to_move = other.m_head;
                             to_move->m_prev = temp_tail;
 
-                            to_return = std::move(to_move->m_next);
-                            temp_tail->m_next = std::move(to_move);
-                            other.m_head = std::move(to_return);
+                            to_return = to_move->m_next;
+                            temp_tail->m_next = to_move;
+                            other.m_head = to_return;
                         }
 
-                        temp_tail = temp_tail->m_next.get();
+                        temp_tail = temp_tail->m_next;
                     }
                 }
 
                 NodeBase* last{};
-                if (m_head == nullptr) // other.m_head attached at the end
+                if (m_head->m_next == nullptr) // other.m_head attached at the end
                 {
                     last = sentinel_other->m_prev;
                     other.m_head->m_prev = temp_tail;
-                    temp_tail->m_next = std::move(other.m_head);
+                    temp_tail->m_next = other.m_head;
                 }
                 else // this.m_head attached at the end
                 {
                     last = sentinel_this->m_prev;
                     m_head->m_prev = temp_tail;
-                    temp_tail->m_next = std::move(m_head);
+                    temp_tail->m_next = m_head;
                 }
-                last->m_next = std::move(sentinel_this);
+                last->m_next = sentinel_this;
                 last->m_next->m_prev = last;
 
-                m_head = std::move(temp_head->m_next);
+                m_head = temp_head->m_next;
                 m_head->m_prev = nullptr;
+                delete temp_head;
+
+                other.m_head = other.m_tail;
+                other.m_head->m_next = nullptr;
+                other.m_head->m_prev = nullptr;
 
                 m_size += other.m_size;
                 other.m_size = 0;
@@ -1583,18 +1596,18 @@ namespace dsa
 
             // select fragment from other
 
-            std::unique_ptr<NodeBase> fragment{};
-            std::unique_ptr<NodeBase> fragment_end{ std::move(last_to_move->m_next) };
+            NodeBase* fragment{};
+            NodeBase* fragment_end{ last_to_move->m_next };
             if (first == other.begin())
             {
-                fragment = std::move(other.m_head);
-                other.m_head = std::move(fragment_end);
+                fragment = other.m_head;
+                other.m_head = fragment_end;
                 other.m_head->m_prev = nullptr;
             }
             else
             {
-                fragment = std::move(first.m_current_node->m_prev->m_next);
-                fragment->m_prev->m_next = std::move(fragment_end);
+                fragment = first.m_current_node->m_prev->m_next;
+                fragment->m_prev->m_next = fragment_end;
                 fragment->m_prev->m_next->m_prev = first.m_current_node->m_prev;
                 fragment->m_prev = nullptr;
             }
@@ -1603,15 +1616,15 @@ namespace dsa
 
             if (pos == begin())
             {
-                last_to_move->m_next = std::move(m_head);
+                last_to_move->m_next = m_head;
                 last_to_move->m_next->m_prev = last_to_move;
-                m_head = std::move(fragment);
+                m_head = fragment;
             }
             else
             {
-                last_to_move->m_next = std::move(temp_prev->m_next);
+                last_to_move->m_next = temp_prev->m_next;
                 last_to_move->m_next->m_prev = last_to_move;
-                temp_prev->m_next = std::move(fragment);
+                temp_prev->m_next = fragment;
                 temp_prev->m_next->m_prev = temp_prev;
             }
 
@@ -1635,13 +1648,13 @@ namespace dsa
     template<typename T>
     void List<T>::splice(const const_iterator& pos, List<T>& other, const const_iterator& iter)
     {
-        transfer(pos, std::move(other), iter, iter.m_current_node->m_next.get());
+        transfer(pos, std::move(other), iter, iter.m_current_node->m_next);
     }
 
     template<typename T>
     void List<T>::splice(const_iterator pos, List<T>&& other, const_iterator iter)
     {
-        transfer(pos, std::move(other), iter, iter.m_current_node->m_next.get());
+        transfer(pos, std::move(other), iter, iter.m_current_node->m_next);
     }
 
     template<typename T>
@@ -1660,19 +1673,19 @@ namespace dsa
     template<typename T>
     void List<T>::remove(const_reference value)
     {
-        NodeBase* temp{ m_head.get() };
+        NodeBase* temp{ m_head };
         NodeBase* next{};
 
-        while (temp->m_next.get())
+        while (temp->m_next)
         {
-            next = temp->m_next.get();
+            next = temp->m_next;
 
-            if (Node* node = dynamic_cast<Node*>(m_head.get()))
+            if (Node* node = dynamic_cast<Node*>(m_head))
             {
                 if (node->value() == value)
                 {
                     pop_front();
-                    temp = m_head.get();
+                    temp = m_head;
                     continue;
                 }
             }
@@ -1687,7 +1700,7 @@ namespace dsa
                 }
             }
 
-            temp = temp->m_next.get();
+            temp = temp->m_next;
         }
     }
 
@@ -1699,31 +1712,31 @@ namespace dsa
             return;
         }
 
-        NodeBase* new_back{ m_head.get() };
-        std::unique_ptr<NodeBase> sentinel = std::move(m_tail->m_prev->m_next);
+        NodeBase* new_back{ m_head };
+        NodeBase* sentinel = m_tail->m_prev->m_next;
 
-        std::unique_ptr<NodeBase> temp = std::move(m_head);
-        std::unique_ptr<NodeBase> prev{};
+        NodeBase* temp = m_head;
+        NodeBase* prev{};
 
         for (size_t i = 0; i < m_size; i++)
         {
-            std::unique_ptr<NodeBase> next = std::move(temp->m_next);
-            temp->m_next = std::move(prev);
-            temp->m_prev = next.get();
+            NodeBase* next = temp->m_next;
+            temp->m_next = prev;
+            temp->m_prev = next;
 
-            prev = std::move(temp);
-            temp = std::move(next);
+            prev = temp;
+            temp = next;
         }
 
-        m_head = std::move(prev);
+        m_head = prev;
         m_tail->m_prev = new_back;
-        m_tail->m_prev->m_next = std::move(sentinel);
+        m_tail->m_prev->m_next = sentinel;
     }
 
     template<typename T>
     void List<T>::unique()
     {
-        NodeBase* temp{ m_head.get() };
+        NodeBase* temp{ m_head };
         NodeBase* prev{};
         NodeBase* next{};
         while (temp)
@@ -1732,7 +1745,7 @@ namespace dsa
 
             while (prev)
             {
-                next = prev->m_next.get();
+                next = prev->m_next;
 
                 Node* node_next = dynamic_cast<Node*>(next);
                 Node* node_temp = dynamic_cast<Node*>(temp);
@@ -1751,15 +1764,16 @@ namespace dsa
                             m_tail = prev;
                         }
 
-                        prev->m_next = std::move(to_remove->m_next);
+                        prev->m_next = to_remove->m_next;
+                        delete to_remove;
 
                         m_size--;
                         continue;
                     }
                 }
 
-                prev = prev->m_next.get();
-                temp = temp->m_next.get();
+                prev = prev->m_next;
+                temp = temp->m_next;
             }
         }
     }
@@ -1782,10 +1796,10 @@ namespace dsa
         if constexpr (mode == FRONT)
         {
             // count nodes from front
-            temp = m_head.get();
+            temp = m_head;
             for (size_t i = 0; i < index; i++)
             {
-                temp = temp->m_next.get();
+                temp = temp->m_next;
             }
         }
         else if constexpr (mode == BACK)
@@ -1802,10 +1816,10 @@ namespace dsa
             // optimize counting nodes from front or back
             if (index < m_size / 2)
             {
-                temp = m_head.get();
+                temp = m_head;
                 for (size_t i = 0; i < index; i++)
                 {
-                    temp = temp->m_next.get();
+                    temp = temp->m_next;
                 }
             }
             else
