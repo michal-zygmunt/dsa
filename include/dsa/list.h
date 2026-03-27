@@ -36,7 +36,6 @@ namespace dsa
      *
      * @tparam T type of data stored in List Node
      *
-     * @todo add get_allocator
      * @todo add rbegin
      * @todo add crbegin
      * @todo add rend
@@ -411,6 +410,11 @@ namespace dsa
         using value_type = T;
 
         /**
+         * @brief Alias for memory allocator
+         */
+        using allocator_type = std::allocator<value_type>;
+
+        /**
          * @brief Alias for pointer to data type used in class
          *
          * @tparam T* pointer to data type
@@ -528,6 +532,13 @@ namespace dsa
          * @param[in] init_list values to replace List with
          */
         void assign(const std::initializer_list<T>& init_list);
+
+        /**
+         * @brief Get the allocator object
+         *
+         * @return allocator_type type of memory allocator
+         */
+        [[nodiscard]] auto get_allocator() const noexcept -> allocator_type;
 
         /**
          * @brief Function returns reference to value stored in List first Node
@@ -1051,6 +1062,11 @@ namespace dsa
         NodeBase* m_head{};
         NodeBase* m_tail{};
         size_t m_size{};
+
+        /**
+         * @brief Allocator for memory management
+         */
+        allocator_type m_allocator{};
     };
 
     template<typename T>
@@ -1165,6 +1181,12 @@ namespace dsa
         {
             push_back(item);
         }
+    }
+
+    template<typename T>
+    [[nodiscard]] auto List<T>::get_allocator() const noexcept -> allocator_type
+    {
+        return m_allocator;
     }
 
     template<typename T>
