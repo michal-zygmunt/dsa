@@ -506,6 +506,17 @@ namespace dsa
         List(size_type count, const T& value);
 
         /**
+         * @brief Construct a new List object using elements from range [ \p first , \p last )
+         *
+         * @tparam InputIt
+         * @param[in] first element defining range of elements to insert
+         * @param[in] last element definig range of elements to insert
+         */
+        template<typename InputIt>
+            requires std::input_iterator<InputIt>
+        List(InputIt first, InputIt last);
+
+        /**
          * @brief Construct a new List object using initializer list
          *
          * @param[in] ilist initializer list of values of type T
@@ -1204,6 +1215,14 @@ namespace dsa
         {
             push_front(value);
         }
+    }
+
+    template<typename T>
+    template<typename InputIt>
+        requires std::input_iterator<InputIt>
+    List<T>::List(InputIt first, InputIt last)
+    {
+        assign(first, last);
     }
 
     template<typename T>
