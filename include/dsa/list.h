@@ -508,9 +508,9 @@ namespace dsa
         /**
          * @brief Construct a new List object using initializer list
          *
-         * @param[in] init_list initializer list of values of type T
+         * @param[in] ilist initializer list of values of type T
          */
-        List(const std::initializer_list<T>& init_list);
+        List(const std::initializer_list<T>& ilist);
 
         /**
          * @brief Construct a new List object using copy constructor
@@ -543,6 +543,14 @@ namespace dsa
          * @return List&
          */
         auto operator=(List<T>&& other) noexcept -> List&;
+
+        /**
+         * @brief Assign initializer list elements to List object
+         *
+         * @param[in] ilist initializer list to copy elements from
+         * @return List&
+         */
+        auto operator=(std::initializer_list<value_type> ilist) -> List&;
 
         /**
          * @brief Destroy the List object
@@ -1182,12 +1190,9 @@ namespace dsa
     }
 
     template<typename T>
-    List<T>::List(const std::initializer_list<T>& init_list)
+    List<T>::List(const std::initializer_list<T>& ilist)
     {
-        for (const auto& item : init_list)
-        {
-            push_back(item);
-        }
+        operator=(ilist);
     }
 
     template<typename T>
@@ -1239,6 +1244,19 @@ namespace dsa
             other.m_head = temp;
             other.m_tail = other.m_head;
             other.m_size = 0;
+        }
+
+        return *this;
+    }
+
+    template<typename T>
+    auto List<T>::operator=(std::initializer_list<value_type> ilist) -> List&
+    {
+        clear();
+
+        for (const auto& item : ilist)
+        {
+            push_back(item);
         }
 
         return *this;
