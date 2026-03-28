@@ -46,6 +46,15 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list3.assign(expected3);
         tests::compare("List3", list3, expected3);
 
+        const std::initializer_list<int> expected4{ 1, 2, 3, 4 };
+        const dsa::List<int> list4 = expected4;
+        tests::compare("List4", list4, expected4);
+
+        const std::initializer_list<int> expected5{ 1, 2, 3, 4 };
+        dsa::List<int> list5{ 10, 20, 30 };
+        list5 = expected5;
+        tests::compare("List4", list5, expected5);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -56,6 +65,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::list<int> std_list3{ 0, 10, 20 };
         std_list3.assign(expected3);
         tests::compare("List3 vs std", list3, std_list3);
+
+        const std::list<int> std_list4 = expected4;
+        tests::compare("List4 vs std", list4, std_list4);
+
+        std::list<int> std_list5{ 10, 20, 30 };
+        std_list5 = expected5;
+        tests::compare("List5 vs std", list5, std_list5);
 
 
         tests::print_stats();
