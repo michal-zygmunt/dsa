@@ -212,6 +212,13 @@ namespace dsa
             using value_type = T;
 
             /**
+             * @brief Alias for size type used in class
+             *
+             * @tparam T size type
+             */
+            using size_type = std::size_t;
+
+            /**
              * @brief Alias for pointer to data type used by iterator
              *
              * @tparam T* pointer to data type
@@ -413,6 +420,13 @@ namespace dsa
          * @brief Alias for memory allocator
          */
         using allocator_type = std::allocator<value_type>;
+
+        /**
+         * @brief Alias for size type used in class
+         *
+         * @tparam T size type
+         */
+        using size_type = std::size_t;
 
         /**
          * @brief Alias for pointer to data type used in class
