@@ -297,6 +297,49 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("iter20 == nullptr", iter20 == nullptr, true);
 
 
+
+
+
+
+        // test iterators traversal
+        dsa::List<int> list21 = { 0, 10, 20, 30, 40 };
+        const std::list<int> temp21(list21.begin(), list21.end());
+        tests::compare("list21 begin()", *list21.begin(), 0);
+        auto iter21 = list21.begin();
+        std::advance(iter21, 1);
+        tests::compare("list21 begin()++", *iter21, 10);
+        iter21 = list21.end();
+        std::advance(iter21, -1);
+        tests::compare("list21 end()--", *iter21, 40);
+        tests::compare("list21 end()-- == back()", *iter21, list21.back());
+        tests::compare("list21 iter", list21, temp21);
+
+        // test const iterator traversal
+        const auto& list22 = list21;
+        const std::list<int> temp22(list22.cbegin(), list22.cend());
+        tests::compare("list22 cbegin()", *list22.cbegin(), 0);
+        auto citer22 = list22.cbegin();
+        std::advance(citer22, 1);
+        tests::compare("list22 cbegin()++", *citer22, 10);
+        citer22 = list22.cend();
+        std::advance(citer22, -1);
+        tests::compare("list22 cend()--", *citer22, 40);
+        tests::compare("list22 cend() == back()", *citer22, list22.back());
+        tests::compare("list22 const iter", list22, temp22);
+
+        // test reverse iterator traversal
+        dsa::List<int> list23{ 0, 1, 2, 3, 4 };
+        auto iter23 = list23.rend();
+        std::advance(iter23, -1);
+        tests::compare("list23 rend()--", *iter23, 0);
+        iter23 = list23.rbegin();
+        std::advance(iter23, 1);
+        tests::compare("list23 rbegin()++", *iter23, 3);
+        const std::list<int> temp23(list23.rbegin(), list23.rend());
+        const dsa::List<int> reversed23{ 4, 3, 2, 1, 0 };
+        tests::compare("list23 reverse iter", reversed23, temp23);
+
+
         std::cout << "Compare operations results with std container\n\n";
 
         std::list<int> std_list1{ 0, 10, 20 };
