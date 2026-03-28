@@ -935,6 +935,7 @@ namespace dsa
         {
             if (m_head == nullptr)
             {
+                // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
                 m_head = new NodeBase;
                 m_tail = m_head;
             }
@@ -966,10 +967,55 @@ namespace dsa
 
             temp->m_next = to_remove->m_next;
             temp->m_next->m_prev = temp;
-            delete to_remove;
+            destroy_node(to_remove);
 
             m_size--;
             return iterator(temp->m_next);
+        }
+
+        /**
+         * @brief Function allocate and construct List node
+         *
+         * @tparam ...Args
+         * @param[in] prev_ptr pointer to previous Node
+         * @param[in] next_ptr pointer to next Node
+         * @param[in] args element of type T to be inserted
+         * @return pointer to created Node
+         */
+        template<typename... Args>
+        // NOLINTNEXTLINE(bugprone-easily-swappable-parameters,-warnings-as-errors)
+        auto construct_node(NodeBase* prev_ptr, NodeBase* next_ptr, Args&&... args) -> Node*
+        {
+            Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
+            try
+            {
+                node_alloc_traits::construct(node_alloc, newNode, std::forward<Args>(args)...);
+            }
+            catch (...)
+            {
+                node_alloc_traits::deallocate(node_alloc, newNode, 1);
+                throw;
+            }
+
+            newNode->m_prev = prev_ptr;
+            newNode->m_next = next_ptr;
+
+            return newNode;
+        }
+
+        /**
+         * @brief Function destroys and deallocates memory used by Node
+         *
+         * @param[in] node_to_destroy pointer to Node to delete
+         */
+        void destroy_node(NodeBase* node_to_destroy)
+        {
+            Node* node_dyn = dynamic_cast<Node*>(node_to_destroy);
+            if (node_dyn)
+            {
+                node_alloc_traits::destroy(node_alloc, node_dyn);
+                node_alloc_traits::deallocate(node_alloc, node_dyn, 1);
+            }
         }
 
         /**
@@ -996,10 +1042,8 @@ namespace dsa
             }
 
             NodeBase* temp{ pos.m_current_node->m_prev };
+            Node* newNode = construct_node(temp, temp->m_next, value);
 
-            Node* newNode = new Node(value);
-            newNode->m_next = temp->m_next;
-            newNode->m_prev = temp;
 
             temp->m_next->m_prev = newNode;
             temp->m_next = newNode;
@@ -1067,6 +1111,21 @@ namespace dsa
          * @brief Allocator for memory management
          */
         allocator_type m_allocator{};
+
+        /**
+         * @brief Rebind allocator to create new objects of type Node
+         */
+        using node_allocator = typename std::allocator_traits<std::allocator<T>>::template rebind_alloc<Node>;
+
+        /**
+         * @brief Setup allocator traits used for Node creation and deletion
+         */
+        using node_alloc_traits = std::allocator_traits<node_allocator>;
+
+        /**
+         * @brief Initialize allocator rebind to Node objects
+         */
+        node_allocator node_alloc{};
     };
 
     template<typename T>
@@ -1277,7 +1336,7 @@ namespace dsa
             {
                 m_head->m_prev = nullptr;
                 m_head = temp->m_next;
-                delete temp;
+                destroy_node(temp);
                 temp = m_head;
             }
 
@@ -1368,7 +1427,7 @@ namespace dsa
     {
         init_node();
 
-        Node* newNode = new Node(value);
+        Node* newNode = construct_node(nullptr, nullptr, value);
         if (!m_head->m_next)
         {
             newNode->m_next = m_head;
@@ -1403,7 +1462,7 @@ namespace dsa
         {
             m_head->m_prev = nullptr;
         }
-        delete temp;
+        destroy_node(temp);
 
         m_size--;
     }
@@ -1413,7 +1472,7 @@ namespace dsa
     {
         init_node();
 
-        Node* newNode = new Node(value);
+        Node* newNode = construct_node(nullptr, nullptr, value);
 
         if (!m_head->m_next) // only sentinel exists
         {
@@ -1453,7 +1512,7 @@ namespace dsa
             temp->m_prev->m_next = temp->m_next;
             m_tail->m_prev = temp->m_prev;
         }
-        delete temp;
+        destroy_node(temp);
 
         m_size--;
     }
@@ -1514,7 +1573,7 @@ namespace dsa
         {
             if (m_size != 0)
             {
-                Node* temp_head = new Node(0);
+                Node* temp_head = construct_node(nullptr, nullptr, 0);
                 NodeBase* temp_tail = temp_head;
 
                 NodeBase* to_move{};
@@ -1571,7 +1630,7 @@ namespace dsa
 
                 m_head = temp_head->m_next;
                 m_head->m_prev = nullptr;
-                delete temp_head;
+                destroy_node(temp_head);
 
                 other.m_head = other.m_tail;
                 other.m_head->m_next = nullptr;
@@ -1787,7 +1846,7 @@ namespace dsa
                         }
 
                         prev->m_next = to_remove->m_next;
-                        delete to_remove;
+                        destroy_node(to_remove);
 
                         m_size--;
                         continue;
