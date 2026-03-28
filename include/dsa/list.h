@@ -438,30 +438,30 @@ namespace dsa
         /**
          * @brief Alias for pointer to data type used in class
          *
-         * @tparam T* pointer to data type
+         * @tparam value_type* pointer to data type
          */
-        using pointer = T*;
+        using pointer = value_type*;
 
         /**
          * @brief Alias for const pointer to data type used in class
          *
-         * @tparam T* pointer to data type
+         * @tparam value_type* const pointer to data type
          */
-        using const_pointer = const T*;
+        using const_pointer = const value_type*;
 
         /**
          * @brief Alias for reference to data type used in class
          *
-         * @tparam T& reference to data type
+         * @tparam value_type& reference to data type
          */
-        using reference = T&;
+        using reference = value_type&;
 
         /**
          * @brief Alias for const reference to data type used in class
          *
-         * @tparam T& const reference to data type
+         * @tparam value_type& const reference to data type
          */
-        using const_reference = const T&;
+        using const_reference = const value_type&;
 
         /**
          * @brief Alias for const iterator to data type used in class
