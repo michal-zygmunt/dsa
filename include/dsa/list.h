@@ -464,14 +464,24 @@ namespace dsa
         using const_reference = const value_type&;
 
         /**
+         * @brief Alias for iterator to data type used in class
+         */
+        using iterator = ListIterator<false>;
+
+        /**
          * @brief Alias for const iterator to data type used in class
          */
         using const_iterator = ListIterator<true>;
 
         /**
-         * @brief Alias for iterator to data type used in class
+         * @brief Alias for reverse_iterator to data type used in class
          */
-        using iterator = ListIterator<false>;
+        using reverse_iterator = std::reverse_iterator<iterator>;
+
+        /**
+         * @brief Alias for const reverse_iterator to data type used in class
+         */
+        using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
         /**
          * @brief Construct a new List object
