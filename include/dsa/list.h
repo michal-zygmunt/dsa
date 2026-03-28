@@ -542,10 +542,10 @@ namespace dsa
          * @param[in,out] other List object of type T
          * @return List&
          */
-        auto operator=(List<T>&& other) noexcept -> List&;
+        auto operator=(List<T>&& other) noexcept(std::allocator_traits<allocator_type>::is_always_equal::value)->List&;
 
         /**
-         * @brief Assign initializer list elements to List object
+         * @brief Assign elements from initializer list to List object
          *
          * @param[in] ilist initializer list to copy elements from
          * @return List&
@@ -1230,7 +1230,8 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::operator=(List<T>&& other) noexcept -> List<T>&
+    auto List<T>::operator=(List<T>&& other) noexcept(std::allocator_traits<allocator_type>::is_always_equal::value)
+        ->List&
     {
         if (&other != this)
         {
