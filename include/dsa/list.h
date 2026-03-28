@@ -562,13 +562,30 @@ namespace dsa
          *
          * @param[in] count new size of the container
          * @param[in] value value to initialize elements of the container with
+         *
+         * @note all iterators, pointers and references to the elements of the container are invalidated
          */
         void assign(size_type count, const_reference value);
+
+        /**
+         * @brief Function assign elements from range [ \p first , \p last ) to List object
+         *
+         * @tparam InputIt
+         * @param[in] first element defining range of elements to insert
+         * @param[in] last element definig range of elements to insert
+         *
+         * @note all iterators, pointers and references to the elements of the container are invalidated
+         */
+        template<typename InputIt>
+            requires std::input_iterator<InputIt>
+        void assign(InputIt first, InputIt last);
 
         /**
          * @brief Function assign values to the List
          *
          * @param[in] init_list values to replace List with
+         *
+         * @note all iterators, pointers and references to the elements of the container are invalidated
          */
         void assign(const std::initializer_list<T>& init_list);
 
@@ -1278,6 +1295,20 @@ namespace dsa
         for (size_type i = 0; i < count; i++)
         {
             push_back(value);
+        }
+    }
+
+    template<typename T>
+    template<typename InputIt>
+        requires std::input_iterator<InputIt>
+    void List<T>::assign(InputIt first, InputIt last)
+    {
+        clear();
+
+        while (first != last)
+        {
+            push_back(*first);
+            ++first;
         }
     }
 
