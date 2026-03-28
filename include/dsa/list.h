@@ -429,6 +429,13 @@ namespace dsa
         using size_type = std::size_t;
 
         /**
+         * @brief Alias for pointer difference type used in class
+         *
+         * @tparam T pointer size type
+         */
+        using difference_type = std::ptrdiff_t;
+
+        /**
          * @brief Alias for pointer to data type used in class
          *
          * @tparam T* pointer to data type
