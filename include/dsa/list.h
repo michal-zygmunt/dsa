@@ -36,10 +36,6 @@ namespace dsa
      *
      * @tparam T type of data stored in List Node
      *
-     * @todo add rbegin
-     * @todo add crbegin
-     * @todo add rend
-     * @todo add crend
      * @todo add emplace
      * @todo add emplace_back
      * @todo add emplace_front
@@ -676,6 +672,60 @@ namespace dsa
          * @return const_iterator const iterator to List last Node
          */
         [[nodiscard]] auto cend() const noexcept -> const_iterator;
+
+        /**
+         * @brief Returns reverse_iterator to the first element of reversed underlaying data structure
+         *
+         * @note If container is empty, returned iterator will be equal to end()
+         *
+         * @return reverse_iterator to the first element
+         */
+        [[nodiscard]] auto rbegin() noexcept -> reverse_iterator;
+
+        /**
+         * @brief Returns const_reverse_iterator to the first element of reversed underlaying data structure
+         *
+         * @note If container is empty, returned iterator will be equal to end()
+         *
+         * @return const_reverse_iterator to the first element
+         */
+        [[nodiscard]] auto rbegin() const noexcept -> const_reverse_iterator;
+
+        /**
+         * @brief Returns const_reverse_iterator to the first element of reversed underlaying data structure
+         *
+         * @note If container is empty, returned iterator will be equal to end()
+         *
+         * @return const_reverse_iterator to the first element
+         */
+        [[nodiscard]] auto crbegin() const noexcept -> const_reverse_iterator;
+
+        /**
+         * @brief Returns reverse_iterator past the last element of reversed underlaying data structure
+         *
+         * @note Iterator act as a sentinel, it is not guaranteed to be dereferencable
+         *
+         * @return reverse_iterator to the element after the last element
+         */
+        [[nodiscard]] auto rend() noexcept -> reverse_iterator;
+
+        /**
+         * @brief Returns const_reverse_iterator past the last element of reversed underlaying data structure
+         *
+         * @note Iterator act as a sentinel, it is not guaranteed to be dereferencable
+         *
+         * @return const_reverse_iterator to the element after the last element
+         */
+        [[nodiscard]] auto rend() const noexcept -> const_reverse_iterator;
+
+        /**
+         * @brief Returns const_reverse_iterator past the last element of reversed underlaying data structure
+         *
+         * @note Iterator act as a sentinel, it is not guaranteed to be dereferencable
+         *
+         * @return const_reverse_iterator to the element after the last element
+         */
+        [[nodiscard]] auto crend() const noexcept -> const_reverse_iterator;
 
         /**
          * @brief Function checks if container has no elements
@@ -1406,6 +1456,42 @@ namespace dsa
     auto List<T>::cend() const noexcept -> typename List<T>::const_iterator
     {
         return end();
+    }
+
+    template<typename T>
+    auto List<T>::rbegin() noexcept -> reverse_iterator
+    {
+        return reverse_iterator(end());
+    }
+
+    template<typename T>
+    auto List<T>::rbegin() const noexcept -> const_reverse_iterator
+    {
+        return const_reverse_iterator(end());
+    }
+
+    template<typename T>
+    auto List<T>::crbegin() const noexcept -> const_reverse_iterator
+    {
+        return const_reverse_iterator(end());
+    }
+
+    template<typename T>
+    auto List<T>::rend() noexcept -> reverse_iterator
+    {
+        return reverse_iterator(begin());
+    }
+
+    template<typename T>
+    auto List<T>::rend() const noexcept -> const_reverse_iterator
+    {
+        return const_reverse_iterator(begin());
+    }
+
+    template<typename T>
+    auto List<T>::crend() const noexcept -> const_reverse_iterator
+    {
+        return const_reverse_iterator(begin());
     }
 
     template<typename T>
