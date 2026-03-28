@@ -16,6 +16,7 @@
 #include <exception>
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
 #include <list>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -53,7 +54,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected5{ 1, 2, 3, 4 };
         dsa::List<int> list5{ 10, 20, 30 };
         list5 = expected5;
-        tests::compare("List4", list5, expected5);
+        tests::compare("List5", list5, expected5);
+
+        dsa::List<int> list6 = dsa::List<int>({ 0, 10, 20 });
+        dsa::List<int> temp6 = dsa::List<int>({ 0, 1, 2, 3, 4, 5 });
+        list6.assign(std::next(temp6.begin(), 1), std::next(temp6.begin(), 4));
+        const std::initializer_list<int> expected6 = { 1, 2, 3 };
+        tests::compare("List6", list6, expected6);
 
 
         std::cout << "Compare operations results with std container\n\n";
@@ -72,6 +79,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::list<int> std_list5{ 10, 20, 30 };
         std_list5 = expected5;
         tests::compare("List5 vs std", list5, std_list5);
+
+        std::list<int> std_list6{ 0, 10, 20 };
+        std_list6.assign(std::next(temp6.begin(), 1), std::next(temp6.begin(), 4));
+        tests::compare("List6 vs std", list6, std_list6);
 
 
         tests::print_stats();
