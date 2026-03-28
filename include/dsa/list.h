@@ -344,11 +344,11 @@ namespace dsa
              * @retval valid ListIterator if index is valid
              * @retval nullptr if index is invalid
              */
-            auto operator[](size_t index) -> ListIterator
+            auto operator[](size_type index) -> ListIterator
             {
                 NodeBase* temp{ m_current_node };
 
-                for (size_t i = 0; i < index; i++)
+                for (size_type i = 0; i < index; i++)
                 {
                     if (temp->m_next)
                     {
@@ -477,7 +477,7 @@ namespace dsa
          *
          * @param[in] count element count
          */
-        List(size_t count);
+        List(size_type count);
 
         /**
          * @brief Construct a new List object of size \p count,
@@ -486,7 +486,7 @@ namespace dsa
          * @param[in] count element count
          * @param[in] value value for all nodes
          */
-        List(size_t count, const T& value);
+        List(size_type count, const T& value);
 
         /**
          * @brief Construct a new List object using initializer list
@@ -538,7 +538,7 @@ namespace dsa
          * @param[in] count new size of the container
          * @param[in] value value to initialize elements of the container with
          */
-        void assign(size_t count, const_reference value);
+        void assign(size_type count, const_reference value);
 
         /**
          * @brief Function assign values to the List
@@ -635,16 +635,16 @@ namespace dsa
         /**
          * @brief Function returns List size
          *
-         * @return size_t number of elements in container
+         * @return size_type number of elements in container
          */
-        [[nodiscard]] auto size() const -> size_t;
+        [[nodiscard]] auto size() const -> size_type;
 
         /**
          * @brief Function returns maximum number of elements container can hold
          *
-         * @return size_t maximum number of elements
+         * @return size_type maximum number of elements
          */
-        [[nodiscard]] auto max_size() const -> size_t;
+        [[nodiscard]] auto max_size() const -> size_type;
 
         /**
          * @brief Function removes all elements of List
@@ -672,7 +672,7 @@ namespace dsa
          * @retval iterator to inserted \p value
          * @retval pos if no element was inserted
          */
-        auto insert(const const_iterator& pos, size_t count, const_reference value) -> iterator;
+        auto insert(const const_iterator& pos, size_type count, const_reference value) -> iterator;
 
         /**
          * @brief Function inserts new Node before specified \p pos
@@ -760,7 +760,7 @@ namespace dsa
          *
          * @param[in] count new size of container
          */
-        void resize(size_t count);
+        void resize(size_type count);
 
         /**
          * @brief Function resize List to specified number of elements
@@ -768,7 +768,7 @@ namespace dsa
          * @param[in] count count new size of container
          * @param[in] value value to initialize new elements
          */
-        void resize(size_t count, const_reference value);
+        void resize(size_type count, const_reference value);
 
         /**
          * @brief Function swaps content of two List objects
@@ -914,7 +914,7 @@ namespace dsa
          * @retval Node* if index is valid
          * @retval nullptr if invalid index
          */
-        [[nodiscard]] auto get(size_t index) const -> Node*;
+        [[nodiscard]] auto get(size_type index) const -> Node*;
 
         /**
          * @brief Function sets value of specifed Node of List
@@ -925,7 +925,7 @@ namespace dsa
          * @retval true if value of Node was overwritten
          * @retval false if invalid index
          */
-        auto set(size_t index, T value) -> bool;
+        auto set(size_type index, T value) -> bool;
 
     private:
 
@@ -1100,9 +1100,9 @@ namespace dsa
          * @tparam T type of input objects
          * @param[in] first const_iterator pointing first element
          * @param[in] last const_iterator pointing to last (inclusive) element
-         * @return size_t number of elements between input elements
+         * @return size_type number of elements between input elements
          */
-        auto distance(const_iterator first, const const_iterator& last) -> size_t;
+        auto distance(const_iterator first, const const_iterator& last) -> size_type;
 
         /**
          * @brief Function moves elements from other List object
@@ -1119,7 +1119,7 @@ namespace dsa
 
         NodeBase* m_head{};
         NodeBase* m_tail{};
-        size_t m_size{};
+        size_type m_size{};
 
         /**
          * @brief Allocator for memory management
@@ -1149,16 +1149,16 @@ namespace dsa
     }
 
     template<typename T>
-    List<T>::List(size_t count)
+    List<T>::List(size_type count)
         : List(count, T{})
     {}
 
     template<typename T>
-    List<T>::List(size_t count, const T& value)
+    List<T>::List(size_type count, const T& value)
     {
         init_node();
 
-        for (size_t i = 0; i < count; i++)
+        for (size_type i = 0; i < count; i++)
         {
             push_front(value);
         }
@@ -1176,7 +1176,7 @@ namespace dsa
     template<typename T>
     List<T>::List(const List<T>& other)
     {
-        for (size_t i = 0; i < other.size(); i++)
+        for (size_type i = 0; i < other.size(); i++)
         {
             push_back(other.get(i)->value());
         }
@@ -1192,7 +1192,7 @@ namespace dsa
                 pop_front();
             }
 
-            for (size_t i = 0; i < other.size(); i++)
+            for (size_type i = 0; i < other.size(); i++)
             {
                 push_back(other.get(i)->value());
             }
@@ -1235,11 +1235,11 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::assign(size_t count, const_reference value)
+    void List<T>::assign(size_type count, const_reference value)
     {
         clear();
 
-        for (size_t i = 0; i < count; i++)
+        for (size_type i = 0; i < count; i++)
         {
             push_back(value);
         }
@@ -1329,15 +1329,15 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::size() const -> size_t
+    auto List<T>::size() const -> size_type
     {
         return m_size;
     }
 
     template<typename T>
-    auto List<T>::max_size() const -> size_t
+    auto List<T>::max_size() const -> size_type
     {
-        return std::numeric_limits<size_t>::max();
+        return std::numeric_limits<size_type>::max();
     }
 
     template<typename T>
@@ -1366,7 +1366,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::insert(const const_iterator& pos, size_t count, const_reference value) -> typename List<T>::iterator
+    auto List<T>::insert(const const_iterator& pos, size_type count, const_reference value) -> typename List<T>::iterator
     {
         iterator iter{ pos.m_current_node };
 
@@ -1375,7 +1375,7 @@ namespace dsa
             return nullptr;
         }
 
-        for (size_t i = 0; i < count; i++)
+        for (size_type i = 0; i < count; i++)
         {
             iter = insert_element_before(iter, value);
         }
@@ -1421,14 +1421,14 @@ namespace dsa
             return nullptr;
         }
 
-        const size_t dist = distance(first, last);
+        const size_type dist = distance(first, last);
         if (dist == 0)
         {
             return last;
         }
 
         iterator iter(first.m_current_node);
-        for (size_t i = 0; i < dist; i++)
+        for (size_type i = 0; i < dist; i++)
         {
             iter = erase_element(iter);
         }
@@ -1532,13 +1532,13 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::resize(size_t count)
+    void List<T>::resize(size_type count)
     {
         resize(count, T{});
     }
 
     template<typename T>
-    void List<T>::resize(size_t count, const_reference value)
+    void List<T>::resize(size_type count, const_reference value)
     {
         if (count == m_size)
         {
@@ -1661,9 +1661,9 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::distance(const_iterator first, const const_iterator& last) -> size_t
+    auto List<T>::distance(const_iterator first, const const_iterator& last) -> size_type
     {
-        size_t dist{};
+        size_type dist{};
         while (first != last)
         {
             ++first;
@@ -1680,7 +1680,7 @@ namespace dsa
     {
         if (&other != this && other.m_size > 0)
         {
-            const size_t dist = distance(first, last);
+            const size_type dist = distance(first, last);
             if (dist == 0)
             {
                 return;
@@ -1813,7 +1813,7 @@ namespace dsa
         NodeBase* temp = m_head;
         NodeBase* prev{};
 
-        for (size_t i = 0; i < m_size; i++)
+        for (size_type i = 0; i < m_size; i++)
         {
             NodeBase* next = temp->m_next;
             temp->m_next = prev;
@@ -1874,7 +1874,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::get(size_t index) const -> typename List<T>::Node*
+    auto List<T>::get(size_type index) const -> typename List<T>::Node*
     {
         if (index >= m_size)
         {
@@ -1892,7 +1892,7 @@ namespace dsa
         {
             // count nodes from front
             temp = m_head;
-            for (size_t i = 0; i < index; i++)
+            for (size_type i = 0; i < index; i++)
             {
                 temp = temp->m_next;
             }
@@ -1901,7 +1901,7 @@ namespace dsa
         {
             // count nodes from back
             temp = m_tail->m_prev;
-            for (size_t i = m_size - 1; i > index; i--)
+            for (size_type i = m_size - 1; i > index; i--)
             {
                 temp = temp->m_prev;
             }
@@ -1912,7 +1912,7 @@ namespace dsa
             if (index < m_size / 2)
             {
                 temp = m_head;
-                for (size_t i = 0; i < index; i++)
+                for (size_type i = 0; i < index; i++)
                 {
                     temp = temp->m_next;
                 }
@@ -1920,7 +1920,7 @@ namespace dsa
             else
             {
                 temp = m_tail->m_prev;
-                for (size_t i = m_size - 1; i > index; i--)
+                for (size_type i = m_size - 1; i > index; i--)
                 {
                     temp = temp->m_prev;
                 }
@@ -1931,7 +1931,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::set(size_t index, T value) -> bool
+    auto List<T>::set(size_type index, T value) -> bool
     {
         Node* temp = get(index);
         if (temp)
