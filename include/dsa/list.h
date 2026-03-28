@@ -640,42 +640,42 @@ namespace dsa
          *
          * @return iterator iterator to List first Node
          */
-        auto begin() -> iterator;
+        auto begin() noexcept -> iterator;
 
         /**
          * @brief Function returns const pointer to List first Node
          *
          * @return const_iterator const iterator to List first Node
          */
-        auto begin() const -> const_iterator;
+        auto begin() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns const pointer to List first Node
          *
          * @return const_iterator const iterator to List first Node
          */
-        [[nodiscard]] auto cbegin() const -> const_iterator;
+        [[nodiscard]] auto cbegin() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns pointer to List last Node
          *
          * @return iterator iterator to List last Node
          */
-        auto end() -> iterator;
+        auto end() noexcept -> iterator;
 
         /**
          * @brief Function returns pointer to List last Node
          *
          * @return const_iterator const iterator to List last Node
          */
-        auto end() const -> const_iterator;
+        auto end() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns pointer to List last Node
          *
          * @return const_iterator const iterator to List last Node
          */
-        [[nodiscard]] auto cend() const -> const_iterator;
+        [[nodiscard]] auto cend() const noexcept -> const_iterator;
 
         /**
          * @brief Function checks if container has no elements
@@ -1373,37 +1373,37 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::begin() -> typename List<T>::iterator
+    auto List<T>::begin() noexcept -> typename List<T>::iterator
     {
         return iterator(m_head);
     }
 
     template<typename T>
-    auto List<T>::begin() const -> typename List<T>::const_iterator
+    auto List<T>::begin() const noexcept -> typename List<T>::const_iterator
     {
         return const_iterator(m_head);
     }
 
     template<typename T>
-    auto List<T>::cbegin() const -> typename List<T>::const_iterator
+    auto List<T>::cbegin() const noexcept -> typename List<T>::const_iterator
     {
         return begin();
     }
 
     template<typename T>
-    auto List<T>::end() -> typename List<T>::iterator
+    auto List<T>::end() noexcept -> typename List<T>::iterator
     {
         return iterator(m_tail);
     }
 
     template<typename T>
-    auto List<T>::end() const -> typename List<T>::const_iterator
+    auto List<T>::end() const noexcept -> typename List<T>::const_iterator
     {
         return const_iterator(m_tail);
     }
 
     template<typename T>
-    auto List<T>::cend() const -> typename List<T>::const_iterator
+    auto List<T>::cend() const noexcept -> typename List<T>::const_iterator
     {
         return end();
     }
