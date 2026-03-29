@@ -36,9 +36,6 @@ namespace dsa
      *
      * @tparam T type of data stored in List Node
      *
-     * @todo add emplace
-     * @todo add emplace_back
-     * @todo add emplace_front
      * @todo add remove_if
      * @todo add sort
      * @todo add operator<=>
@@ -789,6 +786,21 @@ namespace dsa
         auto insert(const const_iterator& pos, std::initializer_list<T> init_list) -> iterator;
 
         /**
+         * @brief Insert new element into the container before \p pos
+         *
+         * @tparam ...Args
+         * @param[in] pos iterator before which new element will be inserted
+         * @param[in] ...args args arguments to forward to the constructor of the element
+         * @return iterator pointing to the emplaced element
+         *
+         * @note no iterators or references are invalidated,
+         *       if construction of new element fails or an exception is thrown for any reason
+         *       state of the object does not change and this function has no effect
+         */
+        template<typename... Args>
+        auto emplace(const_iterator pos, Args&&... args) -> iterator;
+
+        /**
         * @brief Function erases Node object at specified \p pos
         *
         * @param[in] pos iterator to element to erase
@@ -842,6 +854,20 @@ namespace dsa
         void push_back(T value);
 
         /**
+         * @brief Insert new element to the end of the container
+         *
+         * @tparam ...Args
+         * @param[in] ...args args arguments to forward to the constructor of the element
+         * @return reference to the emplaced element
+         *
+         * @note no iterators or references are invalidated,
+         *       if construction of new element fails or an exception is thrown for any reason
+         *       state of the object does not change and this function has no effect
+         */
+        template<typename... Args>
+        auto emplace_back(Args&&... args) -> reference;
+
+        /**
          * @brief Function removes last Node of List
          */
         void pop_back();
@@ -852,6 +878,20 @@ namespace dsa
          * @param[in] value element of type T
          */
         void push_front(T value);
+
+        /**
+         * @brief Insert new element at the beginning of the container
+         *
+         * @tparam ...Args
+         * @param[in] ...args args arguments to forward to the constructor of the element
+         * @return reference to the emplaced element
+         *
+         * @note no iterators or references are invalidated,
+         *       if construction of new element fails or an exception is thrown for any reason
+         *       state of the object does not change and this function has no effect
+         */
+        template<typename... Args>
+        auto emplace_front(Args&&... args) -> reference;
 
         /**
          * @brief Function removes first Node of List
@@ -1575,6 +1615,44 @@ namespace dsa
     }
 
     template<typename T>
+    template<typename... Args>
+    auto List<T>::emplace(const_iterator pos, Args&&... args) -> iterator
+    {
+        Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
+        try
+        {
+            node_alloc_traits::construct(node_alloc, newNode, std::forward<Args>(args)...);
+
+            if (pos == cbegin())
+            {
+                newNode->m_next = m_head;
+                !m_head->m_next ? m_tail->m_prev = newNode : m_head->m_prev = newNode;
+                m_head = newNode;
+            }
+            else
+            {
+                NodeBase* prev_pos{ pos.m_current_node->m_prev };
+                NodeBase* next_pos{ prev_pos->m_next };
+
+                prev_pos->m_next = newNode;
+                newNode->m_prev = prev_pos;
+
+                newNode->m_next = next_pos;
+                next_pos->m_prev = newNode;
+            }
+        }
+        catch (...)
+        {
+            node_alloc_traits::deallocate(node_alloc, newNode, 1);
+            throw;
+        }
+
+        ++m_size;
+        return iterator(newNode);
+    }
+
+
+    template<typename T>
     auto List<T>::erase(iterator pos) -> typename List<T>::iterator
     {
         if (!if_valid_iterator(pos))
@@ -1631,6 +1709,14 @@ namespace dsa
     }
 
     template<typename T>
+    template<typename... Args>
+    auto List<T>::emplace_front(Args&&... args) -> reference
+    {
+        emplace(begin(), std::forward<Args>(args)...);
+        return front();
+    }
+
+    template<typename T>
     void List<T>::pop_front()
     {
         if (m_size == 0)
@@ -1675,6 +1761,14 @@ namespace dsa
         }
 
         m_size++;
+    }
+
+    template<typename T>
+    template<typename... Args>
+    auto List<T>::emplace_back(Args&&... args) -> reference
+    {
+        emplace(end(), std::forward<Args>(args)...);
+        return back();
     }
 
     template<typename T>
