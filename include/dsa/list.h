@@ -740,7 +740,7 @@ namespace dsa
          *
          * @return size_type number of elements in container
          */
-        [[nodiscard]] auto size() const -> size_type;
+        [[nodiscard]] auto size() const noexcept -> size_type;
 
         /**
          * @brief Function returns maximum number of elements container can hold
@@ -1501,7 +1501,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::size() const -> size_type
+    auto List<T>::size() const noexcept -> size_type
     {
         return m_size;
     }
