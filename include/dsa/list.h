@@ -733,7 +733,7 @@ namespace dsa
          * @retval true if container is empty
          * @retval false if container is not empty
          */
-        [[nodiscard]] auto empty() const -> bool;
+        [[nodiscard]] auto empty() const noexcept -> bool;
 
         /**
          * @brief Function returns List size
@@ -1495,7 +1495,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::empty() const -> bool
+    auto List<T>::empty() const noexcept -> bool
     {
         return m_size == 0;
     }
