@@ -90,6 +90,42 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         iter8 = list8.insert(iter8, { 10, 20, 30 });
         tests::compare("iter8 == nullptr", iter8 == nullptr, true);
 
+        dsa::List<int> list9;
+        auto ref9 = list9.emplace_front(30);
+        tests::compare("List9 ref", ref9, list9.front());
+        ref9 = list9.emplace_front(20);
+        tests::compare("List9 ref", ref9, list9.front());
+        list9.emplace_front(10);
+        list9.emplace_front(5);
+        list9.emplace_front(0);
+        const std::initializer_list<int> expected9 = { 0, 5, 10, 20, 30 };
+        tests::compare("List9", list9, expected9);
+
+        dsa::List<int> list10{ 0, 10, 20, 30 };
+        auto iter10 = list10.emplace(list10.begin(), -10);
+        tests::compare("List10 iter", *iter10, *list10.begin());
+        const std::initializer_list<int> expected10 = { -10, 0, 10, 20, 30 };
+        tests::compare("List10", list10, expected10);
+
+        dsa::List<int> list11{ 0, 10, 20, 30 };
+        auto iter11 = list11.emplace(list11.end(), 40);
+        tests::compare("List11 iter", *iter11, *(--list11.end()));
+        const std::initializer_list<int> expected11 = { 0, 10, 20, 30, 40 };
+        tests::compare("List11", list11, expected11);
+
+        dsa::List<int> list12{ 0, 10, 20, 30 };
+        auto ref12 = list12.emplace_back(40);
+        tests::compare("List12 ref", ref12, list12.back());
+        const std::initializer_list<int> expected12 = { 0, 10, 20, 30, 40 };
+        tests::compare("List12", list12, expected12);
+
+        dsa::List<int> list13;
+        list13.emplace_back(10);
+        list13.emplace_back(20);
+        list13.emplace_back(30);
+        const std::initializer_list<int> expected13 = { 10, 20, 30 };
+        tests::compare("List13", list13, expected13);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -104,6 +140,36 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::List<int> std_list7{ 40 };
         std_list7.insert(std_list7.begin(), { 10, 20, 30 });
         tests::compare("List7 vs std", list7, std_list7);
+
+        std::list<int> std_list9;
+        std_list9.emplace_front(30);
+        auto std_ref9 = std_list9.emplace_front(20);
+        tests::compare("List9 ref vs std", ref9, std_ref9);
+        std_list9.emplace_front(10);
+        std_list9.emplace_front(5);
+        std_list9.emplace_front(0);
+        tests::compare("List9 vs std", list9, std_list9);
+
+        std::list<int> std_list10{ 0, 10, 20, 30 };
+        auto std_iter10 = std_list10.emplace(std_list10.begin(), -10);
+        tests::compare("List10 iter vs std", *iter10, *std_iter10);
+        tests::compare("List10 vs std", list10, std_list10);
+
+        std::list<int> std_list11{ 0, 10, 20, 30 };
+        auto std_iter11 = std_list11.emplace(std_list11.end(), 40);
+        tests::compare("List11 iter vs std", *std_iter11, *(--std_list11.end()));
+        tests::compare("List11 vs std", list11, std_list11);
+
+        std::list<int> std_list12{ 0, 10, 20, 30 };
+        auto std_ref12 = std_list12.emplace_back(40);
+        tests::compare("List12 ref vs std", ref12, std_ref12);
+        tests::compare("List12 vs std", list12, std_list12);
+
+        std::list<int> std_list13;
+        std_list13.emplace_back(10);
+        std_list13.emplace_back(20);
+        std_list13.emplace_back(30);
+        tests::compare("List13 vs std", list13, std_list13);
 
 
         tests::print_stats();
