@@ -752,7 +752,7 @@ namespace dsa
         /**
          * @brief Function removes all elements of List
          */
-        void clear();
+        void clear() noexcept;
 
         /**
          * @brief Function inserts new Node before specified \p pos
@@ -1513,7 +1513,7 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::clear()
+    void List<T>::clear() noexcept
     {
         if (m_head && m_head->m_next)
         {
