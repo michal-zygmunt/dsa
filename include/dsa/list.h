@@ -747,7 +747,7 @@ namespace dsa
          *
          * @return size_type maximum number of elements
          */
-        [[nodiscard]] auto max_size() const -> size_type;
+        [[nodiscard]] auto max_size() const noexcept -> size_type;
 
         /**
          * @brief Function removes all elements of List
@@ -1507,7 +1507,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::max_size() const -> size_type
+    auto List<T>::max_size() const noexcept -> size_type
     {
         return std::numeric_limits<size_type>::max();
     }
