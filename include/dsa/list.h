@@ -810,11 +810,11 @@ namespace dsa
          * @brief Function inserts content of initializer list before specified \p pos
          *
          * @param[in] pos const_iterator to insert element before
-         * @param[in] init_list initializer_list with elements to insert before \p pos
+         * @param[in] ilist initializer list with elements to insert before \p pos
          * @retval iterator to first inserted element
          * @retval pos if no element was inserted
          */
-        auto insert(const const_iterator& pos, std::initializer_list<T> init_list) -> iterator;
+        auto insert(const const_iterator& pos, std::initializer_list<T> ilist) -> iterator;
 
         /**
          * @brief Insert new element into the container before \p pos
@@ -1666,21 +1666,9 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::insert(const const_iterator& pos, std::initializer_list<T> init_list) -> typename List<T>::iterator
+    auto List<T>::insert(const const_iterator& pos, std::initializer_list<T> ilist) -> typename List<T>::iterator
     {
-        if (!if_valid_iterator(pos))
-        {
-            return nullptr;
-        }
-
-        iterator iter(pos.m_current_node);
-        for (const auto& val : init_list)
-        {
-            iter = insert_element_before(iter, val);
-            ++iter;
-        }
-
-        return iter;
+        return insert(pos, ilist.begin(), ilist.end());
     }
 
     template<typename T>
