@@ -793,11 +793,24 @@ namespace dsa
         auto insert(const const_iterator& pos, size_type count, const_reference value) -> iterator;
 
         /**
-         * @brief Function inserts new Node before specified \p pos
+         * @brief Function inserts elements in range [first, last) after \p pos
+         *
+         * @param[in] pos const_iterator to insert element after
+         * @param[in] first element defining range of elements to insert
+         * @param[in] last element definig range of elements to insert
+         * @return pointer to List element
+         * @retval iterator pointer to last inserted element
+         * @retval pos if no element was inserted
+         */
+        template<typename InputIt>
+            requires std::input_iterator<InputIt>
+        auto insert(const const_iterator& pos, InputIt first, InputIt last) -> iterator;
+
+        /**
+         * @brief Function inserts content of initializer list before specified \p pos
          *
          * @param[in] pos const_iterator to insert element before
          * @param[in] init_list initializer_list with elements to insert before \p pos
-         * @return pointer to List element
          * @retval iterator to first inserted element
          * @retval pos if no element was inserted
          */
@@ -1627,15 +1640,40 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::insert(const const_iterator& pos, std::initializer_list<T> init_list) -> typename List<T>::iterator
+    template<typename InputIt>
+        requires std::input_iterator<InputIt>
+    auto List<T>::insert(const const_iterator& pos, InputIt first, InputIt last) -> typename List<T>::iterator
     {
-        iterator iter(pos.m_current_node);
-
         if (!if_valid_iterator(pos))
         {
             return nullptr;
         }
 
+        iterator iter{};
+        iterator iter_out{};
+        while (first != last)
+        {
+            iter = insert(pos.m_current_node, *first);
+            if (!iter_out.m_current_node)
+            {
+                iter_out = iter;
+            }
+
+            ++first;
+        }
+
+        return iter_out;
+    }
+
+    template<typename T>
+    auto List<T>::insert(const const_iterator& pos, std::initializer_list<T> init_list) -> typename List<T>::iterator
+    {
+        if (!if_valid_iterator(pos))
+        {
+            return nullptr;
+        }
+
+        iterator iter(pos.m_current_node);
         for (const auto& val : init_list)
         {
             iter = insert_element_before(iter, val);
