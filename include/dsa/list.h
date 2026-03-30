@@ -766,8 +766,7 @@ namespace dsa
          *
          * @param[in] pos const_iterator to insert element before
          * @param[in] value element of type T to be inserted before \p pos
-         * @return pointer to List element
-         * @retval iterator to inserted \p value
+         * @retval iterator to inserted element
          * @retval pos if no element was inserted
          */
         auto insert(const const_iterator& pos, const_reference value) -> iterator;
@@ -776,10 +775,19 @@ namespace dsa
          * @brief Function inserts new Node before specified \p pos
          *
          * @param[in] pos const_iterator to insert element before
+         * @param[in] value element of type T to be inserted before \p pos using move semantics
+         * @retval iterator to inserted element
+         * @retval pos if no element was inserted
+         */
+        auto insert(const const_iterator& pos, T&& value) -> iterator;
+
+        /**
+         * @brief Function inserts new Node before specified \p pos
+         *
+         * @param[in] pos const_iterator to insert element before
          * @param[in] count number of elements to insert before \p pos
          * @param[in] value element of type T to be inserted
-         * @return pointer to List element
-         * @retval iterator to inserted \p value
+         * @retval iterator to inserted element
          * @retval pos if no element was inserted
          */
         auto insert(const const_iterator& pos, size_type count, const_reference value) -> iterator;
@@ -1588,15 +1596,28 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::insert(const const_iterator& pos, size_type count, const_reference value) -> typename List<T>::iterator
+    auto List<T>::insert(const const_iterator& pos, T&& value) -> typename List<T>::iterator
     {
-        iterator iter{ pos.m_current_node };
-
         if (!if_valid_iterator(pos))
         {
             return nullptr;
         }
 
+        iterator iter{ pos.m_current_node };
+        iter = emplace(iter, std::move(value));
+
+        return iter;
+    }
+
+    template<typename T>
+    auto List<T>::insert(const const_iterator& pos, size_type count, const_reference value) -> typename List<T>::iterator
+    {
+        if (!if_valid_iterator(pos))
+        {
+            return nullptr;
+        }
+
+        iterator iter{ pos.m_current_node };
         for (size_type i = 0; i < count; i++)
         {
             iter = insert_element_before(iter, value);
