@@ -840,30 +840,7 @@ namespace dsa
         * @retval begin iterator if \p pos was first element prior to removal
         * @retval end iterator if \p pos was last element prior to removal
         */
-        auto erase(iterator pos) -> iterator;
-
-        /**
-        * @brief Function erases Node object at specified \p pos
-        *
-        * @param[in] pos iterator to element to erase
-        * @return iterator following erased element
-        * @retval iterator to element following \p pos
-        * @retval begin iterator if \p pos was first element prior to removal
-        * @retval end iterator if \p pos was last element prior to removal
-        */
         auto erase(const_iterator pos) -> iterator;
-
-        /**
-         * @brief Function erases Node objects in range [first, last)
-         *
-         * @param[in] first element to erase
-         * @param[in] last element after last erased element
-         * @return iterator following last erased element
-         * @retval iterator to \p last
-         * @retval end iterator if \p last was end element prior to removal
-         * @retval last iterator if \p first to p\ last is empty range
-         */
-        auto erase(iterator first, iterator last) -> iterator;
 
         /**
          * @brief Function erases Node objects in range [first, last)
@@ -1710,18 +1687,18 @@ namespace dsa
 
 
     template<typename T>
-    auto List<T>::erase(iterator pos) -> typename List<T>::iterator
+    auto List<T>::erase(const_iterator pos) -> typename List<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
             return nullptr;
         }
 
-        return erase_element(pos);
+        return erase_element(pos.m_current_node);
     }
 
     template<typename T>
-    auto List<T>::erase(iterator first, iterator last) -> typename List<T>::iterator
+    auto List<T>::erase(const_iterator first, const_iterator last) -> typename List<T>::iterator
     {
         if (!if_valid_iterator(first) || !if_valid_iterator(last))
         {
@@ -1731,10 +1708,10 @@ namespace dsa
         const size_type dist = distance(first, last);
         if (dist == 0)
         {
-            return last;
+            return last.m_current_node;
         }
 
-        iterator iter(first.m_current_node);
+        iterator iter{ first.m_current_node };
         for (size_type i = 0; i < dist; i++)
         {
             iter = erase_element(iter);
