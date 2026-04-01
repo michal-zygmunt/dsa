@@ -858,8 +858,12 @@ namespace dsa
          * @brief Function adds new Node at the end of List
          *
          * @param[in] value element of type T
+         *
+         * @note no iterators or references are invalidated,
+         *       if construction of new element fails or an exception is thrown for any reason
+         *       state of the object does not change and this function has no effect
          */
-        void push_back(T value);
+        void push_back(const_reference value);
 
         /**
          * @brief Insert new element to the end of the container
@@ -1774,7 +1778,7 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::push_back(T value)
+    void List<T>::push_back(const_reference value)
     {
         init_node();
 
