@@ -866,6 +866,17 @@ namespace dsa
         void push_back(const_reference value);
 
         /**
+         * @brief Function adds new Node at the end of List using move semantics
+         *
+         * @param[in] value element of type T
+         *
+         * @note no iterators or references are invalidated,
+         *       if construction of new element fails or an exception is thrown for any reason
+         *       state of the object does not change and this function has no effect
+         */
+        void push_back(T&& value);
+
+        /**
          * @brief Insert new element to the end of the container
          *
          * @tparam ...Args
@@ -1783,6 +1794,28 @@ namespace dsa
         init_node();
 
         Node* newNode = construct_node(nullptr, nullptr, value);
+
+        if (!m_head->m_next) // only sentinel exists
+        {
+            newNode->m_next = m_head;
+            m_head = newNode;
+            m_tail->m_prev = m_head;
+        }
+        else
+        {
+            newNode->m_prev = m_tail->m_prev;
+            newNode->m_next = m_tail->m_prev->m_next;
+            m_tail->m_prev = newNode;
+            m_tail->m_prev->m_prev->m_next = newNode;
+        }
+
+        m_size++;
+    }
+
+    template<typename T>
+    void List<T>::push_back(T&& value)
+    {
+        Node* newNode = construct_node(nullptr, nullptr, std::move(value));
 
         if (!m_head->m_next) // only sentinel exists
         {
