@@ -935,6 +935,8 @@ namespace dsa
 
         /**
          * @brief Function removes first Node of List
+         *
+         * @note references and iterators to the erased element are invalidated
          */
         void pop_front();
 
