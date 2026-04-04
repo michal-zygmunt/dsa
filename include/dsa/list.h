@@ -909,6 +909,17 @@ namespace dsa
         void push_front(const_reference value);
 
         /**
+         * @brief Function adds new Node at the beginning of List using move semantics
+         *
+         * @param[in] value element of type T
+         *
+         * @note no iterators or references are invalidated,
+         *       if construction of new element fails or an exception is thrown for any reason
+         *       state of the object does not change and this function has no effect
+         */
+        void push_front(T&& value);
+
+        /**
          * @brief Insert new element at the beginning of the container
          *
          * @tparam ...Args
@@ -1747,6 +1758,28 @@ namespace dsa
         init_node();
 
         Node* newNode = construct_node(nullptr, nullptr, value);
+        if (!m_head->m_next)
+        {
+            newNode->m_next = m_head;
+            m_head = newNode;
+            m_tail->m_prev = m_head;
+        }
+        else
+        {
+            m_head->m_prev = newNode;
+            newNode->m_next = m_head;
+            m_head = newNode;
+        }
+
+        m_size++;
+    }
+
+    template<typename T>
+    void List<T>::push_front(T&& value)
+    {
+        init_node();
+
+        Node* newNode = construct_node(nullptr, nullptr, std::move(value));
         if (!m_head->m_next)
         {
             newNode->m_next = m_head;
