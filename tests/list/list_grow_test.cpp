@@ -160,6 +160,14 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List17 back", *list17.back(), expected17);
         tests::compare("ptr17 == nullptr", ptr17 == nullptr, true);
 
+        dsa::List<std::unique_ptr<int>> list18{};
+        auto ptr18 = std::make_unique<int>(1);
+        list18.push_front(std::move(ptr18));
+        constexpr int expected18{ 1 };
+        tests::compare("List18 front", *list18.front(), expected18);
+        tests::compare("List18 back", *list18.back(), expected18);
+        tests::compare("ptr18 == nullptr", ptr18 == nullptr, true);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -230,6 +238,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List17 front vs std", *list17.front(), *std_list17.front());
         tests::compare("List17 back vs std", *list17.back(), *std_list17.back());
         tests::compare("ptr17 == nullptr vs std", ptr17 == nullptr, std_ptr17 == nullptr);
+
+        std::list<std::unique_ptr<int>> std_list18{};
+        auto std_ptr18 = std::make_unique<int>(1);
+        std_list18.push_front(std::move(std_ptr18));
+        tests::compare("List18 front vs std", *list18.front(), *std_list18.front());
+        tests::compare("List18 backvs std", *list18.back(), *std_list18.back());
+        tests::compare("ptr18 == nullptr vs std", ptr18 == std_ptr18, true);
 
 
         tests::print_stats();
