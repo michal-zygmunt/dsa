@@ -892,6 +892,8 @@ namespace dsa
 
         /**
          * @brief Function removes last Node of List
+         *
+         * @note references and iterators to the erased element are invalidated
          */
         void pop_back();
 
