@@ -959,8 +959,10 @@ namespace dsa
          * @brief Function swaps content of two List objects
          *
          * @param[in,out] other object to swap content with
+         *
+         * @note all iterators and references remain valid
          */
-        void swap(List<T>& other) noexcept;
+        void swap(List<T>& other) noexcept(std::allocator_traits<allocator_type>::is_always_equal::value);
 
         /**
          * @brief Function combines two sorted Lists into one sorted List
@@ -1943,7 +1945,7 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::swap(List<T>& other) noexcept
+    void List<T>::swap(List<T>& other) noexcept(std::allocator_traits<allocator_type>::is_always_equal::value)
     {
         std::swap(m_head, other.m_head);
         std::swap(m_tail, other.m_tail);
