@@ -983,6 +983,36 @@ namespace dsa
         void merge(List<T>&& other);
 
         /**
+         * @brief Function combines two sorted Lists into one sorted List
+         *
+         * @param[in,out] other container to take elements from
+         * @param[in] comp comparison function object
+         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
+         */
+        template<typename Compare>
+        void merge(List<T>& other, Compare comp);
+
+        /**
+         * @brief Function combines two sorted Lists into one sorted List
+         *
+         * @param[in,out] other container to take elements from
+         * @param[in] comp comparison function object
+         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
+         */
+        template<typename Compare>
+        // transfers ownership of nodes, moving entire container is not necessary
+        // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+        void merge(List<T>&& other, Compare comp);
+
+        /**
          * @brief Function moves elements from other List object
          *
          * @param[in] pos const_iterator before which content of other container will be inserted
@@ -1959,84 +1989,100 @@ namespace dsa
     }
 
     template<typename T>
-    // transfers ownership of nodes, moving entire container is not necessary
-    // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
     void List<T>::merge(List<T>&& other)
     {
-        if (&other != this)
+        merge(std::move(other), std::less<>());
+    }
+
+    template<typename T>
+    template<typename Compare>
+    void List<T>::merge(List<T>& other, Compare comp)
+    {
+        merge(std::move(other), comp);
+    }
+
+    template<typename T>
+    template<typename Compare>
+    // transfers ownership of nodes, moving entire container is not necessary
+    // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+    void List<T>::merge(List<T>&& other, Compare comp)
+    {
+        if (&other == this)
         {
-            if (m_size != 0)
+            return;
+        }
+
+        if (m_size != 0)
+        {
+            Node* temp_head = construct_node(nullptr, nullptr, 0);
+            NodeBase* temp_tail = temp_head;
+
+            NodeBase* to_move{};
+            NodeBase* to_return{};
+
+            NodeBase* sentinel_this{ m_tail->m_prev->m_next };
+            NodeBase* sentinel_other{ other.m_tail->m_prev->m_next };
+
+            while (m_head->m_next && other.m_head->m_next)
             {
-                Node* temp_head = construct_node(nullptr, nullptr, 0);
-                NodeBase* temp_tail = temp_head;
+                Node* node_this = dynamic_cast<Node*>(m_head);
+                Node* node_other = dynamic_cast<Node*>(other.m_head);
 
-                NodeBase* to_move{};
-                NodeBase* to_return{};
-
-                NodeBase* sentinel_this{ m_tail->m_prev->m_next };
-                NodeBase* sentinel_other{ other.m_tail->m_prev->m_next };
-
-                while (m_head->m_next && other.m_head->m_next)
+                if (node_this && node_other)
                 {
-                    Node* node_this = dynamic_cast<Node*>(m_head);
-                    Node* node_other = dynamic_cast<Node*>(other.m_head);
-
-                    if (node_this && node_other)
+                    if (comp(node_this->value(), node_other->value()))
                     {
-                        if (node_this->value() <= node_other->value())
-                        {
-                            to_move = m_head;
-                            to_move->m_prev = temp_tail;
+                        to_move = m_head;
+                        to_move->m_prev = temp_tail;
 
-                            to_return = to_move->m_next;
-                            temp_tail->m_next = to_move;
-                            m_head = to_return;
-                        }
-                        else
-                        {
-                            to_move = other.m_head;
-                            to_move->m_prev = temp_tail;
-
-                            to_return = to_move->m_next;
-                            temp_tail->m_next = to_move;
-                            other.m_head = to_return;
-                        }
-
-                        temp_tail = temp_tail->m_next;
+                        to_return = to_move->m_next;
+                        temp_tail->m_next = to_move;
+                        m_head = to_return;
                     }
+                    else
+                    {
+                        to_move = other.m_head;
+                        to_move->m_prev = temp_tail;
+
+                        to_return = to_move->m_next;
+                        temp_tail->m_next = to_move;
+                        other.m_head = to_return;
+                    }
+
+                    temp_tail = temp_tail->m_next;
                 }
-
-                NodeBase* last{};
-                if (m_head->m_next == nullptr) // other.m_head attached at the end
-                {
-                    last = sentinel_other->m_prev;
-                    other.m_head->m_prev = temp_tail;
-                    temp_tail->m_next = other.m_head;
-                }
-                else // this.m_head attached at the end
-                {
-                    last = sentinel_this->m_prev;
-                    m_head->m_prev = temp_tail;
-                    temp_tail->m_next = m_head;
-                }
-                last->m_next = sentinel_this;
-                last->m_next->m_prev = last;
-
-                m_head = temp_head->m_next;
-                m_head->m_prev = nullptr;
-                destroy_node(temp_head);
-
-                other.m_head = other.m_tail;
-                other.m_head->m_next = nullptr;
-                other.m_head->m_prev = nullptr;
-
-                m_size += other.m_size;
-                other.m_size = 0;
             }
-            else
+
+            NodeBase* last{};
+            if (m_head->m_next == nullptr) // other.m_head attached at the end
             {
-                swap(other);
+                last = sentinel_other->m_prev;
+                other.m_head->m_prev = temp_tail;
+                temp_tail->m_next = other.m_head;
             }
+            else // this.m_head attached at the end
+            {
+                last = sentinel_this->m_prev;
+                m_head->m_prev = temp_tail;
+                temp_tail->m_next = m_head;
+            }
+            last->m_next = sentinel_this;
+            last->m_next->m_prev = last;
+
+            m_head = temp_head->m_next;
+            m_head->m_prev = nullptr;
+            destroy_node(temp_head);
+
+            other.m_head = other.m_tail;
+            other.m_head->m_next = nullptr;
+            other.m_head->m_prev = nullptr;
+
+            m_size += other.m_size;
+            other.m_size = 0;
+        }
+        else
+        {
+            swap(other);
         }
     }
 
