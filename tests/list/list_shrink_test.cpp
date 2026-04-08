@@ -86,28 +86,52 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected9 = { };
         tests::compare("List9", list9, expected9);
 
-        dsa::List<int> list10 = dsa::List<int>({ 0 });
-        tests::compare(list10.empty(), false);
-        list10.clear();
-        tests::compare(list10.empty(), true);
-        const std::initializer_list<int> expected10 = { };
+        dsa::List<int> list10 = dsa::List<int>({ 0, 10, 0, 0, 40, 0 });
+        auto cnt10 = list10.remove_if([](int val) { return val == 0; });
+        const std::initializer_list<int> expected10 = { 10, 40 };
         tests::compare("List10", list10, expected10);
+        tests::compare("List10 removed count", cnt10, std::size_t{ 4 });
 
-        dsa::List<int> list11 = dsa::List<int>({ 10, 20, 30 });
-        list11.pop_front();
-        list11.pop_front();
-        list11.pop_front();
-        list11.pop_front();
+        dsa::List<int> list11 = dsa::List<int>({ 0, 0, 0, 0, 0, 0 });
+        auto cnt11 = list11.remove_if([](int val) { return val == 0; });
         const std::initializer_list<int> expected11 = { };
         tests::compare("List11", list11, expected11);
+        tests::compare("List11 removed count", cnt11, std::size_t{ 6 });
 
-        dsa::List<int> list12 = dsa::List<int>({ 10, 20, 30 });
-        list12.pop_back();
-        list12.pop_back();
-        list12.pop_back();
-        list12.pop_back();
-        const std::initializer_list<int> expected12 = { };
+        dsa::List<int> list12 = dsa::List<int>({ 0, 1, 2, 3, 4, 5 });
+        auto cnt12 = list12.remove_if([](int val) { return val % 2 == 0; });
+        const std::initializer_list<int> expected12 = { 1, 3, 5 };
         tests::compare("List12", list12, expected12);
+        tests::compare("List12 removed count", cnt12, std::size_t{ 3 });
+
+        dsa::List<int> list13 = dsa::List<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt13 = list13.remove_if([](int val) { return val <= 5; });
+        const std::initializer_list<int> expected13 = { 10, 7, 9 };
+        tests::compare("List13", list13, expected13);
+        tests::compare("List13 removed count", cnt13, std::size_t{ 3 });
+
+        dsa::List<int> list14 = dsa::List<int>({ 0 });
+        tests::compare(list14.empty(), false);
+        list14.clear();
+        tests::compare(list14.empty(), true);
+        const std::initializer_list<int> expected14 = { };
+        tests::compare("List14", list14, expected14);
+
+        dsa::List<int> list15 = dsa::List<int>({ 10, 20, 30 });
+        list15.pop_front();
+        list15.pop_front();
+        list15.pop_front();
+        list15.pop_front();
+        const std::initializer_list<int> expected15 = { };
+        tests::compare("List15", list15, expected15);
+
+        dsa::List<int> list16 = dsa::List<int>({ 10, 20, 30 });
+        list16.pop_back();
+        list16.pop_back();
+        list16.pop_back();
+        list16.pop_back();
+        const std::initializer_list<int> expected16 = { };
+        tests::compare("List16", list16, expected16);
 
 
         std::cout << "Compare operations results with std container\n\n";
@@ -153,6 +177,26 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::list<int> std_list9{ 0, 0, 0, 0, 0, 0 };
         std_list9.remove(0);
         tests::compare("List9 vs std", list9, std_list9);
+
+        std::list<int> std_list10{ 0, 10, 0, 0, 40, 0 };
+        auto std_cnt10 = std_list10.remove_if([](int val) { return val == 0; });
+        tests::compare("List10 vs std", list10, std_list10);
+        tests::compare("List10 removed count vs std", cnt10, std_cnt10);
+
+        std::list<int> std_list11{ 0, 0, 0, 0, 0, 0 };
+        auto std_cnt11 = std_list11.remove_if([](int val) { return val == 0; });
+        tests::compare("List11 vs std", list11, std_list11);
+        tests::compare("List11 removed count vs std", cnt11, std_cnt11);
+
+        std::list<int> std_list12{ 0, 1, 2, 3, 4, 5 };
+        auto std_cnt12 = std_list12.remove_if([](int val) { return val % 2 == 0; });
+        tests::compare("List12 vs std", list12, std_list12);
+        tests::compare("List12 removed count vs std", cnt12, std_cnt12);
+
+        std::list<int> std_list13{ 0, 10, 2, 5, 7, 9 };
+        auto std_cnt13 = std_list13.remove_if([](int val) { return val <= 5; });
+        tests::compare("List13 vs std", list13, std_list13);
+        tests::compare("List13 removed count vs std", cnt13, std_cnt13);
 
 
         tests::print_stats();
