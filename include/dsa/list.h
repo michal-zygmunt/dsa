@@ -36,7 +36,6 @@ namespace dsa
      *
      * @tparam T type of data stored in List Node
      *
-     * @todo add remove_if
      * @todo add sort
      * @todo add operator<=>
      * @todo add non-member specialized swap function
@@ -1076,8 +1075,23 @@ namespace dsa
          * @brief Function removes all elements equal to \p value
          *
          * @param[in] value value of elements to remove
+         * @return size_type number of elements removed
+         *
+         * @note invalidates only the iterators and references to the removed elements
          */
-        void remove(const_reference value);
+        auto remove(const_reference value) -> size_type;
+
+        /**
+         * @brief Function removes all elements for which \p predicate returns \p true
+         *
+         * @tparam UnaryPred
+         * @param[in] predicate to remove elements
+         * @return size_type number of elements removed
+         *
+         * @note invalidates only the iterators and references to the removed elements
+         */
+        template<typename UnaryPred>
+        auto remove_if(UnaryPred predicate) -> size_type;
 
         /**
          * @brief Function reverts in place Nodes of List
@@ -2192,10 +2206,19 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::remove(const_reference value)
+    auto List<T>::remove(const_reference value) -> size_type
+    {
+        return remove_if([value](T node_val) { return node_val == value; });
+    }
+
+    template<typename T>
+    template<typename UnaryPred>
+    auto List<T>::remove_if(UnaryPred predicate) -> size_type
     {
         NodeBase* temp{ m_head };
         NodeBase* next{};
+
+        size_type removed_count{};
 
         while (temp->m_next)
         {
@@ -2203,10 +2226,11 @@ namespace dsa
 
             if (Node* node = dynamic_cast<Node*>(m_head))
             {
-                if (node->value() == value)
+                if (predicate(node->value()))
                 {
                     pop_front();
                     temp = m_head;
+                    removed_count++;
                     continue;
                 }
             }
@@ -2214,15 +2238,18 @@ namespace dsa
             if (next && next != m_tail && next->m_next != nullptr)
             {
                 Node* node = dynamic_cast<Node*>(next);
-                if (node->value() == value)
+                if (predicate(node->value()))
                 {
                     erase(ListIterator<false>(node));
+                    removed_count++;
                     continue;
                 }
             }
 
             temp = temp->m_next;
         }
+
+        return removed_count;
     }
 
     template<typename T>
