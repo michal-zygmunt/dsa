@@ -1096,7 +1096,7 @@ namespace dsa
         /**
          * @brief Function reverts in place Nodes of List
          */
-        void reverse();
+        void reverse() noexcept;
 
         /**
          * @brief Function removes consecutive duplicated elements
@@ -2253,7 +2253,7 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::reverse()
+    void List<T>::reverse() noexcept
     {
         if (m_head->m_next == nullptr)
         {
