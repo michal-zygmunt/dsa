@@ -1095,6 +1095,8 @@ namespace dsa
 
         /**
          * @brief Function reverts in place Nodes of List
+         *
+         * @note no iterators or references are invalidated
          */
         void reverse() noexcept;
 
