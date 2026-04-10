@@ -12,6 +12,7 @@
 #include "common.h"
 #include "dsa/list.h"
 
+#include <cmath>
 #include <cstddef>
 #include <exception>
 #include <initializer_list>
@@ -69,6 +70,24 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List7", list7, expected7);
         tests::compare("List7 removed", removed7, size_t{ 0 });
 
+        // find unique values using predicate
+        auto predicate = [](const int& input_a, const int& input_b)
+            {
+                return std::abs(input_a - input_b) <= 5;
+            };
+
+        dsa::List<int> list8 = dsa::List<int>({ 1, 5, 7, 15, 25 });
+        auto removed8 = list8.unique(predicate);
+        const std::initializer_list<int> expected8 = { 1, 7, 15, 25 };
+        tests::compare("List8", list8, expected8);
+        tests::compare("List8 removed", removed8, size_t{ 1 });
+
+        dsa::List<int> list9 = dsa::List<int>({ 1, 4, 12, 13, 12, 14, 3, 15, 1 });
+        auto removed9 = list9.unique(predicate);
+        const std::initializer_list<int> expected9 = { 1, 12, 3, 15, 1 };
+        tests::compare("List9", list9, expected9);
+        tests::compare("List9 removed", removed9, size_t{ 4 });
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -106,6 +125,16 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         auto std_removed7 = std_list7.unique();
         tests::compare("List7 vs std", list7, std_list7);
         tests::compare("List7 removed vs std", removed7, std_removed7);
+
+        std::list<int> std_list8{ 1, 5, 7, 15, 25 };
+        auto std_removed8 = std_list8.unique(predicate);
+        tests::compare("List8 vs std", list8, std_list8);
+        tests::compare("List8 removed vs std", removed8, std_removed8);
+
+        std::list<int> std_list9{ 1, 4, 12, 13, 12, 14, 3, 15, 1 };
+        auto std_removed9 = std_list9.unique(predicate);
+        tests::compare("List9 vs std", list9, std_list9);
+        tests::compare("List9 removed vs std", removed9, std_removed9);
 
 
         tests::print_stats();
