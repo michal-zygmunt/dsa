@@ -36,7 +36,6 @@ namespace dsa
      *
      * @tparam T type of data stored in List Node
      *
-     * @todo add sort
      * @todo add operator<=>
      * @todo add non-member specialized swap function
      * @todo add non-member specialized erase function
@@ -1120,6 +1119,16 @@ namespace dsa
         auto unique(BinaryPred predicate) -> size_type;
 
         /**
+         * @brief Function sorts the elements and preserves the order of equivalent elements
+         *
+         * @details elements are compared using \p operator<
+         *
+         * @note no iterators or references are invalidated,
+         *       if an exception is thrown, the order of elements is unspecified
+         */
+        void sort();
+
+        /**
          * @brief Append elements of another List to base container
          *
          * @tparam T type of data stored in List Node
@@ -1362,6 +1371,26 @@ namespace dsa
          // transfers ownership of nodes, moving entire container is not necessary
          // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
         void transfer(const_iterator pos, List<T>&& other, const_iterator first, const const_iterator& last);
+
+        /**
+         * @brief Function sorts nodes using merge sort algorithm
+         * @details Sorting is implemented using recursive (top-down) algorithm
+         *          Sorting is stable and inplace
+         *
+         * @param[in,out] source list to sort
+         * @return NodeBase* of sorted list
+         */
+        auto merge_sort(NodeBase* source) -> NodeBase*;
+
+        /**
+         * @brief Helper function for merge_sort to merge two sub-lists
+         * @details Merging of sorted sub-lists is performed recursively
+         *
+         * @param[in,out] left first input sub-list
+         * @param[in,out] right second input sub-list
+         * @return NodeBase* containing sorted elements from both input lists
+         */
+        auto merge(NodeBase* left, NodeBase* right) -> NodeBase*;
 
         NodeBase* m_head{};
         NodeBase* m_tail{};
@@ -2352,6 +2381,104 @@ namespace dsa
         }
 
         return removed_count;
+    }
+
+    template<typename T>
+    // Intentional recursive call for sorting nodes in top-down algorithm implementation
+    // NOLINTNEXTLINE(misc-no-recursion)
+    auto List<T>::merge_sort(NodeBase* source) -> NodeBase*
+    {
+        // Stop condition, one element list is already sorted
+        if (source == nullptr || source->m_next == nullptr)
+        {
+            return source;
+        }
+
+        // Divide list into equal-sized sublists consisting of first and second half of the list
+        NodeBase* left{ source };
+        NodeBase* right{};
+
+        // Use slow and fast pointer to find half of list
+        NodeBase* slow{ source };
+        NodeBase* fast{ source->m_next };
+        while (fast && fast->m_next)
+        {
+            slow = slow->m_next;
+            fast = fast->m_next->m_next;
+        }
+
+        // Split input list into two halfs
+        right = slow->m_next;
+        right->m_prev = nullptr;
+        slow->m_next = nullptr;
+
+        // Recursively sort both sub-lists
+        left = merge_sort(left);
+        right = merge_sort(right);
+
+        // Merge sorted sublists
+        NodeBase* result{ merge(left, right) };
+        return result;
+    }
+
+    template<typename T>
+    // Intentional recursive call for merging nodes in top-down merge_sort algorithm implementation
+    // NOLINTNEXTLINE(misc-no-recursion)
+    auto List<T>::merge(NodeBase* left, NodeBase* right) -> NodeBase*
+    {
+        // Stop condition, empty element list is already sorted
+        if (left == nullptr)
+        {
+            return right;
+        }
+        if (right == nullptr)
+        {
+            return left;
+        }
+
+        NodeBase* result{};
+        Node* node_left = dynamic_cast<Node*>(left);
+        Node* node_right = dynamic_cast<Node*>(right);
+        if (node_left && node_right)
+        {
+            // Recursively merge nodes
+            if (node_left->m_value <= node_right->m_value)
+            {
+                result = left;
+                result->m_next = merge(left->m_next, right, comp);
+            }
+            else
+            {
+                result = right;
+                result->m_next = merge(left, right->m_next);
+            }
+            result->m_next->m_prev = result;
+        }
+
+        return result;
+    }
+
+    template<typename T>
+    void List<T>::sort()
+    {
+        if (m_size == 0)
+        {
+            return;
+        }
+
+        // prevent sorting sentinel node
+        m_tail->m_prev->m_next = nullptr;
+
+        m_head = merge_sort(m_head);
+
+        // find last node to attach sentinel to
+        NodeBase* last{ m_head };
+        while (last->m_next)
+        {
+            last = last->m_next;
+        }
+        last->m_next = m_tail;
+        m_tail->m_prev = last;
     }
 
     template<typename T>
