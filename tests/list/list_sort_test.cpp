@@ -62,6 +62,22 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected6{ 50, 40, 30, 20, 10, 1, 1, 1, 1, 1 };
         tests::compare("List6", list6, expected6);
 
+        // empty
+        dsa::List<int> list7{};
+        list7.sort();
+        const std::initializer_list<int> expected7{};
+        tests::compare("List7", list7, expected7);
+
+        dsa::List<int> list8{ 1 };
+        list8.sort();
+        const std::initializer_list<int> expected8{ 1 };
+        tests::compare("List8", list8, expected8);
+
+        dsa::List<int> list9{ 0, -10 };
+        list9.sort();
+        const std::initializer_list<int> expected9{ -10, 0 };
+        tests::compare("List9", list9, expected9);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -90,6 +106,19 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::list<int> std_list6{ il_2 };
         std_list6.sort(std::greater<>());
         tests::compare("List6", list6, std_list6);
+
+        // empty
+        std::list<int> std_list7{};
+        std_list7.sort();
+        tests::compare("List7", list7, std_list7);
+
+        std::list<int> std_list8{ 1 };
+        std_list8.sort();
+        tests::compare("List8", list8, std_list8);
+
+        std::list<int> std_list9{ 0, -10 };
+        std_list9.sort();
+        tests::compare("List9", list9, std_list9);
 
 
         tests::print_stats();
