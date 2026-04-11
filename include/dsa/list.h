@@ -14,6 +14,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <initializer_list>
 #include <iostream>
 #include <iterator>
@@ -1129,6 +1130,20 @@ namespace dsa
         void sort();
 
         /**
+         * @brief Function sorts the elements and preserves the order of equivalent elements
+         *
+         * @details elements are compared using \p comp
+         *
+         * @tparam Compare
+         * @param[in] comp comparison function object, returns \p true if the first argument is less than second
+         *
+         * @note no iterators or references are invalidated,
+         *       if an exception is thrown, the order of elements is unspecified
+         */
+        template<typename Compare>
+        void sort(Compare comp);
+
+        /**
          * @brief Append elements of another List to base container
          *
          * @tparam T type of data stored in List Node
@@ -1377,20 +1392,26 @@ namespace dsa
          * @details Sorting is implemented using recursive (top-down) algorithm
          *          Sorting is stable and inplace
          *
+         * @tparam Compare
          * @param[in,out] source list to sort
-         * @return NodeBase* of sorted list
+         * @param[in] comp comparison function object
+         * @return NodeBase* of sorted list using \p comp
          */
-        auto merge_sort(NodeBase* source) -> NodeBase*;
+        template<typename Compare>
+        auto merge_sort(NodeBase* source, Compare comp) -> NodeBase*;
 
         /**
          * @brief Helper function for merge_sort to merge two sub-lists
          * @details Merging of sorted sub-lists is performed recursively
          *
+         * @tparam Compare
          * @param[in,out] left first input sub-list
          * @param[in,out] right second input sub-list
-         * @return NodeBase* containing sorted elements from both input lists
+         * @param[in] comp comparison function object
+         * @return NodeBase* containing elements from both input lists sorted using \p comp
          */
-        auto merge(NodeBase* left, NodeBase* right) -> NodeBase*;
+        template<typename Compare>
+        auto merge(NodeBase* left, NodeBase* right, Compare comp) -> NodeBase*;
 
         NodeBase* m_head{};
         NodeBase* m_tail{};
@@ -2384,9 +2405,10 @@ namespace dsa
     }
 
     template<typename T>
+    template<typename Compare>
     // Intentional recursive call for sorting nodes in top-down algorithm implementation
     // NOLINTNEXTLINE(misc-no-recursion)
-    auto List<T>::merge_sort(NodeBase* source) -> NodeBase*
+    auto List<T>::merge_sort(NodeBase* source, Compare comp) -> NodeBase*
     {
         // Stop condition, one element list is already sorted
         if (source == nullptr || source->m_next == nullptr)
@@ -2413,18 +2435,19 @@ namespace dsa
         slow->m_next = nullptr;
 
         // Recursively sort both sub-lists
-        left = merge_sort(left);
-        right = merge_sort(right);
+        left = merge_sort(left, comp);
+        right = merge_sort(right, comp);
 
         // Merge sorted sublists
-        NodeBase* result{ merge(left, right) };
+        NodeBase* result{ merge(left, right, comp) };
         return result;
     }
 
     template<typename T>
+    template<typename Compare>
     // Intentional recursive call for merging nodes in top-down merge_sort algorithm implementation
     // NOLINTNEXTLINE(misc-no-recursion)
-    auto List<T>::merge(NodeBase* left, NodeBase* right) -> NodeBase*
+    auto List<T>::merge(NodeBase* left, NodeBase* right, Compare comp) -> NodeBase*
     {
         // Stop condition, empty element list is already sorted
         if (left == nullptr)
@@ -2442,7 +2465,7 @@ namespace dsa
         if (node_left && node_right)
         {
             // Recursively merge nodes
-            if (node_left->m_value <= node_right->m_value)
+            if (comp(node_left->m_value, node_right->m_value))
             {
                 result = left;
                 result->m_next = merge(left->m_next, right, comp);
@@ -2450,7 +2473,7 @@ namespace dsa
             else
             {
                 result = right;
-                result->m_next = merge(left, right->m_next);
+                result->m_next = merge(left, right->m_next, comp);
             }
             result->m_next->m_prev = result;
         }
@@ -2461,6 +2484,13 @@ namespace dsa
     template<typename T>
     void List<T>::sort()
     {
+        sort(std::less<>());
+    }
+
+    template<typename T>
+    template<typename Compare>
+    void List<T>::sort(Compare comp)
+    {
         if (m_size == 0)
         {
             return;
@@ -2469,7 +2499,7 @@ namespace dsa
         // prevent sorting sentinel node
         m_tail->m_prev->m_next = nullptr;
 
-        m_head = merge_sort(m_head);
+        m_head = merge_sort(m_head, comp);
 
         // find last node to attach sentinel to
         NodeBase* last{ m_head };
