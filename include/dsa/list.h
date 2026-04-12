@@ -614,7 +614,7 @@ namespace dsa
          *
          * @return reference to data stored in List first Node
          */
-        auto front() -> reference;
+        [[nodiscard]] auto front() -> reference;
 
         /**
          * @brief Function returns const reference value stored in List first Node
@@ -628,7 +628,7 @@ namespace dsa
          *
          * @return reference to data stored in List last Node
          */
-        auto back() -> reference;
+        [[nodiscard]] auto back() -> reference;
 
         /**
          * @brief Function returns const reference value stored in List last Node
@@ -642,14 +642,14 @@ namespace dsa
          *
          * @return iterator iterator to List first Node
          */
-        auto begin() noexcept -> iterator;
+        [[nodiscard]] auto begin() noexcept -> iterator;
 
         /**
          * @brief Function returns const pointer to List first Node
          *
          * @return const_iterator const iterator to List first Node
          */
-        auto begin() const noexcept -> const_iterator;
+        [[nodiscard]] auto begin() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns const pointer to List first Node
@@ -663,14 +663,14 @@ namespace dsa
          *
          * @return iterator iterator to List last Node
          */
-        auto end() noexcept -> iterator;
+        [[nodiscard]] auto end() noexcept -> iterator;
 
         /**
          * @brief Function returns pointer to List last Node
          *
          * @return const_iterator const iterator to List last Node
          */
-        auto end() const noexcept -> const_iterator;
+        [[nodiscard]] auto end() const noexcept -> const_iterator;
 
         /**
          * @brief Function returns pointer to List last Node
