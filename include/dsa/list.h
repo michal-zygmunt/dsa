@@ -37,7 +37,6 @@ namespace dsa
      *
      * @tparam T type of data stored in List Node
      *
-     * @todo add non-member specialized swap function
      * @todo add non-member specialized erase function
      * @todo add non-member specialized erase_if function
      * @todo remove public functions / operators not supported by std::forward_list
@@ -2697,6 +2696,19 @@ namespace dsa
         // first n elements are equal
         // check sizes
         return lhs.size() <=> rhs.size();
+    }
+
+    /**
+     * @brief Exchanges content of two List containers
+     *
+     * @tparam T data type stored in containers
+     * @param[in] lhs container to swap content
+     * @param[in] rhs container to swap content
+     */
+    template<typename T>
+    void swap(List<T>& lhs, List<T>& rhs) noexcept(noexcept(lhs.swap(rhs)))
+    {
+        lhs.swap(rhs);
     }
 }
 
