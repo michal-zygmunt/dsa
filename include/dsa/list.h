@@ -37,8 +37,6 @@ namespace dsa
      *
      * @tparam T type of data stored in List Node
      *
-     * @todo add non-member specialized erase function
-     * @todo add non-member specialized erase_if function
      * @todo remove public functions / operators not supported by std::forward_list
      */
     template<typename T>
@@ -2709,6 +2707,36 @@ namespace dsa
     void swap(List<T>& lhs, List<T>& rhs) noexcept(noexcept(lhs.swap(rhs)))
     {
         lhs.swap(rhs);
+    }
+
+    /**
+     * @brief Function erases from container all elements that are equal to \p value
+     *
+     * @tparam T data type stored in containers
+     * @tparam U data type of \p value
+     * @param[in,out] container object to remove erase elements from
+     * @param[in] value value to remove from \p container
+     * @return size_type number of elements removed
+     */
+    template<typename T, typename U>
+    auto erase(List<T>& container, const U& value) -> List<T>::size_type
+    {
+        return erase_if(container, [&value](U node_val) { return node_val == value; });
+    }
+
+    /**
+     * @brief Function erases from container all elements that satisfy the predicate \p pred
+     *
+     * @tparam T data type stored in containers
+     * @tparam Pred predicate to check if element should be erased
+     * @param[in,out] container container object to remove erase elements from
+     * @param[in] pred predicate which returns \p true if the element should be erased
+     * @return size_type number of elements removed
+     */
+    template<typename T, typename Pred>
+    auto erase_if(List<T>& container, Pred pred) -> List<T>::size_type
+    {
+        return container.remove_if(pred);
     }
 }
 
