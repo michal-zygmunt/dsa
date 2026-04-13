@@ -133,6 +133,42 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected16 = { };
         tests::compare("List16", list16, expected16);
 
+        dsa::List<int> list17 = dsa::List<int>({ 0, 10, 0, 0, 40, 0 });
+        auto cnt17 = dsa::erase(list17, 0);
+        const std::initializer_list<int> expected17 = { 10, 40 };
+        tests::compare("List17", list17, expected17);
+        tests::compare("List17 removed count", cnt17, std::size_t{ 4 });
+
+        dsa::List<int> list18 = dsa::List<int>({ 0, 0, 0, 0, 0, 0 });
+        auto cnt18 = dsa::erase(list18, 0);
+        const std::initializer_list<int> expected18 = { };
+        tests::compare("List18", list18, expected18);
+        tests::compare("List18 erase count", cnt18, std::size_t{ 6 });
+
+        dsa::List<int> list19 = dsa::List<int>({ 0, 10, 0, 0, 40, 0 });
+        auto cnt19 = dsa::erase_if(list19, [](int val) { return val == 0; });
+        const std::initializer_list<int> expected19 = { 10, 40 };
+        tests::compare("List19", list19, expected19);
+        tests::compare("List19 erase count", cnt19, std::size_t{ 4 });
+
+        dsa::List<int> list20 = dsa::List<int>({ 0, 0, 0, 0, 0, 0 });
+        auto cnt20 = dsa::erase_if(list20, [](int val) { return val == 0; });
+        const std::initializer_list<int> expected20 = { };
+        tests::compare("List20", list20, expected20);
+        tests::compare("List20 erase_if count", cnt20, std::size_t{ 6 });
+
+        dsa::List<int> list21 = dsa::List<int>({ 0, 1, 2, 3, 4, 5 });
+        auto cnt21 = dsa::erase_if(list21, [](int val) { return val % 2 == 0; });
+        const std::initializer_list<int> expected21 = { 1, 3, 5 };
+        tests::compare("List21", list21, expected21);
+        tests::compare("List21 erase_if count", cnt21, std::size_t{ 3 });
+
+        dsa::List<int> list22 = dsa::List<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt22 = dsa::erase_if(list22, [](int val) { return val <= 5; });
+        const std::initializer_list<int> expected22 = { 10, 7, 9 };
+        tests::compare("List22", list22, expected22);
+        tests::compare("List22 erase_if count", cnt22, std::size_t{ 3 });
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -197,6 +233,43 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         auto std_cnt13 = std_list13.remove_if([](int val) { return val <= 5; });
         tests::compare("List13 vs std", list13, std_list13);
         tests::compare("List13 removed count vs std", cnt13, std_cnt13);
+
+        std::list<int> std_list17{ 0, 10, 0, 0, 40, 0 };
+        // Linter do not recognizes that functions std::erase/erase_if are included from std::list in C++20
+        // NOLINTNEXTLINE(misc-include-cleaner,-warnings-as-errors)
+        auto std_cnt17 = std::erase(std_list17, 0);
+        tests::compare("List17 vs std", list17, std_list17);
+        tests::compare("List17 removed count vs std", cnt17, std_cnt17);
+
+        std::list<int> std_list18{ 0, 0, 0, 0, 0, 0 };
+        // NOLINTNEXTLINE(misc-include-cleaner,-warnings-as-errors)
+        auto std_cnt18 = std::erase(std_list18, 0);
+        tests::compare("List18 vs std", list18, std_list18);
+        tests::compare("List18 erase count vs std", cnt18, std_cnt18);
+
+        std::list<int> std_list19{ 0, 10, 0, 0, 40, 0 };
+        // NOLINTNEXTLINE(misc-include-cleaner,-warnings-as-errors)
+        auto std_cnt19 = std::erase_if(std_list19, [](int val) { return val == 0; });
+        tests::compare("List19 vs std", list19, std_list19);
+        tests::compare("List19 erase count vs std", cnt19, std_cnt19);
+
+        std::list<int> std_list20{ 0, 0, 0, 0, 0, 0 };
+        // NOLINTNEXTLINE(misc-include-cleaner,-warnings-as-errors)
+        auto std_cnt20 = std::erase_if(std_list20, [](int val) { return val == 0; });
+        tests::compare("List20 vs std", list20, std_list20);
+        tests::compare("List20 erase_if count vs std", cnt20, std_cnt20);
+
+        std::list<int> std_list21{ 0, 1, 2, 3, 4, 5 };
+        // NOLINTNEXTLINE(misc-include-cleaner,-warnings-as-errors)
+        auto std_cnt21 = std::erase_if(std_list21, [](int val) { return val % 2 == 0; });
+        tests::compare("List21 vs std", list21, std_list21);
+        tests::compare("List21 erase_if count vs std", cnt21, std_cnt21);
+
+        std::list<int> std_list22{ 0, 10, 2, 5, 7, 9 };
+        // NOLINTNEXTLINE(misc-include-cleaner,-warnings-as-errors)
+        auto std_cnt22 = std::erase_if(std_list22, [](int val) { return val <= 5; });
+        tests::compare("List22 vs std", list22, std_list22);
+        tests::compare("List22 erase_if count vs std", cnt22, std_cnt22);
 
 
         tests::print_stats();
