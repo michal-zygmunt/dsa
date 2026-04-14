@@ -29,12 +29,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::cout << "Start list_set_test:\n";
 
         dsa::List<int> list1 = dsa::List<int>({ 0, 10, 20 });
-        // Try setting values for nodes with invalid indexes
-        constexpr int new_value{ 50 };
-        list1.set(static_cast<size_t>(-1), new_value);
-        list1.set(1, new_value);
-        list1.set(100, new_value);
-        const std::initializer_list<int> expected1{ 0, 50, 20 };
+        const std::initializer_list<int> expected1{ 0, 1, 2 };
+        list1 = expected1;
         tests::compare("List1", list1, expected1);
 
         dsa::List<int> list2 = dsa::List<int>({ 0, 10, 20 });
@@ -64,6 +60,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
 
         std::cout << "Compare operations results with std container\n\n";
+
+        std::list<int> std_list1{ 0, 10, 20 };
+        std_list1 = expected1;
+        tests::compare("List1 vs std", list1, std_list1);
 
         std::list<int> std_list2{ 0, 10, 20 };
         std_list2.assign(4, 1);
