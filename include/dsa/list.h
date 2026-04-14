@@ -1172,6 +1172,8 @@ namespace dsa
             return *this;
         }
 
+    private:
+
         /**
          * @brief Function returns pointer to specific Node of List
          *
@@ -1192,8 +1194,6 @@ namespace dsa
          * @retval false if invalid index
          */
         auto set(size_type index, T value) -> bool;
-
-    private:
 
         /**
          * @brief Construct new object based on two List objects
