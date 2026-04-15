@@ -1251,40 +1251,6 @@ namespace dsa
         }
 
         /**
-        * @brief Function inserts new Node before specified List iterator
-        *
-        * @param[in] pos iterator to insert element before
-        * @param[in] value element of type T to be inserted
-        * @return iterator to list element
-        * @retval iterator to inserted element
-        * @retval iterator to \p pos if no element was inserted
-        */
-        auto insert_element_before(iterator pos, const_reference value) -> iterator
-        {
-            if (pos == begin())
-            {
-                push_front(value);
-                return begin();
-            }
-
-            if (pos == end())
-            {
-                push_back(value);
-                return end().m_current_node->m_prev;
-            }
-
-            NodeBase* temp{ pos.m_current_node->m_prev };
-            Node* newNode = construct_node(temp, temp->m_next, value);
-
-
-            temp->m_next->m_prev = newNode;
-            temp->m_next = newNode;
-
-            m_size++;
-            return iterator(newNode);
-        }
-
-        /**
          * @brief Function checks List contains iterator
          *
          * @param[in] pos iterator to check
