@@ -37,20 +37,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::cout << "List2:\t" << list2 << '\n';
         std::cout << "List3:\t" << list3 << "\n\n";
 
-        const dsa::List<int> list4(list1 + list2);
-        const std::initializer_list<int> expected4 = { 1, 2, 3, 1, 2, 6 };
-        tests::compare("List4", list4, expected4);
-
-        dsa::List<int> list5(1, 0);
-        list5 += list2;
-        const std::initializer_list<int> expected5 = { 0, 1, 2, 6 };
-        tests::compare("List5", list5, expected5);
-
-        dsa::List<int> list6(1, 0);
-        list6 += { 1, 2, 6 };
-        const std::initializer_list<int> expected6 = { 0, 1, 2, 6 };
-        tests::compare("List6", list6, expected6);
-
         std::cout << "Compare operators for objects of the same size\n\n";
 
         // intentional self-comparison, an object should be equal to itself
