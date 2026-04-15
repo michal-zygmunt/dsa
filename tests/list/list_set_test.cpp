@@ -12,7 +12,6 @@
 #include "common.h"
 #include "dsa/list.h"
 
-#include <cstddef>
 #include <exception>
 #include <initializer_list>
 #include <iostream>
@@ -39,24 +38,31 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List2", list2, expected2);
 
         dsa::List<int> list3 = dsa::List<int>({ 0, 10, 20 });
-        const std::initializer_list<int> expected3 = { 1, 2, 3, 4 };
-        list3.assign(expected3);
+        list3.assign(0, 1);
+        const std::initializer_list<int> expected3 = {};
         tests::compare("List3", list3, expected3);
 
+        dsa::List<int> list4 = dsa::List<int>({ 0, 10, 20 });
         const std::initializer_list<int> expected4{ 1, 2, 3, 4 };
-        const dsa::List<int> list4 = expected4;
+        list4.assign(expected4);
         tests::compare("List4", list4, expected4);
 
-        const std::initializer_list<int> expected5{ 1, 2, 3, 4 };
-        dsa::List<int> list5{ 10, 20, 30 };
-        list5 = expected5;
+        dsa::List<int> list5 = dsa::List<int>({ 0, 10, 20 });
+        dsa::List<int> temp5 = dsa::List<int>({ 0, 1, 2, 3, 4, 5 });
+        list5.assign(std::next(temp5.begin(), 1), std::next(temp5.begin(), 4));
+        const std::initializer_list<int> expected5 = { 1, 2, 3 };
         tests::compare("List5", list5, expected5);
 
         dsa::List<int> list6 = dsa::List<int>({ 0, 10, 20 });
-        dsa::List<int> temp6 = dsa::List<int>({ 0, 1, 2, 3, 4, 5 });
-        list6.assign(std::next(temp6.begin(), 1), std::next(temp6.begin(), 4));
-        const std::initializer_list<int> expected6 = { 1, 2, 3 };
+        constexpr int new_value{ 50 };
+        list6.front() = new_value;
+        const std::initializer_list<int> expected6{ new_value, 10, 20 };
         tests::compare("List6", list6, expected6);
+
+        dsa::List<int> list7 = dsa::List<int>({ 0, 10, 20 });
+        const std::initializer_list<int> expected7 = {};
+        list7.assign(expected7);
+        tests::compare("List7", list7, expected7);
 
 
         std::cout << "Compare operations results with std container\n\n";
@@ -70,19 +76,23 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List2 vs std", list2, std_list2);
 
         std::list<int> std_list3{ 0, 10, 20 };
-        std_list3.assign(expected3);
+        std_list3.assign(0, 1);
         tests::compare("List3 vs std", list3, std_list3);
 
         const std::list<int> std_list4 = expected4;
         tests::compare("List4 vs std", list4, std_list4);
 
-        std::list<int> std_list5{ 10, 20, 30 };
-        std_list5 = expected5;
+        std::list<int> std_list5{ 0, 10, 20 };
+        std_list5.assign(std::next(temp5.begin(), 1), std::next(temp5.begin(), 4));
         tests::compare("List5 vs std", list5, std_list5);
 
         std::list<int> std_list6{ 0, 10, 20 };
-        std_list6.assign(std::next(temp6.begin(), 1), std::next(temp6.begin(), 4));
+        std_list6.front() = new_value;
         tests::compare("List6 vs std", list6, std_list6);
+
+        std::list<int> std_list7{ 0, 10, 20 };
+        std_list7.assign(expected7);
+        tests::compare("List7 vs std", list7, std_list7);
 
 
         tests::print_stats();
