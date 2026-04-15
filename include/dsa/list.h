@@ -28,9 +28,6 @@ namespace dsa
     template<typename T>
     class List;
 
-    template<typename T>
-    auto operator+(const List<T>& list1, const List<T>& list2) -> List<T>;
-
     /**
      * @brief Implements List using Node with pointer to adjacent
      *        elements as internal base
@@ -1139,39 +1136,6 @@ namespace dsa
         template<typename Compare>
         void sort(Compare comp);
 
-        /**
-         * @brief Append elements of another List to base container
-         *
-         * @tparam T type of data stored in List Node
-         * @param[in] other List to read elements from
-         * @return List<T>&
-         */
-        auto operator+=(const List<T>& other) -> List<T>&
-        {
-            for (auto it = other.cbegin(); it != other.cend(); ++it)
-            {
-                push_back(*it);
-            }
-
-            return *this;
-        }
-
-        /**
-         * @brief push_back elements of another List to base container
-         *
-         * @param[in] init_list initializer_list to read elements from
-         * @return List<T>&
-         */
-        auto operator+=(const std::initializer_list<T> init_list) -> List<T>&
-        {
-            for (const auto& item : init_list)
-            {
-                push_back(item);
-            }
-
-            return *this;
-        }
-
     private:
 
         /**
@@ -1194,18 +1158,6 @@ namespace dsa
          * @retval false if invalid index
          */
         auto set(size_type index, T value) -> bool;
-
-        /**
-         * @brief Construct new object based on two List objects
-         *
-         * Forward friend declaration of List operator+
-         *
-         * @tparam T type of data stored in List Node
-         * @param[in] list1 input List
-         * @param[in] list2 input List
-         * @return List<T> List<T> with content of two input lists
-         */
-        friend auto operator+<>(const List<T>& list1, const List<T>& list2)->List<T>;
 
         /**
          * @brief Function add end node located just after last user created data
@@ -2575,28 +2527,6 @@ namespace dsa
         }
 
         return false;
-    }
-
-    /**
-     * @brief Construct new object based on two List objects
-     *
-     * @tparam T type of data stored in List Node
-     * @param[in] list1 input List
-     * @param[in] list2 input List
-     * @return List<T> List<T> with content of two input lists
-     */
-    template<typename T>
-    auto operator+(const List<T>& list1, const List<T>& list2) -> List<T>
-    {
-        List<T> temp(list1);
-
-        for (auto iter = list2.cbegin(); iter != list2.cend(); ++iter)
-        {
-            T value = *iter;
-            temp.push_back(value);
-        }
-
-        return temp;
     }
 
     /**
