@@ -1693,7 +1693,8 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::insert(const const_iterator& pos, size_type count, const_reference value) -> typename List<T>::iterator
+    auto List<T>::insert(const const_iterator& pos, size_type count, const_reference value)
+        -> typename List<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1703,7 +1704,7 @@ namespace dsa
         iterator iter{ pos.m_current_node };
         for (size_type i = 0; i < count; i++)
         {
-            iter = insert_element_before(iter, value);
+            iter = emplace(iter, value);
         }
 
         return iter;
