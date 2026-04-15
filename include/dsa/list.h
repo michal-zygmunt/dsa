@@ -1006,61 +1006,85 @@ namespace dsa
 
         /**
          * @brief Function moves elements from other List object
+         * @details Content of other object will be taken by constructed object
          *
          * @param[in] pos const_iterator before which content of other container will be inserted
          * @param[in,out] other container to take elements from
-         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
          */
         void splice(const const_iterator& pos, List<T>& other);
 
         /**
          * @brief Function moves elements from other List object
+         * @details Content of other object will be taken by constructed object
          *
          * @param[in] pos const_iterator before which content of other container will be inserted
          * @param[in,out] other container to take elements from
-         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
          */
         void splice(const_iterator pos, List<T>&& other);
 
         /**
          * @brief Function moves elements from other List object
+         * @details Content of other object will be taken by constructed object
          *
          * @param[in] pos const_iterator before which content of other container will be inserted
          * @param[in,out] other container to take elements from
          * @param[in] iter const_iterator pointing to element to move
-         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
          */
         void splice(const const_iterator& pos, List<T>& other, const const_iterator& iter);
 
         /**
          * @brief Function moves elements from other List object
+         * @details Content of other object will be taken by constructed object
          *
          * @param[in] pos const_iterator before which content of other container will be inserted
          * @param[in,out] other container to take elements from
          * @param[in] iter const_iterator pointing to element to move
-         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
          */
         void splice(const_iterator pos, List<T>&& other, const_iterator iter);
 
         /**
          * @brief Function moves elements in range [first, last) from other List object
+         * @details Content of other object will be taken by constructed object
          *
          * @param[in] pos const_iterator before which content of other container will be inserted
          * @param[in,out] other container to take elements from
          * @param[in] first const_iterator pointing to first element to move
          * @param[in] last const_iterator pointing to element after last taken element
-         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
          */
         void splice(const const_iterator& pos, List<T>& other, const const_iterator& first, const const_iterator& last);
 
         /**
          * @brief Function moves elements in range [first, last) from other List object
+         * @details Content of other object will be taken by constructed object
          *
          * @param[in] pos const_iterator before which content of other container will be inserted
          * @param[in,out] other container to take elements from
          * @param[in] first const_iterator pointing to first element to move
          * @param[in] last const_iterator pointing to element after last taken element
-         * @details Content of other object will be taken by constructed object
+         *
+         * @note no iterators or references become invalidated,
+         *       iterators or references of objects moved from \p other will
+         *       refer to the same elements of \p this
          */
         void splice(const_iterator pos, List<T>&& other, const_iterator first, const_iterator last);
 
