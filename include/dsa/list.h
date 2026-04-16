@@ -1187,15 +1187,7 @@ namespace dsa
          * @brief Function add end node located just after last user created data
          * Node is used by iterators indicating end of container
          */
-        void init_node()
-        {
-            if (m_head == nullptr)
-            {
-                // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
-                m_head = new NodeBase;
-                m_tail = m_head;
-            }
-        }
+        void init_node();
 
         /**
          * @brief Function remove next element
@@ -1203,31 +1195,7 @@ namespace dsa
          * @param[in] iterator to element to which will be erased
          * @return iterator to element following \p pos
          */
-        auto erase_element(iterator pos) -> iterator
-        {
-
-            if (pos == begin())
-            {
-                pop_front();
-                return iterator(begin());
-            }
-
-            if (pos == (--end()))
-            {
-                pop_back();
-                return iterator(end());
-            }
-
-            NodeBase* temp{ pos.m_current_node->m_prev };
-            NodeBase* to_remove{ temp->m_next };
-
-            temp->m_next = to_remove->m_next;
-            temp->m_next->m_prev = temp;
-            destroy_node(to_remove);
-
-            m_size--;
-            return iterator(temp->m_next);
-        }
+        auto erase_element(iterator pos) -> iterator;
 
         /**
          * @brief Function allocate and construct List node
@@ -1239,40 +1207,14 @@ namespace dsa
          * @return pointer to created Node
          */
         template<typename... Args>
-        // NOLINTNEXTLINE(bugprone-easily-swappable-parameters,-warnings-as-errors)
-        auto construct_node(NodeBase* prev_ptr, NodeBase* next_ptr, Args&&... args) -> Node*
-        {
-            Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
-            try
-            {
-                node_alloc_traits::construct(node_alloc, newNode, std::forward<Args>(args)...);
-            }
-            catch (...)
-            {
-                node_alloc_traits::deallocate(node_alloc, newNode, 1);
-                throw;
-            }
-
-            newNode->m_prev = prev_ptr;
-            newNode->m_next = next_ptr;
-
-            return newNode;
-        }
+        auto construct_node(NodeBase* prev_ptr, NodeBase* next_ptr, Args&&... args) -> Node*;
 
         /**
          * @brief Function destroys and deallocates memory used by Node
          *
          * @param[in] node_to_destroy pointer to Node to delete
          */
-        void destroy_node(NodeBase* node_to_destroy)
-        {
-            Node* node_dyn = dynamic_cast<Node*>(node_to_destroy);
-            if (node_dyn)
-            {
-                node_alloc_traits::destroy(node_alloc, node_dyn);
-                node_alloc_traits::deallocate(node_alloc, node_dyn, 1);
-            }
-        }
+        void destroy_node(NodeBase* node_to_destroy);
 
         /**
          * @brief Function checks List contains iterator
@@ -1282,25 +1224,7 @@ namespace dsa
          * @return true if \p pos belong to List
          * @return false if otherwise
          */
-        auto if_valid_iterator(const_iterator pos) -> bool
-        {
-            bool valid_iterator{};
-
-            if (pos == cbegin() || pos == cend())
-            {
-                return true;
-            }
-
-            for (auto it = cbegin(); it != cend(); ++it)
-            {
-                if (it == pos)
-                {
-                    valid_iterator = true;
-                    break;
-                }
-            }
-            return valid_iterator;
-        }
+        auto if_valid_iterator(const_iterator pos) -> bool;
 
         /**
          * @brief Function calculate number of elements from first to last
@@ -2105,74 +2029,6 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::distance(const_iterator first, const const_iterator& last) -> size_type
-    {
-        size_type dist{};
-        while (first != last)
-        {
-            ++first;
-            ++dist;
-        }
-
-        return dist;
-    }
-
-    template<typename T>
-    // transfers ownership of nodes, moving entire container is not necessary
-    // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
-    void List<T>::transfer(const_iterator pos, List<T>&& other, const_iterator first, const const_iterator& last)
-    {
-        if (&other != this && other.m_size > 0)
-        {
-            const size_type dist = distance(first, last);
-            if (dist == 0)
-            {
-                return;
-            }
-
-            NodeBase* temp_prev{ pos.m_current_node->m_prev }; // to append to
-            NodeBase* last_to_move{ last.m_current_node->m_prev };
-
-            // select fragment from other
-
-            NodeBase* fragment{};
-            NodeBase* fragment_end{ last_to_move->m_next };
-            if (first == other.begin())
-            {
-                fragment = other.m_head;
-                other.m_head = fragment_end;
-                other.m_head->m_prev = nullptr;
-            }
-            else
-            {
-                fragment = first.m_current_node->m_prev->m_next;
-                fragment->m_prev->m_next = fragment_end;
-                fragment->m_prev->m_next->m_prev = first.m_current_node->m_prev;
-                fragment->m_prev = nullptr;
-            }
-
-            // insert fragment into this
-
-            if (pos == begin())
-            {
-                last_to_move->m_next = m_head;
-                last_to_move->m_next->m_prev = last_to_move;
-                m_head = fragment;
-            }
-            else
-            {
-                last_to_move->m_next = temp_prev->m_next;
-                last_to_move->m_next->m_prev = last_to_move;
-                temp_prev->m_next = fragment;
-                temp_prev->m_next->m_prev = temp_prev;
-            }
-
-            m_size += dist;
-            other.m_size -= dist;
-        }
-    }
-
-    template<typename T>
     void List<T>::splice(const const_iterator& pos, List<T>& other)
     {
         transfer(pos, std::move(other), other.begin(), other.end());
@@ -2344,83 +2200,6 @@ namespace dsa
     }
 
     template<typename T>
-    template<typename Compare>
-    // Intentional recursive call for sorting nodes in top-down algorithm implementation
-    // NOLINTNEXTLINE(misc-no-recursion)
-    auto List<T>::merge_sort(NodeBase* source, Compare comp) -> NodeBase*
-    {
-        // Stop condition, one element list is already sorted
-        if (source == nullptr || source->m_next == nullptr)
-        {
-            return source;
-        }
-
-        // Divide list into equal-sized sublists consisting of first and second half of the list
-        NodeBase* left{ source };
-        NodeBase* right{};
-
-        // Use slow and fast pointer to find half of list
-        NodeBase* slow{ source };
-        NodeBase* fast{ source->m_next };
-        while (fast && fast->m_next)
-        {
-            slow = slow->m_next;
-            fast = fast->m_next->m_next;
-        }
-
-        // Split input list into two halfs
-        right = slow->m_next;
-        right->m_prev = nullptr;
-        slow->m_next = nullptr;
-
-        // Recursively sort both sub-lists
-        left = merge_sort(left, comp);
-        right = merge_sort(right, comp);
-
-        // Merge sorted sublists
-        NodeBase* result{ merge(left, right, comp) };
-        return result;
-    }
-
-    template<typename T>
-    template<typename Compare>
-    // Intentional recursive call for merging nodes in top-down merge_sort algorithm implementation
-    // NOLINTNEXTLINE(misc-no-recursion)
-    auto List<T>::merge(NodeBase* left, NodeBase* right, Compare comp) -> NodeBase*
-    {
-        // Stop condition, empty element list is already sorted
-        if (left == nullptr)
-        {
-            return right;
-        }
-        if (right == nullptr)
-        {
-            return left;
-        }
-
-        NodeBase* result{};
-        Node* node_left = dynamic_cast<Node*>(left);
-        Node* node_right = dynamic_cast<Node*>(right);
-        if (node_left && node_right)
-        {
-            // Recursively merge nodes
-            if (comp(node_left->m_value, node_right->m_value))
-            {
-                result = left;
-                result->m_next = merge(left->m_next, right, comp);
-            }
-            else
-            {
-                result = right;
-                result->m_next = merge(left, right->m_next, comp);
-            }
-            result->m_next->m_prev = result;
-        }
-
-        return result;
-    }
-
-    template<typename T>
     void List<T>::sort()
     {
         sort(std::less<>());
@@ -2448,76 +2227,6 @@ namespace dsa
         }
         last->m_next = m_tail;
         m_tail->m_prev = last;
-    }
-
-    template<typename T>
-    auto List<T>::get(size_type index) const -> typename List<T>::Node*
-    {
-        if (index >= m_size)
-        {
-            return nullptr;
-        }
-
-        NodeBase* temp{};
-
-        // select list end to look for selected index
-        enum Mode : std::uint8_t { FRONT, BACK, AUTO };
-        constexpr Mode mode = Mode::AUTO;
-
-
-        if constexpr (mode == FRONT)
-        {
-            // count nodes from front
-            temp = m_head;
-            for (size_type i = 0; i < index; i++)
-            {
-                temp = temp->m_next;
-            }
-        }
-        else if constexpr (mode == BACK)
-        {
-            // count nodes from back
-            temp = m_tail->m_prev;
-            for (size_type i = m_size - 1; i > index; i--)
-            {
-                temp = temp->m_prev;
-            }
-        }
-        else // mode == AUTO
-        {
-            // optimize counting nodes from front or back
-            if (index < m_size / 2)
-            {
-                temp = m_head;
-                for (size_type i = 0; i < index; i++)
-                {
-                    temp = temp->m_next;
-                }
-            }
-            else
-            {
-                temp = m_tail->m_prev;
-                for (size_type i = m_size - 1; i > index; i--)
-                {
-                    temp = temp->m_prev;
-                }
-            }
-        }
-
-        return dynamic_cast<Node*>(temp);
-    }
-
-    template<typename T>
-    auto List<T>::set(size_type index, T value) -> bool
-    {
-        Node* temp = get(index);
-        if (temp)
-        {
-            temp->m_value = value;
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -2658,6 +2367,315 @@ namespace dsa
     auto erase_if(List<T>& container, Pred pred) -> List<T>::size_type
     {
         return container.remove_if(pred);
+    }
+
+    // definitions of private methods
+
+    template<typename T>
+    auto List<T>::get(size_type index) const -> typename List<T>::Node*
+    {
+        if (index >= m_size)
+        {
+            return nullptr;
+        }
+
+        NodeBase* temp{};
+
+        // select list end to look for selected index
+        enum Mode : std::uint8_t { FRONT, BACK, AUTO };
+        constexpr Mode mode = Mode::AUTO;
+
+
+        if constexpr (mode == FRONT)
+        {
+            // count nodes from front
+            temp = m_head;
+            for (size_type i = 0; i < index; i++)
+            {
+                temp = temp->m_next;
+            }
+        }
+        else if constexpr (mode == BACK)
+        {
+            // count nodes from back
+            temp = m_tail->m_prev;
+            for (size_type i = m_size - 1; i > index; i--)
+            {
+                temp = temp->m_prev;
+            }
+        }
+        else // mode == AUTO
+        {
+            // optimize counting nodes from front or back
+            if (index < m_size / 2)
+            {
+                temp = m_head;
+                for (size_type i = 0; i < index; i++)
+                {
+                    temp = temp->m_next;
+                }
+            }
+            else
+            {
+                temp = m_tail->m_prev;
+                for (size_type i = m_size - 1; i > index; i--)
+                {
+                    temp = temp->m_prev;
+                }
+            }
+        }
+
+        return dynamic_cast<Node*>(temp);
+    }
+
+    template<typename T>
+    auto List<T>::set(size_type index, T value) -> bool
+    {
+        Node* temp = get(index);
+        if (temp)
+        {
+            temp->m_value = value;
+            return true;
+        }
+
+        return false;
+    }
+
+    template<typename T>
+    void List<T>::init_node()
+    {
+        if (m_head == nullptr)
+        {
+            // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
+            m_head = new NodeBase;
+            m_tail = m_head;
+        }
+    }
+
+    template<typename T>
+    auto List<T>::erase_element(iterator pos) -> iterator
+    {
+
+        if (pos == begin())
+        {
+            pop_front();
+            return iterator(begin());
+        }
+
+        if (pos == (--end()))
+        {
+            pop_back();
+            return iterator(end());
+        }
+
+        NodeBase* temp{ pos.m_current_node->m_prev };
+        NodeBase* to_remove{ temp->m_next };
+
+        temp->m_next = to_remove->m_next;
+        temp->m_next->m_prev = temp;
+        destroy_node(to_remove);
+
+        m_size--;
+        return iterator(temp->m_next);
+    }
+
+    template<typename T>
+    template<typename... Args>
+    // NOLINTNEXTLINE(bugprone-easily-swappable-parameters,-warnings-as-errors)
+    auto List<T>::construct_node(NodeBase* prev_ptr, NodeBase* next_ptr, Args&&... args) -> Node*
+    {
+        Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
+        try
+        {
+            node_alloc_traits::construct(node_alloc, newNode, std::forward<Args>(args)...);
+        }
+        catch (...)
+        {
+            node_alloc_traits::deallocate(node_alloc, newNode, 1);
+            throw;
+        }
+
+        newNode->m_prev = prev_ptr;
+        newNode->m_next = next_ptr;
+
+        return newNode;
+    }
+
+    template<typename T>
+    void List<T>::destroy_node(NodeBase* node_to_destroy)
+    {
+        Node* node_dyn = dynamic_cast<Node*>(node_to_destroy);
+        if (node_dyn)
+        {
+            node_alloc_traits::destroy(node_alloc, node_dyn);
+            node_alloc_traits::deallocate(node_alloc, node_dyn, 1);
+        }
+    }
+
+    template<typename T>
+    auto List<T>::if_valid_iterator(const_iterator pos) -> bool
+    {
+        bool valid_iterator{};
+
+        if (pos == cbegin() || pos == cend())
+        {
+            return true;
+        }
+
+        for (auto it = cbegin(); it != cend(); ++it)
+        {
+            if (it == pos)
+            {
+                valid_iterator = true;
+                break;
+            }
+        }
+        return valid_iterator;
+    }
+
+    template<typename T>
+    auto List<T>::distance(const_iterator first, const const_iterator& last) -> size_type
+    {
+        size_type dist{};
+        while (first != last)
+        {
+            ++first;
+            ++dist;
+        }
+
+        return dist;
+    }
+
+    template<typename T>
+    // transfers ownership of nodes, moving entire container is not necessary
+    // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+    void List<T>::transfer(const_iterator pos, List<T>&& other, const_iterator first, const const_iterator& last)
+    {
+        if (&other != this && other.m_size > 0)
+        {
+            const size_type dist = distance(first, last);
+            if (dist == 0)
+            {
+                return;
+            }
+
+            NodeBase* temp_prev{ pos.m_current_node->m_prev }; // to append to
+            NodeBase* last_to_move{ last.m_current_node->m_prev };
+
+            // select fragment from other
+
+            NodeBase* fragment{};
+            NodeBase* fragment_end{ last_to_move->m_next };
+            if (first == other.begin())
+            {
+                fragment = other.m_head;
+                other.m_head = fragment_end;
+                other.m_head->m_prev = nullptr;
+            }
+            else
+            {
+                fragment = first.m_current_node->m_prev->m_next;
+                fragment->m_prev->m_next = fragment_end;
+                fragment->m_prev->m_next->m_prev = first.m_current_node->m_prev;
+                fragment->m_prev = nullptr;
+            }
+
+            // insert fragment into this
+
+            if (pos == begin())
+            {
+                last_to_move->m_next = m_head;
+                last_to_move->m_next->m_prev = last_to_move;
+                m_head = fragment;
+            }
+            else
+            {
+                last_to_move->m_next = temp_prev->m_next;
+                last_to_move->m_next->m_prev = last_to_move;
+                temp_prev->m_next = fragment;
+                temp_prev->m_next->m_prev = temp_prev;
+            }
+
+            m_size += dist;
+            other.m_size -= dist;
+        }
+    }
+
+    template<typename T>
+    template<typename Compare>
+    // Intentional recursive call for sorting nodes in top-down algorithm implementation
+    // NOLINTNEXTLINE(misc-no-recursion)
+    auto List<T>::merge_sort(NodeBase* source, Compare comp) -> NodeBase*
+    {
+        // Stop condition, one element list is already sorted
+        if (source == nullptr || source->m_next == nullptr)
+        {
+            return source;
+        }
+
+        // Divide list into equal-sized sublists consisting of first and second half of the list
+        NodeBase* left{ source };
+        NodeBase* right{};
+
+        // Use slow and fast pointer to find half of list
+        NodeBase* slow{ source };
+        NodeBase* fast{ source->m_next };
+        while (fast && fast->m_next)
+        {
+            slow = slow->m_next;
+            fast = fast->m_next->m_next;
+        }
+
+        // Split input list into two halfs
+        right = slow->m_next;
+        right->m_prev = nullptr;
+        slow->m_next = nullptr;
+
+        // Recursively sort both sub-lists
+        left = merge_sort(left, comp);
+        right = merge_sort(right, comp);
+
+        // Merge sorted sublists
+        NodeBase* result{ merge(left, right, comp) };
+        return result;
+    }
+
+    template<typename T>
+    template<typename Compare>
+    // Intentional recursive call for merging nodes in top-down merge_sort algorithm implementation
+    // NOLINTNEXTLINE(misc-no-recursion)
+    auto List<T>::merge(NodeBase* left, NodeBase* right, Compare comp) -> NodeBase*
+    {
+        // Stop condition, empty element list is already sorted
+        if (left == nullptr)
+        {
+            return right;
+        }
+        if (right == nullptr)
+        {
+            return left;
+        }
+
+        NodeBase* result{};
+        Node* node_left = dynamic_cast<Node*>(left);
+        Node* node_right = dynamic_cast<Node*>(right);
+        if (node_left && node_right)
+        {
+            // Recursively merge nodes
+            if (comp(node_left->m_value, node_right->m_value))
+            {
+                result = left;
+                result->m_next = merge(left->m_next, right, comp);
+            }
+            else
+            {
+                result = right;
+                result->m_next = merge(left, right->m_next, comp);
+            }
+            result->m_next->m_prev = result;
+        }
+
+        return result;
     }
 }
 
