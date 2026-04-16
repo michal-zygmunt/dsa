@@ -29,33 +29,33 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::cout << "Start list_shrink_test:\n";
 
         dsa::List<int> list1 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
-        auto iter1 = list1.erase(list1.begin()[list1.size() - 1]);
+        auto iter1 = list1.erase(std::next(list1.begin(), static_cast<ptrdiff_t>(list1.size() - 1)));
         tests::compare("List1 iter", iter1 == list1.end(), true);
         list1.pop_front();
         auto indexes = { 100, 5, 2, 0 };
         for (const auto& idx : indexes)
         {
-            list1.erase(list1.begin()[static_cast<size_t>(idx)]);
+            list1.erase(std::next(list1.begin(), static_cast<ptrdiff_t>(idx)));
         }
         const std::initializer_list<int> expected1 = { 20, 40 };
         tests::compare("List1", list1, expected1);
 
         dsa::List<int> list2 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
-        auto iter2 = list2.erase(list2.begin()[1], list2.begin()[3]);
+        auto iter2 = list2.erase(std::next(list2.begin(), 1), std::next(list2.begin(), 3));
         tests::compare("List2 iter", iter2 == std::next(list2.begin(), 1), true);
         const std::initializer_list<int> expected2 = { 0, 30, 40, 50 };
         tests::compare("List2", list2, expected2);
 
         dsa::List<int> list3 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
-        auto iter3 = list3.erase(list3.begin()[1]);
+        auto iter3 = list3.erase(std::next(list3.begin(), 1));
         tests::compare("List3 iter", iter3 == std::next(list3.begin(), 1), true);
-        iter3 = list3.erase(list3.begin()[1], list3.begin()[3]);
+        iter3 = list3.erase(std::next(list3.begin(), 1), std::next(list3.begin(), 3));
         const std::initializer_list<int> expected3 = { 0, 40, 50 };
         tests::compare("List3", list3, expected3);
 
         dsa::List<int> list4 = dsa::List<int>({ 0, 10, 20, 30, 40, 50 });
-        list4.erase(list4.begin()[1]);
-        auto iter4 = list4.erase(list4.begin()[1], list4.begin()[4]);
+        list4.erase(std::next(list4.begin(), 1));
+        auto iter4 = list4.erase(std::next(list4.begin(), 1), std::next(list4.begin(), 4));
         tests::compare("List4 iter", iter4 == std::next(list4.begin(), 1), true);
         const std::initializer_list<int> expected4 = { 0, 50 };
         tests::compare("List4", list4, expected4);

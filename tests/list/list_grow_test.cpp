@@ -12,6 +12,7 @@
 #include "common.h"
 #include "dsa/list.h"
 
+#include <cstddef>
 #include <exception>
 #include <initializer_list>
 #include <iostream>
@@ -59,7 +60,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list3.push_front(20);
         iterator = list3.insert(list3.cbegin(), 10);
         list3.insert(iterator, { 1, 2, 3 });
-        list3.insert(list3.cbegin()[list3.size() - 1], 60);
+        list3.insert(std::next(list3.cbegin(), static_cast<ptrdiff_t>(list3.size() - 1)), 60);
         const std::initializer_list<int> expected3 = { 1, 2, 3, 10, 20, 30, 40, 60, 50 };
         tests::compare("List3", list3, expected3);
 
