@@ -1704,43 +1704,15 @@ namespace dsa
     {
         init_node();
 
-        Node* newNode = construct_node(nullptr, nullptr, value);
-        if (!m_head->m_next)
-        {
-            newNode->m_next = m_head;
-            m_head = newNode;
-            m_tail->m_prev = m_head;
-        }
-        else
-        {
-            m_head->m_prev = newNode;
-            newNode->m_next = m_head;
-            m_head = newNode;
-        }
-
-        m_size++;
+        emplace_front(value);
     }
 
     template<typename T>
     void List<T>::push_front(T&& value)
     {
         init_node();
+        emplace_front(std::move(value));
 
-        Node* newNode = construct_node(nullptr, nullptr, std::move(value));
-        if (!m_head->m_next)
-        {
-            newNode->m_next = m_head;
-            m_head = newNode;
-            m_tail->m_prev = m_head;
-        }
-        else
-        {
-            m_head->m_prev = newNode;
-            newNode->m_next = m_head;
-            m_head = newNode;
-        }
-
-        m_size++;
     }
 
     template<typename T>
