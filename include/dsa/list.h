@@ -1751,45 +1751,13 @@ namespace dsa
     {
         init_node();
 
-        Node* newNode = construct_node(nullptr, nullptr, value);
-
-        if (!m_head->m_next) // only sentinel exists
-        {
-            newNode->m_next = m_head;
-            m_head = newNode;
-            m_tail->m_prev = m_head;
-        }
-        else
-        {
-            newNode->m_prev = m_tail->m_prev;
-            newNode->m_next = m_tail->m_prev->m_next;
-            m_tail->m_prev = newNode;
-            m_tail->m_prev->m_prev->m_next = newNode;
-        }
-
-        m_size++;
+        emplace_back(value);
     }
 
     template<typename T>
     void List<T>::push_back(T&& value)
     {
-        Node* newNode = construct_node(nullptr, nullptr, std::move(value));
-
-        if (!m_head->m_next) // only sentinel exists
-        {
-            newNode->m_next = m_head;
-            m_head = newNode;
-            m_tail->m_prev = m_head;
-        }
-        else
-        {
-            newNode->m_prev = m_tail->m_prev;
-            newNode->m_next = m_tail->m_prev->m_next;
-            m_tail->m_prev = newNode;
-            m_tail->m_prev->m_prev->m_next = newNode;
-        }
-
-        m_size++;
+        emplace_back(std::move(value));
     }
 
     template<typename T>
