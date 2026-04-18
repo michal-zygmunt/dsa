@@ -19,6 +19,7 @@
 #include <iterator>
 #include <list>
 #include <memory>
+#include <stdexcept>
 #include <utility>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -168,6 +169,224 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List18 front", *list18.front(), expected18);
         tests::compare("List18 back", *list18.back(), expected18);
         tests::compare("ptr18 == nullptr", ptr18 == nullptr, true);
+
+
+        try
+        {
+            for (size_t i = 0; i < tests::throwing_type_size_limit; i++)
+            {
+                const tests::ThrowingType throwing_type{};
+            }
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error& exc)
+        {
+            std::cout << "Error: " << exc.what() << '\n';
+            std::cout << "Runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::List<tests::ThrowingType> list19{};
+            const tests::ThrowingType throwing_type{};
+            for (size_t i = 0; i < tests::throwing_type_size_limit; i++)
+            {
+                list19.push_front(throwing_type);
+            }
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error& exc)
+        {
+            std::cout << "Error: " << exc.what() << '\n';
+            std::cout << "List19 runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::List<tests::ThrowingType> list20{};
+            tests::ThrowingType throwing_type{};
+            for (size_t i = 0; i < tests::throwing_type_size_limit; i++)
+            {
+                // intentional use of moved object
+                // NOLINTNEXTLINE(bugprone-use-after-move)
+                list20.push_front(std::move(throwing_type));
+            }
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error& exc)
+        {
+            std::cout << "Error: " << exc.what() << '\n';
+            std::cout << "list20 runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::List<tests::ThrowingType> list21{};
+            const tests::ThrowingType throwing_type{};
+            for (size_t i = 0; i < tests::throwing_type_size_limit; i++)
+            {
+                list21.push_back(throwing_type);
+            }
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error& exc)
+        {
+            std::cout << "Error: " << exc.what() << '\n';
+            std::cout << "List21 runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::List<tests::ThrowingType> list22{};
+            tests::ThrowingType throwing_type{};
+            for (size_t i = 0; i < tests::throwing_type_size_limit; i++)
+            {
+                // intentional use of moved object
+                // NOLINTNEXTLINE(bugprone-use-after-move)
+                list22.push_back(std::move(throwing_type));
+            }
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error& exc)
+        {
+            std::cout << "Error: " << exc.what() << '\n';
+            std::cout << "list22 runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::List<tests::ThrowingType> list23{};
+            const tests::ThrowingType throwing_type{};
+            for (size_t i = 0; i < tests::throwing_type_size_limit; i++)
+            {
+                list23.emplace(list23.begin(), throwing_type);
+            }
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error& exc)
+        {
+            std::cout << "Error: " << exc.what() << '\n';
+            std::cout << "List23 runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::List<tests::ThrowingType> list24{};
+            tests::ThrowingType throwing_type{};
+            for (size_t i = 0; i < tests::throwing_type_size_limit; i++)
+            {
+                // intentional use of moved object
+                // NOLINTNEXTLINE(bugprone-use-after-move)
+                list24.emplace(list24.begin(), std::move(throwing_type));
+            }
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error& exc)
+        {
+            std::cout << "Error: " << exc.what() << '\n';
+            std::cout << "List24 runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::List<tests::ThrowingType> list24{};
+            const tests::ThrowingType throwing_type{};
+            for (size_t i = 0; i < tests::throwing_type_size_limit; i++)
+            {
+                list24.emplace_front(throwing_type);
+            }
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error& exc)
+        {
+            std::cout << "Error: " << exc.what() << '\n';
+            std::cout << "List24 runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::List<tests::ThrowingType> list25{};
+            tests::ThrowingType throwing_type{};
+            for (size_t i = 0; i < tests::throwing_type_size_limit; i++)
+            {
+                // intentional use of moved object
+                // NOLINTNEXTLINE(bugprone-use-after-move)
+                list25.emplace_front(std::move(throwing_type));
+            }
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error& exc)
+        {
+            std::cout << "Error: " << exc.what() << '\n';
+            std::cout << "List25 runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::List<tests::ThrowingType> list26{};
+            const tests::ThrowingType throwing_type{};
+            for (size_t i = 0; i < tests::throwing_type_size_limit; i++)
+            {
+                list26.emplace_back(throwing_type);
+            }
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error& exc)
+        {
+            std::cout << "Error: " << exc.what() << '\n';
+            std::cout << "List26 runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::List<tests::ThrowingType> list27{};
+            tests::ThrowingType throwing_type{};
+            for (size_t i = 0; i < tests::throwing_type_size_limit; i++)
+            {
+                // intentional use of moved object
+                // NOLINTNEXTLINE(bugprone-use-after-move)
+                list27.emplace_back(std::move(throwing_type));
+            }
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error& exc)
+        {
+            std::cout << "Error: " << exc.what() << '\n';
+            std::cout << "List27 runtime error exception handled correctly\n\n";
+        }
 
 
         std::cout << "Compare operations results with std container\n\n";
