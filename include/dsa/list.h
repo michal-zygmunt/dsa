@@ -1867,7 +1867,14 @@ namespace dsa
 
         if (m_size != 0)
         {
-            Node* temp_head = construct_node(nullptr, nullptr, 0);
+            Node* temp_head{ construct_node(nullptr, nullptr, T{}) };
+            if (!temp_head)
+            {
+                // if temporary node could not be allocated
+                // do not modify object state
+                return;
+            }
+
             NodeBase* temp_tail = temp_head;
 
             NodeBase* to_move{};
