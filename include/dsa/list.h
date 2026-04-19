@@ -1631,33 +1631,27 @@ namespace dsa
     template<typename... Args>
     auto List<T>::emplace(const_iterator pos, Args&&... args) -> iterator
     {
-        Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
-        try
+        const iterator current{ pos.m_current_node };
+
+        Node* newNode{ construct_node(current.m_current_node->m_prev, current.m_current_node->m_next,
+            std::forward<Args>(args)...) };
+
+        if (pos == cbegin())
         {
-            node_alloc_traits::construct(node_alloc, newNode, std::forward<Args>(args)...);
-
-            if (pos == cbegin())
-            {
-                newNode->m_next = m_head;
-                !m_head->m_next ? m_tail->m_prev = newNode : m_head->m_prev = newNode;
-                m_head = newNode;
-            }
-            else
-            {
-                NodeBase* prev_pos{ pos.m_current_node->m_prev };
-                NodeBase* next_pos{ prev_pos->m_next };
-
-                prev_pos->m_next = newNode;
-                newNode->m_prev = prev_pos;
-
-                newNode->m_next = next_pos;
-                next_pos->m_prev = newNode;
-            }
+            newNode->m_next = m_head;
+            !m_head->m_next ? m_tail->m_prev = newNode : m_head->m_prev = newNode;
+            m_head = newNode;
         }
-        catch (...)
+        else
         {
-            node_alloc_traits::deallocate(node_alloc, newNode, 1);
-            throw;
+            NodeBase* prev_pos{ pos.m_current_node->m_prev };
+            NodeBase* next_pos{ prev_pos->m_next };
+
+            prev_pos->m_next = newNode;
+            newNode->m_prev = prev_pos;
+
+            newNode->m_next = next_pos;
+            next_pos->m_prev = newNode;
         }
 
         ++m_size;
