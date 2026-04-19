@@ -388,6 +388,19 @@ int main() // NOLINT(modernize-use-trailing-return-type)
             std::cout << "List27 runtime error exception handled correctly\n\n";
         }
 
+        dsa::List<int> list28{ 0, 10, 20 };
+        dsa::List<int> temp28{ 30, 40, 50 };
+        auto list28_it = list28.insert(std::next(list28.end(), 1), temp28.begin(), temp28.end());
+        const std::initializer_list<int> expected28{ 0, 10, 20 };
+        tests::compare("List28", list28, expected28);
+        tests::compare("List28 it", list28_it == nullptr, true);
+
+        dsa::List<int> list29{ 0, 10, 20 };
+        auto list29_it = list29.insert(std::next(list29.end(), 1), 30);
+        const std::initializer_list<int> expected29{ 0, 10, 20 };
+        tests::compare("List29", list29, expected29);
+        tests::compare("List29 it", list29_it == nullptr, true);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
