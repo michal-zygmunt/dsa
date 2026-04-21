@@ -1284,9 +1284,8 @@ namespace dsa
 
     template<typename T>
     List<T>::List(size_type count, const T& value)
+        : List()
     {
-        init_node();
-
         for (size_type i = 0; i < count; i++)
         {
             push_front(value);
@@ -1297,18 +1296,21 @@ namespace dsa
     template<typename InputIt>
         requires std::input_iterator<InputIt>
     List<T>::List(InputIt first, InputIt last)
+        : List()
     {
         assign(first, last);
     }
 
     template<typename T>
     List<T>::List(const std::initializer_list<T>& ilist)
+        : List()
     {
         operator=(ilist);
     }
 
     template<typename T>
     List<T>::List(const List<T>& other)
+        : List()
     {
         for (size_type i = 0; i < other.size(); i++)
         {
@@ -1337,6 +1339,7 @@ namespace dsa
 
     template<typename T>
     List<T>::List(List<T>&& other) noexcept
+        : List()
     {
         operator=(std::move(other));
     }
@@ -1696,17 +1699,13 @@ namespace dsa
     template<typename T>
     void List<T>::push_front(const_reference value)
     {
-        init_node();
-
         emplace_front(value);
     }
 
     template<typename T>
     void List<T>::push_front(T&& value)
     {
-        init_node();
         emplace_front(std::move(value));
-
     }
 
     template<typename T>
@@ -1743,8 +1742,6 @@ namespace dsa
     template<typename T>
     void List<T>::push_back(const_reference value)
     {
-        init_node();
-
         emplace_back(value);
     }
 
