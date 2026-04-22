@@ -1134,17 +1134,6 @@ namespace dsa
     private:
 
         /**
-         * @brief Function sets value of specifed Node of List
-         *
-         * @param[in] index index of element to be modified
-         * @param[in] value to overwrite Node at index
-         * @return operation status
-         * @retval true if value of Node was overwritten
-         * @retval false if invalid index
-         */
-        auto set(size_type index, T value) -> bool;
-
-        /**
          * @brief Function add end node located just after last user created data
          * Node is used by iterators indicating end of container
          */
@@ -2258,19 +2247,6 @@ namespace dsa
     }
 
     // definitions of private methods
-
-    template<typename T>
-    auto List<T>::set(size_type index, T value) -> bool
-    {
-        Node* temp = get(index);
-        if (temp)
-        {
-            temp->m_value = value;
-            return true;
-        }
-
-        return false;
-    }
 
     template<typename T>
     void List<T>::init_node()
