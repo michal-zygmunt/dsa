@@ -1320,15 +1320,7 @@ namespace dsa
     {
         if (&other != this)
         {
-            while (m_head->m_next)
-            {
-                pop_front();
-            }
-
-            for (size_type i = 0; i < other.size(); i++)
-            {
-                push_back(other.get(i)->value());
-            }
+            assign(other.begin(), other.end());
         }
 
         return *this;
