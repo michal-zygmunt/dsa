@@ -1134,16 +1134,6 @@ namespace dsa
     private:
 
         /**
-         * @brief Function returns pointer to specific Node of List
-         *
-         * @param[in] index index of element
-         * @return Node*
-         * @retval Node* if index is valid
-         * @retval nullptr if invalid index
-         */
-        [[nodiscard]] auto get(size_type index) const -> Node*;
-
-        /**
          * @brief Function sets value of specifed Node of List
          *
          * @param[in] index index of element to be modified
@@ -2268,63 +2258,6 @@ namespace dsa
     }
 
     // definitions of private methods
-
-    template<typename T>
-    auto List<T>::get(size_type index) const -> typename List<T>::Node*
-    {
-        if (index >= m_size)
-        {
-            return nullptr;
-        }
-
-        NodeBase* temp{};
-
-        // select list end to look for selected index
-        enum Mode : std::uint8_t { FRONT, BACK, AUTO };
-        constexpr Mode mode = Mode::AUTO;
-
-
-        if constexpr (mode == FRONT)
-        {
-            // count nodes from front
-            temp = m_head;
-            for (size_type i = 0; i < index; i++)
-            {
-                temp = temp->m_next;
-            }
-        }
-        else if constexpr (mode == BACK)
-        {
-            // count nodes from back
-            temp = m_tail->m_prev;
-            for (size_type i = m_size - 1; i > index; i--)
-            {
-                temp = temp->m_prev;
-            }
-        }
-        else // mode == AUTO
-        {
-            // optimize counting nodes from front or back
-            if (index < m_size / 2)
-            {
-                temp = m_head;
-                for (size_type i = 0; i < index; i++)
-                {
-                    temp = temp->m_next;
-                }
-            }
-            else
-            {
-                temp = m_tail->m_prev;
-                for (size_type i = m_size - 1; i > index; i--)
-                {
-                    temp = temp->m_prev;
-                }
-            }
-        }
-
-        return dynamic_cast<Node*>(temp);
-    }
 
     template<typename T>
     auto List<T>::set(size_type index, T value) -> bool
