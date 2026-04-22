@@ -1312,10 +1312,7 @@ namespace dsa
     List<T>::List(const List<T>& other)
         : List()
     {
-        for (size_type i = 0; i < other.size(); i++)
-        {
-            push_back(other.get(i)->value());
-        }
+        assign(other.begin(), other.end());
     }
 
     template<typename T>
