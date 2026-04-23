@@ -2251,12 +2251,9 @@ namespace dsa
     template<typename T>
     void List<T>::init_node()
     {
-        if (m_head == nullptr)
-        {
-            // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
-            m_head = new NodeBase;
-            m_tail = m_head;
-        }
+        // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
+        m_head = new NodeBase;
+        m_tail = m_head;
     }
 
     template<typename T>
