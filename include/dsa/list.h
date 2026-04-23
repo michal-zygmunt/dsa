@@ -1512,20 +1512,17 @@ namespace dsa
     template<typename T>
     void List<T>::clear() noexcept
     {
-        if (m_head && m_head->m_next)
+        NodeBase* temp{ m_head };
+        while (temp->m_next)
         {
-            NodeBase* temp{ m_head };
-            while (temp->m_next)
-            {
-                m_head->m_prev = nullptr;
-                m_head = temp->m_next;
-                destroy_node(temp);
-                temp = m_head;
-            }
-
-            m_size = 0;
-            m_tail->m_prev = nullptr;
+            m_head->m_prev = nullptr;
+            m_head = temp->m_next;
+            destroy_node(temp);
+            temp = m_head;
         }
+
+        m_size = 0;
+        m_tail->m_prev = nullptr;
     }
 
     template<typename T>
