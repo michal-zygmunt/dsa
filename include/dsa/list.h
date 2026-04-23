@@ -2305,8 +2305,7 @@ namespace dsa
     template<typename T>
     void List<T>::destroy_node(NodeBase* node_to_destroy)
     {
-        Node* node_dyn = dynamic_cast<Node*>(node_to_destroy);
-        if (node_dyn)
+        if (Node* node_dyn = dynamic_cast<Node*>(node_to_destroy))
         {
             node_alloc_traits::destroy(node_alloc, node_dyn);
             node_alloc_traits::deallocate(node_alloc, node_dyn, 1);
