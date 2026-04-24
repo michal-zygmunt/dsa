@@ -2040,15 +2040,7 @@ namespace dsa
                     if (predicate(node_next->value(), node_temp->value()))
                     {
                         NodeBase* to_remove = next;
-
-                        if (to_remove->m_next)
-                        {
-                            to_remove->m_next->m_prev = prev;
-                        }
-                        else // temp was last node
-                        {
-                            m_tail = prev;
-                        }
+                        to_remove->m_next->m_prev = prev;
 
                         prev->m_next = to_remove->m_next;
                         destroy_node(to_remove);
