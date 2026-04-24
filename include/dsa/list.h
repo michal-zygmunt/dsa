@@ -1536,7 +1536,7 @@ namespace dsa
     {
         if (!if_valid_iterator(pos))
         {
-            return nullptr;
+            return pos.m_current_node;
         }
 
         iterator iter{ pos.m_current_node };
@@ -1551,7 +1551,7 @@ namespace dsa
     {
         if (!if_valid_iterator(pos))
         {
-            return nullptr;
+            return pos.m_current_node;
         }
 
         iterator iter{ pos.m_current_node };
@@ -1568,25 +1568,19 @@ namespace dsa
         requires std::input_iterator<InputIt>
     auto List<T>::insert(const const_iterator& pos, InputIt first, InputIt last) -> typename List<T>::iterator
     {
-        if (!if_valid_iterator(pos))
-        {
-            return nullptr;
-        }
-
         iterator iter{};
-        iterator iter_out{};
         while (first != last)
         {
-            iter = insert(pos.m_current_node, *first);
-            if (!iter_out.m_current_node)
+            auto res = insert(pos.m_current_node, *first);
+            if (!iter.m_current_node)
             {
-                iter_out = iter;
+                iter = res;
             }
 
             ++first;
         }
 
-        return iter_out;
+        return iter == nullptr ? pos.m_current_node : iter;
     }
 
     template<typename T>
