@@ -1944,31 +1944,18 @@ namespace dsa
     auto List<T>::remove_if(UnaryPred predicate) -> size_type
     {
         NodeBase* temp{ m_head };
-        NodeBase* next{};
 
         size_type removed_count{};
 
-        while (temp->m_next)
+        while (temp)
         {
-            next = temp->m_next;
-
-            if (Node* node = dynamic_cast<Node*>(m_head))
+            if (Node* node = dynamic_cast<Node*>(temp))
             {
                 if (predicate(node->value()))
                 {
-                    pop_front();
-                    temp = m_head;
-                    removed_count++;
-                    continue;
-                }
-            }
-
-            if (next && next != m_tail && next->m_next != nullptr)
-            {
-                Node* node = dynamic_cast<Node*>(next);
-                if (predicate(node->value()))
-                {
+                    NodeBase* next{ node->m_next };
                     erase(ListIterator<false>(node));
+                    temp = next;
                     removed_count++;
                     continue;
                 }
@@ -2242,7 +2229,6 @@ namespace dsa
     template<typename T>
     auto List<T>::erase_element(iterator pos) -> iterator
     {
-
         if (pos == begin())
         {
             pop_front();
