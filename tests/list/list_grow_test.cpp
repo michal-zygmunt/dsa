@@ -51,9 +51,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list2.push_front(30);
         list2.push_front(20);
         list2.push_front(10);
-        list2.insert(list2.cbegin(), 5, 5);
+        auto list2_it = list2.insert(list2.cbegin(), 5, 5);
         const std::initializer_list<int> expected2 = { 5, 5, 5, 5, 5, 10, 20, 30, 40, 50 };
         tests::compare("List2", list2, expected2);
+        tests::compare("List2 it", *list2_it, *list2.begin());
+        tests::compare("List2 it", *std::next(list2_it), *std::next(list2.begin()));
 
         dsa::List<int> list3 = dsa::List<int>(1, 50);
         list3.push_front(40);
@@ -99,7 +101,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list9.insert(list9.begin(), std::move(ptr9));
         constexpr int expected9{ 1 };
         tests::compare("List9 front()", *list9.front(), expected9);
-        tests::compare("ptr19 == nullptr", ptr9 == nullptr, true);
+        tests::compare("ptr9 == nullptr", ptr9 == nullptr, true);
 
         dsa::List<int> list10{};
         const dsa::List<int> temp10{ 0, 10, 20, 30, 40, 50 };
@@ -169,7 +171,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List18 front", *list18.front(), expected18);
         tests::compare("List18 back", *list18.back(), expected18);
         tests::compare("ptr18 == nullptr", ptr18 == nullptr, true);
-
 
         try
         {
@@ -400,6 +401,32 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected29{ 0, 10, 20 };
         tests::compare("List29", list29, expected29);
         tests::compare("List29 it", list29_it == nullptr, true);
+
+        dsa::List<std::unique_ptr<int>> list30{};
+        auto ptr30 = std::make_unique<int>(1);
+        auto list30_it = list30.insert(list30.end(), std::move(ptr30));
+        tests::compare("List30 it", *list30_it, list30.front());
+
+        dsa::List<std::unique_ptr<int>> list31{};
+        auto ptr31 = std::make_unique<int>(1);
+        list31.insert(std::next(list31.end()), std::move(ptr31));
+        tests::compare("List31 size", list31.size(), static_cast<std::size_t>(0));
+
+        dsa::List<int> list32{ 0, 10, 20 };
+        dsa::List<int> list33{ 30, 40, 50 };
+        auto list32_it = list32.insert(list32.begin(), list33.begin(), std::next(list33.begin()));
+        const std::initializer_list<int> expected32{ 30, 0, 10, 20 };
+        const std::initializer_list<int> expected33{ 30, 40, 50 };
+        tests::compare("List32", list32, expected32);
+        tests::compare("List32 it", *list32_it, list33.front());
+        tests::compare("List33", list33, expected33);
+
+        dsa::List<int> list34{ 0, 10, 20 };
+        const dsa::List<int> temp34{ 30, 40, 50 };
+        auto list34_it = list34.insert(std::next(list34.begin(), 2), temp34.begin(), temp34.begin());
+        const std::initializer_list<int> expected34{ 0, 10, 20 };
+        tests::compare("List34", list34, expected34);
+        tests::compare("List34 it", *list34_it, *(std::next(list34.begin(), 2)));
 
 
         std::cout << "Compare operations results with std container\n\n";
