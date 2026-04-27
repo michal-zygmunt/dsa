@@ -375,6 +375,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         // NOLINTNEXTLINE(bugprone-use-after-move)
         tests::compare("List70", list70, expected70);
 
+        dsa::List<int> list71{ il_1 };
+        list71.splice(list71.begin(), list71, list71.begin());
+        const std::initializer_list<int> expected71 = { 1, 2, 3, 4, 5 };
+        tests::compare("List71", list71, expected71);
+
 
         tests::print_stats();
     }
