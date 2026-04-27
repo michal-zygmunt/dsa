@@ -200,70 +200,187 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("citer11e", *citer11e, 30);
 
         // increment iterator
-        dsa::List<int> list12 = dsa::List<int>{ 10, 20, 30 };
-        std::cout << "List12\t" << list12 << '\n';
-        auto it_12 = list12.begin();
-        tests::compare("it_12", *it_12, 10);
-        it_12++;
-        tests::compare("it_12", *it_12, 20);
-        it_12++;
-        tests::compare("it_12", *it_12, 30);
-        it_12++;
+        dsa::List<int> list12a = dsa::List<int>{ 10, 20, 30 };
+        std::cout << "List12a\t" << list12a << '\n';
+        auto it_12a = list12a.begin();
+        tests::compare("it_12", *it_12a, 10);
+        ++it_12a;
+        tests::compare("it_12a", *it_12a, 20);
+        ++it_12a;
+        tests::compare("it_12a", *it_12a, 30);
+        ++it_12a;
+        ++it_12a;
+        std::cout << '\n';
+
+        dsa::List<int> list12b = dsa::List<int>{ 10, 20, 30 };
+        std::cout << "List12b\t" << list12b << '\n';
+        auto it_12b = list12b.begin();
+        tests::compare("it_12b", *it_12b, 10);
+        it_12b++;
+        tests::compare("it_12", *it_12b, 20);
+        it_12b++;
+        tests::compare("it_12", *it_12b, 30);
+        it_12b++;
+        it_12b++;
         std::cout << '\n';
 
         // increment const_iterator
-        const dsa::List<int> list13 = dsa::List<int>{ 10, 20, 30 };
-        std::cout << "List13\t" << list13 << '\n';
+        const dsa::List<int> list13a = dsa::List<int>{ 10, 20, 30 };
+        std::cout << "List13a\t" << list13a << '\n';
+        auto cit_13a = list13a.cbegin();
+        tests::compare("cit_13a", *cit_13a, 10);
+        ++cit_13a;
+        tests::compare("cit_13a", *cit_13a, 20);
+        ++cit_13a;
+        tests::compare("cit_13a", *cit_13a, 30);
+        ++cit_13a;
+        ++cit_13a;
+        std::cout << '\n';
 
-        auto cit_13 = list13.cbegin();
-        tests::compare("cit_13", *cit_13, 10);
-        cit_13++;
-        tests::compare("cit_13", *cit_13, 20);
-        cit_13++;
-        tests::compare("cit_13", *cit_13, 30);
-        cit_13++;
+        const dsa::List<int> list13b = dsa::List<int>{ 10, 20, 30 };
+        std::cout << "List13b\t" << list13b << '\n';
+        auto cit_13b = list13b.cbegin();
+        tests::compare("cit_13b", *cit_13b, 10);
+        cit_13b++;
+        tests::compare("cit_13b", *cit_13b, 20);
+        cit_13b++;
+        tests::compare("cit_13b", *cit_13b, 30);
+        cit_13b++;
+        cit_13b++;
         std::cout << '\n';
 
         // decrement iterator
-        dsa::List<int> list14 = dsa::List<int>{ 10, 20, 30 };
-        std::cout << "List14\t" << list14 << '\n';
-        auto it_14 = list14.end();
-        it_14--;
-        tests::compare("it_14", *it_14, 30);
-        --it_14;
-        tests::compare("it_14", *it_14, 20);
-        --it_14;
-        tests::compare("it_14", *it_14, 10);
-        --it_14;
+        dsa::List<int> list14a = dsa::List<int>{ 10, 20, 30 };
+        std::cout << "List14a\t" << list14a << '\n';
+        auto it_14a = list14a.end();
+        --it_14a;
+        tests::compare("it_14a", *it_14a, 30);
+        --it_14a;
+        tests::compare("it_14a", *it_14a, 20);
+        --it_14a;
+        tests::compare("it_14a", *it_14a, 10);
+        --it_14a;
+        --it_14a;
+        std::cout << '\n';
+
+        dsa::List<int> list14b = dsa::List<int>{ 10, 20, 30 };
+        std::cout << "List14b\t" << list14b << '\n';
+        auto it_14b = list14b.end();
+        it_14b--;
+        tests::compare("it_14b", *it_14b, 30);
+        it_14b--;
+        tests::compare("it_14b", *it_14b, 20);
+        it_14b--;
+        tests::compare("it_14b", *it_14b, 10);
+        it_14b--;
+        it_14b--;
         std::cout << '\n';
 
         // decrement const_iterator
-        const dsa::List<int> list15 = dsa::List<int>{ 10, 20, 30 };
-        std::cout << "List15\t" << list15 << '\n';
-        auto cit_15 = list15.cend();
-        cit_15--;
-        tests::compare("cit_15", *cit_15, 30);
-        --cit_15;
-        tests::compare("cit_15", *cit_15, 20);
-        --cit_15;
-        tests::compare("cit_15", *cit_15, 10);
-        --cit_15;
+        const dsa::List<int> list15a = dsa::List<int>{ 10, 20, 30 };
+        std::cout << "List15a\t" << list15a << '\n';
+        auto cit_15a = list15a.cend();
+        --cit_15a;
+        tests::compare("cit_15a", *cit_15a, 30);
+        --cit_15a;
+        tests::compare("cit_15a", *cit_15a, 20);
+        --cit_15a;
+        tests::compare("cit_15a", *cit_15a, 10);
+        --cit_15a;
+        --cit_15a;
+
+        const dsa::List<int> list15b = dsa::List<int>{ 10, 20, 30 };
+        std::cout << "List15b\t" << list15b << '\n';
+        auto cit_15b = list15b.cend();
+        cit_15b--;
+        tests::compare("cit_15b", *cit_15b, 30);
+        cit_15b--;
+        tests::compare("cit_15b", *cit_15b, 20);
+        cit_15b--;
+        tests::compare("cit_15b", *cit_15b, 10);
+        cit_15b--;
+        cit_15b--;
 
         // test throwing 'runtime_error' exception from dereferencing invalid iterator
         try
         {
-            const dsa::List<int> list16;
-            std::cout << *list16.begin();
+            const dsa::List<int> list16a;
+            std::cout << *list16a.begin();
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
         }
         catch (const std::runtime_error&)
         {
-            std::cout << "list16 runtime error exception handled correctly\n\n";
+            std::cout << "list16a runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::List<int> list16b;
+            std::cout << *list16b.rbegin();
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error&)
+        {
+            std::cout << "list16b runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::List<int> list16c;
+            std::cout << *list16c.rend();
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error&)
+        {
+            std::cout << "list16c runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::List<int> list16d;
+            std::cout << *list16d.crbegin();
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error&)
+        {
+            std::cout << "list16d runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::List<int> list16e;
+            std::cout << *list16e.crend();
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error&)
+        {
+            std::cout << "list16e runtime error exception handled correctly\n\n";
         }
 
         try
         {
             const dsa::List<int> list17{ 1, 2, 3 };
-            std::cout << *list17.end();
+            std::cout << list17.begin().operator->() << '\n';
+            std::cout << list17.end().operator->() << '\n';
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
         }
         catch (const std::runtime_error&)
         {
@@ -272,8 +389,14 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         try
         {
-            const dsa::List<int> list18;
-            std::cout << list18.begin().operator->();
+            dsa::List<int> list18 = dsa::List<int>{};
+            auto it18 = list18.begin();
+            std::advance(it18, 5);
+            std::cout << *it18;
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
         }
         catch (const std::runtime_error&)
         {
@@ -282,9 +405,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         try
         {
-            const dsa::List<int> list19{ 1, 2, 3 };
-            std::cout << list19.begin().operator->();
-            std::cout << list19.end().operator->();
+            const dsa::List<int> list19{};
+            std::cout << list19.front();
+            std::cout << list19.back();
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
         }
         catch (const std::runtime_error&)
         {
@@ -295,11 +422,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         auto iter20 = list20.begin();
         std::advance(iter20, 1);
         tests::compare("iter20 == nullptr", iter20 == nullptr, true);
-
-
-
-
-
 
         // test iterators traversal
         dsa::List<int> list21 = { 0, 10, 20, 30, 40 };
