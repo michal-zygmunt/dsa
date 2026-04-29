@@ -2257,19 +2257,19 @@ namespace dsa
     // NOLINTNEXTLINE(bugprone-easily-swappable-parameters,-warnings-as-errors)
     auto List<T>::construct_node(NodeBase* prev_ptr, NodeBase* next_ptr, Args&&... args) -> Node*
     {
-        Node* newNode = node_alloc_traits::allocate(node_alloc, 1);
+        Node* newNode{};
         try
         {
+            newNode = node_alloc_traits::allocate(node_alloc, 1);
             node_alloc_traits::construct(node_alloc, newNode, std::forward<Args>(args)...);
+            newNode->m_prev = prev_ptr;
+            newNode->m_next = next_ptr;
         }
         catch (...)
         {
             node_alloc_traits::deallocate(node_alloc, newNode, 1);
             throw;
         }
-
-        newNode->m_prev = prev_ptr;
-        newNode->m_next = next_ptr;
 
         return newNode;
     }
