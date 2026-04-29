@@ -154,6 +154,14 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list26.merge(list26);
         tests::compare("List26", list26, {});
 
+        // self merge with move semantics should be aborted
+        // compare result with initial input
+        dsa::List<int> list28{ il_1 };
+        list28.merge(std::move(list28), std::greater<>());
+        // intentional use of moved object
+        // NOLINTNEXTLINE(bugprone-use-after-move)
+        tests::compare("List28", list28, il_1);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
