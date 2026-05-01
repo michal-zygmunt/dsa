@@ -2083,14 +2083,9 @@ namespace dsa
     template<typename T>
     auto operator<<(std::ostream& out, const List<T>& list) -> std::ostream&
     {
-        if (list.empty())
-        {
-            return out;
-        }
-
         for (auto iter = list.cbegin(); iter != list.cend(); ++iter)
         {
-            T value = *iter;
+            const T& value = *iter;
             out << value << ' ';
         }
 
