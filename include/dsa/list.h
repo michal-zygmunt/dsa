@@ -1826,8 +1826,8 @@ namespace dsa
             NodeBase* to_move{};
             NodeBase* to_return{};
 
-            NodeBase* sentinel_this{ m_tail->m_prev->m_next };
-            NodeBase* sentinel_other{ other.m_tail->m_prev->m_next };
+            NodeBase* sentinel_this{ m_tail };
+            NodeBase* sentinel_other{ other.m_tail };
 
             while (m_head->m_next && other.m_head->m_next)
             {
