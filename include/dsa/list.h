@@ -1836,7 +1836,9 @@ namespace dsa
 
                 if (node_this && node_other)
                 {
-                    if (comp(node_this->value(), node_other->value()))
+                    // 2nd condition keeps correct order of equal elements
+                    if (comp(node_this->value(), node_other->value()) ||
+                        !comp(node_other->value(), node_this->value()))
                     {
                         to_move = m_head;
                         to_move->m_prev = temp_tail;
