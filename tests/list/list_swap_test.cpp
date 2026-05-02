@@ -16,6 +16,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <list>
+#include <utility>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -45,6 +46,29 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected4 = { 1, 2, 3, 4, 5 };
         tests::compare("List4", list4, expected4);
 
+        dsa::List<int> list5 = dsa::List<int>(il_1);
+        dsa::List<int> list6 = dsa::List<int>(il_2);
+        dsa::swap(list5, list6);
+        const std::initializer_list<int> expected5 = il_2;
+        tests::compare("List5", list5, expected5);
+        const std::initializer_list<int> expected6 = il_1;
+        tests::compare("List6", list6, expected6);
+
+        dsa::List<int> list7 = dsa::List<int>(il_1);
+        dsa::List<int> list8;
+        dsa::swap(list7, list8);
+        const std::initializer_list<int> expected7 = { };
+        tests::compare("List7", list7, expected7);
+        const std::initializer_list<int> expected8 = il_1;
+        tests::compare("List8", list8, expected8);
+
+        // swap safe type
+        static_assert(noexcept(swap(std::declval<dsa::List<int>&>(),
+            std::declval<dsa::List<int>&>())));
+        // swap throwing type
+        static_assert(noexcept(swap(std::declval<dsa::List<tests::ThrowingType>&>(),
+            std::declval<dsa::List<tests::ThrowingType>&>())));
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -59,6 +83,25 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_list3.swap(std_list4);
         tests::compare("List3 vs std", list3, std_list3);
         tests::compare("List4 vs std", list4, std_list4);
+
+        std::list<int> std_list5(il_1);
+        std::list<int> std_list6(il_2);
+        std::swap(std_list5, std_list6);
+        tests::compare("List5 vs std", list5, std_list5);
+        tests::compare("List6 vs std", list6, std_list6);
+
+        std::list<int> std_list7(il_1);
+        std::list<int> std_list8;
+        std::swap(std_list7, std_list8);
+        tests::compare("List7 vs std", list7, std_list7);
+        tests::compare("List8 vs std", list8, std_list8);
+
+        // swap safe type
+        static_assert(noexcept(swap(std::declval<std::list<int>&>(),
+            std::declval<std::list<int>&>())));
+        // swap throwing type
+        static_assert(noexcept(swap(std::declval<std::list<tests::ThrowingType>&>(),
+            std::declval<std::list<tests::ThrowingType>&>())));
 
 
         tests::print_stats();

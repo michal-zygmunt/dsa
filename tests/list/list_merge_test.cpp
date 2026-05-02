@@ -13,8 +13,10 @@
 #include "dsa/list.h"
 
 #include <exception>
+#include <functional>
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
 #include <list>
 #include <utility>
 
@@ -81,14 +83,190 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         // NOLINTNEXTLINE(bugprone-use-after-move)
         tests::compare("List12", list12, expected12);
 
-        // self merge
-        dsa::List<int> list13{ il_1 };
-        list13.merge(list13);
-        tests::compare("List13", list13, il_1);
+        // merging using non default compration argument
 
-        dsa::List<int> list14;
-        list14.merge(list14);
-        tests::compare("List14", list14, {});
+        dsa::List<int> list13 = dsa::List<int>(il_1);
+        dsa::List<int> list14 = dsa::List<int>(il_2);
+        list13.sort(std::greater<>());
+        list14.sort(std::greater<>());
+        list13.merge(list14, std::greater<>());
+        const std::initializer_list<int> expected13 = { 50, 40, 30, 20, 10, 5, 4, 3, 2, 1 };
+        tests::compare("List13", list13, expected13);
+        const std::initializer_list<int> expected14 = {};
+        tests::compare("List14", list14, expected14);
+
+        dsa::List<int> list15 = dsa::List<int>(il_1);
+        dsa::List<int> list16;
+        list15.sort(std::greater<>());
+        list16.sort(std::greater<>());
+        list16.merge(list15, std::greater<>());
+        const std::initializer_list<int> expected15{};
+        tests::compare("List15", list15, expected15);
+        const std::initializer_list<int> expected16{ 5, 4, 3, 2, 1 };
+        tests::compare("List16", list16, expected16);
+
+        dsa::List<int> list17 = dsa::List<int>(il_3);
+        dsa::List<int> list18 = dsa::List<int>(il_4);
+        list17.sort(std::greater<>());
+        list18.sort(std::greater<>());
+        list17.merge(list18, std::greater<>());
+        const std::initializer_list<int> expected17{ 9, 7, 6, 5, 4, 3, 2, 1, 1, 1 };
+        tests::compare("List17", list17, expected17);
+        const std::initializer_list<int> expected18{};
+        tests::compare("List18", list18, expected18);
+
+        dsa::List<int> list19 = dsa::List<int>(il_4);
+        dsa::List<int> list20 = dsa::List<int>(il_3);
+        list19.sort(std::greater<>());
+        list20.sort(std::greater<>());
+        list19.merge(list20, std::greater<>());
+        const std::initializer_list<int> expected19{ 9, 7, 6, 5, 4, 3, 2, 1, 1, 1 };
+        tests::compare("List19", list19, expected19);
+        const std::initializer_list<int> expected20{};
+        tests::compare("List20", list20, expected20);
+
+        dsa::List<int> list21 = dsa::List<int>(il_2);
+        dsa::List<int> list22 = dsa::List<int>(il_3);
+        list21.sort(std::greater<>());
+        list22.sort(std::greater<>());
+        list21.merge(list22, std::greater<>());
+        const std::initializer_list<int> expected21{ 50, 40, 30, 20, 10, 7, 5, 3, 1, 1 };
+        tests::compare("List21", list21, expected21);
+        const std::initializer_list<int> expected22{};
+        tests::compare("List22", list22, expected22);
+
+        dsa::List<int> list23 = dsa::List<int>(il_3);
+        dsa::List<int> list24 = dsa::List<int>(il_2);
+        list23.sort(std::greater<>());
+        list24.sort(std::greater<>());
+        list23.merge(std::move(list24), std::greater<>());
+        const std::initializer_list<int> expected23{ 50, 40, 30, 20, 10, 7, 5, 3, 1, 1 };
+        tests::compare("List23", list23, expected23);
+        const std::initializer_list<int> expected24{};
+        // NOLINTNEXTLINE(bugprone-use-after-move)
+        tests::compare("List24", list24, expected24);
+
+        // self merge
+        dsa::List<int> list25{ il_1 };
+        list25.merge(list25);
+        tests::compare("List25", list25, il_1);
+
+        dsa::List<int> list26;
+        list26.merge(list26);
+        tests::compare("List26", list26, {});
+
+        // self merge with move semantics should be aborted
+        // compare result with initial input
+        dsa::List<int> list28{ il_1 };
+        list28.merge(std::move(list28), std::greater<>());
+        // intentional use of moved object
+        // NOLINTNEXTLINE(bugprone-use-after-move)
+        tests::compare("List28", list28, il_1);
+
+        dsa::List<std::string> list29{ "1a", "1b", "2a" };
+        dsa::List<std::string> list30{ "2b", "1c", "1d" };
+        list29.sort();
+        list30.sort();
+        list29.merge(list30);
+        const std::initializer_list<std::string> expected29{ "1a", "1b", "1c", "1d", "2a", "2b" };
+        tests::compare("List29", list29, expected29);
+        const std::initializer_list<std::string> expected30{};
+        tests::compare("List30", list30, expected30);
+
+        dsa::List<std::string> list31{ "1a", "1b", "2a" };
+        dsa::List<std::string> list32{ "2b", "1c", "1d" };
+        list31.sort(std::less<>());
+        list32.sort(std::less<>());
+        list31.merge(list32, std::less<>());
+        const std::initializer_list<std::string> expected31{ "1a", "1b", "1c", "1d", "2a", "2b" };
+        tests::compare("List31", list31, expected31);
+        const std::initializer_list<std::string> expected32{};
+        tests::compare("List32", list32, expected32);
+
+        dsa::List<std::string> list33{ "1a", "1b", "2a" };
+        dsa::List<std::string> list34{ "2b", "1c", "1d" };
+        list33.sort(std::greater<>());
+        list34.sort(std::greater<>());
+        list33.merge(list34, std::greater<>());
+        const std::initializer_list<std::string> expected33{ "2b", "2a", "1d", "1c", "1b", "1a" };
+        tests::compare("List33", list33, expected33);
+        const std::initializer_list<std::string> expected34{};
+        tests::compare("List34", list34, expected34);
+
+        dsa::List<std::string> list35{ "2a", "1a", "1b" };
+        dsa::List<std::string> list36{};
+        list35.sort(std::less<>());
+        list36.sort(std::less<>());
+        list35.merge(list36, std::less<>());
+        const std::initializer_list<std::string> expected35{ "1a", "1b", "2a" };
+        tests::compare("List35", list35, expected35);
+        const std::initializer_list<std::string> expected36{};
+        tests::compare("List36", list36, expected36);
+
+        dsa::List<std::string> list37{};
+        dsa::List<std::string> list38{ "2a", "1a", "1b" };
+        list37.sort(std::less<>());
+        list38.sort(std::less<>());
+        list37.merge(list38, std::less<>());
+        const std::initializer_list<std::string> expected37{ "1a", "1b", "2a" };
+        tests::compare("List37", list37, expected37);
+        const std::initializer_list<std::string> expected38{};
+        tests::compare("List38", list38, expected38);
+
+        dsa::List<std::string> list39{ "1a", "1b", "2a" };
+        dsa::List<std::string> list40{};
+        list39.sort(std::greater<>());
+        list40.sort(std::greater<>());
+        list40.merge(list39, std::greater<>());
+        const std::initializer_list<std::string> expected39{};
+        tests::compare("List39", list39, expected39);
+        const std::initializer_list<std::string> expected40{ "2a", "1b", "1a" };
+        tests::compare("List40", list40, expected40);
+
+        dsa::List<std::string> list41{};
+        dsa::List<std::string> list42{ "1a", "1b", "2a" };
+        list41.sort(std::greater<>());
+        list42.sort(std::greater<>());
+        list42.merge(list41, std::greater<>());
+        const std::initializer_list<std::string> expected41{};
+        tests::compare("List41", list41, expected41);
+        const std::initializer_list<std::string> expected42{ "2a", "1b", "1a" };
+        tests::compare("List42", list42, expected42);
+
+        // test order of equal elements
+        dsa::List<int> list43{ 1, 1 };
+        auto addr43_1 = list43.begin();
+        auto addr43_2 = std::next(list43.begin());
+        dsa::List<int> list44{ 1, 2 };
+        auto addr44_1 = list44.begin();
+        auto addr44_2 = std::next(list44.begin());
+        list43.merge(list44);
+        const std::initializer_list<int> expected43 = { 1, 1, 1, 2 };
+        tests::compare("List43", list43, expected43);
+        const std::initializer_list<int> expected44 = {};
+        tests::compare("List44", list44, expected44);
+        tests::compare("List43 it 43_1", list43.begin() == addr43_1, true);
+        tests::compare("List43 it 43_2", std::next(list43.begin(), 1) == addr43_2, true);
+        tests::compare("List43 it 44_1", std::next(list43.begin(), 2) == addr44_1, true);
+        tests::compare("List43 it 44_2", std::next(list43.begin(), 3) == addr44_2, true);
+
+        dsa::List<int> list45{ 1, 1 };
+        list45.sort(std::greater<>());
+        auto addr45_1 = list45.begin();
+        auto addr45_2 = std::next(list45.begin());
+        dsa::List<int> list46{ 1, 2 };
+        list46.sort(std::greater<>());
+        auto addr46_1 = list46.begin();
+        auto addr46_2 = std::next(list46.begin());
+        list45.merge(list46, std::greater<>());
+        const std::initializer_list<int> expected45 = { 2, 1, 1, 1 };
+        tests::compare("List45", list45, expected45);
+        const std::initializer_list<int> expected46 = {};
+        tests::compare("List46", list46, expected46);
+        tests::compare("List45 it 48_1", list45.begin() == addr46_1, true);
+        tests::compare("List45 it 47_1", std::next(list45.begin(), 1) == addr45_1, true);
+        tests::compare("List45 it 47_2", std::next(list45.begin(), 2) == addr45_2, true);
+        tests::compare("List45 it 48_2", std::next(list45.begin(), 3) == addr46_2, true);
 
 
         std::cout << "Compare operations results with std container\n\n";
@@ -116,6 +294,165 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_list7.merge(std_list8);
         tests::compare("List7 vs std", list7, std_list7);
         tests::compare("List8 vs std", list8, std_list8);
+
+        std::list<int> std_list9{ il_2 };
+        std::list<int> std_list10{ il_3 };
+        std_list9.merge(std_list10);
+        tests::compare("List9 vs std", list9, std_list9);
+        tests::compare("List10 vs std", list10, std_list10);
+
+        std::list<int> std_list11{ il_3 };
+        std::list<int> std_list12{ il_2 };
+        std_list11.merge(std::move(std_list12));
+        tests::compare("List11 vs std", list11, std_list11);
+        // NOLINTNEXTLINE(bugprone-use-after-move)
+        tests::compare("List12 vs std", list12, std_list12);
+
+        // merging using non default compration argument
+
+        std::list<int> std_list13{ il_1 };
+        std::list<int> std_list14{ il_2 };
+        std_list13.sort(std::greater<>());
+        std_list14.sort(std::greater<>());
+        std_list13.merge(std_list14, std::greater<>());
+        tests::compare("List13 vs std", list13, std_list13);
+        tests::compare("List14 vs std", list14, std_list14);
+
+        std::list<int> std_list15{ il_1 };
+        std::list<int> std_list16;
+        std_list15.sort(std::greater<>());
+        std_list16.sort(std::greater<>());
+        std_list16.merge(std_list15, std::greater<>());
+        tests::compare("List15 vs std", list15, std_list15);
+        tests::compare("List16 vs std", list16, std_list16);
+
+        std::list<int> std_list17{ il_3 };
+        std::list<int> std_list18{ il_4 };
+        std_list17.sort(std::greater<>());
+        std_list18.sort(std::greater<>());
+        std_list17.merge(std_list18, std::greater<>());
+        tests::compare("List17 vs std", list17, std_list17);
+        tests::compare("List18 vs std", list18, std_list18);
+
+        std::list<int> std_list19{ il_4 };
+        std::list<int> std_list20{ il_3 };
+        std_list19.sort(std::greater<>());
+        std_list20.sort(std::greater<>());
+        std_list19.merge(std_list20, std::greater<>());
+        tests::compare("List19 vs std", list19, std_list19);
+        tests::compare("List20 vs std", list20, std_list20);
+
+        std::list<int> std_list21{ il_2 };
+        std::list<int> std_list22{ il_3 };
+        std_list21.sort(std::greater<>());
+        std_list22.sort(std::greater<>());
+        std_list21.merge(std_list22, std::greater<>());
+        tests::compare("List21 vs std", list21, std_list21);
+        tests::compare("List22 vs std", list22, std_list22);
+
+        std::list<int> std_list23{ il_3 };
+        std::list<int> std_list24{ il_2 };
+        std_list23.sort(std::greater<>());
+        std_list24.sort(std::greater<>());
+        std_list23.merge(std::move(std_list24), std::greater<>());
+        tests::compare("List23 vs std", list23, std_list23);
+        // NOLINTNEXTLINE(bugprone-use-after-move)
+        tests::compare("List24 vs std", list24, std_list24);
+
+        // self merge
+        std::list<int> std_list25{ il_1 };
+        std_list25.merge(std_list25);
+        tests::compare("List25 vs std", list25, std_list25);
+
+        std::list<int> std_list26;
+        std_list26.merge(std_list26);
+        tests::compare("List26 vs std", list26, std_list26);
+
+        std::list<std::string> std_list29{ "1a", "1b", "2a" };
+        std::list<std::string> std_list30{ "2b", "1c", "1d" };
+        std_list29.sort();
+        std_list30.sort();
+        std_list29.merge(std_list30);
+        tests::compare("List29 vs std", list29, std_list29);
+        tests::compare("List30 vs std", list30, std_list30);
+
+        std::list<std::string> std_list31{ "1a", "1b", "2a" };
+        std::list<std::string> std_list32{ "2b", "1c", "1d" };
+        std_list31.sort(std::less<>());
+        std_list32.sort(std::less<>());
+        std_list31.merge(std_list32, std::less<>());
+        tests::compare("List31 vs std", list31, std_list31);
+        tests::compare("List32 vs std", list32, std_list32);
+
+        std::list<std::string> std_list33{ "1a", "1b", "2a" };
+        std::list<std::string> std_list34{ "2b", "1c", "1d" };
+        std_list33.sort(std::greater<>());
+        std_list34.sort(std::greater<>());
+        std_list33.merge(std_list34, std::greater<>());
+        tests::compare("List33 vs std", list33, std_list33);
+        tests::compare("List34 vs std", list34, std_list34);
+
+        std::list<std::string> std_list35{ "2a", "1a", "1b" };
+        std::list<std::string> std_list36{};
+        std_list35.sort(std::less<>());
+        std_list36.sort(std::less<>());
+        std_list35.merge(std_list36, std::less<>());
+        tests::compare("List35 vs std", list35, std_list35);
+        tests::compare("List36 vs std", list36, std_list36);
+
+        std::list<std::string> std_list37{};
+        std::list<std::string> std_list38{ "2a", "1a", "1b" };
+        std_list37.sort(std::less<>());
+        std_list38.sort(std::less<>());
+        std_list37.merge(std_list38, std::less<>());
+        tests::compare("List37 vs std", list37, std_list37);
+        tests::compare("List38 vs std", list38, std_list38);
+
+        std::list<std::string> std_list39{ "1a", "1b", "2a" };
+        std::list<std::string> std_list40{};
+        std_list39.sort(std::greater<>());
+        std_list40.sort(std::greater<>());
+        std_list40.merge(std_list39, std::greater<>());
+        tests::compare("List39 vs std", list39, std_list39);
+        tests::compare("List40 vs std", list40, std_list40);
+
+        std::list<std::string> std_list41{};
+        std::list<std::string> std_list42{ "1a", "1b", "2a" };
+        std_list41.sort(std::greater<>());
+        std_list42.sort(std::greater<>());
+        std_list42.merge(std_list41, std::greater<>());
+        tests::compare("List41 vs std", list41, std_list41);
+        tests::compare("List42 vs std", list42, std_list42);
+
+        std::list<int> std_list43{ 1, 1 };
+        auto std_addr43_1 = std_list43.begin();
+        auto std_addr43_2 = std::next(std_list43.begin());
+        std::list<int> std_list44{ 1, 2 };
+        auto std_addr44_1 = std_list44.begin();
+        auto std_addr44_2 = std::next(std_list44.begin());
+        std_list43.merge(std_list44);
+        tests::compare("List43 vs std", list43, std_list43);
+        tests::compare("List44 vs std", list44, std_list44);
+        tests::compare("List43 it 43_1 vs std", std_list43.begin() == std_addr43_1, true);
+        tests::compare("List43 it 43_2 vs std", std::next(std_list43.begin(), 1) == std_addr43_2, true);
+        tests::compare("List43 it 44_1 vs std", std::next(std_list43.begin(), 2) == std_addr44_1, true);
+        tests::compare("List43 it 44_2 vs std", std::next(std_list43.begin(), 3) == std_addr44_2, true);
+
+        std::list<int> std_list45{ 1, 1 };
+        std_list45.sort(std::greater<>());
+        auto std_addr45_1 = std_list45.begin();
+        auto std_addr45_2 = std::next(std_list45.begin());
+        std::list<int> std_list46{ 1, 2 };
+        std_list46.sort(std::greater<>());
+        auto std_addr46_1 = std_list46.begin();
+        auto std_addr46_2 = std::next(std_list46.begin());
+        std_list45.merge(std_list46, std::greater<>());
+        tests::compare("List45 vs std", list45, std_list45);
+        tests::compare("List46 vs std", list46, std_list46);
+        tests::compare("List45 it 46_1 vs std", std_list45.begin() == std_addr46_1, true);
+        tests::compare("List45 it 45_1 vs std", std::next(std_list45.begin(), 1) == std_addr45_1, true);
+        tests::compare("List45 it 45_2 vs std", std::next(std_list45.begin(), 2) == std_addr45_2, true);
+        tests::compare("List45 it 46_2 vs std", std::next(std_list45.begin(), 3) == std_addr46_2, true);
 
 
         tests::print_stats();
