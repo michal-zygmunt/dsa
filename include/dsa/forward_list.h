@@ -1361,19 +1361,16 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::clear()
     {
-        if (m_head)
+        NodeBase* temp{ m_head->m_next };
+        while (temp)
         {
-            NodeBase* temp{ m_head->m_next };
-            while (temp)
-            {
-                m_head->m_next = temp->m_next;
-                destroy_node(temp);
-                temp = m_head->m_next;
-            }
-
-            m_size = 0;
-            m_head->m_next = nullptr;
+            m_head->m_next = temp->m_next;
+            destroy_node(temp);
+            temp = m_head->m_next;
         }
+
+        m_size = 0;
+        m_head->m_next = nullptr;
     }
 
     template<typename T>
