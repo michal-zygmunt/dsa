@@ -1138,9 +1138,8 @@ namespace dsa
 
     template<typename T>
     ForwardList<T>::ForwardList(size_type count, const T& value)
+        : ForwardList()
     {
-        init_node();
-
         for (size_type i = 0; i < count; i++)
         {
             push_front(value);
@@ -1151,17 +1150,15 @@ namespace dsa
     template<typename InputIt>
         requires std::input_iterator<InputIt>
     ForwardList<T>::ForwardList(InputIt first, InputIt last)
+        : ForwardList()
     {
-        init_node();
-
         assign(first, last);
     }
 
     template<typename T>
     ForwardList<T>::ForwardList(const std::initializer_list<T>& init_list)
+        : ForwardList()
     {
-        init_node();
-
         auto iter = before_begin();
         for (const auto& item : init_list)
         {
@@ -1171,9 +1168,8 @@ namespace dsa
 
     template<typename T>
     ForwardList<T>::ForwardList(const ForwardList<T>& other)
+        : ForwardList()
     {
-        init_node();
-
         auto iter = before_begin();
         for (const auto& item : other)
         {
@@ -1184,8 +1180,6 @@ namespace dsa
     template<typename T>
     auto ForwardList<T>::operator=(const ForwardList<T>& other) -> ForwardList<T>&
     {
-        init_node();
-
         if (&other != this)
         {
             while (m_head->m_next)
@@ -1205,6 +1199,7 @@ namespace dsa
 
     template<typename T>
     ForwardList<T>::ForwardList(ForwardList<T>&& other) noexcept
+        : ForwardList()
     {
         operator=(std::move(other));
     }
@@ -1215,7 +1210,6 @@ namespace dsa
         if (&other != this)
         {
             clear();
-            init_node();
 
             m_head->m_next = other.m_head->m_next;
             m_size = other.m_size;
@@ -1558,8 +1552,6 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::resize(size_type count, const_reference value)
     {
-        init_node();
-
         if (count == m_size)
         {
             return;
@@ -1996,11 +1988,8 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::init_node()
     {
-        if (m_head == nullptr)
-        {
-            // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
-            m_head = new NodeBase;
-        }
+        // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
+        m_head = new NodeBase;
     }
 
     template<typename T>
