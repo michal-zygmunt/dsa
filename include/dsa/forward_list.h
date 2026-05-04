@@ -514,7 +514,7 @@ namespace dsa
          *
          * @return allocator_type type of memory allocator
          */
-        [[nodiscard]] constexpr auto get_allocator() const -> allocator_type;
+        [[nodiscard]] auto get_allocator() const noexcept -> allocator_type;
 
         /**
          * @brief Function returns reference to value stored in ForwardList first Node
@@ -1269,7 +1269,7 @@ namespace dsa
     }
 
     template<typename T>
-    [[nodiscard]] constexpr auto ForwardList<T>::get_allocator() const -> allocator_type
+    [[nodiscard]] auto ForwardList<T>::get_allocator() const noexcept -> allocator_type
     {
         return m_allocator;
     }
