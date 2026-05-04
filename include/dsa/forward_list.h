@@ -764,7 +764,7 @@ namespace dsa
          *
          * @param[in,out] other object to swap content with
          */
-        void swap(ForwardList<T>& other) noexcept(std::is_nothrow_swappable_v<T>);
+        void swap(ForwardList<T>& other) noexcept(std::allocator_traits<allocator_type>::is_always_equal::value);
 
         /**
          * @brief Function combines two sorted ForwardLists into one sorted ForwardList
@@ -1579,7 +1579,8 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::swap(ForwardList<T>& other) noexcept(std::is_nothrow_swappable_v<T>)
+    void ForwardList<T>::swap(ForwardList<T>& other)
+        noexcept(std::allocator_traits<allocator_type>::is_always_equal::value)
     {
         std::swap(m_head->m_next, other.m_head->m_next);
         std::swap(m_size, other.m_size);
