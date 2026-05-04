@@ -1107,7 +1107,7 @@ namespace dsa
         /**
          * @brief Rebind allocator to create new objects of type Node
          */
-        using node_allocator = typename std::allocator_traits<std::allocator<T>>::template rebind_alloc<Node>;
+        using node_allocator = typename std::allocator_traits<allocator_type>::template rebind_alloc<Node>;
 
         /**
          * @brief Setup allocator traits used for Node creation and deletion
