@@ -141,17 +141,137 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList18", list18, expected18);
         tests::compare("ForwardList18 erase_if count", cnt18, std::size_t{ 3 });
 
-        dsa::ForwardList<int> list19 = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
-        auto cnt19 = dsa::erase_if(list19, [](int val) { return val <= 5; });
-        const std::initializer_list<int> expected19 = { 10, 7, 9 };
-        tests::compare("ForwardList19", list19, expected19);
-        tests::compare("ForwardList19 erase_if count", cnt19, std::size_t{ 3 });
+        dsa::ForwardList<int> list19{ 0, 1, 2, 3, 4, 5 };
+        auto iter19 = list19.erase_after(std::next(list19.end()), std::next(list19.end()));
+        tests::compare("iter19 == nullptr", iter19 == nullptr, true);
+        iter19 = list19.erase_after(list19.begin(), std::next(list19.end()));
+        tests::compare("iter19 == nullptr", iter19 == nullptr, true);
 
-        dsa::ForwardList<int> list20{ 0, 1, 2, 3, 4, 5 };
-        auto iter20 = list20.erase_after(std::next(list20.end()), std::next(list20.end()));
-        tests::compare("iter20 == nullptr", iter20 == nullptr, true);
-        iter20 = list20.erase_after(list20.begin(), std::next(list20.end()));
-        tests::compare("iter20 == nullptr", iter20 == nullptr, true);
+        dsa::ForwardList<int> list20a = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt20a = dsa::erase_if(list20a, [](int val) { return val == 5; });
+        const std::initializer_list<int> expected20a = { 0, 10, 2, 7, 9 };
+        tests::compare("ForwardList20a", list20a, expected20a);
+        tests::compare("ForwardList20a erase_if count", cnt20a, std::size_t{ 1 });
+
+        dsa::ForwardList<int> list20b = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt20b = dsa::erase_if(list20b, [](int val) { return val != 5; });
+        const std::initializer_list<int> expected20b = { 5 };
+        tests::compare("ForwardList20b", list20b, expected20b);
+        tests::compare("ForwardList20b erase_if count", cnt20b, std::size_t{ 5 });
+
+        dsa::ForwardList<int> list20c = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt20c = dsa::erase_if(list20c, [](int val) { return val < 5; });
+        const std::initializer_list<int> expected20c = { 10, 5, 7, 9 };
+        tests::compare("ForwardList20c", list20c, expected20c);
+        tests::compare("ForwardList20c erase_if count", cnt20c, std::size_t{ 2 });
+
+        dsa::ForwardList<int> list20d = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt20d = dsa::erase_if(list20d, [](int val) { return val > 5; });
+        const std::initializer_list<int> expected20d = { 0, 2, 5 };
+        tests::compare("ForwardList20d", list20d, expected20d);
+        tests::compare("ForwardList20d erase_if count", cnt20d, std::size_t{ 3 });
+
+        dsa::ForwardList<int> list20e = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt20e = dsa::erase_if(list20e, [](int val) { return val <= 5; });
+        const std::initializer_list<int> expected20e = { 10, 7, 9 };
+        tests::compare("ForwardList20e", list20e, expected20e);
+        tests::compare("ForwardList20e erase_if count", cnt20e, std::size_t{ 3 });
+
+        dsa::ForwardList<int> list20f = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt20f = dsa::erase_if(list20f, [](int val) { return val >= 5; });
+        const std::initializer_list<int> expected20f = { 0, 2 };
+        tests::compare("ForwardList20f", list20f, expected20f);
+        tests::compare("ForwardList20f erase_if count", cnt20f, std::size_t{ 4 });
+
+        dsa::ForwardList<int> list20g = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt20g = dsa::erase_if(list20g, [](int val) { return val < (-5); });
+        const std::initializer_list<int> expected20g = { 0, 10, 2, 5, 7, 9 };
+        tests::compare("ForwardList20g", list20g, expected20g);
+        tests::compare("ForwardList20g erase_if count", cnt20g, std::size_t{ 0 });
+
+        dsa::ForwardList<int> list20h = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt20h = dsa::erase_if(list20h, [](int val) { return val > (-5); });
+        const std::initializer_list<int> expected20h = { };
+        tests::compare("ForwardList20h", list20h, expected20h);
+        tests::compare("ForwardList20h erase_if count", cnt20h, std::size_t{ 6 });
+
+        dsa::ForwardList<int> list20i = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt20i = dsa::erase_if(list20i, [](int val) { return val <= (-5); });
+        const std::initializer_list<int> expected20i = { 0, 10, 2, 5, 7, 9 };
+        tests::compare("ForwardList20i", list20i, expected20i);
+        tests::compare("ForwardList20i erase_if count", cnt20i, std::size_t{ 0 });
+
+        dsa::ForwardList<int> list20j = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt20j = dsa::erase_if(list20j, [](int val) { return val >= (-5); });
+        const std::initializer_list<int> expected20j = { };
+        tests::compare("ForwardList20j", list20j, expected20j);
+        tests::compare("ForwardList20j erase_if count", cnt20j, std::size_t{ 6 });
+
+        dsa::ForwardList<int> list20k = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt20k = dsa::erase_if(list20k, [](int val) { return val < 100; });
+        const std::initializer_list<int> expected20k = { };
+        tests::compare("ForwardList20k", list20k, expected20k);
+        tests::compare("ForwardList20k erase_if count", cnt20k, std::size_t{ 6 });
+
+        dsa::ForwardList<int> list20l = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt20l = dsa::erase_if(list20l, [](int val) { return val > 100; });
+        const std::initializer_list<int> expected20l = { 0, 10, 2, 5, 7, 9 };
+        tests::compare("ForwardList20l", list20l, expected20l);
+        tests::compare("ForwardList20l erase_if count", cnt20l, std::size_t{ 0 });
+
+        dsa::ForwardList<int> list20m = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt20m = dsa::erase_if(list20m, [](int val) { return val <= 100; });
+        const std::initializer_list<int> expected20m = { };
+        tests::compare("ForwardList20m", list20m, expected20m);
+        tests::compare("ForwardList20m erase_if count", cnt20m, std::size_t{ 6 });
+
+        dsa::ForwardList<int> list20n = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
+        auto cnt20n = dsa::erase_if(list20n, [](int val) { return val >= 100; });
+        const std::initializer_list<int> expected20n = { 0, 10, 2, 5, 7, 9 };
+        tests::compare("ForwardList20n", list20n, expected20n);
+        tests::compare("ForwardList20n erase_if count", cnt20n, std::size_t{ 0 });
+
+        dsa::ForwardList<int> list21a{};
+        auto cnt21a = list21a.remove_if([](int val) { return val == 0; });
+        const std::initializer_list<int> expected21a = { };
+        tests::compare("ForwardList21a", list21a, expected21a);
+        tests::compare("ForwardList21a removed count", cnt21a, std::size_t{ 0 });
+
+        dsa::ForwardList<int> list21b{};
+        auto cnt21b = list21b.remove_if([](int val) { return val != 0; });
+        const std::initializer_list<int> expected21b = { };
+        tests::compare("ForwardList21b", list21b, expected21b);
+        tests::compare("ForwardList21b removed count", cnt21b, std::size_t{ 0 });
+
+        dsa::ForwardList<int> list21c{};
+        auto cnt21c = list21c.remove_if([](int val) { return val < 0; });
+        const std::initializer_list<int> expected21c = { };
+        tests::compare("ForwardList21c", list21c, expected21c);
+        tests::compare("ForwardList21c removed count", cnt21c, std::size_t{ 0 });
+
+        dsa::ForwardList<int> list21d{};
+        auto cnt21d = list21d.remove_if([](int val) { return val > 0; });
+        const std::initializer_list<int> expected21d = { };
+        tests::compare("ForwardList21d", list21d, expected21d);
+        tests::compare("ForwardList21d removed count", cnt21d, std::size_t{ 0 });
+
+        dsa::ForwardList<int> list21e{};
+        auto cnt21e = list21e.remove_if([](int val) { return val <= 0; });
+        const std::initializer_list<int> expected21e = { };
+        tests::compare("ForwardList21e", list21e, expected21e);
+        tests::compare("ForwardList21e removed count", cnt21e, std::size_t{ 0 });
+
+        dsa::ForwardList<int> list21f{};
+        auto cnt21f = list21f.remove_if([](int val) { return val >= 0; });
+        const std::initializer_list<int> expected21f = { };
+        tests::compare("ForwardList21f", list21f, expected21f);
+        tests::compare("ForwardList21f removed count", cnt21f, std::size_t{ 0 });
+
+        dsa::ForwardList<int> list22{ 0, 1, 2, 3, 4, 5 };
+        auto iter22 = list22.erase_after(std::next(list22.end()), std::next(list22.end()));
+        tests::compare("iter22 == nullptr", iter22 == nullptr, true);
+        iter22 = list22.erase_after(list22.begin(), std::next(list22.end()));
+        tests::compare("iter22 == nullptr", iter22 == nullptr, true);
 
 
         std::cout << "Compare operations results with std container\n\n";
@@ -248,12 +368,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList18 vs std", list18, std_list18);
         tests::compare("ForwardList18 erase_if count vs std", cnt18, std_cnt18);
 
-        std::forward_list<int> std_list19{ 0, 10, 2, 5, 7, 9 };
+        std::forward_list<int> std_list20a{ 0, 10, 2, 5, 7, 9 };
         // NOLINTNEXTLINE(misc-include-cleaner,-warnings-as-errors)
-        auto std_cnt19 = std::erase_if(std_list19, [](int val) { return val <= 5; });
-        tests::compare("ForwardList19 vs std", list19, std_list19);
-        tests::compare("ForwardList19 erase_if count vs std", cnt19, std_cnt19);
-
+        auto std_cnt20a = std::erase_if(std_list20a, [](int val) { return val == 5; });
+        tests::compare("ForwardList20a vs std", list20a, std_list20a);
+        tests::compare("ForwardList20a erase_if count vs std", cnt20a, std_cnt20a);
 
         tests::print_stats();
     }
