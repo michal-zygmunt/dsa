@@ -356,43 +356,39 @@ namespace dsa
 
         /**
          * @brief Alias for size type used in class
-         *
-         * @tparam T size type
          */
         using size_type = std::size_t;
 
         /**
          * @brief Alias for pointer difference type used in class
-         *
-         * @tparam T pointer size type
          */
         using difference_type = std::ptrdiff_t;
 
         /**
          * @brief Alias for pointer to data type used in class
          *
-         * @tparam T* pointer to data type
+         * @tparam value_type* pointer to data type
          */
         using pointer = value_type*;
 
         /**
          * @brief Alias for const pointer to data type used in class
          *
-         * @tparam T* pointer to data type
+         * @tparam value_type* pointer to data type
          */
         using const_pointer = const value_type*;
 
         /**
          * @brief Alias for reference to data type used in class
          *
-         * @tparam T& reference to data type
+         * @tparam value_type& reference to data type
          */
         using reference = value_type&;
 
         /**
          * @brief Alias for const reference to data type used in class
          *
-         * @tparam T& const reference to data type
+         * @tparam value_type& const reference to data type
          */
         using const_reference = const value_type&;
 
