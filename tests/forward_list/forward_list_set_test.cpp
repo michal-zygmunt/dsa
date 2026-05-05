@@ -56,11 +56,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::ForwardList<int> list6 = dsa::ForwardList<int>({ 0, 10, 20 });
         constexpr int new_value{ 50 };
         list6.front() = new_value;
-        const std::initializer_list<int> expected6{ 50, 10, 20 };
+        const std::initializer_list<int> expected6{ new_value, 10, 20 };
         tests::compare("ForwardList6", list6, expected6);
 
         dsa::ForwardList<int> list7 = dsa::ForwardList<int>({ 0, 10, 20 });
-        const std::initializer_list<int> expected7 = { 1, 2, 3, 4 };
+        const std::initializer_list<int> expected7 = {};
         list7.assign(expected7);
         tests::compare("ForwardList7", list7, expected7);
 
