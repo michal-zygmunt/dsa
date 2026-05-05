@@ -1733,12 +1733,8 @@ namespace dsa
             {
                 if (predicate(node->value()))
                 {
-                    NodeBase* to_remove = temp->m_next;
-                    temp->m_next = to_remove->m_next;
-                    destroy_node(to_remove);
-
+                    erase_element_after(ForwardListIterator<false>(temp));
                     removed_count++;
-                    m_size--;
                     continue;
                 }
             }
