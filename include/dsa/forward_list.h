@@ -1845,14 +1845,9 @@ namespace dsa
     template<typename T>
     auto operator<<(std::ostream& out, const ForwardList<T>& list) -> std::ostream&
     {
-        if (list.empty())
-        {
-            return out;
-        }
-
         for (auto it = list.cbegin(); it != list.cend(); ++it)
         {
-            T value = *it;
+            const T& value = *it;
             out << value << ' ';
         }
 
