@@ -205,55 +205,124 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("citer11e", citer11e == dsa::ForwardList<int>::const_iterator(nullptr), true);
 
         // increment iterator
-        dsa::ForwardList<int> list12 = dsa::ForwardList<int>{ 10, 20, 30 };
-        std::cout << "ForwardList12\t" << list12 << '\n';
-        auto it_12 = list12.begin();
-        tests::compare("it_12", *it_12, 10);
-        it_12++;
-        tests::compare("it_12", *it_12, 20);
-        it_12++;
-        tests::compare("it_12", *it_12, 30);
-        it_12++;
+        dsa::ForwardList<int> list12a = dsa::ForwardList<int>{ 10, 20, 30 };
+        std::cout << "List12a\t" << list12a << '\n';
+        auto it_12a = list12a.begin();
+        tests::compare("it_12", *it_12a, 10);
+        ++it_12a;
+        tests::compare("it_12a", *it_12a, 20);
+        ++it_12a;
+        tests::compare("it_12a", *it_12a, 30);
+        ++it_12a;
+        ++it_12a;
+        std::cout << '\n';
+
+        dsa::ForwardList<int> list12b = dsa::ForwardList<int>{ 10, 20, 30 };
+        std::cout << "List12b\t" << list12b << '\n';
+        auto it_12b = list12b.begin();
+        tests::compare("it_12b", *it_12b, 10);
+        it_12b++;
+        tests::compare("it_12", *it_12b, 20);
+        it_12b++;
+        tests::compare("it_12", *it_12b, 30);
+        it_12b++;
+        it_12b++;
         std::cout << '\n';
 
         // increment const_iterator
-        const dsa::ForwardList<int> list13 = dsa::ForwardList<int>{ 10, 20, 30 };
-        std::cout << "ForwardList13\t" << list13 << '\n';
-
-        auto cit_13 = list13.cbegin();
-        tests::compare("cit_13", *cit_13, 10);
-        cit_13++;
-        tests::compare("cit_13", *cit_13, 20);
-        cit_13++;
-        tests::compare("cit_13", *cit_13, 30);
-        cit_13++;
+        const dsa::ForwardList<int> list13a = dsa::ForwardList<int>{ 10, 20, 30 };
+        std::cout << "List13a\t" << list13a << '\n';
+        auto cit_13a = list13a.cbegin();
+        tests::compare("cit_13a", *cit_13a, 10);
+        ++cit_13a;
+        tests::compare("cit_13a", *cit_13a, 20);
+        ++cit_13a;
+        tests::compare("cit_13a", *cit_13a, 30);
+        ++cit_13a;
+        ++cit_13a;
         std::cout << '\n';
 
-        // test throwing 'runtime_error' exception from dereferencing invalid iterator
+        const dsa::ForwardList<int> list13b = dsa::ForwardList<int>{ 10, 20, 30 };
+        std::cout << "List13b\t" << list13b << '\n';
+        auto cit_13b = list13b.cbegin();
+        tests::compare("cit_13b", *cit_13b, 10);
+        cit_13b++;
+        tests::compare("cit_13b", *cit_13b, 20);
+        cit_13b++;
+        tests::compare("cit_13b", *cit_13b, 30);
+        cit_13b++;
+        cit_13b++;
+        std::cout << '\n';
+
         try
         {
-            const dsa::ForwardList<int> list14;
-            std::cout << *list14.begin();
+            const dsa::ForwardList<int> list14a;
+            std::cout << *list14a.begin();
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
         }
         catch (const std::runtime_error&)
         {
-            std::cout << "list14 runtime error exception handled correctly\n\n";
+            std::cout << "list14a runtime error exception handled correctly\n\n";
         }
 
         try
         {
-            const dsa::ForwardList<int> list15{ 1, 2, 3 };
-            std::cout << *list15.end();
+            const dsa::ForwardList<int> list14b;
+            std::cout << list14b.begin().operator->();
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
         }
         catch (const std::runtime_error&)
         {
-            std::cout << "list15 runtime error exception handled correctly\n\n";
+            std::cout << "list14b runtime error exception handled correctly\n\n";
         }
 
         try
         {
-            const dsa::ForwardList<int> list16;
-            std::cout << list16.begin().operator->();
+            const dsa::ForwardList<int> list15a{ 1, 2, 3 };
+            std::cout << *list15a.end();
+            std::cout << list15a.begin().operator->() << '\n';
+            std::cout << list15a.end().operator->() << '\n';
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error&)
+        {
+            std::cout << "list15a runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            const dsa::ForwardList<int> list15b{ 1, 2, 3 };
+            std::cout << *list15b.begin().operator->();
+            std::cout << *list15b.end().operator->();
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
+        }
+        catch (const std::runtime_error&)
+        {
+            std::cout << "list15b runtime error exception handled correctly\n\n";
+        }
+
+        try
+        {
+            dsa::ForwardList<int> list16 = dsa::ForwardList<int>{};
+            auto it16 = list16.begin();
+            std::advance(it16, 5);
+            std::cout << *it16;
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
         }
         catch (const std::runtime_error&)
         {
@@ -262,9 +331,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         try
         {
-            const dsa::ForwardList<int> list17{ 1, 2, 3 };
-            std::cout << *list17.begin().operator->();
-            std::cout << *list17.end().operator->();
+            const dsa::ForwardList<int> list17{};
+            std::cout << list17.front();
+
+            // command should not be reached
+            tests::failed_count()++;
+            std::cout << "ThrowingType should throw error\n\n";
         }
         catch (const std::runtime_error&)
         {
