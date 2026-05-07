@@ -224,6 +224,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("(list7 <=> list8) == (std_list7 <=> std_list8)",
             (list7 <=> list8) == (std_list7 <=> std_list8), true);
 
+        // test noexcept
+
+        // operators
+        static_assert(!noexcept(std::forward_list<tests::ThrowingType>{1} == std::forward_list<tests::ThrowingType>{1}));
+        static_assert(!noexcept(std::forward_list<tests::ThrowingType>{1} <=> std::forward_list<tests::ThrowingType>{1}));
+
 
         tests::print_stats();
     }
