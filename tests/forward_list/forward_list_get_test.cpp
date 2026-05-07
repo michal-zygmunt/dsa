@@ -16,6 +16,7 @@
 #include <exception>
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -32,8 +33,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         for (size_t i = 0; i < list1_size; i++)
         {
             const int temp = list1.front();
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            tests::compare("ForwardList1", temp, expected1.begin()[i]);
+            tests::compare("ForwardList1", temp, *std::next(expected1.begin(), static_cast<ptrdiff_t>(i)));
             list1.pop_front();
         }
 
