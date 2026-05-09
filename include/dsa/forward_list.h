@@ -1826,7 +1826,7 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::sort()
     {
-        m_head->m_next = merge_sort(m_head->m_next, std::less<>());
+        sort(std::less<>());
     }
 
     template<typename T>
