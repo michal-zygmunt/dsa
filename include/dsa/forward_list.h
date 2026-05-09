@@ -356,43 +356,39 @@ namespace dsa
 
         /**
          * @brief Alias for size type used in class
-         *
-         * @tparam T size type
          */
         using size_type = std::size_t;
 
         /**
          * @brief Alias for pointer difference type used in class
-         *
-         * @tparam T pointer size type
          */
         using difference_type = std::ptrdiff_t;
 
         /**
          * @brief Alias for pointer to data type used in class
          *
-         * @tparam T* pointer to data type
+         * @tparam value_type* pointer to data type
          */
         using pointer = value_type*;
 
         /**
          * @brief Alias for const pointer to data type used in class
          *
-         * @tparam T* pointer to data type
+         * @tparam value_type* pointer to data type
          */
         using const_pointer = const value_type*;
 
         /**
          * @brief Alias for reference to data type used in class
          *
-         * @tparam T& reference to data type
+         * @tparam value_type& reference to data type
          */
         using reference = value_type&;
 
         /**
          * @brief Alias for const reference to data type used in class
          *
-         * @tparam T& const reference to data type
+         * @tparam value_type& const reference to data type
          */
         using const_reference = const value_type&;
 
@@ -488,6 +484,8 @@ namespace dsa
          *
          * @param[in] count new size of the container
          * @param[in] value value to initialize elements of the container with
+         *
+         * @note all iterators, pointers and references to the elements of the container are invalidated
          */
         void assign(size_type count, const_reference value);
 
@@ -497,6 +495,8 @@ namespace dsa
          * @tparam InputIt
          * @param[in] first element defining range of elements to insert
          * @param[in] last element definig range of elements to insert
+         *
+         * @note all iterators, pointers and references to the elements of the container are invalidated
          */
         template<typename InputIt>
             requires std::input_iterator<InputIt>
@@ -506,6 +506,8 @@ namespace dsa
          * @brief Function assign values to the ForwardList
          *
          * @param[in] init_list values to replace ForwardList with
+         *
+         * @note all iterators, pointers and references to the elements of the container are invalidated
          */
         void assign(const std::initializer_list<T>& init_list);
 
@@ -514,7 +516,7 @@ namespace dsa
          *
          * @return allocator_type type of memory allocator
          */
-        [[nodiscard]] constexpr auto get_allocator() const -> allocator_type;
+        [[nodiscard]] auto get_allocator() const noexcept -> allocator_type;
 
         /**
          * @brief Function returns reference to value stored in ForwardList first Node
@@ -618,9 +620,7 @@ namespace dsa
          *
          * @param[in] pos const_iterator to insert element after
          * @param[in] value element of type T to be inserted after \p pos
-         * @return pointer to ForwardList element
-         * @retval iterator to inserted \p value
-         * @retval pos if no element was inserted
+         * @return iterator to last inserted element, or \p pos if no element was inserted
          */
         auto insert_after(const const_iterator& pos, const_reference value) -> iterator;
 
@@ -629,9 +629,7 @@ namespace dsa
          *
          * @param[in] pos const_iterator to insert element after
          * @param[in] value element of type T to be inserted after \p pos
-         * @return pointer to ForwardList element
-         * @retval iterator to inserted \p value
-         * @retval pos if no element was inserted
+         * @return iterator to last inserted element, or \p pos if no element was inserted
          */
         auto insert_after(const const_iterator& pos, T&& value) -> iterator;
 
@@ -641,9 +639,7 @@ namespace dsa
          * @param[in] pos const_iterator to insert element after
          * @param[in] count number of elements to insert after \p pos
          * @param[in] value element of type T to be inserted
-         * @return pointer to ForwardList element
-         * @retval iterator pointer to last inserted element
-         * @retval pos if no element was inserted
+         * @return iterator to last inserted element, or \p pos if no element was inserted
          */
         auto insert_after(const const_iterator& pos, size_type count, const_reference value) -> iterator;
 
@@ -653,9 +649,7 @@ namespace dsa
          * @param[in] pos const_iterator to insert element after
          * @param[in] first element defining range of elements to insert
          * @param[in] last element definig range of elements to insert
-         * @return pointer to ForwardList element
-         * @retval iterator pointer to last inserted element
-         * @retval pos if no element was inserted
+         * @return iterator to last inserted element, or \p pos if no element was inserted
          */
         template<typename InputIt>
             requires std::input_iterator<InputIt>
@@ -666,9 +660,7 @@ namespace dsa
          *
          * @param[in] pos const_iterator to insert element after
          * @param[in] init_list initializer_list with elements to insert after \p pos
-         * @return pointer to the last inserted element
-         * @retval iterator to last inserted element
-         * @retval pos if no element was inserted
+         * @return iterator to last inserted element, or \p pos if no element was inserted
          */
         auto insert_after(const const_iterator& pos, std::initializer_list<T> init_list) -> iterator;
 
@@ -769,7 +761,7 @@ namespace dsa
          *
          * @param[in,out] other object to swap content with
          */
-        void swap(ForwardList<T>& other) noexcept(std::is_nothrow_swappable_v<T>);
+        void swap(ForwardList<T>& other) noexcept(std::allocator_traits<allocator_type>::is_always_equal::value);
 
         /**
          * @brief Function combines two sorted ForwardLists into one sorted ForwardList
@@ -1112,7 +1104,7 @@ namespace dsa
         /**
          * @brief Rebind allocator to create new objects of type Node
          */
-        using node_allocator = typename std::allocator_traits<std::allocator<T>>::template rebind_alloc<Node>;
+        using node_allocator = typename std::allocator_traits<allocator_type>::template rebind_alloc<Node>;
 
         /**
          * @brief Setup allocator traits used for Node creation and deletion
@@ -1138,9 +1130,8 @@ namespace dsa
 
     template<typename T>
     ForwardList<T>::ForwardList(size_type count, const T& value)
+        : ForwardList()
     {
-        init_node();
-
         for (size_type i = 0; i < count; i++)
         {
             push_front(value);
@@ -1151,17 +1142,15 @@ namespace dsa
     template<typename InputIt>
         requires std::input_iterator<InputIt>
     ForwardList<T>::ForwardList(InputIt first, InputIt last)
+        : ForwardList()
     {
-        init_node();
-
         assign(first, last);
     }
 
     template<typename T>
     ForwardList<T>::ForwardList(const std::initializer_list<T>& init_list)
+        : ForwardList()
     {
-        init_node();
-
         auto iter = before_begin();
         for (const auto& item : init_list)
         {
@@ -1171,9 +1160,8 @@ namespace dsa
 
     template<typename T>
     ForwardList<T>::ForwardList(const ForwardList<T>& other)
+        : ForwardList()
     {
-        init_node();
-
         auto iter = before_begin();
         for (const auto& item : other)
         {
@@ -1184,8 +1172,6 @@ namespace dsa
     template<typename T>
     auto ForwardList<T>::operator=(const ForwardList<T>& other) -> ForwardList<T>&
     {
-        init_node();
-
         if (&other != this)
         {
             while (m_head->m_next)
@@ -1205,6 +1191,7 @@ namespace dsa
 
     template<typename T>
     ForwardList<T>::ForwardList(ForwardList<T>&& other) noexcept
+        : ForwardList()
     {
         operator=(std::move(other));
     }
@@ -1215,7 +1202,6 @@ namespace dsa
         if (&other != this)
         {
             clear();
-            init_node();
 
             m_head->m_next = other.m_head->m_next;
             m_size = other.m_size;
@@ -1280,7 +1266,7 @@ namespace dsa
     }
 
     template<typename T>
-    [[nodiscard]] constexpr auto ForwardList<T>::get_allocator() const -> allocator_type
+    [[nodiscard]] auto ForwardList<T>::get_allocator() const noexcept -> allocator_type
     {
         return m_allocator;
     }
@@ -1367,19 +1353,16 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::clear()
     {
-        if (m_head)
+        NodeBase* temp{ m_head->m_next };
+        while (temp)
         {
-            NodeBase* temp{ m_head->m_next };
-            while (temp)
-            {
-                m_head->m_next = temp->m_next;
-                destroy_node(temp);
-                temp = m_head->m_next;
-            }
-
-            m_size = 0;
-            m_head->m_next = nullptr;
+            m_head->m_next = temp->m_next;
+            destroy_node(temp);
+            temp = m_head->m_next;
         }
+
+        m_size = 0;
+        m_head->m_next = nullptr;
     }
 
     template<typename T>
@@ -1395,7 +1378,7 @@ namespace dsa
     {
         if (!if_valid_iterator(pos))
         {
-            return nullptr;
+            return pos.m_current_node;
         }
 
         iterator iter{ pos.m_current_node };
@@ -1410,7 +1393,7 @@ namespace dsa
     {
         if (!if_valid_iterator(pos))
         {
-            return nullptr;
+            return pos.m_current_node;
         }
 
         iterator iter{ pos.m_current_node };
@@ -1430,7 +1413,7 @@ namespace dsa
     {
         if (!if_valid_iterator(pos))
         {
-            return nullptr;
+            return pos.m_current_node;
         }
 
         iterator iter{ pos.m_current_node };
@@ -1449,13 +1432,13 @@ namespace dsa
     {
         if (!if_valid_iterator(pos))
         {
-            return nullptr;
+            return pos.m_current_node;
         }
 
         iterator iter{ pos.m_current_node };
-        for (const auto val : init_list)
+        for (const auto item : init_list)
         {
-            iter = emplace_after(iter, val);
+            iter = emplace_after(iter, item);
         }
 
         return iter;
@@ -1558,8 +1541,6 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::resize(size_type count, const_reference value)
     {
-        init_node();
-
         if (count == m_size)
         {
             return;
@@ -1595,9 +1576,10 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::swap(ForwardList<T>& other) noexcept(std::is_nothrow_swappable_v<T>)
+    void ForwardList<T>::swap(ForwardList<T>& other)
+        noexcept(std::allocator_traits<allocator_type>::is_always_equal::value)
     {
-        std::swap(m_head->m_next, other.m_head->m_next);
+        std::swap(m_head, other.m_head);
         std::swap(m_size, other.m_size);
     }
 
@@ -1633,7 +1615,10 @@ namespace dsa
 
         if (m_size != 0)
         {
+            // if temporary node could not be allocated do not modify
+            // object state
             Node* temp_head{ construct_node(nullptr, T{}) };
+
             NodeBase* temp_tail{ temp_head };
 
             NodeBase* to_move{};
@@ -1646,7 +1631,9 @@ namespace dsa
 
                 if (node_this && node_other)
                 {
-                    if (comp(node_this->value(), node_other->value()))
+                    // 2nd condition keeps correct order of equal elements
+                    if (comp(node_this->value(), node_other->value()) ||
+                        !comp(node_other->value(), node_this->value()))
                     {
                         to_move = m_head->m_next;
                         to_return = to_move->m_next;
@@ -1748,12 +1735,8 @@ namespace dsa
             {
                 if (predicate(node->value()))
                 {
-                    NodeBase* to_remove = temp->m_next;
-                    temp->m_next = to_remove->m_next;
-                    destroy_node(to_remove);
-
+                    erase_element_after(ForwardListIterator<false>(temp));
                     removed_count++;
-                    m_size--;
                     continue;
                 }
             }
@@ -1841,7 +1824,7 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::sort()
     {
-        m_head->m_next = merge_sort(m_head->m_next, std::less<>());
+        sort(std::less<>());
     }
 
     template<typename T>
@@ -1862,14 +1845,9 @@ namespace dsa
     template<typename T>
     auto operator<<(std::ostream& out, const ForwardList<T>& list) -> std::ostream&
     {
-        if (list.empty())
-        {
-            return out;
-        }
-
         for (auto it = list.cbegin(); it != list.cend(); ++it)
         {
-            T value = *it;
+            const T& value = *it;
             out << value << ' ';
         }
 
@@ -1996,11 +1974,8 @@ namespace dsa
     template<typename T>
     void ForwardList<T>::init_node()
     {
-        if (m_head == nullptr)
-        {
-            // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
-            m_head = new NodeBase;
-        }
+        // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
+        m_head = new NodeBase;
     }
 
     template<typename T>

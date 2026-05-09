@@ -51,9 +51,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list2.push_front(30);
         list2.push_front(20);
         list2.push_front(10);
-        list2.insert_after(list2.cbegin(), 5, 5);
+        auto list2_it = list2.insert_after(list2.cbegin(), 5, 5);
         const std::initializer_list<int> expected2 = { 10, 5, 5, 5, 5, 5, 20, 30, 40, 50 };
         tests::compare("ForwardList2", list2, expected2);
+        tests::compare("ForwardList2 it", *list2_it, *std::next(list2.begin(), 5));
+        tests::compare("ForwardList2 it", *std::next(list2_it), *std::next(list2.begin(), 6));
 
         dsa::ForwardList<int> list3 = dsa::ForwardList<int>(1, 50);
         list3.push_front(40);
@@ -254,16 +256,23 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::ForwardList<std::unique_ptr<int>> list23{};
         auto ptr23 = std::make_unique<int>(1);
         auto list23_it = list23.insert_after(list23.end(), std::move(ptr23));
+        tests::compare("ForwardList23 size", list23.size(), static_cast<std::size_t>(0));
         tests::compare("ForwardList23 it", list23_it == nullptr, true);
 
         dsa::ForwardList<int> list24{ 0, 10, 20 };
         dsa::ForwardList<int> list25{ 30, 40, 50 };
         auto list24_it = list24.insert_after(list24.begin(), list25.begin(), std::next(list25.begin()));
         const std::initializer_list<int> expected24{ 0, 30, 10, 20 };
-        const std::initializer_list<int> expected28{ 30, 40, 50 };
+        const std::initializer_list<int> expected25{ 30, 40, 50 };
         tests::compare("ForwardList24", list24, expected24);
         tests::compare("ForwardList24 it", *list24_it, list25.front());
-        tests::compare("ForwardList25", list25, expected28);
+        tests::compare("ForwardList25", list25, expected25);
+
+        dsa::ForwardList<int> list26{ 40 };
+        auto list26_it = list26.insert_after(list26.begin(), {});
+        const std::initializer_list<int> expected26 = { 40 };
+        tests::compare("ForwardList26", list26, expected26);
+        tests::compare("ForwardList26 it", list26_it == list26.begin(), true);
 
 
         std::cout << "Compare operations results with std container\n\n";
