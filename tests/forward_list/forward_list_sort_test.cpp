@@ -81,6 +81,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::cout << "Compare operations results with std container\n\n";
 
+        // ascending
         std::forward_list<int> std_list1{ il_1 };
         std_list1.sort();
         tests::compare("ForwardList1 vs std", list1, std_list1);
@@ -106,6 +107,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_list6.sort(std::greater<>());
         tests::compare("ForwardList6", list6, std_list6);
 
+        // empty
         std::forward_list<int> std_list7{};
         std_list7.sort();
         tests::compare("ForwardList7", list7, std_list7);
