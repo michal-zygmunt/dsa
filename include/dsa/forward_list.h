@@ -1584,7 +1584,7 @@ namespace dsa
     void ForwardList<T>::swap(ForwardList<T>& other)
         noexcept(std::allocator_traits<allocator_type>::is_always_equal::value)
     {
-        std::swap(m_head->m_next, other.m_head->m_next);
+        std::swap(m_head, other.m_head);
         std::swap(m_size, other.m_size);
     }
 
