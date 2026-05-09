@@ -620,8 +620,7 @@ namespace dsa
          *
          * @param[in] pos const_iterator to insert element after
          * @param[in] value element of type T to be inserted after \p pos
-         * @retval iterator to inserted element
-         * @retval iterator to \p pos if no element was inserted
+         * @return iterator to last inserted element, or \p pos if no element was inserted
          */
         auto insert_after(const const_iterator& pos, const_reference value) -> iterator;
 
@@ -630,8 +629,7 @@ namespace dsa
          *
          * @param[in] pos const_iterator to insert element after
          * @param[in] value element of type T to be inserted after \p pos
-         * @retval iterator to inserted element
-         * @retval iterator to \p pos if no element was inserted
+         * @return iterator to last inserted element, or \p pos if no element was inserted
          */
         auto insert_after(const const_iterator& pos, T&& value) -> iterator;
 
@@ -641,8 +639,7 @@ namespace dsa
          * @param[in] pos const_iterator to insert element after
          * @param[in] count number of elements to insert after \p pos
          * @param[in] value element of type T to be inserted
-         * @retval iterator to last inserted element
-         * @retval iterator to \p pos if no element was inserted
+         * @return iterator to last inserted element, or \p pos if no element was inserted
          */
         auto insert_after(const const_iterator& pos, size_type count, const_reference value) -> iterator;
 
@@ -652,8 +649,7 @@ namespace dsa
          * @param[in] pos const_iterator to insert element after
          * @param[in] first element defining range of elements to insert
          * @param[in] last element definig range of elements to insert
-         * @retval iterator to last inserted element
-         * @retval iterator to \p pos if no element was inserted
+         * @return iterator to last inserted element, or \p pos if no element was inserted
          */
         template<typename InputIt>
             requires std::input_iterator<InputIt>
@@ -664,8 +660,7 @@ namespace dsa
          *
          * @param[in] pos const_iterator to insert element after
          * @param[in] init_list initializer_list with elements to insert after \p pos
-         * @retval iterator to last inserted element
-         * @retval iterator to \p pos if no element was inserted
+         * @return iterator to last inserted element, or \p pos if no element was inserted
          */
         auto insert_after(const const_iterator& pos, std::initializer_list<T> init_list) -> iterator;
 
