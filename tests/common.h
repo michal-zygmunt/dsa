@@ -215,13 +215,12 @@ namespace tests
     };
 
     /**
-     * @brief Concept that checks if T type provides pop_front() member function
+     * @brief Concept that defines the requirements of a type that allows iteration over elements
      *
-     * Concept is satisfied if an object of type T allows calling public `pop_front()` method
+     * Concept is satisfied if an object of type T provides an iterator and sentinel that denote
+     * the elements of the range
      *
      * @tparam T type checked agains the concept
-     *
-     * @see requires
      */
     template <typename T>
     concept has_ranges = std::ranges::range<T>;
