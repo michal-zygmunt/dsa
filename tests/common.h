@@ -604,6 +604,68 @@ namespace tests
     }
 
     /**
+     * @brief Function compares values of List and list
+     *
+     * @tparam T type of elements to compare
+     * @param[in] list input container
+     * @param[in] test_values input expected values
+     * @return true if compared containers are different
+     * @return false if containers are equal
+     */
+    template<typename T>
+    auto cmp(dsa::List<T> list, const std::list<T>& test_values) -> bool
+    {
+        const auto size{ (test_values.size()) };
+        tests::total_count() += static_cast<int>(size);
+
+        if (if_error(list.size(), size))
+        {
+            std::cout << "Objects of different length!\n";
+            return true;
+        }
+
+        if constexpr (std::ranges::bidirectional_range<dsa::List<T>>)
+        {
+            std::vector<T> forward{};
+            for (const auto& item : list)
+            {
+                forward.push_back(item);
+            }
+
+            std::vector<T> backward{};
+            for (const auto& item : std::views::reverse(list))
+            {
+                backward.push_back(item);
+            }
+
+            std::reverse(backward.begin(), backward.end());
+            if (forward == backward)
+            {
+                std::cout << "Forward and backward content OK\n";
+            }
+            if (forward != backward)
+            {
+                std::cout << "Forward and backward content of container is different!\n";
+                return true;
+            }
+        }
+
+        auto vector_iter = list.begin();
+
+        for (const auto& item : test_values)
+        {
+            if (if_error(*vector_iter, item))
+            {
+                return true;
+            }
+
+            ++vector_iter;
+        }
+
+        return false;
+    }
+
+    /**
      * @brief Function compares values of Vector and vector
      *
      * @tparam T type of elements to compare
