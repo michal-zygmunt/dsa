@@ -303,6 +303,32 @@ namespace tests
             return true;
         }
 
+        if constexpr (std::ranges::bidirectional_range<T<U>>)
+        {
+            std::vector<U> forward{};
+            for (const auto& item : container)
+            {
+                forward.push_back(item);
+            }
+
+            std::vector<U> backward{};
+            for (const auto& item : std::views::reverse(container))
+            {
+                backward.push_back(item);
+            }
+
+            std::reverse(backward.begin(), backward.end());
+            if (forward == backward)
+            {
+                std::cout << "Forward and backward content OK\n";
+            }
+            if (forward != backward)
+            {
+                std::cout << "Forward and backward content of container is different!\n";
+                return true;
+            }
+        }
+
         auto iter = container.begin();
 
         for (const auto& item : test_values)
@@ -408,6 +434,32 @@ namespace tests
             return true;
         }
 
+        if constexpr (std::ranges::bidirectional_range<T<U, N>>)
+        {
+            std::vector<U> forward{};
+            for (const auto& item : container)
+            {
+                forward.push_back(item);
+            }
+
+            std::vector<U> backward{};
+            for (const auto& item : std::views::reverse(container))
+            {
+                backward.push_back(item);
+            }
+
+            std::reverse(backward.begin(), backward.end());
+            if (forward == backward)
+            {
+                std::cout << "Forward and backward content OK\n";
+            }
+            if (forward != backward)
+            {
+                std::cout << "Forward and backward content of container is different!\n";
+                return true;
+            }
+        }
+
         auto iter = container.begin();
 
         for (const auto& item : test_values)
@@ -446,6 +498,32 @@ namespace tests
         {
             std::cout << "Objects of different length!\n";
             return true;
+        }
+
+        if constexpr (std::ranges::bidirectional_range<T>)
+        {
+            std::vector<T> forward{};
+            for (const auto& item : container)
+            {
+                forward.push_back(item);
+            }
+
+            std::vector<T> backward{};
+            for (const auto& item : std::views::reverse(container))
+            {
+                backward.push_back(item);
+            }
+
+            std::reverse(backward.begin(), backward.end());
+            if (forward == backward)
+            {
+                std::cout << "Forward and backward content OK\n";
+            }
+            if (forward != backward)
+            {
+                std::cout << "Forward and backward content of container is different!\n";
+                return true;
+            }
         }
 
         for (size_t i = 0; i < size; i++)
@@ -551,6 +629,32 @@ namespace tests
             return true;
         }
 
+        if constexpr (std::ranges::bidirectional_range<dsa::Array<T, N>>)
+        {
+            std::vector<T> forward{};
+            for (const auto& item : array)
+            {
+                forward.push_back(item);
+            }
+
+            std::vector<T> backward{};
+            for (const auto& item : std::views::reverse(array))
+            {
+                backward.push_back(item);
+            }
+
+            std::reverse(backward.begin(), backward.end());
+            if (forward == backward)
+            {
+                std::cout << "Forward and backward content OK\n";
+            }
+            if (forward != backward)
+            {
+                std::cout << "Forward and backward content of container is different!\n";
+                return true;
+            }
+        }
+
         auto array_iter = array.begin();
 
         for (const auto& item : test_values)
@@ -586,6 +690,32 @@ namespace tests
         {
             std::cout << "Objects of different length!\n";
             return true;
+        }
+
+        if constexpr (std::ranges::bidirectional_range<dsa::Array<T, N>>)
+        {
+            std::vector<T> forward{};
+            for (const auto& item : array)
+            {
+                forward.push_back(item);
+            }
+
+            std::vector<T> backward{};
+            for (const auto& item : std::views::reverse(array))
+            {
+                backward.push_back(item);
+            }
+
+            std::reverse(backward.begin(), backward.end());
+            if (forward == backward)
+            {
+                std::cout << "Forward and backward content OK\n";
+            }
+            if (forward != backward)
+            {
+                std::cout << "Forward and backward content of container is different!\n";
+                return true;
+            }
         }
 
         auto array_iter = array.begin();
@@ -684,6 +814,32 @@ namespace tests
         {
             std::cout << "Objects of different length!\n";
             return true;
+        }
+
+        if constexpr (std::ranges::bidirectional_range<dsa::Vector<T>>)
+        {
+            std::vector<T> forward{};
+            for (const auto& item : vector)
+            {
+                forward.push_back(item);
+            }
+
+            std::vector<T> backward{};
+            for (const auto& item : std::views::reverse(vector))
+            {
+                backward.push_back(item);
+            }
+
+            std::reverse(backward.begin(), backward.end());
+            if (forward == backward)
+            {
+                std::cout << "Forward and backward content OK\n";
+            }
+            if (forward != backward)
+            {
+                std::cout << "Forward and backward content of container is different!\n";
+                return true;
+            }
         }
 
         auto vector_iter = vector.begin();
