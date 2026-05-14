@@ -200,9 +200,33 @@ namespace tests
     }
 
     /**
-     * @brief Concept that checks if T type provides pop_front() member function
+     * @brief Concept that checks if an object of type T allows calling public `front()` method
      *
-     * Concept is satisfied if an object of type T allows calling public `pop_front()` method
+     * @tparam T type checked agains the concept
+     *
+     * @see requires
+     */
+    template <typename T>
+    concept has_front = requires(T type)
+    {
+        type.front();
+    };
+
+    /**
+     * @brief Concept that checks if an object of type T allows calling public `pop()` method
+     *
+     * @tparam T type checked agains the concept
+     *
+     * @see requires
+     */
+    template <typename T>
+    concept has_pop = requires(T type)
+    {
+        type.pop();
+    };
+
+    /**
+     * @brief Concept that checks if an object of type T allows calling public `pop_front()` method
      *
      * @tparam T type checked agains the concept
      *
@@ -224,6 +248,32 @@ namespace tests
      */
     template <typename T>
     concept has_ranges = std::ranges::range<T>;
+
+    /**
+     * @brief Concept that checks if an object of type T allows calling public `size()` method
+     *
+     * @tparam T type checked agains the concept
+     *
+     * @see requires
+     */
+    template <typename T>
+    concept has_size = requires(T type)
+    {
+        type.size();
+    };
+
+    /**
+     * @brief Concept that checks if an object of type T allows calling public `top()` method
+     *
+     * @tparam T type checked agains the concept
+     *
+     * @see requires
+     */
+    template <typename T>
+    concept has_top = requires(T type)
+    {
+        type.top();
+    };
 
     /**
      * @brief Function print error message
