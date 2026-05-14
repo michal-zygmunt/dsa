@@ -395,39 +395,6 @@ namespace tests
     }
 
     /**
-     * @brief Function compares values of Queue and initializer list
-     *
-     * @tparam T type of elements to compare
-     * @param[in] queue input Queue
-     * @param[in] test_values input initializer list
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T>
-    auto cmp(dsa::Queue<T> queue, const std::initializer_list<T>& test_values) -> bool
-    {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(queue.size(), size))
-        {
-            std::cout << "Objects of different length!\n";
-            return true;
-        }
-
-        for (const auto& item : test_values)
-        {
-            if (if_error(queue.front(), item))
-            {
-                return true;
-            }
-            queue.pop();
-        }
-
-        return false;
-    }
-
-    /**
      * @brief Function compares values of array class of constant size supporting ranges iterators and initializer list.
      *        Both classes must use the same underlying data type.
      *
@@ -565,39 +532,21 @@ namespace tests
                 test_values_copy.pop();
             }
         }
-
-        return false;
-    }
-
-    /**
-     * @brief Function compares values of Queue and queue
-     *
-     * @tparam T type of elements to compare
-     * @param[in] queue input Queue
-     * @param[in] test_values input queue
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T>
-    auto cmp(dsa::Queue<T> queue, std::queue<T>& test_values) -> bool
-    {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(queue.size(), size))
+        else if constexpr (has_front<T> && has_front<U> && has_pop<T> && has_pop<U>)
         {
-            std::cout << "Objects of different length!\n";
-            return true;
-        }
+            // handle dsa::Queue and std::queue comparison
 
-        for (size_t i = 0; i < size; i++)
-        {
-            if (if_error(queue.front(), test_values.front()))
+            T container_copy{ container };
+            U test_values_copy{ test_values };
+            for (size_t i = 0; i < size; i++)
             {
-                return true;
+                if (if_error(container_copy.front(), test_values_copy.front()))
+                {
+                    return true;
+                }
+                container_copy.pop();
+                test_values_copy.pop();
             }
-            queue.pop();
-            test_values.pop();
         }
 
         return false;
@@ -1037,23 +986,6 @@ namespace tests
      */
     template<typename T, typename U>
     void compare(const std::string& container_name, const T& container, const std::initializer_list<U>& expected)
-    {
-        print_containers(container_name, container, "Expected", expected);
-        const bool res = cmp(container, expected);
-        std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-    }
-
-    /**
-     * @brief Function compares content of two containers
-     *
-     * @tparam T input container
-     * @tparam U type of data stored in queue
-     * @param[in] container_name container name to print
-     * @param[in] container input container
-     * @param[in] expected expected content of input container, stored as queue
-     */
-    template<typename T, typename U>
-    void compare(const std::string& container_name, const T& container, std::queue<U> expected)
     {
         print_containers(container_name, container, "Expected", expected);
         const bool res = cmp(container, expected);
