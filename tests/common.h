@@ -428,39 +428,6 @@ namespace tests
     }
 
     /**
-     * @brief Function compares values of Stack and initializer list
-     *
-     * @tparam T type of elements to compare
-     * @param[in] stack input Stack
-     * @param[in] test_values input initializer list
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T>
-    auto cmp(dsa::Stack<T> stack, const std::initializer_list<T>& test_values) -> bool
-    {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(stack.size(), size))
-        {
-            std::cout << "Objects of different length!\n";
-            return true;
-        }
-
-        for (const auto& item : test_values)
-        {
-            if (if_error(stack.top(), item))
-            {
-                return true;
-            }
-            stack.pop();
-        }
-
-        return false;
-    }
-
-    /**
      * @brief Function compares values of array class of constant size supporting ranges iterators and initializer list.
      *        Both classes must use the same underlying data type.
      *
@@ -526,22 +493,28 @@ namespace tests
     }
 
     /**
-     * @brief Function compares values of two classes with pop_front() public member function.
-     *        Both classes must use the same underlying data type.
+     * @brief Function compares values of two classes
      *
-     * @tparam T type of first list class
-     * @tparam U type of second list class
-     * @tparam V type of elements to compare
-     * @param[in] container input list
-     * @param[in] test_values input list
+     * @tparam T type of input container
+     * @tparam U type of input container with expected content
+     * @param[in] container input container
+     * @param[in] test_values input container with expected content
      * @return true if compared containers are different
      * @return false if containers are equal
      */
     template<typename T, typename U>
-        requires has_pop_front<T>&& has_pop_front<U>
-    auto cmp(T container, U test_values) -> bool
+    auto cmp(const T& container, const U& test_values) -> bool
     {
-        const auto size{ static_cast<size_t>(std::distance(test_values.begin(), test_values.end())) };
+        size_t size{};
+        if constexpr (has_size<U>)
+        {
+            size = test_values.size();
+        }
+        else
+        {
+            size = static_cast<size_t>(std::distance(test_values.begin(), test_values.end()));
+        }
+
         tests::total_count() += static_cast<int>(size);
 
         if (if_error(container.size(), size))
@@ -576,14 +549,21 @@ namespace tests
             }
         }
 
-        for (size_t i = 0; i < size; i++)
+        if constexpr (has_top<T> && has_top<U> && has_pop<T> && has_pop<U>)
         {
-            if (if_error(container.front(), test_values.front()))
+            // handle dsa::Stack and std::stack comparison
+
+            T container_copy{ container };
+            U test_values_copy{ test_values };
+            for (size_t i = 0; i < size; i++)
             {
-                return true;
+                if (if_error(container_copy.top(), test_values_copy.top()))
+                {
+                    return true;
+                }
+                container_copy.pop();
+                test_values_copy.pop();
             }
-            container.pop_front();
-            test_values.pop_front();
         }
 
         return false;
@@ -617,40 +597,6 @@ namespace tests
                 return true;
             }
             queue.pop();
-            test_values.pop();
-        }
-
-        return false;
-    }
-
-    /**
-     * @brief Function compares values of Stack and stack
-     *
-     * @tparam T type of elements to compare
-     * @param[in] stack input Stack
-     * @param[in] test_values input stack
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T>
-    auto cmp(dsa::Stack<T> stack, std::stack<T> test_values) -> bool
-    {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(stack.size(), size))
-        {
-            std::cout << "Objects of different length!\n";
-            return true;
-        }
-
-        for (size_t i = 0; i < size; i++)
-        {
-            if (if_error(stack.top(), test_values.top()))
-            {
-                return true;
-            }
-            stack.pop();
             test_values.pop();
         }
 
@@ -1073,7 +1019,6 @@ namespace tests
      * @param[in] expected expected content of input container, stored as elements of initializer list
      */
     template<typename T, typename U>
-        requires has_ranges<T>&& has_ranges<U>
     void compare(const std::string& container_name, const T& container, const U& expected)
     {
         print_containers(container_name, container, "Expected", expected);
@@ -1109,23 +1054,6 @@ namespace tests
      */
     template<typename T, typename U>
     void compare(const std::string& container_name, const T& container, std::queue<U> expected)
-    {
-        print_containers(container_name, container, "Expected", expected);
-        const bool res = cmp(container, expected);
-        std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-    }
-
-    /**
-     * @brief Function compares content of two containers
-     *
-     * @tparam T input container
-     * @tparam U type of data stored in stack
-     * @param[in] container_name container name to print
-     * @param[in] container input container
-     * @param[in] expected expected content of input container, stored as stack
-     */
-    template<typename T, typename U>
-    void compare(const std::string& container_name, const T& container, const std::stack<U>& expected)
     {
         print_containers(container_name, container, "Expected", expected);
         const bool res = cmp(container, expected);
