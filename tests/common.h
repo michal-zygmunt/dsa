@@ -870,23 +870,6 @@ namespace tests
     }
 
     /**
-     * @brief Function compares content of two containers
-     *
-     * @tparam T input container
-     * @tparam U type of data stored in array
-     * @param[in] container_name container name to print
-     * @param[in] container input container
-     * @param[in] expected expected content of input container, stored as array
-     */
-    template<typename T, typename U, size_t N>
-    void compare(const std::string& container_name, const T& container, const std::array<U, N>& expected)
-    {
-        print_containers(container_name, container, "Expected", expected);
-        const bool res = cmp(container, expected);
-        std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-    }
-
-    /**
      * @brief Function compares two values
      *
      * @tparam T type of compared objects
