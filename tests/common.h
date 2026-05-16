@@ -353,9 +353,9 @@ namespace tests
      * @return true if compared containers are different
      * @return false if containers are equal
      */
-    template<template <typename> typename T, typename U>
-        requires has_ranges<T<U>>
-    auto cmp(const T<U>& container, const std::initializer_list<U>& test_values) -> bool
+    template<typename T, typename U>
+        requires has_ranges<T>
+    auto cmp(const T& container, const std::initializer_list<U>& test_values) -> bool
     {
         const auto size{ (test_values.size()) };
         tests::total_count() += static_cast<int>(size);
@@ -366,72 +366,7 @@ namespace tests
             return true;
         }
 
-        if constexpr (std::ranges::bidirectional_range<T<U>>)
-        {
-            std::vector<U> forward{};
-            for (const auto& item : container)
-            {
-                forward.push_back(item);
-            }
-
-            std::vector<U> backward{};
-            for (const auto& item : std::views::reverse(container))
-            {
-                backward.push_back(item);
-            }
-
-            std::reverse(backward.begin(), backward.end());
-            if (forward == backward)
-            {
-                std::cout << "Forward and backward content OK\n";
-            }
-            if (forward != backward)
-            {
-                std::cout << "Forward and backward content of container is different!\n";
-                return true;
-            }
-        }
-
-        auto iter = container.begin();
-
-        for (const auto& item : test_values)
-        {
-            if (if_error(*iter, item))
-            {
-                return true;
-            }
-
-            ++iter;
-        }
-
-        return false;
-    }
-
-    /**
-     * @brief Function compares values of array class of constant size supporting ranges iterators and initializer list.
-     *        Both classes must use the same underlying data type.
-     *
-     * @tparam T type of class
-     * @tparam U type of underlying data type
-     * @param[in] container input list
-     * @param[in] test_values input initializer list
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<template <typename, size_t> typename T, size_t N, typename U>
-        requires has_ranges<T<U, N>>
-    auto cmp(T<U, N> container, const std::initializer_list<U>& test_values) -> bool
-    {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(container.size(), size))
-        {
-            std::cout << "Objects of different length!\n";
-            return true;
-        }
-
-        if constexpr (std::ranges::bidirectional_range<T<U, N>>)
+        if constexpr (std::ranges::bidirectional_range<T>)
         {
             std::vector<U> forward{};
             for (const auto& item : container)
