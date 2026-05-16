@@ -239,6 +239,19 @@ namespace tests
     };
 
     /**
+     * @brief Concept that checks if an object provide printable range for not-string-like types
+     *
+     * @tparam T type checked agains the concept
+     *
+     * @see requires
+     */
+    template <typename T>
+    concept has_printable_range = std::ranges::range<T> &&
+        !std::same_as<std::remove_cvref_t<T>, std::string> &&
+        !std::same_as<std::remove_cvref_t<T>, std::string_view> &&
+        !std::is_convertible_v<T, const char*>;
+
+    /**
      * @brief Concept that defines the requirements of a type that allows iteration over elements
      *
      * Concept is satisfied if an object of type T provides an iterator and sentinel that denote
