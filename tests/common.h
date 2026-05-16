@@ -816,89 +816,18 @@ namespace tests
     }
 
     /**
-     * @brief Function overloads out operator to print all elements of initializer list
+     * @brief Function overloads out operator to print all elements of iterable not-string-like type
      *
-     * @tparam T type of initializer list elements
+     * @tparam T type of not-string-like type
      * @param[in,out] out reference to output stream
-     * @param[in] std_init_list input container of type T
+     * @param[in] container input container of type T
      * @return std::ostream&
      */
     template<typename T>
-    auto operator<<(std::ostream& out, const std::initializer_list<T>& std_init_list) -> std::ostream&
+        requires has_printable_range<T>
+    auto operator<<(std::ostream& out, const T& container) -> std::ostream&
     {
-        for (const auto& item : std_init_list)
-        {
-            out << item << ' ';
-        }
-        return out;
-    }
-
-    /**
-     * @brief Function overloads out operator to print all elements of initializer list
-     *
-     * @tparam T type of initializer list elements
-     * @param[in,out] out reference to output stream
-     * @param[in] std_forward_list input container of type T
-     * @return std::ostream&
-     */
-    template<typename T>
-    auto operator<<(std::ostream& out, const std::forward_list<T>& std_forward_list) -> std::ostream&
-    {
-        for (const auto& item : std_forward_list)
-        {
-            out << item << ' ';
-        }
-        return out;
-    }
-
-    /**
-     * @brief Function overloads out operator to print all elements of list
-     *
-     * @tparam T type of list elements
-     * @param[in,out] out reference to output stream
-     * @param[in] std_list input container of type T
-     * @return std::ostream&
-     */
-    template<typename T>
-    auto operator<<(std::ostream& out, const std::list<T>& std_list) -> std::ostream&
-    {
-        for (const auto& item : std_list)
-        {
-            out << item << ' ';
-        }
-        return out;
-    }
-
-    /**
-     * @brief Function overloads out operator to print all elements of array
-     *
-     * @tparam T type of list elements
-     * @param[in,out] out reference to output stream
-     * @param[in] std_list input container of type T
-     * @return std::ostream&
-     */
-    template<typename T, size_t N >
-    auto operator<<(std::ostream& out, const std::array<T, N>& std_array) -> std::ostream&
-    {
-        for (const auto& item : std_array)
-        {
-            out << item << ' ';
-        }
-        return out;
-    }
-
-    /**
-     * @brief Function overloads out operator to print all elements of vector
-     *
-     * @tparam T type of list elements
-     * @param[in,out] out reference to output stream
-     * @param[in] std_list input container of type T
-     * @return std::ostream&
-     */
-    template<typename T>
-    auto operator<<(std::ostream& out, const std::vector<T>& std_vector) -> std::ostream&
-    {
-        for (const auto& item : std_vector)
+        for (const auto& item : container)
         {
             out << item << ' ';
         }
