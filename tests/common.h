@@ -360,6 +360,115 @@ namespace tests
     }
 
     /**
+     * @brief Function iterates over input container elements to check if they are equal
+     *
+     * @tparam T type of input container
+     * @tparam U type of input container with expected content
+     * @param[in] container input container
+     * @param[in] test_values input container with expected content
+     * @return flag if elements of compared containers are equal
+     */
+    template<typename T, typename U>
+    auto compare_elements(const T& container, const U& test_values) -> bool
+    {
+        if constexpr (has_ranges<T> && has_ranges<U>)
+        {
+            auto iter = container.begin();
+
+            for (const auto& item : test_values)
+            {
+                if (if_error(*iter, item))
+                {
+                    return true;
+                }
+
+                ++iter;
+            }
+        }
+        else if constexpr (has_top<T> && has_pop<T>)
+        {
+            T container_copy{ container };
+            if constexpr (has_ranges<U>)
+            {
+                // handle dsa::Stack and std::stack comparison
+
+                for (const auto& item : test_values)
+                {
+                    if (if_error(container_copy.top(), item))
+                    {
+                        return true;
+                    }
+                    container_copy.pop();
+                }
+            }
+            else if constexpr (has_top<U> && has_pop<U>)
+            {
+                // handle dsa::Stack or std::stack and std::initializer_list comparison
+
+                U test_values_copy{ test_values };
+                for (size_t i = 0; i < test_values.size(); i++)
+                {
+                    if (if_error(container_copy.top(), test_values_copy.top()))
+                    {
+                        return true;
+                    }
+                    container_copy.pop();
+                    test_values_copy.pop();
+                }
+            }
+            else
+            {
+                std::cout << "No constexpr condition was used for elements comparison\n";
+                return true;
+            }
+        }
+        else if constexpr (has_front<T> && has_pop<T>)
+        {
+            T container_copy{ container };
+            if constexpr (has_ranges<U>)
+            {
+                // handle dsa::Queue or std::queue and std::initializer_list comparison
+
+                for (const auto& item : test_values)
+                {
+                    if (if_error(container_copy.front(), item))
+                    {
+                        return true;
+                    }
+                    container_copy.pop();
+                }
+            }
+            else if constexpr (has_front<U> && has_pop<U>)
+            {
+                // handle dsa::Queue and std::queue comparison
+
+                U test_values_copy{ test_values };
+                for (size_t i = 0; i < test_values.size(); i++)
+                {
+                    if (if_error(container_copy.front(), test_values_copy.front()))
+                    {
+                        return true;
+                    }
+                    container_copy.pop();
+                    test_values_copy.pop();
+                }
+            }
+            else
+            {
+                std::cout << "No constexpr condition was used for elements comparison\n";
+                return true;
+            }
+        }
+        else
+        {
+            std::cout << "No constexpr condition was used for elements comparison\n";
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @brief Function compares two values
      *
      * @tparam T type of compared objects
@@ -421,16 +530,9 @@ namespace tests
             }
         }
 
-        auto iter = container.begin();
-
-        for (const auto& item : test_values)
+        if (compare_elements(container, test_values))
         {
-            if (if_error(*iter, item))
-            {
-                return true;
-            }
-
-            ++iter;
+            return true;
         }
 
         return false;
@@ -480,37 +582,9 @@ namespace tests
             }
         }
 
-        if constexpr (has_top<T> && has_top<U> && has_pop<T> && has_pop<U>)
+        if (compare_elements(container, test_values))
         {
-            // handle dsa::Stack and std::stack comparison
-
-            T container_copy{ container };
-            U test_values_copy{ test_values };
-            for (size_t i = 0; i < test_values.size(); i++)
-            {
-                if (if_error(container_copy.top(), test_values_copy.top()))
-                {
-                    return true;
-                }
-                container_copy.pop();
-                test_values_copy.pop();
-            }
-        }
-        else if constexpr (has_front<T> && has_front<U> && has_pop<T> && has_pop<U>)
-        {
-            // handle dsa::Queue and std::queue comparison
-
-            T container_copy{ container };
-            U test_values_copy{ test_values };
-            for (size_t i = 0; i < test_values.size(); i++)
-            {
-                if (if_error(container_copy.front(), test_values_copy.front()))
-                {
-                    return true;
-                }
-                container_copy.pop();
-                test_values_copy.pop();
-            }
+            return true;
         }
 
         return false;
@@ -560,16 +634,9 @@ namespace tests
             }
         }
 
-        auto array_iter = array.begin();
-
-        for (const auto& item : test_values)
+        if (compare_elements(array, test_values))
         {
-            if (if_error(*array_iter, item))
-            {
-                return true;
-            }
-
-            ++array_iter;
+            return true;
         }
 
         return false;
@@ -619,16 +686,9 @@ namespace tests
             }
         }
 
-        auto array_iter = array.begin();
-
-        for (const auto& item : test_values)
+        if (compare_elements(array, test_values))
         {
-            if (if_error(*array_iter, item))
-            {
-                return true;
-            }
-
-            ++array_iter;
+            return true;
         }
 
         return false;
@@ -677,16 +737,9 @@ namespace tests
             }
         }
 
-        auto vector_iter = list.begin();
-
-        for (const auto& item : test_values)
+        if (compare_elements(list, test_values))
         {
-            if (if_error(*vector_iter, item))
-            {
-                return true;
-            }
-
-            ++vector_iter;
+            return true;
         }
 
         return false;
@@ -735,16 +788,9 @@ namespace tests
             }
         }
 
-        auto vector_iter = vector.begin();
-
-        for (const auto& item : test_values)
+        if (compare_elements(vector, test_values))
         {
-            if (if_error(*vector_iter, item))
-            {
-                return true;
-            }
-
-            ++vector_iter;
+            return true;
         }
 
         return false;
