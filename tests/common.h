@@ -327,6 +327,39 @@ namespace tests
     }
 
     /**
+     * @brief Function checks size of two container
+     *
+     * @tparam T type of input container
+     * @tparam U type of input container with expected content
+     * @param[in] container input container
+     * @param[in] test_values input container with expected content
+     * @return flag if compared containers have different size
+     */
+    template<typename T, typename U>
+    auto compare_size(const T& container, const U& test_values) -> bool
+    {
+        size_t size{};
+        if constexpr (has_size<U>)
+        {
+            size = test_values.size();
+        }
+        else if constexpr (has_ranges<U>)
+        {
+            size = static_cast<size_t>(std::distance(test_values.begin(), test_values.end()));
+        }
+
+        tests::total_count() += static_cast<int>(size);
+
+        if (if_error(container.size(), size))
+        {
+            std::cout << "Objects of different size!\n";
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @brief Function compares two values
      *
      * @tparam T type of compared objects
@@ -357,12 +390,8 @@ namespace tests
         requires has_ranges<T>
     auto cmp(const T& container, const std::initializer_list<U>& test_values) -> bool
     {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(container.size(), size))
+        if (compare_size(container, test_values))
         {
-            std::cout << "Objects of different length!\n";
             return true;
         }
 
@@ -420,21 +449,8 @@ namespace tests
     template<typename T, typename U>
     auto cmp(const T& container, const U& test_values) -> bool
     {
-        size_t size{};
-        if constexpr (has_size<U>)
+        if (compare_size(container, test_values))
         {
-            size = test_values.size();
-        }
-        else
-        {
-            size = static_cast<size_t>(std::distance(test_values.begin(), test_values.end()));
-        }
-
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(container.size(), size))
-        {
-            std::cout << "Objects of different length!\n";
             return true;
         }
 
@@ -470,7 +486,7 @@ namespace tests
 
             T container_copy{ container };
             U test_values_copy{ test_values };
-            for (size_t i = 0; i < size; i++)
+            for (size_t i = 0; i < test_values.size(); i++)
             {
                 if (if_error(container_copy.top(), test_values_copy.top()))
                 {
@@ -486,7 +502,7 @@ namespace tests
 
             T container_copy{ container };
             U test_values_copy{ test_values };
-            for (size_t i = 0; i < size; i++)
+            for (size_t i = 0; i < test_values.size(); i++)
             {
                 if (if_error(container_copy.front(), test_values_copy.front()))
                 {
@@ -513,12 +529,8 @@ namespace tests
     template<typename T, size_t N>
     auto cmp(dsa::Array<T, N> array, const std::array<T, N>& test_values) -> bool
     {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(array.size(), size))
+        if (compare_size(array, test_values))
         {
-            std::cout << "Objects of different length!\n";
             return true;
         }
 
@@ -576,12 +588,8 @@ namespace tests
     template<typename T, size_t N>
     auto cmp(dsa::Array<T, N> array, const std::vector<T>& test_values) -> bool
     {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(array.size(), size))
+        if (compare_size(array, test_values))
         {
-            std::cout << "Objects of different length!\n";
             return true;
         }
 
@@ -638,12 +646,8 @@ namespace tests
     template<typename T>
     auto cmp(dsa::List<T> list, const std::list<T>& test_values) -> bool
     {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(list.size(), size))
+        if (compare_size(list, test_values))
         {
-            std::cout << "Objects of different length!\n";
             return true;
         }
 
@@ -700,12 +704,8 @@ namespace tests
     template<typename T>
     auto cmp(dsa::Vector<T> vector, const std::vector<T>& test_values) -> bool
     {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(vector.size(), size))
+        if (compare_size(vector, test_values))
         {
-            std::cout << "Objects of different length!\n";
             return true;
         }
 
