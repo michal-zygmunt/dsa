@@ -527,7 +527,7 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T, size_t N>
-    auto cmp(dsa::Array<T, N> array, const std::array<T, N>& test_values) -> bool
+    auto cmp(const dsa::Array<T, N>& array, const std::array<T, N>& test_values) -> bool
     {
         if (compare_size(array, test_values))
         {
@@ -586,7 +586,7 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T, size_t N>
-    auto cmp(dsa::Array<T, N> array, const std::vector<T>& test_values) -> bool
+    auto cmp(const dsa::Array<T, N>& array, const std::vector<T>& test_values) -> bool
     {
         if (compare_size(array, test_values))
         {
@@ -644,7 +644,7 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    auto cmp(dsa::List<T> list, const std::list<T>& test_values) -> bool
+    auto cmp(const dsa::List<T>& list, const std::list<T>& test_values) -> bool
     {
         if (compare_size(list, test_values))
         {
@@ -702,7 +702,7 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    auto cmp(dsa::Vector<T> vector, const std::vector<T>& test_values) -> bool
+    auto cmp(const dsa::Vector<T>& vector, const std::vector<T>& test_values) -> bool
     {
         if (compare_size(vector, test_values))
         {
