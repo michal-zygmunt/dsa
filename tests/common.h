@@ -952,6 +952,37 @@ namespace tests
     }
 
     /**
+     * @brief Function print PASS or FAIL message
+     *
+     * @param[in] status result of comparison containers or values
+     */
+    inline void print_status(Status status)
+    {
+        if (status == Status::OK)
+        {
+            std::cout << "PASS\n\n";
+        }
+        else
+        {
+            std::cout << "FAIL\n\n";
+        }
+    }
+
+    /**
+     * @brief Function handle tests results
+     *
+     * @param[in] status result of comparison containers or values
+     */
+    inline void result(Status status)
+    {
+        if (status != Status::OK)
+        {
+            tests::failed_count()++;
+        }
+        print_status(status);
+    }
+
+    /**
      * @brief Function compares content of two containers
      *
      * @tparam T input container
@@ -965,7 +996,7 @@ namespace tests
     {
         print_containers(container_name, container, "Expected", expected);
         const Status res = cmp(container, expected);
-        std::cout << (res == Status::OK ? "PASS" : "FAIL") << "\n\n";
+        result(res);
     }
 
     /**
@@ -982,7 +1013,7 @@ namespace tests
     {
         print_containers(container_name, container, "Expected", expected);
         const Status res = cmp(container, expected);
-        std::cout << (res == Status::OK ? "PASS" : "FAIL") << "\n\n";
+        print_status(res);
     }
 
     /**
@@ -998,7 +1029,7 @@ namespace tests
     {
         print_containers(container_name, val1, "Expected", val2);
         const Status res = cmp(val1, val2);
-        std::cout << (res == Status::OK ? "PASS" : "FAIL") << "\n\n";
+        print_status(res);
     }
 
     /**
