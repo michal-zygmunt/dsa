@@ -105,7 +105,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Queue3 vs std", queue3, std_queue3);
 
         const std::queue<int> std_queue4{ std_queue1 };
-        tests::compare("Queue4 vs std", queue4, expected);
+        tests::compare("Queue4 vs std", queue4, std_queue4);
 
         std::queue<int> std_queue5{ std_queue1 };
         std_queue5.push(1);
