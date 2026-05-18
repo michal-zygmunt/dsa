@@ -370,6 +370,133 @@ namespace tests
     }
 
     /**
+     * @brief Function compares elements of two iterable container
+     *
+     * @tparam T type of input container
+     * @tparam U type of input container with expected content
+     * @param[in] container input container
+     * @param[in] test_values input container with expected content
+     * @return flag if compared containers have different size
+     */
+    template<typename T, typename U>
+    auto compare_elements_ranges(const T& container, const U& test_values) -> Status
+    {
+        auto iter = container.begin();
+
+        for (const auto& item : test_values)
+        {
+            if (if_error(*iter, item) != Status::OK)
+            {
+                return Status::Error;
+            }
+
+            ++iter;
+        }
+
+        return Status::OK;
+    }
+
+    /**
+     * @brief Function compares elements of stack container
+     *
+     * @tparam T type of input container
+     * @tparam U type of input container with expected content
+     * @param[in] container input container
+     * @param[in] test_values input container with expected content
+     * @return flag if compared containers have different size
+     */
+    template<typename T, typename U>
+    auto compare_elements_stack(const T& container, const U& test_values) -> Status
+    {
+        T container_copy{ container };
+        if constexpr (has_ranges<U>)
+        {
+            // handle dsa::Stack and std::stack comparison
+
+            for (const auto& item : test_values)
+            {
+                if (if_error(container_copy.top(), item) != Status::OK)
+                {
+                    return Status::Error;
+                }
+                container_copy.pop();
+            }
+        }
+        else if constexpr (has_top<U> && has_pop<U>)
+        {
+            // handle dsa::Stack or std::stack and std::initializer_list comparison
+
+            U test_values_copy{ test_values };
+            for (size_t i = 0; i < test_values.size(); i++)
+            {
+                if (if_error(container_copy.top(), test_values_copy.top()) != Status::OK)
+                {
+                    return Status::Error;
+                }
+                container_copy.pop();
+                test_values_copy.pop();
+            }
+        }
+        else
+        {
+            std::cout << "No constexpr condition was used for elements comparison of stack\n";
+            return Status::Error;
+        }
+
+        return Status::OK;
+    }
+
+    /**
+     * @brief Function compares elements of queue container
+     *
+     * @tparam T type of input container
+     * @tparam U type of input container with expected content
+     * @param[in] container input container
+     * @param[in] test_values input container with expected content
+     * @return flag if compared containers have different size
+     */
+    template<typename T, typename U>
+    auto compare_elements_queue(const T& container, const U& test_values) -> Status
+    {
+        T container_copy{ container };
+        if constexpr (has_ranges<U>)
+        {
+            // handle dsa::Queue or std::queue and std::initializer_list comparison
+
+            for (const auto& item : test_values)
+            {
+                if (if_error(container_copy.front(), item) != Status::OK)
+                {
+                    return Status::Error;
+                }
+                container_copy.pop();
+            }
+        }
+        else if constexpr (has_front<U> && has_pop<U>)
+        {
+            // handle dsa::Queue and std::queue comparison
+
+            U test_values_copy{ test_values };
+            for (size_t i = 0; i < test_values.size(); i++)
+            {
+                if (if_error(container_copy.front(), test_values_copy.front()) != Status::OK)
+                {
+                    return Status::Error;
+                }
+                container_copy.pop();
+                test_values_copy.pop();
+            }
+        }
+        else
+        {
+            std::cout << "No constexpr condition was used for elements comparison of queue\n";
+            return Status::Error;
+        }
+
+        return Status::OK;
+    }
+
+    /**
      * @brief Function iterates over input container elements to check if they are equal
      *
      * @tparam T type of input container
@@ -383,89 +510,23 @@ namespace tests
     {
         if constexpr (has_ranges<T> && has_ranges<U>)
         {
-            auto iter = container.begin();
-
-            for (const auto& item : test_values)
+            if (compare_elements_ranges(container, test_values) == Status::Error)
             {
-                if (if_error(*iter, item) != Status::OK)
-                {
-                    return Status::Error;
-                }
-
-                ++iter;
+                return Status::Error;
             }
         }
         else if constexpr (has_top<T> && has_pop<T>)
         {
-            T container_copy{ container };
-            if constexpr (has_ranges<U>)
-            {
-                // handle dsa::Stack and std::stack comparison
 
-                for (const auto& item : test_values)
-                {
-                    if (if_error(container_copy.top(), item) != Status::OK)
-                    {
-                        return Status::Error;
-                    }
-                    container_copy.pop();
-                }
-            }
-            else if constexpr (has_top<U> && has_pop<U>)
+            if (compare_elements_stack(container, test_values) == Status::Error)
             {
-                // handle dsa::Stack or std::stack and std::initializer_list comparison
-
-                U test_values_copy{ test_values };
-                for (size_t i = 0; i < test_values.size(); i++)
-                {
-                    if (if_error(container_copy.top(), test_values_copy.top()) != Status::OK)
-                    {
-                        return Status::Error;
-                    }
-                    container_copy.pop();
-                    test_values_copy.pop();
-                }
-            }
-            else
-            {
-                std::cout << "No constexpr condition was used for elements comparison\n";
                 return Status::Error;
             }
         }
         else if constexpr (has_front<T> && has_pop<T>)
         {
-            T container_copy{ container };
-            if constexpr (has_ranges<U>)
+            if (compare_elements_queue(container, test_values) == Status::Error)
             {
-                // handle dsa::Queue or std::queue and std::initializer_list comparison
-
-                for (const auto& item : test_values)
-                {
-                    if (if_error(container_copy.front(), item) != Status::OK)
-                    {
-                        return Status::Error;
-                    }
-                    container_copy.pop();
-                }
-            }
-            else if constexpr (has_front<U> && has_pop<U>)
-            {
-                // handle dsa::Queue and std::queue comparison
-
-                U test_values_copy{ test_values };
-                for (size_t i = 0; i < test_values.size(); i++)
-                {
-                    if (if_error(container_copy.front(), test_values_copy.front()) != Status::OK)
-                    {
-                        return Status::Error;
-                    }
-                    container_copy.pop();
-                    test_values_copy.pop();
-                }
-            }
-            else
-            {
-                std::cout << "No constexpr condition was used for elements comparison\n";
                 return Status::Error;
             }
         }
