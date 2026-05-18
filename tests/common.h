@@ -178,6 +178,16 @@ namespace tests
     };
 
     /**
+     * @enum Status
+     * @brief Determines return codes for functions in tests
+     */
+    enum class Status : std::int8_t
+    {
+        OK = 0,                 ///< Function executed sucessfully
+        Error = -1              ///< Function returned error
+    };
+
+    /**
      * @brief Function return number of failed comparisons
      *
      * @return int& reference to failed comparison count
@@ -315,10 +325,10 @@ namespace tests
      * @retval false otherwise
      */
     template<typename T>
-    auto if_error(const T& val1, const T& val2) -> bool
+    auto if_error(const T& val1, const T& val2) -> Status
     {
-        const bool res = val1 != val2;
-        if (res)
+        const Status res = val1 != val2 ? Status::Error : Status::OK;
+        if (res != Status::OK)
         {
             std::cout << "Comparison error! Value " << val1 << " not equal to " << val2 << '\n';
             tests::failed_count()++;
@@ -336,7 +346,7 @@ namespace tests
      * @return flag if compared containers have different size
      */
     template<typename T, typename U>
-    auto compare_size(const T& container, const U& test_values) -> bool
+    auto compare_size(const T& container, const U& test_values) -> Status
     {
         size_t size{};
         if constexpr (has_size<U>)
@@ -350,13 +360,13 @@ namespace tests
 
         tests::total_count() += static_cast<int>(size);
 
-        if (if_error(container.size(), size))
+        if (if_error(container.size(), size) != Status::OK)
         {
             std::cout << "Objects of different size!\n";
-            return true;
+            return Status::Error;
         }
 
-        return false;
+        return Status::OK;
     }
 
     /**
@@ -369,7 +379,7 @@ namespace tests
      * @return flag if elements of compared containers are equal
      */
     template<typename T, typename U>
-    auto compare_elements(const T& container, const U& test_values) -> bool
+    auto compare_elements(const T& container, const U& test_values) -> Status
     {
         if constexpr (has_ranges<T> && has_ranges<U>)
         {
@@ -377,9 +387,9 @@ namespace tests
 
             for (const auto& item : test_values)
             {
-                if (if_error(*iter, item))
+                if (if_error(*iter, item) != Status::OK)
                 {
-                    return true;
+                    return Status::Error;
                 }
 
                 ++iter;
@@ -394,9 +404,9 @@ namespace tests
 
                 for (const auto& item : test_values)
                 {
-                    if (if_error(container_copy.top(), item))
+                    if (if_error(container_copy.top(), item) != Status::OK)
                     {
-                        return true;
+                        return Status::Error;
                     }
                     container_copy.pop();
                 }
@@ -408,9 +418,9 @@ namespace tests
                 U test_values_copy{ test_values };
                 for (size_t i = 0; i < test_values.size(); i++)
                 {
-                    if (if_error(container_copy.top(), test_values_copy.top()))
+                    if (if_error(container_copy.top(), test_values_copy.top()) != Status::OK)
                     {
-                        return true;
+                        return Status::Error;
                     }
                     container_copy.pop();
                     test_values_copy.pop();
@@ -419,7 +429,7 @@ namespace tests
             else
             {
                 std::cout << "No constexpr condition was used for elements comparison\n";
-                return true;
+                return Status::Error;
             }
         }
         else if constexpr (has_front<T> && has_pop<T>)
@@ -431,9 +441,9 @@ namespace tests
 
                 for (const auto& item : test_values)
                 {
-                    if (if_error(container_copy.front(), item))
+                    if (if_error(container_copy.front(), item) != Status::OK)
                     {
-                        return true;
+                        return Status::Error;
                     }
                     container_copy.pop();
                 }
@@ -445,9 +455,9 @@ namespace tests
                 U test_values_copy{ test_values };
                 for (size_t i = 0; i < test_values.size(); i++)
                 {
-                    if (if_error(container_copy.front(), test_values_copy.front()))
+                    if (if_error(container_copy.front(), test_values_copy.front()) != Status::OK)
                     {
-                        return true;
+                        return Status::Error;
                     }
                     container_copy.pop();
                     test_values_copy.pop();
@@ -456,16 +466,16 @@ namespace tests
             else
             {
                 std::cout << "No constexpr condition was used for elements comparison\n";
-                return true;
+                return Status::Error;
             }
         }
         else
         {
             std::cout << "No constexpr condition was used for elements comparison\n";
-            return true;
+            return Status::Error;
         }
 
-        return false;
+        return Status::OK;
     }
 
     /**
@@ -478,7 +488,7 @@ namespace tests
      * @retval false otherwise
      */
     template<typename T>
-    auto cmp(const T& val1, const T& val2) -> bool
+    auto cmp(const T& val1, const T& val2) -> Status
     {
         tests::total_count()++;
         return if_error(val1, val2);
@@ -496,12 +506,11 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T, typename U>
-        requires has_ranges<T>
-    auto cmp(const T& container, const std::initializer_list<U>& test_values) -> bool
+    auto cmp(const T& container, const std::initializer_list<U>& test_values) -> Status
     {
-        if (compare_size(container, test_values))
+        if (compare_size(container, test_values) != Status::OK)
         {
-            return true;
+            return Status::Error;
         }
 
         if constexpr (std::ranges::bidirectional_range<T>)
@@ -526,16 +535,16 @@ namespace tests
             if (forward != backward)
             {
                 std::cout << "Forward and backward content of container is different!\n";
-                return true;
+                return Status::Error;
             }
         }
 
-        if (compare_elements(container, test_values))
+        if (compare_elements(container, test_values) != Status::OK)
         {
-            return true;
+            return Status::Error;
         }
 
-        return false;
+        return Status::OK;
     }
 
     /**
@@ -549,11 +558,11 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T, typename U>
-    auto cmp(const T& container, const U& test_values) -> bool
+    auto cmp(const T& container, const U& test_values) -> Status
     {
-        if (compare_size(container, test_values))
+        if (compare_size(container, test_values) != Status::OK)
         {
-            return true;
+            return Status::Error;
         }
 
         if constexpr (std::ranges::bidirectional_range<T>)
@@ -578,16 +587,16 @@ namespace tests
             if (forward != backward)
             {
                 std::cout << "Forward and backward content of container is different!\n";
-                return true;
+                return Status::Error;
             }
         }
 
-        if (compare_elements(container, test_values))
+        if (compare_elements(container, test_values) != Status::OK)
         {
-            return true;
+            return Status::Error;
         }
 
-        return false;
+        return Status::OK;
     }
 
     /**
@@ -601,11 +610,11 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T, size_t N>
-    auto cmp(const dsa::Array<T, N>& array, const std::array<T, N>& test_values) -> bool
+    auto cmp(const dsa::Array<T, N>& array, const std::array<T, N>& test_values) -> Status
     {
-        if (compare_size(array, test_values))
+        if (compare_size(array, test_values) != Status::OK)
         {
-            return true;
+            return Status::Error;
         }
 
         if constexpr (std::ranges::bidirectional_range<dsa::Array<T, N>>)
@@ -630,16 +639,16 @@ namespace tests
             if (forward != backward)
             {
                 std::cout << "Forward and backward content of container is different!\n";
-                return true;
+                return Status::Error;
             }
         }
 
-        if (compare_elements(array, test_values))
+        if (compare_elements(array, test_values) != Status::OK)
         {
-            return true;
+            return Status::Error;
         }
 
-        return false;
+        return Status::OK;
     }
 
     /**
@@ -653,11 +662,11 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T, size_t N>
-    auto cmp(const dsa::Array<T, N>& array, const std::vector<T>& test_values) -> bool
+    auto cmp(const dsa::Array<T, N>& array, const std::vector<T>& test_values) -> Status
     {
-        if (compare_size(array, test_values))
+        if (compare_size(array, test_values) != Status::OK)
         {
-            return true;
+            return Status::Error;
         }
 
         if constexpr (std::ranges::bidirectional_range<dsa::Array<T, N>>)
@@ -682,16 +691,16 @@ namespace tests
             if (forward != backward)
             {
                 std::cout << "Forward and backward content of container is different!\n";
-                return true;
+                return Status::Error;
             }
         }
 
-        if (compare_elements(array, test_values))
+        if (compare_elements(array, test_values) != Status::OK)
         {
-            return true;
+            return Status::Error;
         }
 
-        return false;
+        return Status::OK;
     }
 
     /**
@@ -704,11 +713,11 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    auto cmp(const dsa::List<T>& list, const std::list<T>& test_values) -> bool
+    auto cmp(const dsa::List<T>& list, const std::list<T>& test_values) -> Status
     {
-        if (compare_size(list, test_values))
+        if (compare_size(list, test_values) != Status::OK)
         {
-            return true;
+            return Status::Error;
         }
 
         if constexpr (std::ranges::bidirectional_range<dsa::List<T>>)
@@ -733,16 +742,16 @@ namespace tests
             if (forward != backward)
             {
                 std::cout << "Forward and backward content of container is different!\n";
-                return true;
+                return Status::Error;
             }
         }
 
-        if (compare_elements(list, test_values))
+        if (compare_elements(list, test_values) != Status::OK)
         {
-            return true;
+            return Status::Error;
         }
 
-        return false;
+        return Status::OK;
     }
 
     /**
@@ -755,11 +764,11 @@ namespace tests
      * @return false if containers are equal
      */
     template<typename T>
-    auto cmp(const dsa::Vector<T>& vector, const std::vector<T>& test_values) -> bool
+    auto cmp(const dsa::Vector<T>& vector, const std::vector<T>& test_values) -> Status
     {
-        if (compare_size(vector, test_values))
+        if (compare_size(vector, test_values) != Status::OK)
         {
-            return true;
+            return Status::Error;
         }
 
         if constexpr (std::ranges::bidirectional_range<dsa::Vector<T>>)
@@ -784,16 +793,16 @@ namespace tests
             if (forward != backward)
             {
                 std::cout << "Forward and backward content of container is different!\n";
-                return true;
+                return Status::Error;
             }
         }
 
-        if (compare_elements(vector, test_values))
+        if (compare_elements(vector, test_values) != Status::OK)
         {
-            return true;
+            return Status::Error;
         }
 
-        return false;
+        return Status::OK;
     }
 
     /**
@@ -894,8 +903,8 @@ namespace tests
     void compare(const std::string& container_name, const T& container, const U& expected)
     {
         print_containers(container_name, container, "Expected", expected);
-        const bool res = cmp(container, expected);
-        std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+        const Status res = cmp(container, expected);
+        std::cout << (res == Status::OK ? "PASS" : "FAIL") << "\n\n";
     }
 
     /**
@@ -911,8 +920,8 @@ namespace tests
     void compare(const std::string& container_name, const T& container, const std::initializer_list<U>& expected)
     {
         print_containers(container_name, container, "Expected", expected);
-        const bool res = cmp(container, expected);
-        std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+        const Status res = cmp(container, expected);
+        std::cout << (res == Status::OK ? "PASS" : "FAIL") << "\n\n";
     }
 
     /**
@@ -927,8 +936,8 @@ namespace tests
     void compare(const std::string& container_name, const T& val1, const T& val2)
     {
         print_containers(container_name, val1, "Expected", val2);
-        const bool res = cmp(val1, val2);
-        std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+        const Status res = cmp(val1, val2);
+        std::cout << (res == Status::OK ? "PASS" : "FAIL") << "\n\n";
     }
 
     /**
@@ -941,7 +950,7 @@ namespace tests
      * @retval false otherwise
      */
     template<typename T>
-    auto compare(T val1, T val2) -> bool
+    auto compare(T val1, T val2) -> Status
     {
         return cmp(val1, val2);
     }
