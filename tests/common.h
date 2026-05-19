@@ -210,6 +210,14 @@ namespace tests
     }
 
     /**
+     * @brief Template used to detect underlying data type of template
+     *
+     * @tparam T type checked agains the template
+     */
+    template<typename T>
+    using element_type_t = std::remove_cvref_t<decltype(*std::begin(std::declval<const T&>()))>;
+
+    /**
      * @brief Concept that checks if an object of type T allows calling public `front()` method
      *
      * @tparam T type checked agains the concept
