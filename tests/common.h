@@ -378,6 +378,44 @@ namespace tests
     }
 
     /**
+     * @brief Function checks if bidirectional container can be reversed preserving valid relation between elements
+     *
+     * @tparam T type of input container
+     * @param[in] container input container
+     * @return flag if compared containers have different size
+     */
+    template<typename T>
+    auto compare_bidirectional(const T& container) -> Status
+    {
+        using Type = element_type_t<T>;
+
+        std::vector<Type> forward{};
+        for (const auto& item : container)
+        {
+            forward.push_back(item);
+        }
+
+        std::vector<Type> backward{};
+        for (const auto& item : std::views::reverse(container))
+        {
+            backward.push_back(item);
+        }
+
+        std::reverse(backward.begin(), backward.end());
+        if (forward == backward)
+        {
+            std::cout << "Forward and backward content OK\n";
+        }
+        if (forward != backward)
+        {
+            std::cout << "Forward and backward content of container is different!\n";
+            return Status::Error;
+        }
+
+        return Status::OK;
+    }
+
+    /**
      * @brief Function compares elements of two iterable container
      *
      * @tparam T type of input container
@@ -516,6 +554,14 @@ namespace tests
     template<typename T, typename U>
     auto compare_elements(const T& container, const U& test_values) -> Status
     {
+        if constexpr (std::ranges::bidirectional_range<T>)
+        {
+            if (compare_bidirectional(container) != Status::OK)
+            {
+                return Status::Error;
+            }
+        }
+
         if constexpr (has_ranges<T> && has_ranges<U>)
         {
             if (compare_elements_ranges(container, test_values) == Status::Error)
@@ -582,32 +628,6 @@ namespace tests
             return Status::Error;
         }
 
-        if constexpr (std::ranges::bidirectional_range<T>)
-        {
-            std::vector<U> forward{};
-            for (const auto& item : container)
-            {
-                forward.push_back(item);
-            }
-
-            std::vector<U> backward{};
-            for (const auto& item : std::views::reverse(container))
-            {
-                backward.push_back(item);
-            }
-
-            std::reverse(backward.begin(), backward.end());
-            if (forward == backward)
-            {
-                std::cout << "Forward and backward content OK\n";
-            }
-            if (forward != backward)
-            {
-                std::cout << "Forward and backward content of container is different!\n";
-                return Status::Error;
-            }
-        }
-
         if (compare_elements(container, test_values) != Status::OK)
         {
             return Status::Error;
@@ -632,32 +652,6 @@ namespace tests
         if (compare_size(container, test_values) != Status::OK)
         {
             return Status::Error;
-        }
-
-        if constexpr (std::ranges::bidirectional_range<T>)
-        {
-            std::vector<T> forward{};
-            for (const auto& item : container)
-            {
-                forward.push_back(item);
-            }
-
-            std::vector<T> backward{};
-            for (const auto& item : std::views::reverse(container))
-            {
-                backward.push_back(item);
-            }
-
-            std::reverse(backward.begin(), backward.end());
-            if (forward == backward)
-            {
-                std::cout << "Forward and backward content OK\n";
-            }
-            if (forward != backward)
-            {
-                std::cout << "Forward and backward content of container is different!\n";
-                return Status::Error;
-            }
         }
 
         if (compare_elements(container, test_values) != Status::OK)
@@ -686,32 +680,6 @@ namespace tests
             return Status::Error;
         }
 
-        if constexpr (std::ranges::bidirectional_range<dsa::Array<T, N>>)
-        {
-            std::vector<T> forward{};
-            for (const auto& item : array)
-            {
-                forward.push_back(item);
-            }
-
-            std::vector<T> backward{};
-            for (const auto& item : std::views::reverse(array))
-            {
-                backward.push_back(item);
-            }
-
-            std::reverse(backward.begin(), backward.end());
-            if (forward == backward)
-            {
-                std::cout << "Forward and backward content OK\n";
-            }
-            if (forward != backward)
-            {
-                std::cout << "Forward and backward content of container is different!\n";
-                return Status::Error;
-            }
-        }
-
         if (compare_elements(array, test_values) != Status::OK)
         {
             return Status::Error;
@@ -736,32 +704,6 @@ namespace tests
         if (compare_size(array, test_values) != Status::OK)
         {
             return Status::Error;
-        }
-
-        if constexpr (std::ranges::bidirectional_range<dsa::Array<T, N>>)
-        {
-            std::vector<T> forward{};
-            for (const auto& item : array)
-            {
-                forward.push_back(item);
-            }
-
-            std::vector<T> backward{};
-            for (const auto& item : std::views::reverse(array))
-            {
-                backward.push_back(item);
-            }
-
-            std::reverse(backward.begin(), backward.end());
-            if (forward == backward)
-            {
-                std::cout << "Forward and backward content OK\n";
-            }
-            if (forward != backward)
-            {
-                std::cout << "Forward and backward content of container is different!\n";
-                return Status::Error;
-            }
         }
 
         if (compare_elements(array, test_values) != Status::OK)
@@ -789,32 +731,6 @@ namespace tests
             return Status::Error;
         }
 
-        if constexpr (std::ranges::bidirectional_range<dsa::List<T>>)
-        {
-            std::vector<T> forward{};
-            for (const auto& item : list)
-            {
-                forward.push_back(item);
-            }
-
-            std::vector<T> backward{};
-            for (const auto& item : std::views::reverse(list))
-            {
-                backward.push_back(item);
-            }
-
-            std::reverse(backward.begin(), backward.end());
-            if (forward == backward)
-            {
-                std::cout << "Forward and backward content OK\n";
-            }
-            if (forward != backward)
-            {
-                std::cout << "Forward and backward content of container is different!\n";
-                return Status::Error;
-            }
-        }
-
         if (compare_elements(list, test_values) != Status::OK)
         {
             return Status::Error;
@@ -838,32 +754,6 @@ namespace tests
         if (compare_size(vector, test_values) != Status::OK)
         {
             return Status::Error;
-        }
-
-        if constexpr (std::ranges::bidirectional_range<dsa::Vector<T>>)
-        {
-            std::vector<T> forward{};
-            for (const auto& item : vector)
-            {
-                forward.push_back(item);
-            }
-
-            std::vector<T> backward{};
-            for (const auto& item : std::views::reverse(vector))
-            {
-                backward.push_back(item);
-            }
-
-            std::reverse(backward.begin(), backward.end());
-            if (forward == backward)
-            {
-                std::cout << "Forward and backward content OK\n";
-            }
-            if (forward != backward)
-            {
-                std::cout << "Forward and backward content of container is different!\n";
-                return Status::Error;
-            }
         }
 
         if (compare_elements(vector, test_values) != Status::OK)
