@@ -610,33 +610,6 @@ namespace tests
     }
 
     /**
-     * @brief Function compares values of class supporting ranges iterators and initializer list.
-     *        Both classes must use the same underlying data type.
-     *
-     * @tparam T type of class
-     * @tparam U type of underlying data type
-     * @param[in] container input list
-     * @param[in] test_values input initializer list
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T, typename U>
-    auto cmp(const T& container, const std::initializer_list<U>& test_values) -> Status
-    {
-        if (compare_size(container, test_values) != Status::OK)
-        {
-            return Status::Error;
-        }
-
-        if (compare_elements(container, test_values) != Status::OK)
-        {
-            return Status::Error;
-        }
-
-        return Status::OK;
-    }
-
-    /**
      * @brief Function compares values of two classes
      *
      * @tparam T type of input container
@@ -655,108 +628,6 @@ namespace tests
         }
 
         if (compare_elements(container, test_values) != Status::OK)
-        {
-            return Status::Error;
-        }
-
-        return Status::OK;
-    }
-
-    /**
-     * @brief Function compares values of Array and array
-     *
-     * @tparam T type of elements to compare
-     * @tparam N number of elements in Array
-     * @param[in] array input Array
-     * @param[in] test_values input array
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T, size_t N>
-    auto cmp(const dsa::Array<T, N>& array, const std::array<T, N>& test_values) -> Status
-    {
-        if (compare_size(array, test_values) != Status::OK)
-        {
-            return Status::Error;
-        }
-
-        if (compare_elements(array, test_values) != Status::OK)
-        {
-            return Status::Error;
-        }
-
-        return Status::OK;
-    }
-
-    /**
-     * @brief Function compares values of Array and vector
-     *
-     * @tparam T type of elements to compare
-     * @tparam N number of elements in Array
-     * @param[in] array input Array
-     * @param[in] test_values input vector
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T, size_t N>
-    auto cmp(const dsa::Array<T, N>& array, const std::vector<T>& test_values) -> Status
-    {
-        if (compare_size(array, test_values) != Status::OK)
-        {
-            return Status::Error;
-        }
-
-        if (compare_elements(array, test_values) != Status::OK)
-        {
-            return Status::Error;
-        }
-
-        return Status::OK;
-    }
-
-    /**
-     * @brief Function compares values of List and list
-     *
-     * @tparam T type of elements to compare
-     * @param[in] list input container
-     * @param[in] test_values input expected values
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T>
-    auto cmp(const dsa::List<T>& list, const std::list<T>& test_values) -> Status
-    {
-        if (compare_size(list, test_values) != Status::OK)
-        {
-            return Status::Error;
-        }
-
-        if (compare_elements(list, test_values) != Status::OK)
-        {
-            return Status::Error;
-        }
-
-        return Status::OK;
-    }
-
-    /**
-     * @brief Function compares values of Vector and vector
-     *
-     * @tparam T type of elements to compare
-     * @param[in] vector input Vector
-     * @param[in] test_values input vector
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T>
-    auto cmp(const dsa::Vector<T>& vector, const std::vector<T>& test_values) -> Status
-    {
-        if (compare_size(vector, test_values) != Status::OK)
-        {
-            return Status::Error;
-        }
-
-        if (compare_elements(vector, test_values) != Status::OK)
         {
             return Status::Error;
         }
@@ -895,23 +766,6 @@ namespace tests
         print_containers(container_name, container, "Expected", expected);
         const Status res = cmp(container, expected);
         result(res);
-    }
-
-    /**
-     * @brief Function compares content of two containers
-     *
-     * @tparam T input container
-     * @tparam U type of data stored in initializer list
-     * @param[in] container_name container name to print
-     * @param[in] container input container
-     * @param[in] expected expected content of input container, stored as elements of initializer list
-     */
-    template<typename T, typename U>
-    void compare(const std::string& container_name, const T& container, const std::initializer_list<U>& expected)
-    {
-        print_containers(container_name, container, "Expected", expected);
-        const Status res = cmp(container, expected);
-        print_status(res);
     }
 
     /**
