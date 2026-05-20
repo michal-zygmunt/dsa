@@ -141,7 +141,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector11 vs std", vector11, std_vector11);
 
         const std::vector<int> std_temp12 = { 0, 10, 20, 30, 40, 50 };
-        const dsa::Vector<int> std_vector12(std_temp12.begin() + 1, std_temp12.begin() + 4);
+        const std::vector<int> std_vector12(std_temp12.begin() + 1, std_temp12.begin() + 4);
         tests::compare("Vector12 vs std", vector12, std_vector12);
 
         tests::print_stats();

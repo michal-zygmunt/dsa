@@ -178,6 +178,16 @@ namespace tests
     };
 
     /**
+     * @enum Status
+     * @brief Determines return codes for functions in tests
+     */
+    enum class Status : std::int8_t
+    {
+        OK = 0,                 ///< Function executed sucessfully
+        Error = -1              ///< Function returned error
+    };
+
+    /**
      * @brief Function return number of failed comparisons
      *
      * @return int& reference to failed comparison count
@@ -200,9 +210,41 @@ namespace tests
     }
 
     /**
-     * @brief Concept that checks if T type provides pop_front() member function
+     * @brief Template used to detect underlying data type of template
      *
-     * Concept is satisfied if an object of type T allows calling public `pop_front()` method
+     * @tparam T type checked agains the template
+     */
+    template<typename T>
+    using element_type_t = std::remove_cvref_t<decltype(*std::begin(std::declval<const T&>()))>;
+
+    /**
+     * @brief Concept that checks if an object of type T allows calling public `front()` method
+     *
+     * @tparam T type checked agains the concept
+     *
+     * @see requires
+     */
+    template <typename T>
+    concept has_front = requires(T type)
+    {
+        type.front();
+    };
+
+    /**
+     * @brief Concept that checks if an object of type T allows calling public `pop()` method
+     *
+     * @tparam T type checked agains the concept
+     *
+     * @see requires
+     */
+    template <typename T>
+    concept has_pop = requires(T type)
+    {
+        type.pop();
+    };
+
+    /**
+     * @brief Concept that checks if an object of type T allows calling public `pop_front()` method
      *
      * @tparam T type checked agains the concept
      *
@@ -215,16 +257,54 @@ namespace tests
     };
 
     /**
-     * @brief Concept that checks if T type provides pop_front() member function
-     *
-     * Concept is satisfied if an object of type T allows calling public `pop_front()` method
+     * @brief Concept that checks if an object provide printable range for not-string-like types
      *
      * @tparam T type checked agains the concept
      *
      * @see requires
      */
     template <typename T>
+    concept has_printable_range = std::ranges::range<T> &&
+        !std::same_as<std::remove_cvref_t<T>, std::string> &&
+        !std::same_as<std::remove_cvref_t<T>, std::string_view> &&
+        !std::is_convertible_v<T, const char*>;
+
+    /**
+     * @brief Concept that defines the requirements of a type that allows iteration over elements
+     *
+     * Concept is satisfied if an object of type T provides an iterator and sentinel that denote
+     * the elements of the range
+     *
+     * @tparam T type checked agains the concept
+     */
+    template <typename T>
     concept has_ranges = std::ranges::range<T>;
+
+    /**
+     * @brief Concept that checks if an object of type T allows calling public `size()` method
+     *
+     * @tparam T type checked agains the concept
+     *
+     * @see requires
+     */
+    template <typename T>
+    concept has_size = requires(T type)
+    {
+        type.size();
+    };
+
+    /**
+     * @brief Concept that checks if an object of type T allows calling public `top()` method
+     *
+     * @tparam T type checked agains the concept
+     *
+     * @see requires
+     */
+    template <typename T>
+    concept has_top = requires(T type)
+    {
+        type.top();
+    };
 
     /**
      * @brief Function print error message
@@ -253,15 +333,264 @@ namespace tests
      * @retval false otherwise
      */
     template<typename T>
-    auto if_error(const T& val1, const T& val2) -> bool
+    auto if_error(const T& val1, const T& val2) -> Status
     {
-        const bool res = val1 != val2;
-        if (res)
+        const Status res = val1 != val2 ? Status::Error : Status::OK;
+        if (res != Status::OK)
         {
             std::cout << "Comparison error! Value " << val1 << " not equal to " << val2 << '\n';
             tests::failed_count()++;
         }
         return res;
+    }
+
+    /**
+     * @brief Function checks size of two container
+     *
+     * @tparam T type of input container
+     * @tparam U type of input container with expected content
+     * @param[in] container input container
+     * @param[in] test_values input container with expected content
+     * @return flag if compared containers have different size
+     */
+    template<typename T, typename U>
+    auto compare_size(const T& container, const U& test_values) -> Status
+    {
+        size_t size{};
+        if constexpr (has_size<U>)
+        {
+            size = test_values.size();
+        }
+        else if constexpr (has_ranges<U>)
+        {
+            size = static_cast<size_t>(std::distance(test_values.begin(), test_values.end()));
+        }
+
+        tests::total_count() += static_cast<int>(size);
+
+        if (if_error(container.size(), size) != Status::OK)
+        {
+            std::cout << "Objects of different size!\n";
+            return Status::Error;
+        }
+
+        return Status::OK;
+    }
+
+    /**
+     * @brief Function checks if bidirectional container can be reversed preserving valid relation between elements
+     *
+     * @tparam T type of input container
+     * @param[in] container input container
+     * @return flag if compared containers have different size
+     */
+    template<typename T>
+    auto compare_bidirectional(const T& container) -> Status
+    {
+        using Type = element_type_t<T>;
+
+        std::vector<Type> forward{};
+        for (const auto& item : container)
+        {
+            forward.push_back(item);
+        }
+
+        std::vector<Type> backward{};
+        for (const auto& item : std::views::reverse(container))
+        {
+            backward.push_back(item);
+        }
+
+        std::reverse(backward.begin(), backward.end());
+        if (forward == backward)
+        {
+            std::cout << "Forward and backward content OK\n";
+        }
+        if (forward != backward)
+        {
+            std::cout << "Forward and backward content of container is different!\n";
+            return Status::Error;
+        }
+
+        return Status::OK;
+    }
+
+    /**
+     * @brief Function compares elements of two iterable container
+     *
+     * @tparam T type of input container
+     * @tparam U type of input container with expected content
+     * @param[in] container input container
+     * @param[in] test_values input container with expected content
+     * @return flag if compared containers have different size
+     */
+    template<typename T, typename U>
+    auto compare_elements_ranges(const T& container, const U& test_values) -> Status
+    {
+        auto iter = container.begin();
+
+        for (const auto& item : test_values)
+        {
+            if (if_error(*iter, item) != Status::OK)
+            {
+                return Status::Error;
+            }
+
+            ++iter;
+        }
+
+        return Status::OK;
+    }
+
+    /**
+     * @brief Function compares elements of stack container
+     *
+     * @tparam T type of input container
+     * @tparam U type of input container with expected content
+     * @param[in] container input container
+     * @param[in] test_values input container with expected content
+     * @return flag if compared containers have different size
+     */
+    template<typename T, typename U>
+    auto compare_elements_stack(const T& container, const U& test_values) -> Status
+    {
+        T container_copy{ container };
+        if constexpr (has_ranges<U>)
+        {
+            // handle dsa::Stack and std::stack comparison
+
+            for (const auto& item : test_values)
+            {
+                if (if_error(container_copy.top(), item) != Status::OK)
+                {
+                    return Status::Error;
+                }
+                container_copy.pop();
+            }
+        }
+        else if constexpr (has_top<U> && has_pop<U>)
+        {
+            // handle dsa::Stack or std::stack and std::initializer_list comparison
+
+            U test_values_copy{ test_values };
+            for (size_t i = 0; i < test_values.size(); i++)
+            {
+                if (if_error(container_copy.top(), test_values_copy.top()) != Status::OK)
+                {
+                    return Status::Error;
+                }
+                container_copy.pop();
+                test_values_copy.pop();
+            }
+        }
+        else
+        {
+            std::cout << "No constexpr condition was used for elements comparison of stack\n";
+            return Status::Error;
+        }
+
+        return Status::OK;
+    }
+
+    /**
+     * @brief Function compares elements of queue container
+     *
+     * @tparam T type of input container
+     * @tparam U type of input container with expected content
+     * @param[in] container input container
+     * @param[in] test_values input container with expected content
+     * @return flag if compared containers have different size
+     */
+    template<typename T, typename U>
+    auto compare_elements_queue(const T& container, const U& test_values) -> Status
+    {
+        T container_copy{ container };
+        if constexpr (has_ranges<U>)
+        {
+            // handle dsa::Queue or std::queue and std::initializer_list comparison
+
+            for (const auto& item : test_values)
+            {
+                if (if_error(container_copy.front(), item) != Status::OK)
+                {
+                    return Status::Error;
+                }
+                container_copy.pop();
+            }
+        }
+        else if constexpr (has_front<U> && has_pop<U>)
+        {
+            // handle dsa::Queue and std::queue comparison
+
+            U test_values_copy{ test_values };
+            for (size_t i = 0; i < test_values.size(); i++)
+            {
+                if (if_error(container_copy.front(), test_values_copy.front()) != Status::OK)
+                {
+                    return Status::Error;
+                }
+                container_copy.pop();
+                test_values_copy.pop();
+            }
+        }
+        else
+        {
+            std::cout << "No constexpr condition was used for elements comparison of queue\n";
+            return Status::Error;
+        }
+
+        return Status::OK;
+    }
+
+    /**
+     * @brief Function iterates over input container elements to check if they are equal
+     *
+     * @tparam T type of input container
+     * @tparam U type of input container with expected content
+     * @param[in] container input container
+     * @param[in] test_values input container with expected content
+     * @return flag if elements of compared containers are equal
+     */
+    template<typename T, typename U>
+    auto compare_elements(const T& container, const U& test_values) -> Status
+    {
+        if constexpr (std::ranges::bidirectional_range<T>)
+        {
+            if (compare_bidirectional(container) != Status::OK)
+            {
+                return Status::Error;
+            }
+        }
+
+        if constexpr (has_ranges<T> && has_ranges<U>)
+        {
+            if (compare_elements_ranges(container, test_values) == Status::Error)
+            {
+                return Status::Error;
+            }
+        }
+        else if constexpr (has_top<T> && has_pop<T>)
+        {
+
+            if (compare_elements_stack(container, test_values) == Status::Error)
+            {
+                return Status::Error;
+            }
+        }
+        else if constexpr (has_front<T> && has_pop<T>)
+        {
+            if (compare_elements_queue(container, test_values) == Status::Error)
+            {
+                return Status::Error;
+            }
+        }
+        else
+        {
+            std::cout << "No constexpr condition was used for elements comparison\n";
+            return Status::Error;
+        }
+
+        return Status::OK;
     }
 
     /**
@@ -274,456 +603,51 @@ namespace tests
      * @retval false otherwise
      */
     template<typename T>
-    auto cmp(const T& val1, const T& val2) -> bool
+    auto cmp(const T& val1, const T& val2) -> Status
     {
         tests::total_count()++;
         return if_error(val1, val2);
     }
 
     /**
-     * @brief Function compares values of class supporting ranges iterators and initializer list.
-     *        Both classes must use the same underlying data type.
+     * @brief Function compares values of two classes
      *
-     * @tparam T type of class
-     * @tparam U type of underlying data type
-     * @param[in] container input list
-     * @param[in] test_values input initializer list
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<template <typename> typename T, typename U>
-        requires has_ranges<T<U>>
-    auto cmp(const T<U>& container, const std::initializer_list<U>& test_values) -> bool
-    {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(container.size(), size))
-        {
-            std::cout << "Objects of different length!\n";
-            return true;
-        }
-
-        auto iter = container.begin();
-
-        for (const auto& item : test_values)
-        {
-            if (if_error(*iter, item))
-            {
-                return true;
-            }
-
-            ++iter;
-        }
-
-        return false;
-    }
-
-    /**
-     * @brief Function compares values of Queue and initializer list
-     *
-     * @tparam T type of elements to compare
-     * @param[in] queue input Queue
-     * @param[in] test_values input initializer list
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T>
-    auto cmp(dsa::Queue<T> queue, const std::initializer_list<T>& test_values) -> bool
-    {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(queue.size(), size))
-        {
-            std::cout << "Objects of different length!\n";
-            return true;
-        }
-
-        for (const auto& item : test_values)
-        {
-            if (if_error(queue.front(), item))
-            {
-                return true;
-            }
-            queue.pop();
-        }
-
-        return false;
-    }
-
-    /**
-     * @brief Function compares values of Stack and initializer list
-     *
-     * @tparam T type of elements to compare
-     * @param[in] stack input Stack
-     * @param[in] test_values input initializer list
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T>
-    auto cmp(dsa::Stack<T> stack, const std::initializer_list<T>& test_values) -> bool
-    {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(stack.size(), size))
-        {
-            std::cout << "Objects of different length!\n";
-            return true;
-        }
-
-        for (const auto& item : test_values)
-        {
-            if (if_error(stack.top(), item))
-            {
-                return true;
-            }
-            stack.pop();
-        }
-
-        return false;
-    }
-
-    /**
-     * @brief Function compares values of array class of constant size supporting ranges iterators and initializer list.
-     *        Both classes must use the same underlying data type.
-     *
-     * @tparam T type of class
-     * @tparam U type of underlying data type
-     * @param[in] container input list
-     * @param[in] test_values input initializer list
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<template <typename, size_t> typename T, size_t N, typename U>
-        requires has_ranges<T<U, N>>
-    auto cmp(T<U, N> container, const std::initializer_list<U>& test_values) -> bool
-    {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(container.size(), size))
-        {
-            std::cout << "Objects of different length!\n";
-            return true;
-        }
-
-        auto iter = container.begin();
-
-        for (const auto& item : test_values)
-        {
-            if (if_error(*iter, item))
-            {
-                return true;
-            }
-
-            ++iter;
-        }
-
-        return false;
-    }
-
-    /**
-     * @brief Function compares values of two classes with pop_front() public member function.
-     *        Both classes must use the same underlying data type.
-     *
-     * @tparam T type of first list class
-     * @tparam U type of second list class
-     * @tparam V type of elements to compare
-     * @param[in] container input list
-     * @param[in] test_values input list
+     * @tparam T type of input container
+     * @tparam U type of input container with expected content
+     * @param[in] container input container
+     * @param[in] test_values input container with expected content
      * @return true if compared containers are different
      * @return false if containers are equal
      */
     template<typename T, typename U>
-        requires has_pop_front<T>&& has_pop_front<U>
-    auto cmp(T container, U test_values) -> bool
+    auto cmp(const T& container, const U& test_values) -> Status
     {
-        const auto size{ static_cast<size_t>(std::distance(test_values.begin(), test_values.end())) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(container.size(), size))
+        if (compare_size(container, test_values) != Status::OK)
         {
-            std::cout << "Objects of different length!\n";
-            return true;
+            return Status::Error;
         }
 
-        for (size_t i = 0; i < size; i++)
+        if (compare_elements(container, test_values) != Status::OK)
         {
-            if (if_error(container.front(), test_values.front()))
-            {
-                return true;
-            }
-            container.pop_front();
-            test_values.pop_front();
+            return Status::Error;
         }
 
-        return false;
+        return Status::OK;
     }
 
     /**
-     * @brief Function compares values of Queue and queue
+     * @brief Function overloads out operator to print all elements of iterable not-string-like type
      *
-     * @tparam T type of elements to compare
-     * @param[in] queue input Queue
-     * @param[in] test_values input queue
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T>
-    auto cmp(dsa::Queue<T> queue, std::queue<T>& test_values) -> bool
-    {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(queue.size(), size))
-        {
-            std::cout << "Objects of different length!\n";
-            return true;
-        }
-
-        for (size_t i = 0; i < size; i++)
-        {
-            if (if_error(queue.front(), test_values.front()))
-            {
-                return true;
-            }
-            queue.pop();
-            test_values.pop();
-        }
-
-        return false;
-    }
-
-    /**
-     * @brief Function compares values of Stack and stack
-     *
-     * @tparam T type of elements to compare
-     * @param[in] stack input Stack
-     * @param[in] test_values input stack
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T>
-    auto cmp(dsa::Stack<T> stack, std::stack<T> test_values) -> bool
-    {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(stack.size(), size))
-        {
-            std::cout << "Objects of different length!\n";
-            return true;
-        }
-
-        for (size_t i = 0; i < size; i++)
-        {
-            if (if_error(stack.top(), test_values.top()))
-            {
-                return true;
-            }
-            stack.pop();
-            test_values.pop();
-        }
-
-        return false;
-    }
-
-    /**
-     * @brief Function compares values of Array and array
-     *
-     * @tparam T type of elements to compare
-     * @tparam N number of elements in Array
-     * @param[in] array input Array
-     * @param[in] test_values input array
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T, size_t N>
-    auto cmp(dsa::Array<T, N> array, const std::array<T, N>& test_values) -> bool
-    {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(array.size(), size))
-        {
-            std::cout << "Objects of different length!\n";
-            return true;
-        }
-
-        auto array_iter = array.begin();
-
-        for (const auto& item : test_values)
-        {
-            if (if_error(*array_iter, item))
-            {
-                return true;
-            }
-
-            ++array_iter;
-        }
-
-        return false;
-    }
-
-    /**
-     * @brief Function compares values of Array and vector
-     *
-     * @tparam T type of elements to compare
-     * @tparam N number of elements in Array
-     * @param[in] array input Array
-     * @param[in] test_values input vector
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T, size_t N>
-    auto cmp(dsa::Array<T, N> array, const std::vector<T>& test_values) -> bool
-    {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(array.size(), size))
-        {
-            std::cout << "Objects of different length!\n";
-            return true;
-        }
-
-        auto array_iter = array.begin();
-
-        for (const auto& item : test_values)
-        {
-            if (if_error(*array_iter, item))
-            {
-                return true;
-            }
-
-            ++array_iter;
-        }
-
-        return false;
-    }
-
-    /**
-     * @brief Function compares values of Vector and vector
-     *
-     * @tparam T type of elements to compare
-     * @param[in] vector input Vector
-     * @param[in] test_values input vector
-     * @return true if compared containers are different
-     * @return false if containers are equal
-     */
-    template<typename T>
-    auto cmp(dsa::Vector<T> vector, const std::vector<T>& test_values) -> bool
-    {
-        const auto size{ (test_values.size()) };
-        tests::total_count() += static_cast<int>(size);
-
-        if (if_error(vector.size(), size))
-        {
-            std::cout << "Objects of different length!\n";
-            return true;
-        }
-
-        auto vector_iter = vector.begin();
-
-        for (const auto& item : test_values)
-        {
-            if (if_error(*vector_iter, item))
-            {
-                return true;
-            }
-
-            ++vector_iter;
-        }
-
-        return false;
-    }
-
-    /**
-     * @brief Function overloads out operator to print all elements of initializer list
-     *
-     * @tparam T type of initializer list elements
+     * @tparam T type of not-string-like type
      * @param[in,out] out reference to output stream
-     * @param[in] std_init_list input container of type T
+     * @param[in] container input container of type T
      * @return std::ostream&
      */
     template<typename T>
-    auto operator<<(std::ostream& out, const std::initializer_list<T>& std_init_list) -> std::ostream&
+        requires has_printable_range<T>
+    auto operator<<(std::ostream& out, const T& container) -> std::ostream&
     {
-        for (const auto& item : std_init_list)
-        {
-            out << item << ' ';
-        }
-        return out;
-    }
-
-    /**
-     * @brief Function overloads out operator to print all elements of initializer list
-     *
-     * @tparam T type of initializer list elements
-     * @param[in,out] out reference to output stream
-     * @param[in] std_forward_list input container of type T
-     * @return std::ostream&
-     */
-    template<typename T>
-    auto operator<<(std::ostream& out, const std::forward_list<T>& std_forward_list) -> std::ostream&
-    {
-        for (const auto& item : std_forward_list)
-        {
-            out << item << ' ';
-        }
-        return out;
-    }
-
-    /**
-     * @brief Function overloads out operator to print all elements of list
-     *
-     * @tparam T type of list elements
-     * @param[in,out] out reference to output stream
-     * @param[in] std_list input container of type T
-     * @return std::ostream&
-     */
-    template<typename T>
-    auto operator<<(std::ostream& out, const std::list<T>& std_list) -> std::ostream&
-    {
-        for (const auto& item : std_list)
-        {
-            out << item << ' ';
-        }
-        return out;
-    }
-
-    /**
-     * @brief Function overloads out operator to print all elements of array
-     *
-     * @tparam T type of list elements
-     * @param[in,out] out reference to output stream
-     * @param[in] std_list input container of type T
-     * @return std::ostream&
-     */
-    template<typename T, size_t N >
-    auto operator<<(std::ostream& out, const std::array<T, N>& std_array) -> std::ostream&
-    {
-        for (const auto& item : std_array)
-        {
-            out << item << ' ';
-        }
-        return out;
-    }
-
-    /**
-     * @brief Function overloads out operator to print all elements of vector
-     *
-     * @tparam T type of list elements
-     * @param[in,out] out reference to output stream
-     * @param[in] std_list input container of type T
-     * @return std::ostream&
-     */
-    template<typename T>
-    auto operator<<(std::ostream& out, const std::vector<T>& std_vector) -> std::ostream&
-    {
-        for (const auto& item : std_vector)
+        for (const auto& item : container)
         {
             out << item << ' ';
         }
@@ -797,6 +721,37 @@ namespace tests
     }
 
     /**
+     * @brief Function print PASS or FAIL message
+     *
+     * @param[in] status result of comparison containers or values
+     */
+    inline void print_status(Status status)
+    {
+        if (status == Status::OK)
+        {
+            std::cout << "PASS\n\n";
+        }
+        else
+        {
+            std::cout << "FAIL\n\n";
+        }
+    }
+
+    /**
+     * @brief Function handle tests results
+     *
+     * @param[in] status result of comparison containers or values
+     */
+    inline void result(Status status)
+    {
+        if (status != Status::OK)
+        {
+            tests::failed_count()++;
+        }
+        print_status(status);
+    }
+
+    /**
      * @brief Function compares content of two containers
      *
      * @tparam T input container
@@ -806,80 +761,11 @@ namespace tests
      * @param[in] expected expected content of input container, stored as elements of initializer list
      */
     template<typename T, typename U>
-        requires has_ranges<T>&& has_ranges<U>
     void compare(const std::string& container_name, const T& container, const U& expected)
     {
         print_containers(container_name, container, "Expected", expected);
-        const bool res = cmp(container, expected);
-        std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-    }
-
-    /**
-     * @brief Function compares content of two containers
-     *
-     * @tparam T input container
-     * @tparam U type of data stored in initializer list
-     * @param[in] container_name container name to print
-     * @param[in] container input container
-     * @param[in] expected expected content of input container, stored as elements of initializer list
-     */
-    template<typename T, typename U>
-    void compare(const std::string& container_name, const T& container, const std::initializer_list<U>& expected)
-    {
-        print_containers(container_name, container, "Expected", expected);
-        const bool res = cmp(container, expected);
-        std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-    }
-
-    /**
-     * @brief Function compares content of two containers
-     *
-     * @tparam T input container
-     * @tparam U type of data stored in queue
-     * @param[in] container_name container name to print
-     * @param[in] container input container
-     * @param[in] expected expected content of input container, stored as queue
-     */
-    template<typename T, typename U>
-    void compare(const std::string& container_name, const T& container, std::queue<U> expected)
-    {
-        print_containers(container_name, container, "Expected", expected);
-        const bool res = cmp(container, expected);
-        std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-    }
-
-    /**
-     * @brief Function compares content of two containers
-     *
-     * @tparam T input container
-     * @tparam U type of data stored in stack
-     * @param[in] container_name container name to print
-     * @param[in] container input container
-     * @param[in] expected expected content of input container, stored as stack
-     */
-    template<typename T, typename U>
-    void compare(const std::string& container_name, const T& container, const std::stack<U>& expected)
-    {
-        print_containers(container_name, container, "Expected", expected);
-        const bool res = cmp(container, expected);
-        std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
-    }
-
-    /**
-     * @brief Function compares content of two containers
-     *
-     * @tparam T input container
-     * @tparam U type of data stored in array
-     * @param[in] container_name container name to print
-     * @param[in] container input container
-     * @param[in] expected expected content of input container, stored as array
-     */
-    template<typename T, typename U, size_t N>
-    void compare(const std::string& container_name, const T& container, const std::array<U, N>& expected)
-    {
-        print_containers(container_name, container, "Expected", expected);
-        const bool res = cmp(container, expected);
-        std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+        const Status res = cmp(container, expected);
+        result(res);
     }
 
     /**
@@ -894,8 +780,8 @@ namespace tests
     void compare(const std::string& container_name, const T& val1, const T& val2)
     {
         print_containers(container_name, val1, "Expected", val2);
-        const bool res = cmp(val1, val2);
-        std::cout << (res == 0 ? "PASS" : "FAIL") << "\n\n";
+        const Status res = cmp(val1, val2);
+        print_status(res);
     }
 
     /**
@@ -908,7 +794,7 @@ namespace tests
      * @retval false otherwise
      */
     template<typename T>
-    auto compare(T val1, T val2) -> bool
+    auto compare(T val1, T val2) -> Status
     {
         return cmp(val1, val2);
     }
