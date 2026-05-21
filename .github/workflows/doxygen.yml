@@ -70,7 +70,7 @@ jobs:
       with:
         name: doxygen-docs-artifact
         path: docs/html/
-        retention-days: 5
+        retention-days: 2
 
     - name: Upload Pages
       uses: actions/upload-pages-artifact@v5
