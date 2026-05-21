@@ -3,8 +3,11 @@
 name: Doxygen Workflow
 
 on:
+  # Run workflow also on pull requests to allow testing documentation generation before deploying to GitHub Pages
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "**" ]
 
 permissions:
   contents: write
@@ -76,6 +79,10 @@ jobs:
 
   deploy:
     needs: build
+
+    # Sanity check to prevent deploying documentation from other branch than 'main'
+    if: github.ref == 'refs/heads/main'
+
     runs-on: ubuntu-latest
     environment:
       name: github-pages
