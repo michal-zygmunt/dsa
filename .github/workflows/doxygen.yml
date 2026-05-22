@@ -3,8 +3,11 @@
 name: Doxygen Workflow
 
 on:
+  # Run workflow also on pull requests to allow testing documentation generation before deploying to GitHub Pages
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "**" ]
 
 permissions:
   contents: write
@@ -63,23 +66,27 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Save Doxygen HTML as Artifact
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: doxygen-docs-artifact
         path: docs/html/
-        retention-days: 5
+        retention-days: 2
 
     - name: Upload Pages
-      uses: actions/upload-pages-artifact@v4
+      uses: actions/upload-pages-artifact@v5
       with:
         path: docs/html/
 
   deploy:
     needs: build
+
+    # Sanity check to prevent deploying documentation from other branch than 'main'
+    if: github.ref == 'refs/heads/main'
+
     runs-on: ubuntu-latest
     environment:
       name: github-pages
     steps:
     - name: Deploy to GitHub Pages
       id: deploy
-      uses: actions/deploy-pages@v4
+      uses: actions/deploy-pages@v5
