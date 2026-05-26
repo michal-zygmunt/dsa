@@ -1,14 +1,34 @@
 name: Setup MSVC toolchain
-description: Install LLVM/Clang 19 on Ubuntu and set as default
+description: Setup MSVC toolchain on Windows
 runs:
   using: composite
   steps:
     - name: Setup MSVC toolchain
-      if: runner.os == 'Windows'
-      uses: ilammy/msvc-dev-cmd@v1
-      with:
-        toolset: "14.44"
-        arch: x64
+      shell: pwsh
+      run: |
+        $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+        
+        $vsPath = & $vsWhere `
+          -latest `
+          -products * `
+          -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
+          -property installationPath
+
+        if(-not $vsPath)
+        {
+           throw "Visual Studio installation not found"
+        }
+
+        $devCmd = Join-Path $vsPath "Common7\Tools\VsDevCmd.bat"
+
+        $output = cmd /c "`"$devCmd`" -arch=x64 && set"
+
+        $output | ForEach-Object {
+          if ($_ -match "=") {
+            $name, $value = $_ -split "=", 2
+            Add-Content -Path $env:GITHUB_ENV -Value "$name=$value"
+          }
+        }
 
     - name: Check MSVC toolchain
       shell: pwsh
