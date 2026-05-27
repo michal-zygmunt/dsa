@@ -25,15 +25,15 @@ jobs:
       #
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
-        os: [ubuntu-24.04, windows-2025]
+        os: [ubuntu-24.04, windows-2025-vs2026]
         build_type: [Release]
         c_compiler: [gcc, clang, cl, clang-cl]
         include:
-          - os: windows-2025
+          - os: windows-2025-vs2026
             c_compiler: cl
             cpp_compiler: cl
             generator: Ninja
-          - os: windows-2025
+          - os: windows-2025-vs2026
             c_compiler: clang-cl
             cpp_compiler: clang-cl
             generator: Ninja
@@ -46,9 +46,9 @@ jobs:
             cpp_compiler: clang++
             generator: Ninja
         exclude:
-          - os: windows-2025
+          - os: windows-2025-vs2026
             c_compiler: gcc
-          - os: windows-2025
+          - os: windows-2025-vs2026
             c_compiler: clang
           - os: ubuntu-24.04
             c_compiler: cl
@@ -212,7 +212,7 @@ jobs:
 
   windows-clang-tidy:
     name: windows-2025-clang-tidy
-    runs-on: windows-2025
+    runs-on: windows-2025-vs2026
     needs: build
 
     # run clang-tidy only in PR
