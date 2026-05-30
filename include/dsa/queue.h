@@ -82,14 +82,22 @@ namespace dsa
          * @brief Construct a new Queue object
          *
          */
-        Queue() = default;
+        Queue();
 
         /**
-         * @brief Construct a new Queue object using initializer list
+         * @brief Construct a new Queue object from base Container using copy constructor
          *
-         * @param[in] init_list initializer list of values of type T
+         * @param[in] cont object of type Container
          */
-        Queue(const std::initializer_list<T>& init_list);
+        explicit Queue(const Container& cont);
+
+        /**
+         * @brief Construct a new Queue object from base Container using move constructor
+         * @details Content of other object will be taken by constructed object
+         *
+         * @param[in,out] cont Queue object of type Container
+         */
+        explicit Queue(Container&& cont) noexcept;
 
         /**
          * @brief Construct a new Queue object using copy constructor
@@ -99,20 +107,27 @@ namespace dsa
         Queue(const Queue<T>& other);
 
         /**
-         * @brief Constructs Queue using copy assignment
-         *
-         * @param[in] other Queue object of type T
-         * @return Queue& reference to Queue object
-         */
-        auto operator=(const Queue<T>& other) -> Queue&;
-
-        /**
          * @brief Construct a new Queue object using move constructor
          * @details Content of other object will be taken by constructed object
          *
          * @param[in,out] other Queue object of type T
          */
         Queue(Queue<T>&& other) noexcept;
+
+        /**
+         * @brief Construct a new Queue object using initializer list
+         *
+         * @param[in] init_list initializer list of values of type T
+         */
+        Queue(const std::initializer_list<T>& init_list);
+
+        /**
+         * @brief Constructs Queue using copy assignment
+         *
+         * @param[in] other Queue object of type T
+         * @return Queue& reference to Queue object
+         */
+        auto operator=(const Queue<T>& other) -> Queue&;
 
         /**
          * @brief Assign Queue object using move assignment
@@ -229,13 +244,23 @@ namespace dsa
     };
 
     template<typename T>
-    Queue<T>::Queue(const std::initializer_list<T>& init_list)
+    Queue<T>::Queue()
+        : Queue(Container())
+    {}
+
+    template<typename T>
+    Queue<T>::Queue(const Container& cont)
     {
-        for (const auto& item : init_list)
+        for (const auto& item : cont)
         {
             container.push_back(item);
         }
     }
+
+    template<typename T>
+    Queue<T>::Queue(Container&& cont) noexcept
+        : container{ std::move(cont) }
+    {}
 
     template<typename T>
     Queue<T>::Queue(const Queue<T>& other)
@@ -246,6 +271,20 @@ namespace dsa
             {
                 container.push_back(item);
             }
+        }
+    }
+
+    template<typename T>
+    Queue<T>::Queue(Queue<T>&& other) noexcept
+        : container{ std::move(other.container) }
+    {}
+
+    template<typename T>
+    Queue<T>::Queue(const std::initializer_list<T>& init_list)
+    {
+        for (const auto& item : init_list)
+        {
+            container.push_back(item);
         }
     }
 
@@ -266,12 +305,6 @@ namespace dsa
         }
 
         return *this;
-    }
-
-    template<typename T>
-    Queue<T>::Queue(Queue<T>&& other) noexcept
-        : container{ std::move(other.container) }
-    {
     }
 
     template<typename T>
