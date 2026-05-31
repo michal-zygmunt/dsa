@@ -35,7 +35,6 @@ namespace dsa
      * @tparam T type of data stored in Queue
      *
      * @todo add operator<=>
-     * @todo add emplace
      * @todo add non-member specialized swap function
      */
     template<typename T>
@@ -201,6 +200,17 @@ namespace dsa
         void push(value_type&& value);
 
         /**
+         * @brief Insert new element to the end of the container
+         * @details The element is constructed in-place, i.e. no copy or move operations are performed
+         *
+         * @tparam ...Args
+         * @param[in] ...args args arguments to forward to the constructor of the element
+         * @return reference to the emplaced element
+         */
+        template<typename... Args>
+        auto emplace(Args&&... args) -> decltype(auto);
+
+        /**
          * @brief Function removes the first element of Queue
          */
         void pop();
@@ -364,6 +374,14 @@ namespace dsa
     void Queue<T>::push(value_type&& value)
     {
         container.push_back(std::move(value));
+    }
+
+    template<typename T>
+    template<typename... Args>
+    auto Queue<T>::emplace(Args&&... args) -> decltype(auto)
+    {
+        container.emplace_back(std::forward<Args>(args)...);
+        return back();
     }
 
     template<typename T>
