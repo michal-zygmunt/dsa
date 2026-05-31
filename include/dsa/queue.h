@@ -220,7 +220,7 @@ namespace dsa
          *
          * @param[in,out] other object to swap content with
          */
-        void swap(Queue<T>& other) noexcept;
+        void swap(Queue<T>& other) noexcept(std::is_nothrow_swappable_v<Container>);
 
         /**
          * @brief Function add range of elements at the end of Queue
@@ -391,7 +391,7 @@ namespace dsa
     }
 
     template<typename T>
-    void Queue<T>::swap(Queue<T>& other) noexcept
+    void Queue<T>::swap(Queue<T>& other) noexcept(std::is_nothrow_swappable_v<Container>)
     {
         if (&other != this)
         {
