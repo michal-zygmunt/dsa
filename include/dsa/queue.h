@@ -198,7 +198,7 @@ namespace dsa
          *
          * @param[in] value element of type T
          */
-        void push(T&& value);
+        void push(value_type&& value);
 
         /**
          * @brief Function removes the first element of Queue
@@ -361,7 +361,7 @@ namespace dsa
     }
 
     template<typename T>
-    void Queue<T>::push(T&& value)
+    void Queue<T>::push(value_type&& value)
     {
         container.push_back(std::move(value));
     }
