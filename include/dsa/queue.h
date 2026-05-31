@@ -393,10 +393,7 @@ namespace dsa
     template<typename T>
     void Queue<T>::swap(Queue<T>& other) noexcept(std::is_nothrow_swappable_v<Container>)
     {
-        if (&other != this)
-        {
-            std::swap(container, other.container);
-        }
+        std::swap(container, other.container);
     }
 
     template<typename T>
