@@ -24,17 +24,16 @@ namespace dsa
     class Queue;
 
     template<typename T>
-    auto operator==(const Queue<T>& queue1, const Queue<T>& queue2) -> bool;
+    auto operator==(const Queue<T>& lhs, const Queue<T>& rhs) -> bool;
 
     template<typename T>
-    auto operator<(const Queue<T>& queue1, const Queue<T>& queue2) -> bool;
+    auto operator<=>(const Queue<T>& lhs, const Queue<T>& rhs)->std::compare_three_way_result_t<T>;
 
     /**
      * @brief Implements Queue class
      *
      * @tparam T type of data stored in Queue
      *
-     * @todo add operator<=>
      * @todo add non-member specialized swap function
      */
     template<typename T>
@@ -243,12 +242,12 @@ namespace dsa
         /**
          * @brief Forward friend declaration to access internal container comparison operator
          */
-        friend auto operator==<T>(const Queue<T>& queue1, const Queue<T>& queue2) -> bool;
+        friend auto operator==<T>(const Queue<T>& lhs, const Queue<T>& rhs) -> bool;
 
         /**
          * @brief Forward friend declaration to access internal container comparison operator
          */
-        friend auto operator< <T>(const Queue<T>& queue1, const Queue<T>& queue2) -> bool;
+        friend auto operator<=><T>(const Queue<T>& lhs, const Queue<T>& rhs)->std::compare_three_way_result_t<T>;
 
         Container container{};
     };
@@ -433,95 +432,34 @@ namespace dsa
      * @brief The relational operator compares two Queue objects
      *
      * @tparam T type of data stored in Queue
-     * @param[in] queue1 input container
-     * @param[in] queue2 input container
+     * @param[in] lhs input container
+     * @param[in] rhs input container
      * @retval true if containers are equal
      * @retval false if containers are not equal
      */
     template<typename T>
-    auto operator==(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
+    auto operator==(const Queue<T>& lhs, const Queue<T>& rhs) -> bool
     {
-        return queue1.container == queue2.container;
+        return lhs.container == rhs.container;
     }
 
     /**
      * @brief The relational operator compares two Queue objects
      *
-     * @tparam T type of data stored in Queue
-     * @param[in] queue1 input container
-     * @param[in] queue2 input container
-     * @retval true if containers are not equal
-     * @retval false if containers are equal
-     */
-    template<typename T>
-    auto operator!=(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
-    {
-        return !(operator==(queue1, queue2));
-    }
-
-    /**
-     * @brief The relational operator compares two Queue objects
+     * Depending on type T, function returns one of following objects:
+     * std::strong_ordering::less / equal / greater
+     * std::weak_ordering::less / equivalent / greater
+     * std::partial_ordering::less / equivalent / greater / unordered
+     * It is best to compare results with 0 to determine if lhs is <, >, or == to rhs
      *
-     * @tparam T type of data stored in Queue
-     * @param[in] queue1 input container
-     * @param[in] queue2 input container
-     * @retval true if the content of \p queue1 are lexicographically
-     *         less than the content of \p queue2
-     * @retval false otherwise
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @return three way comparison result type
      */
     template<typename T>
-    auto operator<(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
+    auto operator<=>(const Queue<T>& lhs, const Queue<T>& rhs) -> std::compare_three_way_result_t<T>
     {
-        return queue1.container < queue2.container;
+        return lhs.container <=> rhs.container;
     }
-
-    /**
-     * @brief The relational operator compares two Queue objects
-     *
-     * @tparam T type of data stored in Queue
-     * @param[in] queue1 input container
-     * @param[in] queue2 input container
-     * @retval true if the content of \p queue1 are lexicographically
-     *         greater than the content of \p queue2
-     * @retval false otherwise
-     */
-    template<typename T>
-    auto operator>(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
-    {
-        return operator<(queue2, queue1);
-    }
-
-    /**
-     * @brief The relational operator compares two Queue objects
-     *
-     * @tparam T type of data stored in Queue
-     * @param[in] queue1 input container
-     * @param[in] queue2 input container
-     * @retval true if the content of \p queue1 are lexicographically
-     *         less or equal than the content of \p queue2
-     * @retval false otherwise
-     */
-    template<typename T>
-    auto operator<=(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
-    {
-        return !(operator>(queue1, queue2));
-    }
-
-    /**
-     * @brief The relational operator compares two Queue objects
-     *
-     * @tparam T type of data stored in Queue
-     * @param[in] queue1 input container
-     * @param[in] queue2 input container
-     * @retval true if the content of \p queue1 are lexicographically
-     *         greater or equal than the content of \p queue2
-     * @retval false otherwise
-     */
-    template<typename T>
-    auto operator>=(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
-    {
-        return !(operator<(queue1, queue2));
-    }
-
 }
 #endif // !QUEUE_H
