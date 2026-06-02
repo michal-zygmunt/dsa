@@ -113,13 +113,6 @@ namespace dsa
         Queue(Queue<T>&& other) noexcept;
 
         /**
-         * @brief Construct a new Queue object using initializer list
-         *
-         * @param[in] init_list initializer list of values of type T
-         */
-        Queue(const std::initializer_list<T>& init_list);
-
-        /**
          * @brief Constructs Queue using copy assignment
          *
          * @param[in] other Queue object of type T
@@ -287,15 +280,6 @@ namespace dsa
     Queue<T>::Queue(Queue<T>&& other) noexcept
         : container{ std::move(other.container) }
     {}
-
-    template<typename T>
-    Queue<T>::Queue(const std::initializer_list<T>& init_list)
-    {
-        for (const auto& item : init_list)
-        {
-            container.push_back(item);
-        }
-    }
 
     template<typename T>
     auto Queue<T>::operator=(const Queue<T>& other) -> Queue<T>&
