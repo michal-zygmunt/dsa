@@ -33,8 +33,6 @@ namespace dsa
      * @brief Implements Queue class
      *
      * @tparam T type of data stored in Queue
-     *
-     * @todo add non-member specialized swap function
      */
     template<typename T>
     class Queue
@@ -444,6 +442,19 @@ namespace dsa
     auto operator<=>(const Queue<T>& lhs, const Queue<T>& rhs) -> std::compare_three_way_result_t<T>
     {
         return lhs.container <=> rhs.container;
+    }
+
+    /**
+     * @brief Exchanges content of two Queue containers
+     *
+     * @tparam T data type stored in containers
+     * @param[in] lhs container to swap content
+     * @param[in] rhs container to swap content
+     */
+    template<typename T>
+    void swap(Queue<T>& lhs, Queue<T>& rhs) noexcept(noexcept(lhs.swap(rhs)))
+    {
+        lhs.swap(rhs);
     }
 }
 #endif // !QUEUE_H
