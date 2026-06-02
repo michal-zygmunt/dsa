@@ -212,22 +212,6 @@ namespace dsa
          */
         void swap(Queue<T>& other) noexcept(std::is_nothrow_swappable_v<Container>);
 
-        /**
-         * @brief Function add range of elements at the end of Queue
-         *
-         * @param[in] other Queue to read elements from
-         * @return Queue<T>& reference to Queue
-         */
-        auto operator+=(const Queue<T>& other) -> Queue<T>&;
-
-        /**
-        * @brief Function add range of elements at the end of Queue
-        *
-        * @param[in] init_list std::initializer_list to read elements from
-        * @return Queue<T>& reference to Queue
-        */
-        auto operator+=(const std::initializer_list<T>& init_list) -> Queue<T>&;
-
     private:
 
         /**
@@ -375,17 +359,6 @@ namespace dsa
     void Queue<T>::swap(Queue<T>& other) noexcept(std::is_nothrow_swappable_v<Container>)
     {
         std::swap(container, other.container);
-    }
-
-    template<typename T>
-    auto Queue<T>::operator+=(const Queue<T>& other) -> Queue<T>&
-    {
-        for (const auto& item : other.container)
-        {
-            push(item);
-        }
-
-        return *this;
     }
 
     /**
