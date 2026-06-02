@@ -27,3 +27,7 @@ add_test(NAME queue_set_test COMMAND queue_set_test)
 add_executable(queue_operators_test queue_operators_test.cpp ${SRC_DIR}/common.cpp)
 target_link_libraries(queue_operators_test PRIVATE dsa_testing)
 add_test(NAME queue_operators_test COMMAND queue_operators_test)
+
+add_executable(queue_swap_test queue_swap_test.cpp ${SRC_DIR}/common.cpp)
+target_link_libraries(queue_swap_test PRIVATE dsa_testing)
+add_test(NAME queue_swap_test COMMAND queue_swap_test)
