@@ -137,7 +137,7 @@ namespace dsa
          *
          * @return T& reference to Queue first object
          */
-        auto front() -> reference;
+        [[nodiscard]] auto front() -> reference;
 
         /**
          * @brief Function returns pointer to Queue first object
@@ -151,7 +151,7 @@ namespace dsa
          *
          * @return T& reference to Queue last object
          */
-        auto back() -> reference;
+        [[nodiscard]] auto back() -> reference;
 
         /**
          * @brief Function returns pointer to Queue last object
