@@ -24,19 +24,15 @@ namespace dsa
     class Queue;
 
     template<typename T>
-    auto operator==(const Queue<T>& queue1, const Queue<T>& queue2) -> bool;
+    auto operator==(const Queue<T>& lhs, const Queue<T>& rhs) -> bool;
 
     template<typename T>
-    auto operator<(const Queue<T>& queue1, const Queue<T>& queue2) -> bool;
+    auto operator<=>(const Queue<T>& lhs, const Queue<T>& rhs)->std::compare_three_way_result_t<T>;
 
     /**
      * @brief Implements Queue class
      *
      * @tparam T type of data stored in Queue
-     *
-     * @todo add operator<=>
-     * @todo add emplace
-     * @todo add non-member specialized swap function
      */
     template<typename T>
     class Queue
@@ -44,38 +40,60 @@ namespace dsa
     public:
 
         /**
+         * @brief Alias for underlying container type used in class
+         *
+         * @tparam T data type
+         */
+        using Container = List<T>;
+
+        /**
          * @brief Alias for data type used in class
          *
          * @tparam T data type
          */
-        using value_type = T;
+        using value_type = Container::value_type;
+
+        /**
+         * @brief Alias for size type used in class
+         *
+         * @tparam T size type
+         */
+        using size_type = Container::size_type;
 
         /**
          * @brief Alias for reference to data type used in class
          *
          * @tparam T& reference to data type
          */
-        using reference = T&;
+        using reference = Container::reference;
 
         /**
          * @brief Alias for const reference to data type used in class
          *
          * @tparam T& const reference to data type
          */
-        using const_reference = const T&;
+        using const_reference = Container::const_reference;
 
         /**
          * @brief Construct a new Queue object
          *
          */
-        Queue() = default;
+        Queue();
 
         /**
-         * @brief Construct a new Queue object using initializer list
+         * @brief Construct a new Queue object from base Container using copy constructor
          *
-         * @param[in] init_list initializer list of values of type T
+         * @param[in] cont object of type Container
          */
-        Queue(const std::initializer_list<T>& init_list);
+        explicit Queue(const Container& cont);
+
+        /**
+         * @brief Construct a new Queue object from base Container using move constructor
+         * @details Content of other object will be taken by constructed object
+         *
+         * @param[in,out] cont Queue object of type Container
+         */
+        explicit Queue(Container&& cont) noexcept;
 
         /**
          * @brief Construct a new Queue object using copy constructor
@@ -85,20 +103,20 @@ namespace dsa
         Queue(const Queue<T>& other);
 
         /**
-         * @brief Constructs Queue using copy assignment
-         *
-         * @param[in] other Queue object of type T
-         * @return Queue& reference to Queue object
-         */
-        auto operator=(const Queue<T>& other) -> Queue&;
-
-        /**
          * @brief Construct a new Queue object using move constructor
          * @details Content of other object will be taken by constructed object
          *
          * @param[in,out] other Queue object of type T
          */
         Queue(Queue<T>&& other) noexcept;
+
+        /**
+         * @brief Constructs Queue using copy assignment
+         *
+         * @param[in] other Queue object of type T
+         * @return Queue& reference to Queue object
+         */
+        auto operator=(const Queue<T>& other) -> Queue&;
 
         /**
          * @brief Assign Queue object using move assignment
@@ -119,7 +137,7 @@ namespace dsa
          *
          * @return T& reference to Queue first object
          */
-        auto front() -> reference;
+        [[nodiscard]] auto front() -> reference;
 
         /**
          * @brief Function returns pointer to Queue first object
@@ -133,7 +151,7 @@ namespace dsa
          *
          * @return T& reference to Queue last object
          */
-        auto back() -> reference;
+        [[nodiscard]] auto back() -> reference;
 
         /**
          * @brief Function returns pointer to Queue last object
@@ -169,7 +187,18 @@ namespace dsa
          *
          * @param[in] value element of type T
          */
-        void push(T&& value);
+        void push(value_type&& value);
+
+        /**
+         * @brief Insert new element to the end of the container
+         * @details The element is constructed in-place, i.e. no copy or move operations are performed
+         *
+         * @tparam ...Args
+         * @param[in] ...args args arguments to forward to the constructor of the element
+         * @return reference to the emplaced element
+         */
+        template<typename... Args>
+        auto emplace(Args&&... args) -> decltype(auto);
 
         /**
          * @brief Function removes the first element of Queue
@@ -181,47 +210,41 @@ namespace dsa
          *
          * @param[in,out] other object to swap content with
          */
-        void swap(Queue<T>& other) noexcept;
-
-        /**
-         * @brief Function add range of elements at the end of Queue
-         *
-         * @param[in] other Queue to read elements from
-         * @return Queue<T>& reference to Queue
-         */
-        auto operator+=(const Queue<T>& other) -> Queue<T>&;
-
-        /**
-        * @brief Function add range of elements at the end of Queue
-        *
-        * @param[in] init_list std::initializer_list to read elements from
-        * @return Queue<T>& reference to Queue
-        */
-        auto operator+=(const std::initializer_list<T>& init_list) -> Queue<T>&;
+        void swap(Queue<T>& other) noexcept(std::is_nothrow_swappable_v<Container>);
 
     private:
 
         /**
          * @brief Forward friend declaration to access internal container comparison operator
          */
-        friend auto operator==<T>(const Queue<T>& queue1, const Queue<T>& queue2) -> bool;
+        friend auto operator==<T>(const Queue<T>& lhs, const Queue<T>& rhs) -> bool;
 
         /**
          * @brief Forward friend declaration to access internal container comparison operator
          */
-        friend auto operator< <T>(const Queue<T>& queue1, const Queue<T>& queue2) -> bool;
+        friend auto operator<=><T>(const Queue<T>& lhs, const Queue<T>& rhs)->std::compare_three_way_result_t<T>;
 
-        List<T> container{};
+        Container container{};
     };
 
     template<typename T>
-    Queue<T>::Queue(const std::initializer_list<T>& init_list)
+    Queue<T>::Queue()
+        : Queue(Container())
+    {}
+
+    template<typename T>
+    Queue<T>::Queue(const Container& cont)
     {
-        for (const auto& item : init_list)
+        for (const auto& item : cont)
         {
             container.push_back(item);
         }
     }
+
+    template<typename T>
+    Queue<T>::Queue(Container&& cont) noexcept
+        : container{ std::move(cont) }
+    {}
 
     template<typename T>
     Queue<T>::Queue(const Queue<T>& other)
@@ -234,6 +257,11 @@ namespace dsa
             }
         }
     }
+
+    template<typename T>
+    Queue<T>::Queue(Queue<T>&& other) noexcept
+        : container{ std::move(other.container) }
+    {}
 
     template<typename T>
     auto Queue<T>::operator=(const Queue<T>& other) -> Queue<T>&
@@ -252,12 +280,6 @@ namespace dsa
         }
 
         return *this;
-    }
-
-    template<typename T>
-    Queue<T>::Queue(Queue<T>&& other) noexcept
-        : container{ std::move(other.container) }
-    {
     }
 
     template<typename T>
@@ -314,9 +336,17 @@ namespace dsa
     }
 
     template<typename T>
-    void Queue<T>::push(T&& value)
+    void Queue<T>::push(value_type&& value)
     {
         container.push_back(std::move(value));
+    }
+
+    template<typename T>
+    template<typename... Args>
+    auto Queue<T>::emplace(Args&&... args) -> decltype(auto)
+    {
+        container.emplace_back(std::forward<Args>(args)...);
+        return back();
     }
 
     template<typename T>
@@ -326,23 +356,9 @@ namespace dsa
     }
 
     template<typename T>
-    void Queue<T>::swap(Queue<T>& other) noexcept
+    void Queue<T>::swap(Queue<T>& other) noexcept(std::is_nothrow_swappable_v<Container>)
     {
-        if (&other != this)
-        {
-            std::swap(container, other.container);
-        }
-    }
-
-    template<typename T>
-    auto Queue<T>::operator+=(const Queue<T>& other) -> Queue<T>&
-    {
-        for (const auto& item : other.container)
-        {
-            push(item);
-        }
-
-        return *this;
+        std::swap(container, other.container);
     }
 
     /**
@@ -371,95 +387,47 @@ namespace dsa
      * @brief The relational operator compares two Queue objects
      *
      * @tparam T type of data stored in Queue
-     * @param[in] queue1 input container
-     * @param[in] queue2 input container
+     * @param[in] lhs input container
+     * @param[in] rhs input container
      * @retval true if containers are equal
      * @retval false if containers are not equal
      */
     template<typename T>
-    auto operator==(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
+    auto operator==(const Queue<T>& lhs, const Queue<T>& rhs) -> bool
     {
-        return queue1.container == queue2.container;
+        return lhs.container == rhs.container;
     }
 
     /**
      * @brief The relational operator compares two Queue objects
      *
-     * @tparam T type of data stored in Queue
-     * @param[in] queue1 input container
-     * @param[in] queue2 input container
-     * @retval true if containers are not equal
-     * @retval false if containers are equal
+     * Depending on type T, function returns one of following objects:
+     * std::strong_ordering::less / equal / greater
+     * std::weak_ordering::less / equivalent / greater
+     * std::partial_ordering::less / equivalent / greater / unordered
+     * It is best to compare results with 0 to determine if lhs is <, >, or == to rhs
+     *
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @return three way comparison result type
      */
     template<typename T>
-    auto operator!=(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
+    auto operator<=>(const Queue<T>& lhs, const Queue<T>& rhs) -> std::compare_three_way_result_t<T>
     {
-        return !(operator==(queue1, queue2));
+        return lhs.container <=> rhs.container;
     }
 
     /**
-     * @brief The relational operator compares two Queue objects
+     * @brief Exchanges content of two Queue containers
      *
-     * @tparam T type of data stored in Queue
-     * @param[in] queue1 input container
-     * @param[in] queue2 input container
-     * @retval true if the content of \p queue1 are lexicographically
-     *         less than the content of \p queue2
-     * @retval false otherwise
+     * @tparam T data type stored in containers
+     * @param[in] lhs container to swap content
+     * @param[in] rhs container to swap content
      */
     template<typename T>
-    auto operator<(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
+    void swap(Queue<T>& lhs, Queue<T>& rhs) noexcept(noexcept(lhs.swap(rhs)))
     {
-        return queue1.container < queue2.container;
+        lhs.swap(rhs);
     }
-
-    /**
-     * @brief The relational operator compares two Queue objects
-     *
-     * @tparam T type of data stored in Queue
-     * @param[in] queue1 input container
-     * @param[in] queue2 input container
-     * @retval true if the content of \p queue1 are lexicographically
-     *         greater than the content of \p queue2
-     * @retval false otherwise
-     */
-    template<typename T>
-    auto operator>(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
-    {
-        return operator<(queue2, queue1);
-    }
-
-    /**
-     * @brief The relational operator compares two Queue objects
-     *
-     * @tparam T type of data stored in Queue
-     * @param[in] queue1 input container
-     * @param[in] queue2 input container
-     * @retval true if the content of \p queue1 are lexicographically
-     *         less or equal than the content of \p queue2
-     * @retval false otherwise
-     */
-    template<typename T>
-    auto operator<=(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
-    {
-        return !(operator>(queue1, queue2));
-    }
-
-    /**
-     * @brief The relational operator compares two Queue objects
-     *
-     * @tparam T type of data stored in Queue
-     * @param[in] queue1 input container
-     * @param[in] queue2 input container
-     * @retval true if the content of \p queue1 are lexicographically
-     *         greater or equal than the content of \p queue2
-     * @retval false otherwise
-     */
-    template<typename T>
-    auto operator>=(const Queue<T>& queue1, const Queue<T>& queue2) -> bool
-    {
-        return !(operator<(queue1, queue2));
-    }
-
 }
 #endif // !QUEUE_H

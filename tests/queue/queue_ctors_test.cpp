@@ -10,8 +10,10 @@
  */
 
 #include "common.h"
+#include "dsa/list.h"
 #include "dsa/queue.h"
 
+#include <deque>
 #include <exception>
 #include <initializer_list>
 #include <iostream>
@@ -46,10 +48,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const dsa::Queue<int> queue3(expected);
         tests::compare("Queue3", queue3, expected);
 
-
         std::cout << "Copy ctor\n";
-        // intentionally make a copy to test copy constructor
-        // NOLINTNEXTLINE(performance-unnecessary-copy-initialization)
         const dsa::Queue<int> queue4{ queue1 };
         tests::compare("Queue4", queue4, expected);
 
@@ -64,7 +63,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Queue5", queue5, expected);
 
         std::cout << "Copy self assignment ctor\n";
-        dsa::Queue<int> queue6{ 0, 10, 20 };
+        dsa::Queue<int> queue6{ dsa::List<int>({0, 10, 20}) };
         auto* pointer6 = &queue6;
         queue6 = *pointer6;
         tests::compare("Queue6", queue6, expected);
@@ -82,10 +81,26 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Queue8", queue8, expected);
 
         std::cout << "Move self assignment ctor\n";
-        dsa::Queue<int> queue9{ 0, 10, 20 };
+        dsa::Queue<int> queue9{ dsa::List<int>({0, 10, 20}) };
         auto* pointer9 = &queue9;
         queue9 = std::move(*pointer9);
         tests::compare("Queue9", queue9, expected);
+
+        const dsa::Queue<int> queue10(dsa::List<int>(5));
+        const std::initializer_list<int> expected10{ 0, 0, 0, 0, 0 };
+        tests::compare("Queue10", queue10, expected10);
+
+        std::cout << "Construct from List using copy ctor\n";
+        const dsa::List<int> temp11 = { 10, 20, 30 };
+        const dsa::Queue<int> queue11(temp11);
+        const std::initializer_list<int> expected11{ 10, 20, 30 };
+        tests::compare("Queue11", queue11, expected11);
+
+        std::cout << "Construct from List using move assignment\n";
+        dsa::List<int> temp12 = { 10, 20, 30 };
+        const dsa::Queue<int> queue12(std::move(temp12));
+        const std::initializer_list<int> expected12{ 10, 20, 30 };
+        tests::compare("Queue12", queue12, expected12);
 
 
         std::cout << "Compare operations results with std container\n\n";
@@ -116,15 +131,28 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_queue5 = std_queue1;
         tests::compare("Queue5 vs std", queue5, std_queue5);
 
-        std::queue<int> std_temp_1(std_queue1);
-        const std::queue<int> std_queue6 = std::move(std_temp_1);
+        const std::queue<int> std_queue6(std::deque<int>({ 0, 10, 20 }));
         tests::compare("Queue6 vs std", queue6, std_queue6);
 
         std::queue<int> std_temp_2(std_queue1);
-        std::queue<int> std_queue7;
-        std_queue7.push(0);
-        std_queue7 = std::move(std_temp_2);
+        const std::queue<int> std_queue7 = std::move(std_temp_2);
         tests::compare("Queue7 vs std", queue7, std_queue7);
+
+        std::queue<int> std_temp_8(std_queue1);
+        std::queue<int> std_queue8;
+        std_queue8 = std::move(std_temp_8);
+        tests::compare("Queue8 vs std", queue8, std_queue8);
+
+        const std::queue<int> std_queue10(std::deque<int>(5));
+        tests::compare("Queue10 vs std", queue10, std_queue10);
+
+        const std::deque<int> std_temp11 = { 10, 20, 30 };
+        const std::queue<int> std_queue11(std_temp11);
+        tests::compare("Queue11 vs std", queue11, std_queue11);
+
+        std::deque<int> std_temp12 = { 10, 20, 30 };
+        const std::queue<int> std_queue12(std::move(std_temp12));
+        tests::compare("Queue12 vs std", queue12, std_queue12);
 
 
         tests::print_stats();

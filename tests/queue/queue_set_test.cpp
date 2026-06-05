@@ -10,6 +10,7 @@
  */
 
 #include "common.h"
+#include "dsa/list.h"
 #include "dsa/queue.h"
 
 #include <exception>
@@ -35,8 +36,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::Queue<int> queue2 = dsa::Queue<int>({ 0,10,20 });
         dsa::Queue<int> queue3 = dsa::Queue<int>({ 50,10,20 });
         queue2.swap(queue3);
-        tests::compare("Queue2", queue2, { 50, 10, 20 });
-        tests::compare("Queue3", queue3, { 0, 10, 20 });
+        tests::compare("Queue2", queue2, dsa::Queue(dsa::List<int>{ 50, 10, 20 }));
+        tests::compare("Queue3", queue3, dsa::Queue(dsa::List<int>{  0, 10, 20 }));
 
         dsa::Queue<int> queue4 = dsa::Queue<int>({ 50,10,20 });
         queue4.swap(queue4);
