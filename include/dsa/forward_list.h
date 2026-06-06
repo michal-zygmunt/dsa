@@ -413,7 +413,7 @@ namespace dsa
          *
          * @param[in] count element count
          */
-        ForwardList(size_type count);
+        explicit ForwardList(size_type count);
 
         /**
          * @brief Construct a new ForwardList object of size \p count,
