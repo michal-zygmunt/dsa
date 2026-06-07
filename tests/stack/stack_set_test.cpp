@@ -10,6 +10,7 @@
  */
 
 #include "common.h"
+#include "dsa/list.h"
 #include "dsa/stack.h"
 
 #include <exception>
@@ -35,8 +36,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::Stack<int> stack2 = dsa::Stack<int>({ 0,10,20 });
         dsa::Stack<int> stack3 = dsa::Stack<int>({ 0,10,50 });
         stack2.swap(stack3);
-        tests::compare("Stack2", stack2, std::initializer_list<int>{ 50, 10, 0 });
-        tests::compare("Stack3", stack3, std::initializer_list<int>{ 20, 10, 0 });
+        tests::compare("Stack2", stack2, dsa::Stack(dsa::List<int>{ 0, 10, 50 }));
+        tests::compare("Stack3", stack3, dsa::Stack(dsa::List<int>{ 0, 10, 20 }));
 
         dsa::Stack<int> stack4 = dsa::Stack<int>({ 0,10,50 });
         stack4.swap(stack4);

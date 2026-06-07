@@ -10,8 +10,10 @@
  */
 
 #include "common.h"
+#include "dsa/list.h"
 #include "dsa/stack.h"
 
+#include <deque>
 #include <exception>
 #include <initializer_list>
 #include <iostream>
@@ -48,8 +50,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
 
         std::cout << "Copy ctor\n";
-        // intentionally make a copy to test copy constructor
-        // NOLINTNEXTLINE(performance-unnecessary-copy-initialization)
         const dsa::Stack<int> stack4{ stack1 };
         tests::compare("Stack4", stack4, expected);
 
@@ -64,7 +64,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Stack5", stack5, expected);
 
         std::cout << "Copy self assignment ctor\n";
-        dsa::Stack<int> stack6{ 0, 10, 20 };
+        dsa::Stack<int> stack6{ dsa::List<int>({0, 10, 20}) };
         auto* pointer6 = &stack6;
         stack6 = *pointer6;
         tests::compare("Stack6", stack6, expected);
@@ -81,10 +81,26 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Stack8", stack8, expected);
 
         std::cout << "Move self assignment ctor\n";
-        dsa::Stack<int> stack9{ 0, 10, 20 };
+        dsa::Stack<int> stack9{ dsa::List<int>({0, 10, 20}) };
         auto* pointer9 = &stack9;
         stack9 = std::move(*pointer9);
         tests::compare("Stack9", stack9, expected);
+
+        const dsa::Stack<int> stack10(dsa::List<int>(5));
+        const std::initializer_list<int> expected10{ 0, 0, 0, 0, 0 };
+        tests::compare("Stack10", stack10, expected10);
+
+        std::cout << "Construct from List using copy ctor\n";
+        const dsa::List<int> temp11 = { 10, 20, 30 };
+        const dsa::Stack<int> stack11(temp11);
+        const std::initializer_list<int> expected11{ 30, 20, 10 };
+        tests::compare("Stack11", stack11, expected11);
+
+        std::cout << "Construct from List using move assignment\n";
+        dsa::List<int> temp12 = { 10, 20, 30 };
+        const dsa::Stack<int> stack12(std::move(temp12));
+        const std::initializer_list<int> expected12{ 30, 20, 10 };
+        tests::compare("Stack12", stack12, expected12);
 
 
         std::cout << "Compare operations results with std container\n\n";
@@ -115,15 +131,28 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_stack5 = std_stack1;
         tests::compare("Stack5 vs std", stack5, std_stack5);
 
-        std::stack<int> std_temp_1(std_stack1);
-        const std::stack<int> std_stack6 = std::move(std_temp_1);
+        const std::stack<int> std_stack6(std::deque<int>({ 0, 10, 20 }));
         tests::compare("Stack6 vs std", stack6, std_stack6);
 
         std::stack<int> std_temp_2(std_stack1);
-        std::stack<int> std_stack7;
-        std_stack7.push(0);
-        std_stack7 = std::move(std_temp_2);
+        const std::stack<int> std_stack7 = std::move(std_temp_2);
         tests::compare("Stack7 vs std", stack7, std_stack7);
+
+        std::stack<int> std_temp_8(std_stack1);
+        std::stack<int> std_stack8;
+        std_stack8 = std::move(std_temp_8);
+        tests::compare("Stack8 vs std", stack8, std_stack8);
+
+        const std::stack<int> std_stack10(std::deque<int>(5));
+        tests::compare("Stack10 vs std", stack10, std_stack10);
+
+        const std::deque<int> std_temp11 = { 10, 20, 30 };
+        const std::stack<int> std_stack11(std_temp11);
+        tests::compare("Stack11 vs std", stack11, std_stack11);
+
+        std::deque<int> std_temp12 = { 10, 20, 30 };
+        const std::stack<int> std_stack12(std::move(std_temp12));
+        tests::compare("Stack12 vs std", stack12, std_stack12);
 
 
         tests::print_stats();
