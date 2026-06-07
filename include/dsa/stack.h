@@ -45,25 +45,39 @@ namespace dsa
     public:
 
         /**
+         * @brief Alias for underlying container type used in class
+         *
+         * @tparam T data type
+         */
+        using Container = List<T>;
+
+        /**
          * @brief Alias for data type used in class
          *
          * @tparam T data type
          */
-        using value_type = T;
+        using value_type = Container::value_type;
+
+        /**
+         * @brief Alias for size type used in class
+         *
+         * @tparam T size type
+         */
+        using size_type = Container::size_type;
 
         /**
          * @brief Alias for reference to data type used in class
          *
          * @tparam T& reference to data type
          */
-        using reference = T&;
+        using reference = Container::reference;
 
         /**
          * @brief Alias for const reference to data type used in class
          *
          * @tparam T& const reference to data type
          */
-        using const_reference = const T&;
+        using const_reference = Container::const_reference;
 
         /**
          * @brief Construct a new Stack object
@@ -175,7 +189,7 @@ namespace dsa
          */
         friend auto operator< <T>(const Stack<T>& stack1, const Stack<T>& stack2) -> bool;
 
-        List<T> container{};
+        Container container{};
     };
 
     template<typename T>
