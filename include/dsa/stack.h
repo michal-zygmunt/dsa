@@ -81,16 +81,23 @@ namespace dsa
 
         /**
          * @brief Construct a new Stack object
-         *
          */
-        Stack() = default;
+        Stack();
 
         /**
-         * @brief Construct a new Stack object using initializer list
+         * @brief Construct a new Stack object from base Container using copy constructor
          *
-         * @param[in] init_list initializer list of values of type T
+         * @param[in] cont object of type Container
          */
-        Stack(const std::initializer_list<T>& init_list);
+        explicit Stack(const Container& cont);
+
+        /**
+         * @brief Construct a new Stack object from base Container using move constructor
+         * @details Content of other object will be taken by constructed object
+         *
+         * @param[in,out] cont Stack object of type Container
+         */
+        explicit Stack(Container&& cont) noexcept;
 
         /**
          * @brief Construct a new Stack object using copy constructor
@@ -100,20 +107,27 @@ namespace dsa
         Stack(const Stack<T>& other);
 
         /**
-         * @brief Constructs Stack using copy assignment
-         *
-         * @param[in] other Stack object of type T
-         * @return Stack& reference to Stack object
-         */
-        auto operator=(const Stack<T>& other) -> Stack&;
-
-        /**
          * @brief Construct a new Stack object using move constructor
          * @details Content of other object will be taken by constructed object
          *
          * @param[in,out] other Stack object of type T
          */
         Stack(Stack<T>&& other) noexcept;
+
+        /**
+         * @brief Construct a new Stack object using initializer list
+         *
+         * @param[in] init_list initializer list of values of type T
+         */
+        Stack(const std::initializer_list<T>& init_list);
+
+        /**
+         * @brief Constructs Stack using copy assignment
+         *
+         * @param[in] other Stack object of type T
+         * @return Stack& reference to Stack object
+         */
+        auto operator=(const Stack<T>& other) -> Stack&;
 
         /**
          * @brief Assign Stack object using move assignment
@@ -193,13 +207,23 @@ namespace dsa
     };
 
     template<typename T>
-    Stack<T>::Stack(const std::initializer_list<T>& init_list)
+    Stack<T>::Stack()
+        : Stack(Container())
+    {}
+
+    template<typename T>
+    Stack<T>::Stack(const Container& cont)
     {
-        for (const auto& item : init_list)
+        for (const auto& item : cont)
         {
             container.push_back(item);
         }
     }
+
+    template<typename T>
+    Stack<T>::Stack(Container&& cont) noexcept
+        : container{ std::move(cont) }
+    {}
 
     template<typename T>
     Stack<T>::Stack(const Stack<T>& other)
@@ -210,6 +234,21 @@ namespace dsa
             {
                 container.push_back(item);
             }
+        }
+    }
+
+    template<typename T>
+    Stack<T>::Stack(Stack<T>&& other) noexcept
+    {
+        std::swap(container, other.container);
+    }
+
+    template<typename T>
+    Stack<T>::Stack(const std::initializer_list<T>& init_list)
+    {
+        for (const auto& item : init_list)
+        {
+            container.push_back(item);
         }
     }
 
@@ -230,12 +269,6 @@ namespace dsa
         }
 
         return *this;
-    }
-
-    template<typename T>
-    Stack<T>::Stack(Stack<T>&& other) noexcept
-    {
-        std::swap(container, other.container);
     }
 
     template<typename T>
