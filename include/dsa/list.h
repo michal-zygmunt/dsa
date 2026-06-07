@@ -460,7 +460,7 @@ namespace dsa
          *
          * @param[in] count element count
          */
-        List(size_type count);
+        explicit List(size_type count);
 
         /**
          * @brief Construct a new List object of size \p count,
