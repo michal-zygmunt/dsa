@@ -180,6 +180,13 @@ namespace dsa
         void push(const_reference value);
 
         /**
+         * @brief Function add new element at the top of Stack
+         *
+         * @param[in] value element of type T
+         */
+        void push(value_type&& value);
+
+        /**
          * @brief Function removes the top element of Stack
          */
         void pop();
@@ -310,6 +317,12 @@ namespace dsa
     void Stack<T>::push(const_reference value)
     {
         container.push_back(value);
+    }
+
+    template<typename T>
+    void Stack<T>::push(value_type&& value)
+    {
+        container.push_back(std::move(value));
     }
 
     template<typename T>
