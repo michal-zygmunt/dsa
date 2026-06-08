@@ -177,7 +177,7 @@ namespace dsa
          *
          * @param[in] value element of type T
          */
-        void push(T value);
+        void push(const_reference value);
 
         /**
          * @brief Function removes the top element of Stack
@@ -307,7 +307,7 @@ namespace dsa
     }
 
     template<typename T>
-    void Stack<T>::push(T value)
+    void Stack<T>::push(const_reference value)
     {
         container.push_back(value);
     }
