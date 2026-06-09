@@ -206,7 +206,7 @@ namespace dsa
          *
          * @param[in,out] other object to swap content with
          */
-        void swap(Stack<T>& other) noexcept;
+        void swap(Stack<T>& other) noexcept(std::is_nothrow_swappable_v<Container>);
 
     private:
 
@@ -349,7 +349,7 @@ namespace dsa
     }
 
     template<typename T>
-    void Stack<T>::swap(Stack<T>& other) noexcept
+    void Stack<T>::swap(Stack<T>& other) noexcept(std::is_nothrow_swappable_v<Container>)
     {
         if (&other != this)
         {
