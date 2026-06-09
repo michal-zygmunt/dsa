@@ -351,10 +351,7 @@ namespace dsa
     template<typename T>
     void Stack<T>::swap(Stack<T>& other) noexcept(std::is_nothrow_swappable_v<Container>)
     {
-        if (&other != this)
-        {
-            std::swap(container, other.container);
-        }
+        std::swap(container, other.container);
     }
 
     /**
