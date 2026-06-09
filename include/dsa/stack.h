@@ -36,7 +36,6 @@ namespace dsa
      * @tparam T type of data stored in Stack
      *
      * @todo add operator<=>
-     * @todo add emplace
      * @todo add non-member specialized swap function
      */
     template<typename T>
@@ -187,6 +186,17 @@ namespace dsa
         void push(value_type&& value);
 
         /**
+         * @brief Insert new element to the end of the container
+         * @details The element is constructed in-place, i.e. no copy or move operations are performed
+         *
+         * @tparam ...Args
+         * @param[in] ...args args arguments to forward to the constructor of the element
+         * @return reference to the emplaced element
+         */
+        template<typename... Args>
+        auto emplace(Args&&... args) -> decltype(auto);
+
+        /**
          * @brief Function removes the top element of Stack
          */
         void pop();
@@ -323,6 +333,13 @@ namespace dsa
     void Stack<T>::push(value_type&& value)
     {
         container.push_back(std::move(value));
+    }
+
+    template<typename T>
+    template<typename... Args>
+    auto Stack<T>::emplace(Args&&... args) -> decltype(auto)
+    {
+        return container.emplace_back(std::forward<Args>(args)...);
     }
 
     template<typename T>
