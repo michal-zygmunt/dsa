@@ -113,13 +113,6 @@ namespace dsa
         Stack(Stack<T>&& other) noexcept;
 
         /**
-         * @brief Construct a new Stack object using initializer list
-         *
-         * @param[in] init_list initializer list of values of type T
-         */
-        Stack(const std::initializer_list<T>& init_list);
-
-        /**
          * @brief Constructs Stack using copy assignment
          *
          * @param[in] other Stack object of type T
@@ -257,15 +250,6 @@ namespace dsa
     Stack<T>::Stack(Stack<T>&& other) noexcept
     {
         std::swap(container, other.container);
-    }
-
-    template<typename T>
-    Stack<T>::Stack(const std::initializer_list<T>& init_list)
-    {
-        for (const auto& item : init_list)
-        {
-            container.push_back(item);
-        }
     }
 
     template<typename T>
