@@ -25,17 +25,16 @@ namespace dsa
     class Stack;
 
     template<typename T>
-    auto operator==(const Stack<T>& stack1, const Stack<T>& stack2) -> bool;
+    auto operator==(const Stack<T>& lhs, const Stack<T>& rhs) -> bool;
 
     template<typename T>
-    auto operator<(const Stack<T>& stack1, const Stack<T>& stack2) -> bool;
+    auto operator<=>(const Stack<T>& lhs, const Stack<T>& rhs)->std::compare_three_way_result_t<T>;
 
     /**
      * @brief Implements Stack class
      *
      * @tparam T type of data stored in Stack
      *
-     * @todo add operator<=>
      * @todo add non-member specialized swap function
      */
     template<typename T>
@@ -213,12 +212,12 @@ namespace dsa
         /**
          * @brief Forward friend declaration to access internal container comparison operator
          */
-        friend auto operator==<T>(const Stack<T>& stack1, const Stack<T>& stack2) -> bool;
+        friend auto operator==<T>(const Stack<T>& lhs, const Stack<T>& rhs) -> bool;
 
         /**
          * @brief Forward friend declaration to access internal container comparison operator
          */
-        friend auto operator< <T>(const Stack<T>& stack1, const Stack<T>& stack2) -> bool;
+        friend auto operator<=><T>(const Stack<T>& lhs, const Stack<T>& rhs)->std::compare_three_way_result_t<T>;
 
         Container container{};
     };
@@ -380,95 +379,34 @@ namespace dsa
      * @brief The relational operator compares two Stack objects
      *
      * @tparam T type of data stored in Stack
-     * @param[in] stack1 input container
-     * @param[in] stack2 input container
+     * @param[in] lhs input container
+     * @param[in] rhs input container
      * @retval true if containers are equal
      * @retval false if containers are not equal
      */
     template<typename T>
-    auto operator==(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
+    auto operator==(const Stack<T>& lhs, const Stack<T>& rhs) -> bool
     {
-        return stack1.container == stack2.container;
+        return lhs.container == rhs.container;
     }
 
     /**
      * @brief The relational operator compares two Stack objects
      *
-     * @tparam T type of data stored in Stack
-     * @param[in] stack1 input container
-     * @param[in] stack2 input container
-     * @retval true if containers are not equal
-     * @retval false if containers are equal
-     */
-    template<typename T>
-    auto operator!=(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
-    {
-        return !(operator==(stack1, stack2));
-    }
-
-    /**
-     * @brief The relational operator compares two Stack objects
+     * Depending on type T, function returns one of following objects:
+     * std::strong_ordering::less / equal / greater
+     * std::weak_ordering::less / equivalent / greater
+     * std::partial_ordering::less / equivalent / greater / unordered
+     * It is best to compare results with 0 to determine if lhs is <, >, or == to rhs
      *
-     * @tparam T type of data stored in Stack
-     * @param[in] stack1 input container
-     * @param[in] stack2 input container
-     * @retval true if the content of \p stack1 are lexicographically
-     *         less than the content of \p stack2
-     * @retval false otherwise
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @return three way comparison result type
      */
     template<typename T>
-    auto operator<(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
+    auto operator<=>(const Stack<T>& lhs, const Stack<T>& rhs) -> std::compare_three_way_result_t<T>
     {
-        return stack1.container < stack2.container;
+        return lhs.container <=> rhs.container;
     }
-
-    /**
-     * @brief The relational operator compares two Stack objects
-     *
-     * @tparam T type of data stored in Stack
-     * @param[in] stack1 input container
-     * @param[in] stack2 input container
-     * @retval true if the content of \p stack1 are lexicographically
-     *         greater than the content of \p stack2
-     * @retval false otherwise
-     */
-    template<typename T>
-    auto operator>(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
-    {
-        return operator<(stack2, stack1);
-    }
-
-    /**
-     * @brief The relational operator compares two Stack objects
-     *
-     * @tparam T type of data stored in Stack
-     * @param[in] stack1 input container
-     * @param[in] stack2 input container
-     * @retval true if the content of \p stack1 are lexicographically
-     *         less or equal than the content of \p stack2
-     * @retval false otherwise
-     */
-    template<typename T>
-    auto operator<=(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
-    {
-        return !(operator>(stack1, stack2));
-    }
-
-    /**
-     * @brief The relational operator compares two Stack objects
-     *
-     * @tparam T type of data stored in Stack
-     * @param[in] stack1 input container
-     * @param[in] stack2 input container
-     * @retval true if the content of \p s1 are lexicographically
-     *         greater or equal than the content of \p s2
-     * @retval false otherwise
-     */
-    template<typename T>
-    auto operator>=(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
-    {
-        return !(operator<(stack1, stack2));
-    }
-
 }
 #endif // !STACK_H
