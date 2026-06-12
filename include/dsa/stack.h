@@ -34,8 +34,6 @@ namespace dsa
      * @brief Implements Stack class
      *
      * @tparam T type of data stored in Stack
-     *
-     * @todo add non-member specialized swap function
      */
     template<typename T>
     class Stack
@@ -391,6 +389,19 @@ namespace dsa
     auto operator<=>(const Stack<T>& lhs, const Stack<T>& rhs) -> std::compare_three_way_result_t<T>
     {
         return lhs.container <=> rhs.container;
+    }
+
+    /**
+     * @brief Exchanges content of two Stack containers
+     *
+     * @tparam T data type stored in containers
+     * @param[in] lhs container to swap content
+     * @param[in] rhs container to swap content
+     */
+    template<typename T>
+    void swap(Stack<T>& lhs, Stack<T>& rhs) noexcept(noexcept(lhs.swap(rhs)))
+    {
+        lhs.swap(rhs);
     }
 }
 #endif // !STACK_H
