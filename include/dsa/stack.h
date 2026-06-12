@@ -137,7 +137,7 @@ namespace dsa
          *
          * @return T& reference to Stack top element
          */
-        auto top() -> reference;
+        [[nodiscard]] auto top() -> reference;
 
         /**
          * @brief Function returns pointer to Stack top element
