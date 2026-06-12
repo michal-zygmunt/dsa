@@ -457,7 +457,7 @@ namespace tests
         T container_copy{ container };
         if constexpr (has_ranges<U>)
         {
-            // handle dsa::Stack and std::stack comparison
+            // handle dsa::Stack or std::stack and std::initializer_list comparison
 
             for (const auto& item : test_values)
             {
@@ -470,7 +470,7 @@ namespace tests
         }
         else if constexpr (has_top<U> && has_pop<U>)
         {
-            // handle dsa::Stack or std::stack and std::initializer_list comparison
+            // handle dsa::Stack and std::stack comparison
 
             U test_values_copy{ test_values };
             for (size_t i = 0; i < test_values.size(); i++)
