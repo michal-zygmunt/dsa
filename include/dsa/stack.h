@@ -25,19 +25,15 @@ namespace dsa
     class Stack;
 
     template<typename T>
-    auto operator==(const Stack<T>& stack1, const Stack<T>& stack2) -> bool;
+    auto operator==(const Stack<T>& lhs, const Stack<T>& rhs) -> bool;
 
     template<typename T>
-    auto operator<(const Stack<T>& stack1, const Stack<T>& stack2) -> bool;
+    auto operator<=>(const Stack<T>& lhs, const Stack<T>& rhs)->std::compare_three_way_result_t<T>;
 
     /**
      * @brief Implements Stack class
      *
      * @tparam T type of data stored in Stack
-     *
-     * @todo add operator<=>
-     * @todo add emplace
-     * @todo add non-member specialized swap function
      */
     template<typename T>
     class Stack
@@ -45,38 +41,59 @@ namespace dsa
     public:
 
         /**
+         * @brief Alias for underlying container type used in class
+         *
+         * @tparam T data type
+         */
+        using Container = List<T>;
+
+        /**
          * @brief Alias for data type used in class
          *
          * @tparam T data type
          */
-        using value_type = T;
+        using value_type = Container::value_type;
+
+        /**
+         * @brief Alias for size type used in class
+         *
+         * @tparam T size type
+         */
+        using size_type = Container::size_type;
 
         /**
          * @brief Alias for reference to data type used in class
          *
          * @tparam T& reference to data type
          */
-        using reference = T&;
+        using reference = Container::reference;
 
         /**
          * @brief Alias for const reference to data type used in class
          *
          * @tparam T& const reference to data type
          */
-        using const_reference = const T&;
+        using const_reference = Container::const_reference;
 
         /**
          * @brief Construct a new Stack object
-         *
          */
-        Stack() = default;
+        Stack();
 
         /**
-         * @brief Construct a new Stack object using initializer list
+         * @brief Construct a new Stack object from base Container using copy constructor
          *
-         * @param[in] init_list initializer list of values of type T
+         * @param[in] cont object of type Container
          */
-        Stack(const std::initializer_list<T>& init_list);
+        explicit Stack(const Container& cont);
+
+        /**
+         * @brief Construct a new Stack object from base Container using move constructor
+         * @details Content of other object will be taken by constructed object
+         *
+         * @param[in,out] cont Stack object of type Container
+         */
+        explicit Stack(Container&& cont) noexcept;
 
         /**
          * @brief Construct a new Stack object using copy constructor
@@ -86,20 +103,20 @@ namespace dsa
         Stack(const Stack<T>& other);
 
         /**
-         * @brief Constructs Stack using copy assignment
-         *
-         * @param[in] other Stack object of type T
-         * @return Stack& reference to Stack object
-         */
-        auto operator=(const Stack<T>& other) -> Stack&;
-
-        /**
          * @brief Construct a new Stack object using move constructor
          * @details Content of other object will be taken by constructed object
          *
          * @param[in,out] other Stack object of type T
          */
         Stack(Stack<T>&& other) noexcept;
+
+        /**
+         * @brief Constructs Stack using copy assignment
+         *
+         * @param[in] other Stack object of type T
+         * @return Stack& reference to Stack object
+         */
+        auto operator=(const Stack<T>& other) -> Stack&;
 
         /**
          * @brief Assign Stack object using move assignment
@@ -120,7 +137,7 @@ namespace dsa
          *
          * @return T& reference to Stack top element
          */
-        auto top() -> reference;
+        [[nodiscard]] auto top() -> reference;
 
         /**
          * @brief Function returns pointer to Stack top element
@@ -149,7 +166,25 @@ namespace dsa
          *
          * @param[in] value element of type T
          */
-        void push(T value);
+        void push(const_reference value);
+
+        /**
+         * @brief Function add new element at the top of Stack
+         *
+         * @param[in] value element of type T
+         */
+        void push(value_type&& value);
+
+        /**
+         * @brief Insert new element to the end of the container
+         * @details The element is constructed in-place, i.e. no copy or move operations are performed
+         *
+         * @tparam ...Args
+         * @param[in] ...args args arguments to forward to the constructor of the element
+         * @return reference to the emplaced element
+         */
+        template<typename... Args>
+        auto emplace(Args&&... args) -> decltype(auto);
 
         /**
          * @brief Function removes the top element of Stack
@@ -161,31 +196,41 @@ namespace dsa
          *
          * @param[in,out] other object to swap content with
          */
-        void swap(Stack<T>& other) noexcept;
+        void swap(Stack<T>& other) noexcept(std::is_nothrow_swappable_v<Container>);
 
     private:
 
         /**
          * @brief Forward friend declaration to access internal container comparison operator
          */
-        friend auto operator==<T>(const Stack<T>& stack1, const Stack<T>& stack2) -> bool;
+        friend auto operator==<T>(const Stack<T>& lhs, const Stack<T>& rhs) -> bool;
 
         /**
          * @brief Forward friend declaration to access internal container comparison operator
          */
-        friend auto operator< <T>(const Stack<T>& stack1, const Stack<T>& stack2) -> bool;
+        friend auto operator<=><T>(const Stack<T>& lhs, const Stack<T>& rhs)->std::compare_three_way_result_t<T>;
 
-        List<T> container{};
+        Container container{};
     };
 
     template<typename T>
-    Stack<T>::Stack(const std::initializer_list<T>& init_list)
+    Stack<T>::Stack()
+        : Stack(Container())
+    {}
+
+    template<typename T>
+    Stack<T>::Stack(const Container& cont)
     {
-        for (const auto& item : init_list)
+        for (const auto& item : cont)
         {
             container.push_back(item);
         }
     }
+
+    template<typename T>
+    Stack<T>::Stack(Container&& cont) noexcept
+        : container{ std::move(cont) }
+    {}
 
     template<typename T>
     Stack<T>::Stack(const Stack<T>& other)
@@ -197,6 +242,12 @@ namespace dsa
                 container.push_back(item);
             }
         }
+    }
+
+    template<typename T>
+    Stack<T>::Stack(Stack<T>&& other) noexcept
+    {
+        std::swap(container, other.container);
     }
 
     template<typename T>
@@ -216,12 +267,6 @@ namespace dsa
         }
 
         return *this;
-    }
-
-    template<typename T>
-    Stack<T>::Stack(Stack<T>&& other) noexcept
-    {
-        std::swap(container, other.container);
     }
 
     template<typename T>
@@ -260,9 +305,22 @@ namespace dsa
     }
 
     template<typename T>
-    void Stack<T>::push(T value)
+    void Stack<T>::push(const_reference value)
     {
         container.push_back(value);
+    }
+
+    template<typename T>
+    void Stack<T>::push(value_type&& value)
+    {
+        container.push_back(std::move(value));
+    }
+
+    template<typename T>
+    template<typename... Args>
+    auto Stack<T>::emplace(Args&&... args) -> decltype(auto)
+    {
+        return container.emplace_back(std::forward<Args>(args)...);
     }
 
     template<typename T>
@@ -272,12 +330,9 @@ namespace dsa
     }
 
     template<typename T>
-    void Stack<T>::swap(Stack<T>& other) noexcept
+    void Stack<T>::swap(Stack<T>& other) noexcept(std::is_nothrow_swappable_v<Container>)
     {
-        if (&other != this)
-        {
-            std::swap(container, other.container);
-        }
+        std::swap(container, other.container);
     }
 
     /**
@@ -306,95 +361,47 @@ namespace dsa
      * @brief The relational operator compares two Stack objects
      *
      * @tparam T type of data stored in Stack
-     * @param[in] stack1 input container
-     * @param[in] stack2 input container
+     * @param[in] lhs input container
+     * @param[in] rhs input container
      * @retval true if containers are equal
      * @retval false if containers are not equal
      */
     template<typename T>
-    auto operator==(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
+    auto operator==(const Stack<T>& lhs, const Stack<T>& rhs) -> bool
     {
-        return stack1.container == stack2.container;
+        return lhs.container == rhs.container;
     }
 
     /**
      * @brief The relational operator compares two Stack objects
      *
-     * @tparam T type of data stored in Stack
-     * @param[in] stack1 input container
-     * @param[in] stack2 input container
-     * @retval true if containers are not equal
-     * @retval false if containers are equal
+     * Depending on type T, function returns one of following objects:
+     * std::strong_ordering::less / equal / greater
+     * std::weak_ordering::less / equivalent / greater
+     * std::partial_ordering::less / equivalent / greater / unordered
+     * It is best to compare results with 0 to determine if lhs is <, >, or == to rhs
+     *
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @return three way comparison result type
      */
     template<typename T>
-    auto operator!=(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
+    auto operator<=>(const Stack<T>& lhs, const Stack<T>& rhs) -> std::compare_three_way_result_t<T>
     {
-        return !(operator==(stack1, stack2));
+        return lhs.container <=> rhs.container;
     }
 
     /**
-     * @brief The relational operator compares two Stack objects
+     * @brief Exchanges content of two Stack containers
      *
-     * @tparam T type of data stored in Stack
-     * @param[in] stack1 input container
-     * @param[in] stack2 input container
-     * @retval true if the content of \p stack1 are lexicographically
-     *         less than the content of \p stack2
-     * @retval false otherwise
+     * @tparam T data type stored in containers
+     * @param[in] lhs container to swap content
+     * @param[in] rhs container to swap content
      */
     template<typename T>
-    auto operator<(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
+    void swap(Stack<T>& lhs, Stack<T>& rhs) noexcept(noexcept(lhs.swap(rhs)))
     {
-        return stack1.container < stack2.container;
+        lhs.swap(rhs);
     }
-
-    /**
-     * @brief The relational operator compares two Stack objects
-     *
-     * @tparam T type of data stored in Stack
-     * @param[in] stack1 input container
-     * @param[in] stack2 input container
-     * @retval true if the content of \p stack1 are lexicographically
-     *         greater than the content of \p stack2
-     * @retval false otherwise
-     */
-    template<typename T>
-    auto operator>(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
-    {
-        return operator<(stack2, stack1);
-    }
-
-    /**
-     * @brief The relational operator compares two Stack objects
-     *
-     * @tparam T type of data stored in Stack
-     * @param[in] stack1 input container
-     * @param[in] stack2 input container
-     * @retval true if the content of \p stack1 are lexicographically
-     *         less or equal than the content of \p stack2
-     * @retval false otherwise
-     */
-    template<typename T>
-    auto operator<=(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
-    {
-        return !(operator>(stack1, stack2));
-    }
-
-    /**
-     * @brief The relational operator compares two Stack objects
-     *
-     * @tparam T type of data stored in Stack
-     * @param[in] stack1 input container
-     * @param[in] stack2 input container
-     * @retval true if the content of \p s1 are lexicographically
-     *         greater or equal than the content of \p s2
-     * @retval false otherwise
-     */
-    template<typename T>
-    auto operator>=(const Stack<T>& stack1, const Stack<T>& stack2) -> bool
-    {
-        return !(operator<(stack1, stack2));
-    }
-
 }
 #endif // !STACK_H

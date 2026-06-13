@@ -34,6 +34,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         stack1.push(10);
         tests::compare("Stack1", stack1, expected);
 
+        dsa::Stack<int> stack2;
+        stack2.emplace(40);
+        stack2.emplace(30);
+        stack2.emplace(20);
+        stack2.emplace(10);
+        tests::compare("Stack2", stack2, expected);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -42,6 +49,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_stack1.push(20);
         std_stack1.push(10);
         tests::compare("Stack1 vs std", stack1, std_stack1);
+
+        std::stack<int> std_stack2;
+        std_stack2.emplace(40);
+        std_stack2.emplace(30);
+        std_stack2.emplace(20);
+        std_stack2.emplace(10);
+        tests::compare("Stack2 vs std", stack2, std_stack2);
 
 
         tests::print_stats();

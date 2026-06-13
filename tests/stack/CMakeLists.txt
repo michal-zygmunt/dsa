@@ -27,3 +27,7 @@ add_test(NAME stack_set_test COMMAND stack_set_test)
 add_executable(stack_operators_test stack_operators_test.cpp ${SRC_DIR}/common.cpp)
 target_link_libraries(stack_operators_test PRIVATE dsa_testing)
 add_test(NAME stack_operators_test COMMAND stack_operators_test)
+
+add_executable(stack_swap_test stack_swap_test.cpp ${SRC_DIR}/common.cpp)
+target_link_libraries(stack_swap_test PRIVATE dsa_testing)
+add_test(NAME stack_swap_test COMMAND stack_swap_test)
