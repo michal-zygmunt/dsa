@@ -170,7 +170,7 @@ namespace dsa
         /**
          * @brief Destroy the Vector object
          */
-        ~Vector();
+        constexpr ~Vector();
 
         /**
          * @brief Assign Vector object using copy assignment
@@ -758,7 +758,7 @@ namespace dsa
     }
 
     template<typename T>
-    Vector<T>::~Vector()
+    constexpr Vector<T>::~Vector()
     {
         clear_allocation();
     }
