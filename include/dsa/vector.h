@@ -188,7 +188,9 @@ namespace dsa
          * @param[in,out] other Vector object of type T
          * @return Vector& reference to constructed Vector of type T
          */
-        constexpr auto operator=(Vector<T>&& other) noexcept -> Vector<T>&;
+        constexpr auto operator=(Vector<T>&& other) noexcept(
+            std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value ||
+            std::allocator_traits<allocator_type>::is_always_equal::value)->Vector<T>&;
 
         /**
          * @brief Assign Vector object from \p init_list elements
@@ -783,7 +785,9 @@ namespace dsa
     }
 
     template<typename T>
-    constexpr auto Vector<T>::operator=(Vector<T>&& other) noexcept -> Vector<T>&
+    constexpr auto Vector<T>::operator=(Vector<T>&& other) noexcept(
+        std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value ||
+        std::allocator_traits<allocator_type>::is_always_equal::value)-> Vector<T>&
     {
         if (&other != this)
         {
