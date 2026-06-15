@@ -165,7 +165,7 @@ namespace dsa
          *
          * @param[in] init_list initializer list of values of type T
          */
-        constexpr Vector(std::initializer_list<T> init_list);
+        Vector(std::initializer_list<T> init_list);
 
         /**
          * @brief Destroy the Vector object
@@ -752,7 +752,7 @@ namespace dsa
     }
 
     template<typename T>
-    constexpr Vector<T>::Vector(std::initializer_list<T> init_list)
+    Vector<T>::Vector(std::initializer_list<T> init_list)
     {
         assign(init_list);
     }
