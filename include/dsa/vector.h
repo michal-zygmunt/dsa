@@ -233,7 +233,7 @@ namespace dsa
          *
          * @return allocator_type type of memory allocator
          */
-        [[nodiscard]] constexpr auto get_allocator() const -> allocator_type;
+        [[nodiscard]] constexpr auto get_allocator() const noexcept -> allocator_type;
 
         /**
          * @brief Returns a reference to Vector element at \p pos index.
@@ -871,7 +871,7 @@ namespace dsa
     }
 
     template<typename T>
-    [[nodiscard]] constexpr auto Vector<T>::get_allocator() const -> allocator_type
+    [[nodiscard]] constexpr auto Vector<T>::get_allocator() const noexcept -> allocator_type
     {
         return m_allocator;
     }
