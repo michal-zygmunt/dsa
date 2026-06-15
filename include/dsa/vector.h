@@ -83,24 +83,24 @@ namespace dsa
          *
          * @tparam T& reference to data type
          */
-        using reference = T&;
+        using reference = value_type&;
 
         /**
          * @brief Alias for const reference to data type used in class
          *
          * @tparam T& const reference to data type
          */
-        using const_reference = const T&;
+        using const_reference = const value_type&;
 
         /**
          * @brief Alias for iterator to data type used in class
          */
-        using iterator = T*;
+        using iterator = value_type*;
 
         /**
          * @brief Alias for const iterator to data type used in class
          */
-        using const_iterator = const T*;
+        using const_iterator = const value_type*;
 
         /**
          * @brief Alias for reverse_iterator to data type used in class
