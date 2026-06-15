@@ -123,7 +123,7 @@ namespace dsa
          *
          * @param[in] count element count
          */
-        constexpr Vector(size_type count);
+        explicit Vector(size_type count);
 
         /**
          * @brief Construct a new Vector object of size \p count,
@@ -712,10 +712,9 @@ namespace dsa
     constexpr Vector<T>::Vector() = default;
 
     template<typename T>
-    constexpr Vector<T>::Vector(size_type count)
+    Vector<T>::Vector(size_type count)
         : Vector(count, T())
-    {
-    }
+    {}
 
     template<typename T>
     constexpr Vector<T>::Vector(size_type count, const T& value)
