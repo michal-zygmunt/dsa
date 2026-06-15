@@ -70,17 +70,13 @@ namespace dsa
 
         /**
          * @brief Alias for pointer to data type used in class
-         *
-         * @tparam T* pointer to data type
          */
-        using pointer = T*;
+        using pointer = std::allocator_traits<allocator_type>::pointer;
 
         /**
          * @brief Alias for const pointer to data type used in class
-         *
-         * @tparam T* pointer to data type
          */
-        using const_pointer = const T*;
+        using const_pointer = std::allocator_traits<allocator_type>::const_pointer;
 
         /**
          * @brief Alias for reference to data type used in class
