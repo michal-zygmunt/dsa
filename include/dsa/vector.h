@@ -401,7 +401,7 @@ namespace dsa
          *
          * @return reverse_iterator to the element after the last element
          */
-        [[nodiscard]] constexpr auto rend() -> reverse_iterator;
+        [[nodiscard]] constexpr auto rend() noexcept -> reverse_iterator;
 
         /**
          * @brief Returns const_reverse_iterator past the last element of reversed underlaying data structure
@@ -410,7 +410,7 @@ namespace dsa
          *
          * @return const_reverse_iterator to the element after the last element
          */
-        [[nodiscard]] constexpr auto rend() const -> const_reverse_iterator;
+        [[nodiscard]] constexpr auto rend() const noexcept -> const_reverse_iterator;
 
         /**
          * @brief Returns const_reverse_iterator past the last element of reversed underlaying data structure
@@ -1014,13 +1014,13 @@ namespace dsa
     }
 
     template<typename T>
-    [[nodiscard]] constexpr auto Vector<T>::rend() -> reverse_iterator
+    [[nodiscard]] constexpr auto Vector<T>::rend() noexcept -> reverse_iterator
     {
         return reverse_iterator(begin());
     }
 
     template<typename T>
-    [[nodiscard]] constexpr auto Vector<T>::rend() const -> const_reverse_iterator
+    [[nodiscard]] constexpr auto Vector<T>::rend() const noexcept -> const_reverse_iterator
     {
         return const_reverse_iterator(begin());
     }
