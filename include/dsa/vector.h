@@ -374,7 +374,7 @@ namespace dsa
          *
          * @return reverse_iterator to the first element
          */
-        [[nodiscard]] constexpr auto rbegin() -> reverse_iterator;
+        [[nodiscard]] constexpr auto rbegin() noexcept -> reverse_iterator;
 
         /**
          * @brief Returns const_reverse_iterator to the first element of reversed underlaying data structure
@@ -383,7 +383,7 @@ namespace dsa
          *
          * @return const_reverse_iterator to the first element
          */
-        [[nodiscard]] constexpr auto rbegin() const -> const_reverse_iterator;
+        [[nodiscard]] constexpr auto rbegin() const noexcept -> const_reverse_iterator;
 
         /**
          * @brief Returns const_reverse_iterator to the first element of reversed underlaying data structure
@@ -996,13 +996,13 @@ namespace dsa
     }
 
     template<typename T>
-    [[nodiscard]] constexpr auto Vector<T>::rbegin() -> reverse_iterator
+    [[nodiscard]] constexpr auto Vector<T>::rbegin() noexcept -> reverse_iterator
     {
         return reverse_iterator(end());
     }
 
     template<typename T>
-    [[nodiscard]] constexpr auto Vector<T>::rbegin() const -> const_reverse_iterator
+    [[nodiscard]] constexpr auto Vector<T>::rbegin() const noexcept -> const_reverse_iterator
     {
         return const_reverse_iterator(end());
     }
