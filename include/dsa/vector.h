@@ -427,7 +427,7 @@ namespace dsa
          * @return true if container is empty
          * @return false if container is not empty
          */
-        [[nodiscard]] constexpr auto empty() const -> bool;
+        [[nodiscard]] constexpr auto empty() const noexcept -> bool;
 
         /**
          * @brief Returns number of elements in container
@@ -1032,7 +1032,7 @@ namespace dsa
     }
 
     template<typename T>
-    [[nodiscard]] constexpr auto Vector<T>::empty() const -> bool
+    [[nodiscard]] constexpr auto Vector<T>::empty() const noexcept -> bool
     {
         return m_size == 0;
     }
