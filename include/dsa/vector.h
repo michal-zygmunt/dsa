@@ -565,30 +565,7 @@ namespace dsa
          * @note iterator \p pos must be valid and dereferencable
          *       iterators and references at and after \p pos are invalidated
          */
-        constexpr auto erase(iterator pos) -> iterator;
-
-        /**
-         * @brief Erases specified element from the container
-         *
-         * @param[in] pos iterator to the element to remove
-         * @return iterator iterator to element after last erased element
-         *
-         * @note iterator \p pos must be valid and dereferencable
-         *       iterators and references at and after \p pos are invalidated
-         */
         constexpr auto erase(const_iterator pos) -> iterator;
-
-        /**
-         * @brief Erases elements in range [ \p first , \p last ) from the container
-         *
-         * @param[in] first element defining range of elements to insert
-         * @param[in] last element definig range of elements to insert
-         * @return iterator iterator to element after last erased element
-         *
-         * @note iterator \p first does not need to be dereferencable
-         *       iterators and references at and after \p first are invalidated
-         */
-        constexpr auto erase(iterator first, iterator last) -> iterator;
 
         /**
          * @brief Erases elements in range [ \p first , \p last ) from the container
@@ -1181,21 +1158,9 @@ namespace dsa
     }
 
     template<typename T>
-    constexpr auto Vector<T>::erase(iterator pos) -> iterator
-    {
-        return erase(pos, pos + 1);
-    }
-
-    template<typename T>
     constexpr auto Vector<T>::erase(const_iterator pos) -> iterator
     {
         return erase(pos, pos + 1);
-    }
-
-    template<typename T>
-    constexpr auto Vector<T>::erase(iterator first, iterator last) -> iterator
-    {
-        return erase(static_cast<const_iterator>(first), static_cast<const_iterator>(last));
     }
 
     template<typename T>
