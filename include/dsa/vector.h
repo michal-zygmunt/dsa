@@ -626,7 +626,9 @@ namespace dsa
          *
          * @param[in] other container to exchange content with
          */
-        constexpr void swap(Vector<T>& other) noexcept;
+        constexpr void swap(Vector<T>& other) noexcept(
+            std::allocator_traits<allocator_type>::propagate_on_container_swap::value ||
+            std::allocator_traits<allocator_type>::is_always_equal::value);
 
     private:
 
@@ -1259,7 +1261,9 @@ namespace dsa
     }
 
     template<typename T>
-    constexpr void Vector<T>::swap(Vector<T>& other) noexcept
+    constexpr void Vector<T>::swap(Vector<T>& other) noexcept(
+        std::allocator_traits<allocator_type>::propagate_on_container_swap::value ||
+        std::allocator_traits<allocator_type>::is_always_equal::value)
     {
         std::swap(*this, other);
     }
