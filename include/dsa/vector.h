@@ -471,7 +471,7 @@ namespace dsa
          *
          * @note Operation invalidates all pointers and references
          */
-        constexpr void clear();
+        constexpr void clear() noexcept;
 
         /**
          * @brief Insert a copy of \p value before \p pos
@@ -1075,7 +1075,7 @@ namespace dsa
     }
 
     template<typename T>
-    constexpr void Vector<T>::clear()
+    constexpr void Vector<T>::clear() noexcept
     {
         destroy_elements();
         m_size = 0;
