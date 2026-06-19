@@ -120,6 +120,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         assert((vector7 <=> vector8) == std::partial_ordering::unordered);
         tests::compare("Vector7 <=> vector8 weak ordering", (vector7 <=> vector8) != std::weak_ordering::less, true);
 
+        // test noexcept
+
+        // operators
+        static_assert(!noexcept(dsa::Vector<tests::ThrowingType>{1} == dsa::Vector<tests::ThrowingType>{1}));
+        static_assert(!noexcept(dsa::Vector<tests::ThrowingType>{1} <=> dsa::Vector<tests::ThrowingType>{1}));
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -218,6 +224,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
             (std_vector7 <=> std_vector8) == std::partial_ordering::unordered, true);
         tests::compare("(vector7 <=> vector8) == (std_vector7 <=> std_vector8)",
             (vector7 <=> vector8) == (std_vector7 <=> std_vector8), true);
+
+        // test noexcept
+
+        // operators
+        static_assert(!noexcept(std::vector<tests::ThrowingType>{1} == std::vector<tests::ThrowingType>{1}));
+        static_assert(!noexcept(std::vector<tests::ThrowingType>{1} <=> std::vector<tests::ThrowingType>{1}));
 
 
         tests::print_stats();
