@@ -1416,33 +1416,33 @@ namespace dsa
     /**
      * @brief The relational operator compares two Vector objects
      *
-     * @tparam T type of data stored in container
-     * @param[in] vector1 input container
-     * @param[in] vector2 input container
+     * @tparam T type of data stored in Vector
+     * @param[in] lhs input container
+     * @param[in] rhs input container
      * @retval true if containers are equal
      * @retval false if containers are not equal
      */
     template<typename T>
-    auto operator==(const Vector<T>& vector1, const Vector<T>& vector2) -> bool
+    auto operator==(const Vector<T>& lhs, const Vector<T>& rhs)
+        noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> bool
     {
-        if (vector1.size() != vector2.size())
+        if (lhs.size() != rhs.size())
         {
             return false;
         }
 
-        auto vector1_iter = vector1.cbegin();
-        auto vector2_iter = vector2.cbegin();
+        auto lhs_iter = lhs.cbegin();
+        auto rhs_iter = rhs.cbegin();
 
-        // vectors have equal size, test condition for one vector
-        while (vector1_iter != vector1.cend())
+        while (lhs_iter != lhs.cend())
         {
-            if (*vector1_iter != *vector2_iter)
+            if (*lhs_iter != *rhs_iter)
             {
                 return false;
             }
 
-            vector1_iter++;
-            vector2_iter++;
+            lhs_iter++;
+            rhs_iter++;
         }
 
         return true;
@@ -1451,43 +1451,38 @@ namespace dsa
     /**
      * @brief The relational operator compares two Vector objects
      *
-     * @param[in] vector1 input container
-     * @param[in] vector2 input container
-     * @retval -1 if the content of \p vector1 is lexicographically lesser than the content of \p vector2
-     * @retval  0 if the content of \p vector1 and \p vector2 is equal
-     * @retval +1 if the content of \p vector1 is lexicographically greater than the content of \p vector2
+     * Depending on type T, function returns one of following objects:
+     * std::strong_ordering::less / equal / greater
+     * std::weak_ordering::less / equivalent / greater
+     * std::partial_ordering::less / equivalent / greater / unordered
+     * It is best to compare results with 0 to determine if lhs is <, >, or == to rhs
+     *
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @return three way comparison result type
      */
     template<typename T>
-    constexpr auto operator<=>(const Vector<T>& vector1, const Vector<T>& vector2)
+    auto operator<=>(const Vector<T>& lhs, const Vector<T>& rhs)
+        noexcept(noexcept(*lhs.begin() == *rhs.begin()))->std::compare_three_way_result_t<T>
     {
-        auto vector1_iter = vector1.cbegin();
-        auto vector2_iter = vector2.cbegin();
+        auto lhs_iter = lhs.cbegin();
+        auto rhs_iter = rhs.cbegin();
 
-        while (vector1_iter != vector1.cend() && vector2_iter != vector2.cend())
+        while (lhs_iter != lhs.cend() && rhs_iter != rhs.cend())
         {
-            if (*vector1_iter < *vector2_iter)
+            auto cmp = *lhs_iter <=> *rhs_iter;
+            if (cmp != 0)
             {
-                return std::strong_ordering::less;
-            }
-            if (*vector1_iter > *vector2_iter)
-            {
-                return std::strong_ordering::greater;
+                return cmp;
             }
 
-            vector1_iter++;
-            vector2_iter++;
+            lhs_iter++;
+            rhs_iter++;
         }
 
-        if (vector1.size() < vector2.size())
-        {
-            return std::strong_ordering::less;
-        }
-        if (vector1.size() > vector2.size())
-        {
-            return std::strong_ordering::greater;
-        }
-
-        return std::strong_ordering::equivalent;
+        // first n elements are equal
+        // check sizes
+        return lhs.size() <=> rhs.size();
     }
 }
 
