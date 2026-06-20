@@ -1382,19 +1382,6 @@ namespace dsa
     }
 
     /**
-     * @brief Exchanges content of two Vector containers
-     *
-     * @tparam T data type stored in containers
-     * @param[in] vector1 container to swap content
-     * @param[in] vector2 container to swap content
-     */
-    template<typename T>
-    void swap(Vector<T>& vector1, Vector<T>& vector2) noexcept
-    {
-        vector1.swap(vector2);
-    }
-
-    /**
      * @brief Overloads operator to print all elements of Vector
      *
      * @tparam T data type stored in container
@@ -1483,6 +1470,19 @@ namespace dsa
         // first n elements are equal
         // check sizes
         return lhs.size() <=> rhs.size();
+    }
+
+    /**
+     * @brief Exchanges content of two Vector containers
+     *
+     * @tparam T data type stored in containers
+     * @param[in] lhs container to swap content
+     * @param[in] rhs container to swap content
+     */
+    template<typename T>
+    void swap(Vector<T>& lhs, Vector<T>& rhs) noexcept(noexcept(lhs.swap(rhs)))
+    {
+        lhs.swap(rhs);
     }
 }
 
