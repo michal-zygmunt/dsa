@@ -15,6 +15,7 @@
 #include <exception>
 #include <initializer_list>
 #include <iostream>
+#include <utility>
 #include <vector>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -58,6 +59,21 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector6", vector6, temp7);
         tests::compare("Vector7", vector7, temp6);
 
+        dsa::Vector<int> vector8 = dsa::Vector<int>(il_1);
+        dsa::Vector<int> vector9;
+        dsa::swap(vector8, vector9);
+        const std::initializer_list<int> expected8 = { };
+        tests::compare("Vector8", vector8, expected8);
+        const std::initializer_list<int> expected9 = il_1;
+        tests::compare("Vector9", vector9, expected9);
+
+        // swap safe type
+        static_assert(noexcept(swap(std::declval<dsa::Vector<int>&>(),
+            std::declval<dsa::Vector<int>&>())));
+        // swap throwing type
+        static_assert(noexcept(swap(std::declval<dsa::Vector<tests::ThrowingType>&>(),
+            std::declval<dsa::Vector<tests::ThrowingType>&>())));
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -75,7 +91,28 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::vector<int> std_vector5{ 1, 2, 3, 4 };
         std_vector5.swap(std_vector5);
-        tests::compare("vector13 vs std", vector5, std_vector5);
+        tests::compare("vector5 vs std", vector5, std_vector5);
+
+        const std::initializer_list<int> std_temp6{ 1, 2, 3, 4, 5 };
+        const std::initializer_list<int> std_temp7{ 10, 20, 30 };
+        std::vector<int> std_vector6{ std_temp6 };
+        std::vector<int> std_vector7{ std_temp7 };
+        std::swap(std_vector6, std_vector7);
+        tests::compare("Vector6 vs std", vector6, std_vector6);
+        tests::compare("Vector7 vs std", vector7, std_vector7);
+
+        std::vector<int> std_vector8 = std::vector<int>(il_1);
+        std::vector<int> std_vector9;
+        std::swap(std_vector8, std_vector9);
+        tests::compare("Vector8 vs std", vector8, std_vector8);
+        tests::compare("Vector9 vs std", vector9, std_vector9);
+
+        // swap safe type
+        static_assert(noexcept(swap(std::declval<std::vector<int>&>(),
+            std::declval<std::vector<int>&>())));
+        // swap throwing type
+        static_assert(noexcept(swap(std::declval<std::vector<tests::ThrowingType>&>(),
+            std::declval<std::vector<tests::ThrowingType>&>())));
 
 
         tests::print_stats();
