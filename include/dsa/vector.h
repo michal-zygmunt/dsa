@@ -12,6 +12,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include <algorithm>
 #include <cstddef>
 #include <initializer_list>
 #include <iostream>
@@ -33,9 +34,6 @@ namespace dsa
      *       `dsa::Vector<bool>` behaves like a regular container,
      *       without bit-packing. This design choice prioritizes correctness
      *       and predictable semantics over memory optimization.
-     *
-     * @todo add non-member specialized erase function
-     * @todo add non-member specialized erase_if function
      */
     template<typename T>
     class Vector
@@ -1483,6 +1481,42 @@ namespace dsa
     void swap(Vector<T>& lhs, Vector<T>& rhs) noexcept(noexcept(lhs.swap(rhs)))
     {
         lhs.swap(rhs);
+    }
+
+    /**
+     * @brief Function erases from container all elements that are equal to \p value
+     *
+     * @tparam T data type stored in containers
+     * @tparam U data type of \p value
+     * @param[in,out] container object to remove erase elements from
+     * @param[in] value value to remove from \p container
+     * @return size_type number of elements removed
+     */
+    template<typename T, typename U>
+    constexpr auto erase(Vector<T>& container, const U& value) -> Vector<T>::size_type
+    {
+        auto* new_end_iter = std::remove(container.begin(), container.end(), value);
+        auto removed_count = static_cast<Vector<T>::size_type>(container.end() - new_end_iter);
+        container.erase(new_end_iter, container.end());
+        return removed_count;
+    }
+
+    /**
+     * @brief Function erases from container all elements that satisfy the predicate \p pred
+     *
+     * @tparam T data type stored in containers
+     * @tparam Pred predicate to check if element should be erased
+     * @param[in,out] container container object to remove erase elements from
+     * @param[in] pred predicate which returns \p true if the element should be erased
+     * @return size_type number of elements removed
+     */
+    template<typename T, typename Pred>
+    constexpr auto erase_if(Vector<T>& container, Pred pred) -> Vector<T>::size_type
+    {
+        auto* new_end_iter = std::remove_if(container.begin(), container.end(), pred);
+        auto removed_count = static_cast<Vector<T>::size_type>(container.end() - new_end_iter);
+        container.erase(new_end_iter, container.end());
+        return removed_count;
     }
 }
 
