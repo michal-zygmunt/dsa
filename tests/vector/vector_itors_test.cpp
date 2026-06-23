@@ -305,7 +305,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("vector20()", vector20, expected20);
 
         // test data access
-        int* ptr_vector20 = vector20.data();
+        const int* ptr_vector20 = vector20.data();
         static_assert(std::is_same_v<decltype(vector20.data()), int*>, "data() must return T*");
         tests::compare("vector20[0]", *ptr_vector20, 10);
 
