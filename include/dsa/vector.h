@@ -453,7 +453,7 @@ namespace dsa
          *
          * @return size_type number of allocated elements
          */
-        constexpr auto capacity() const noexcept -> size_type;
+        [[nodiscard]] constexpr auto capacity() const noexcept -> size_type;
 
         /**
          * @brief Request to remove of unused capacity
@@ -1037,7 +1037,7 @@ namespace dsa
     }
 
     template<typename T>
-    constexpr auto Vector<T>::capacity() const noexcept -> size_type
+    [[nodiscard]] constexpr auto Vector<T>::capacity() const noexcept -> size_type
     {
         return m_capacity;
     }
