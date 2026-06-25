@@ -12,6 +12,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include <algorithm>
 #include <cstddef>
 #include <initializer_list>
 #include <iostream>
@@ -33,9 +34,6 @@ namespace dsa
      *       `dsa::Vector<bool>` behaves like a regular container,
      *       without bit-packing. This design choice prioritizes correctness
      *       and predictable semantics over memory optimization.
-     *
-     * @todo add non-member specialized erase function
-     * @todo add non-member specialized erase_if function
      */
     template<typename T>
     class Vector
@@ -70,41 +68,37 @@ namespace dsa
 
         /**
          * @brief Alias for pointer to data type used in class
-         *
-         * @tparam T* pointer to data type
          */
-        using pointer = T*;
+        using pointer = std::allocator_traits<allocator_type>::pointer;
 
         /**
          * @brief Alias for const pointer to data type used in class
-         *
-         * @tparam T* pointer to data type
          */
-        using const_pointer = const T*;
+        using const_pointer = std::allocator_traits<allocator_type>::const_pointer;
 
         /**
          * @brief Alias for reference to data type used in class
          *
          * @tparam T& reference to data type
          */
-        using reference = T&;
+        using reference = value_type&;
 
         /**
          * @brief Alias for const reference to data type used in class
          *
          * @tparam T& const reference to data type
          */
-        using const_reference = const T&;
+        using const_reference = const value_type&;
 
         /**
          * @brief Alias for iterator to data type used in class
          */
-        using iterator = T*;
+        using iterator = value_type*;
 
         /**
          * @brief Alias for const iterator to data type used in class
          */
-        using const_iterator = const T*;
+        using const_iterator = const value_type*;
 
         /**
          * @brief Alias for reverse_iterator to data type used in class
@@ -127,7 +121,7 @@ namespace dsa
          *
          * @param[in] count element count
          */
-        constexpr Vector(size_type count);
+        explicit Vector(size_type count);
 
         /**
          * @brief Construct a new Vector object of size \p count,
@@ -169,12 +163,12 @@ namespace dsa
          *
          * @param[in] init_list initializer list of values of type T
          */
-        constexpr Vector(std::initializer_list<T> init_list);
+        Vector(std::initializer_list<T> init_list);
 
         /**
          * @brief Destroy the Vector object
          */
-        ~Vector();
+        constexpr ~Vector();
 
         /**
          * @brief Assign Vector object using copy assignment
@@ -192,7 +186,9 @@ namespace dsa
          * @param[in,out] other Vector object of type T
          * @return Vector& reference to constructed Vector of type T
          */
-        constexpr auto operator=(Vector<T>&& other) noexcept -> Vector<T>&;
+        constexpr auto operator=(Vector<T>&& other) noexcept(
+            std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value ||
+            std::allocator_traits<allocator_type>::is_always_equal::value)->Vector<T>&;
 
         /**
          * @brief Assign Vector object from \p init_list elements
@@ -235,7 +231,7 @@ namespace dsa
          *
          * @return allocator_type type of memory allocator
          */
-        [[nodiscard]] constexpr auto get_allocator() const -> allocator_type;
+        [[nodiscard]] constexpr auto get_allocator() const noexcept -> allocator_type;
 
         /**
          * @brief Returns a reference to Vector element at \p pos index.
@@ -376,7 +372,7 @@ namespace dsa
          *
          * @return reverse_iterator to the first element
          */
-        [[nodiscard]] constexpr auto rbegin() -> reverse_iterator;
+        [[nodiscard]] constexpr auto rbegin() noexcept -> reverse_iterator;
 
         /**
          * @brief Returns const_reverse_iterator to the first element of reversed underlaying data structure
@@ -385,7 +381,7 @@ namespace dsa
          *
          * @return const_reverse_iterator to the first element
          */
-        [[nodiscard]] constexpr auto rbegin() const -> const_reverse_iterator;
+        [[nodiscard]] constexpr auto rbegin() const noexcept -> const_reverse_iterator;
 
         /**
          * @brief Returns const_reverse_iterator to the first element of reversed underlaying data structure
@@ -403,7 +399,7 @@ namespace dsa
          *
          * @return reverse_iterator to the element after the last element
          */
-        [[nodiscard]] constexpr auto rend() -> reverse_iterator;
+        [[nodiscard]] constexpr auto rend() noexcept -> reverse_iterator;
 
         /**
          * @brief Returns const_reverse_iterator past the last element of reversed underlaying data structure
@@ -412,7 +408,7 @@ namespace dsa
          *
          * @return const_reverse_iterator to the element after the last element
          */
-        [[nodiscard]] constexpr auto rend() const -> const_reverse_iterator;
+        [[nodiscard]] constexpr auto rend() const noexcept -> const_reverse_iterator;
 
         /**
          * @brief Returns const_reverse_iterator past the last element of reversed underlaying data structure
@@ -429,7 +425,7 @@ namespace dsa
          * @return true if container is empty
          * @return false if container is not empty
          */
-        [[nodiscard]] constexpr auto empty() const -> bool;
+        [[nodiscard]] constexpr auto empty() const noexcept -> bool;
 
         /**
          * @brief Returns number of elements in container
@@ -457,7 +453,7 @@ namespace dsa
          *
          * @return size_type number of allocated elements
          */
-        constexpr auto capacity() -> size_type;
+        [[nodiscard]] constexpr auto capacity() const noexcept -> size_type;
 
         /**
          * @brief Request to remove of unused capacity
@@ -473,7 +469,7 @@ namespace dsa
          *
          * @note Operation invalidates all pointers and references
          */
-        constexpr void clear();
+        constexpr void clear() noexcept;
 
         /**
          * @brief Insert a copy of \p value before \p pos
@@ -567,30 +563,7 @@ namespace dsa
          * @note iterator \p pos must be valid and dereferencable
          *       iterators and references at and after \p pos are invalidated
          */
-        constexpr auto erase(iterator pos) -> iterator;
-
-        /**
-         * @brief Erases specified element from the container
-         *
-         * @param[in] pos iterator to the element to remove
-         * @return iterator iterator to element after last erased element
-         *
-         * @note iterator \p pos must be valid and dereferencable
-         *       iterators and references at and after \p pos are invalidated
-         */
         constexpr auto erase(const_iterator pos) -> iterator;
-
-        /**
-         * @brief Erases elements in range [ \p first , \p last ) from the container
-         *
-         * @param[in] first element defining range of elements to insert
-         * @param[in] last element definig range of elements to insert
-         * @return iterator iterator to element after last erased element
-         *
-         * @note iterator \p first does not need to be dereferencable
-         *       iterators and references at and after \p first are invalidated
-         */
-        constexpr auto erase(iterator first, iterator last) -> iterator;
 
         /**
          * @brief Erases elements in range [ \p first , \p last ) from the container
@@ -651,7 +624,9 @@ namespace dsa
          *
          * @param[in] other container to exchange content with
          */
-        constexpr void swap(Vector<T>& other) noexcept;
+        constexpr void swap(Vector<T>& other) noexcept(
+            std::allocator_traits<allocator_type>::propagate_on_container_swap::value ||
+            std::allocator_traits<allocator_type>::is_always_equal::value);
 
     private:
 
@@ -716,10 +691,9 @@ namespace dsa
     constexpr Vector<T>::Vector() = default;
 
     template<typename T>
-    constexpr Vector<T>::Vector(size_type count)
+    Vector<T>::Vector(size_type count)
         : Vector(count, T())
-    {
-    }
+    {}
 
     template<typename T>
     constexpr Vector<T>::Vector(size_type count, const T& value)
@@ -757,13 +731,13 @@ namespace dsa
     }
 
     template<typename T>
-    constexpr Vector<T>::Vector(std::initializer_list<T> init_list)
+    Vector<T>::Vector(std::initializer_list<T> init_list)
     {
         assign(init_list);
     }
 
     template<typename T>
-    Vector<T>::~Vector()
+    constexpr Vector<T>::~Vector()
     {
         clear_allocation();
     }
@@ -788,7 +762,9 @@ namespace dsa
     }
 
     template<typename T>
-    constexpr auto Vector<T>::operator=(Vector<T>&& other) noexcept -> Vector<T>&
+    constexpr auto Vector<T>::operator=(Vector<T>&& other) noexcept(
+        std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value ||
+        std::allocator_traits<allocator_type>::is_always_equal::value)-> Vector<T>&
     {
         if (&other != this)
         {
@@ -872,7 +848,7 @@ namespace dsa
     }
 
     template<typename T>
-    [[nodiscard]] constexpr auto Vector<T>::get_allocator() const -> allocator_type
+    [[nodiscard]] constexpr auto Vector<T>::get_allocator() const noexcept -> allocator_type
     {
         return m_allocator;
     }
@@ -997,13 +973,13 @@ namespace dsa
     }
 
     template<typename T>
-    [[nodiscard]] constexpr auto Vector<T>::rbegin() -> reverse_iterator
+    [[nodiscard]] constexpr auto Vector<T>::rbegin() noexcept -> reverse_iterator
     {
         return reverse_iterator(end());
     }
 
     template<typename T>
-    [[nodiscard]] constexpr auto Vector<T>::rbegin() const -> const_reverse_iterator
+    [[nodiscard]] constexpr auto Vector<T>::rbegin() const noexcept -> const_reverse_iterator
     {
         return const_reverse_iterator(end());
     }
@@ -1015,13 +991,13 @@ namespace dsa
     }
 
     template<typename T>
-    [[nodiscard]] constexpr auto Vector<T>::rend() -> reverse_iterator
+    [[nodiscard]] constexpr auto Vector<T>::rend() noexcept -> reverse_iterator
     {
         return reverse_iterator(begin());
     }
 
     template<typename T>
-    [[nodiscard]] constexpr auto Vector<T>::rend() const -> const_reverse_iterator
+    [[nodiscard]] constexpr auto Vector<T>::rend() const noexcept -> const_reverse_iterator
     {
         return const_reverse_iterator(begin());
     }
@@ -1033,7 +1009,7 @@ namespace dsa
     }
 
     template<typename T>
-    [[nodiscard]] constexpr auto Vector<T>::empty() const -> bool
+    [[nodiscard]] constexpr auto Vector<T>::empty() const noexcept -> bool
     {
         return m_size == 0;
     }
@@ -1061,7 +1037,7 @@ namespace dsa
     }
 
     template<typename T>
-    constexpr auto Vector<T>::capacity() -> size_type
+    [[nodiscard]] constexpr auto Vector<T>::capacity() const noexcept -> size_type
     {
         return m_capacity;
     }
@@ -1076,7 +1052,7 @@ namespace dsa
     }
 
     template<typename T>
-    constexpr void Vector<T>::clear()
+    constexpr void Vector<T>::clear() noexcept
     {
         destroy_elements();
         m_size = 0;
@@ -1182,21 +1158,9 @@ namespace dsa
     }
 
     template<typename T>
-    constexpr auto Vector<T>::erase(iterator pos) -> iterator
-    {
-        return erase(pos, pos + 1);
-    }
-
-    template<typename T>
     constexpr auto Vector<T>::erase(const_iterator pos) -> iterator
     {
         return erase(pos, pos + 1);
-    }
-
-    template<typename T>
-    constexpr auto Vector<T>::erase(iterator first, iterator last) -> iterator
-    {
-        return erase(static_cast<const_iterator>(first), static_cast<const_iterator>(last));
     }
 
     template<typename T>
@@ -1295,10 +1259,154 @@ namespace dsa
     }
 
     template<typename T>
-    constexpr void Vector<T>::swap(Vector<T>& other) noexcept
+    constexpr void Vector<T>::swap(Vector<T>& other) noexcept(
+        std::allocator_traits<allocator_type>::propagate_on_container_swap::value ||
+        std::allocator_traits<allocator_type>::is_always_equal::value)
     {
         std::swap(*this, other);
     }
+
+    /**
+     * @brief Overloads operator to print all elements of Vector
+     *
+     * @tparam T data type stored in container
+     * @param[in,out] out reference to output stream
+     * @param[in] vector Vector to print
+     * @return std::ostream&
+     */
+    template<typename T>
+    auto operator<<(std::ostream& out, const Vector<T>& vector) -> std::ostream&
+    {
+        for (size_t i = 0; i < vector.size(); i++)
+        {
+            out << vector[i] << ' ';
+        }
+
+        return out;
+    }
+
+    /**
+     * @brief The relational operator compares two Vector objects
+     *
+     * @tparam T type of data stored in Vector
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @retval true if containers are equal
+     * @retval false if containers are not equal
+     */
+    template<typename T>
+    auto operator==(const Vector<T>& lhs, const Vector<T>& rhs)
+        noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> bool
+    {
+        if (lhs.size() != rhs.size())
+        {
+            return false;
+        }
+
+        auto lhs_iter = lhs.cbegin();
+        auto rhs_iter = rhs.cbegin();
+
+        while (lhs_iter != lhs.cend())
+        {
+            if (*lhs_iter != *rhs_iter)
+            {
+                return false;
+            }
+
+            lhs_iter++;
+            rhs_iter++;
+        }
+
+        return true;
+    }
+
+    /**
+     * @brief The relational operator compares two Vector objects
+     *
+     * Depending on type T, function returns one of following objects:
+     * std::strong_ordering::less / equal / greater
+     * std::weak_ordering::less / equivalent / greater
+     * std::partial_ordering::less / equivalent / greater / unordered
+     * It is best to compare results with 0 to determine if lhs is <, >, or == to rhs
+     *
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @return three way comparison result type
+     */
+    template<typename T>
+    auto operator<=>(const Vector<T>& lhs, const Vector<T>& rhs)
+        noexcept(noexcept(*lhs.begin() == *rhs.begin()))->std::compare_three_way_result_t<T>
+    {
+        auto lhs_iter = lhs.cbegin();
+        auto rhs_iter = rhs.cbegin();
+
+        while (lhs_iter != lhs.cend() && rhs_iter != rhs.cend())
+        {
+            auto cmp = *lhs_iter <=> *rhs_iter;
+            if (cmp != 0)
+            {
+                return cmp;
+            }
+
+            lhs_iter++;
+            rhs_iter++;
+        }
+
+        // first n elements are equal
+        // check sizes
+        return lhs.size() <=> rhs.size();
+    }
+
+    /**
+     * @brief Exchanges content of two Vector containers
+     *
+     * @tparam T data type stored in containers
+     * @param[in] lhs container to swap content
+     * @param[in] rhs container to swap content
+     */
+    template<typename T>
+    void swap(Vector<T>& lhs, Vector<T>& rhs) noexcept(noexcept(lhs.swap(rhs)))
+    {
+        lhs.swap(rhs);
+    }
+
+    /**
+     * @brief Function erases from container all elements that are equal to \p value
+     *
+     * @tparam T data type stored in containers
+     * @tparam U data type of \p value
+     * @param[in,out] container object to remove erase elements from
+     * @param[in] value value to remove from \p container
+     * @return size_type number of elements removed
+     */
+    template<typename T, typename U>
+    constexpr auto erase(Vector<T>& container, const U& value) -> Vector<T>::size_type
+    {
+        auto* new_end_iter = std::remove(container.begin(), container.end(), value);
+        auto removed_count = static_cast<Vector<T>::size_type>(container.end() - new_end_iter);
+        container.erase(new_end_iter, container.end());
+        return removed_count;
+    }
+
+    /**
+     * @brief Function erases from container all elements that satisfy the predicate \p pred
+     *
+     * @tparam T data type stored in containers
+     * @tparam Pred predicate to check if element should be erased
+     * @param[in,out] container container object to remove erase elements from
+     * @param[in] pred predicate which returns \p true if the element should be erased
+     * @return size_type number of elements removed
+     */
+    template<typename T, typename Pred>
+    constexpr auto erase_if(Vector<T>& container, Pred pred) -> Vector<T>::size_type
+    {
+        auto* new_end_iter = std::remove_if(container.begin(), container.end(), pred);
+        auto removed_count = static_cast<Vector<T>::size_type>(container.end() - new_end_iter);
+        container.erase(new_end_iter, container.end());
+        return removed_count;
+    }
+
+    // definitions of private methods
 
     template<typename T>
     inline auto Vector<T>::calc_new_capacity() -> size_type
@@ -1411,115 +1519,6 @@ namespace dsa
             std::allocator_traits<allocator_type>::deallocate(m_allocator, m_data, m_capacity);
             m_capacity = 0;
         }
-    }
-
-    /**
-     * @brief Exchanges content of two Vector containers
-     *
-     * @tparam T data type stored in containers
-     * @param[in] vector1 container to swap content
-     * @param[in] vector2 container to swap content
-     */
-    template<typename T>
-    void swap(Vector<T>& vector1, Vector<T>& vector2) noexcept
-    {
-        vector1.swap(vector2);
-    }
-
-    /**
-     * @brief Overloads operator to print all elements of Vector
-     *
-     * @tparam T data type stored in container
-     * @param[in,out] out reference to output stream
-     * @param[in] vector Vector to print
-     * @return std::ostream&
-     */
-    template<typename T>
-    auto operator<<(std::ostream& out, const Vector<T>& vector) -> std::ostream&
-    {
-        for (size_t i = 0; i < vector.size(); i++)
-        {
-            out << vector[i] << ' ';
-        }
-
-        return out;
-    }
-
-    /**
-     * @brief The relational operator compares two Vector objects
-     *
-     * @tparam T type of data stored in container
-     * @param[in] vector1 input container
-     * @param[in] vector2 input container
-     * @retval true if containers are equal
-     * @retval false if containers are not equal
-     */
-    template<typename T>
-    auto operator==(const Vector<T>& vector1, const Vector<T>& vector2) -> bool
-    {
-        if (vector1.size() != vector2.size())
-        {
-            return false;
-        }
-
-        auto vector1_iter = vector1.cbegin();
-        auto vector2_iter = vector2.cbegin();
-
-        // vectors have equal size, test condition for one vector
-        while (vector1_iter != vector1.cend())
-        {
-            if (*vector1_iter != *vector2_iter)
-            {
-                return false;
-            }
-
-            vector1_iter++;
-            vector2_iter++;
-        }
-
-        return true;
-    }
-
-    /**
-     * @brief The relational operator compares two Vector objects
-     *
-     * @param[in] vector1 input container
-     * @param[in] vector2 input container
-     * @retval -1 if the content of \p vector1 is lexicographically lesser than the content of \p vector2
-     * @retval  0 if the content of \p vector1 and \p vector2 is equal
-     * @retval +1 if the content of \p vector1 is lexicographically greater than the content of \p vector2
-     */
-    template<typename T>
-    constexpr auto operator<=>(const Vector<T>& vector1, const Vector<T>& vector2)
-    {
-        auto vector1_iter = vector1.cbegin();
-        auto vector2_iter = vector2.cbegin();
-
-        while (vector1_iter != vector1.cend() && vector2_iter != vector2.cend())
-        {
-            if (*vector1_iter < *vector2_iter)
-            {
-                return std::strong_ordering::less;
-            }
-            if (*vector1_iter > *vector2_iter)
-            {
-                return std::strong_ordering::greater;
-            }
-
-            vector1_iter++;
-            vector2_iter++;
-        }
-
-        if (vector1.size() < vector2.size())
-        {
-            return std::strong_ordering::less;
-        }
-        if (vector1.size() > vector2.size())
-        {
-            return std::strong_ordering::greater;
-        }
-
-        return std::strong_ordering::equivalent;
     }
 }
 

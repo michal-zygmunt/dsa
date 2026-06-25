@@ -123,16 +123,16 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_vector5.push_back(4);
         std_vector5.push_back(5);
         std_vector5 = std_vector1;
-        tests::compare("Vector5 vs std", vector5, expected);
+        tests::compare("Vector5 vs std", vector5, std_vector5);
 
         std::vector<int> std_temp_1(std_vector1);
         const std::vector<int> std_vector6 = std::move(std_temp_1);
-        tests::compare("Vector6 vs std", vector6, expected);
+        tests::compare("Vector6 vs std", vector6, std_vector6);
 
         std::vector<int> std_temp_2(std_vector1);
         std::vector<int> std_vector7(1, 0);
         std_vector7 = std::move(std_temp_2);
-        tests::compare("Vector7 vs std", vector7, expected);
+        tests::compare("Vector7 vs std", vector7, std_vector7);
 
         const std::vector<int> std_vector10{ 0, 10, 20 };
         tests::compare("Vector10 vs std", vector10, std_vector10);

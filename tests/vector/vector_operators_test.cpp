@@ -12,8 +12,12 @@
 #include "common.h"
 #include "dsa/vector.h"
 
+#include <cassert>
+#include <compare>
 #include <exception>
 #include <iostream>
+#include <limits>
+#include <type_traits>
 #include <vector>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -103,6 +107,26 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector1 <=> vector3 <=", (vector1 <=> vector3) != std::weak_ordering::greater, true);
 
 
+        // test comparison categories
+        static_assert(std::is_same_v<std::compare_three_way_result_t<dsa::Vector<int>>, std::strong_ordering>,
+            "Int vector should support strong ordering");
+
+        static_assert(std::is_same_v<std::compare_three_way_result_t<dsa::Vector<double>>, std::partial_ordering>,
+            "Double vector should support strong ordering");
+
+        // test partial ordering
+        const dsa::Vector<double> vector7{ 1.0, 2.0, 3.0 };
+        const dsa::Vector<double> vector8{ 1.0, 2.0, std::numeric_limits<double>::quiet_NaN() };
+        assert((vector7 <=> vector8) == std::partial_ordering::unordered);
+        tests::compare("Vector7 <=> vector8 weak ordering", (vector7 <=> vector8) != std::weak_ordering::less, true);
+
+        // test noexcept
+
+        // operators
+        static_assert(!noexcept(dsa::Vector<tests::ThrowingType>{1} == dsa::Vector<tests::ThrowingType>{1}));
+        static_assert(!noexcept(dsa::Vector<tests::ThrowingType>{1} <=> dsa::Vector<tests::ThrowingType>{1}));
+
+
         std::cout << "Compare operations results with std container\n\n";
 
         const std::vector<int> std_vector1({ 1, 2, 3 });
@@ -169,6 +193,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector2 >= vector3 vs std", vector2 >= vector3, std_vector2 >= std_vector3);
         tests::compare("Vector3 >= vector2 vs std", vector3 >= vector2, std_vector3 >= std_vector2);
 
+        // test three way comparison
+
         tests::compare("Vector1 <=> vector3 vs std ==", (vector1 <=> vector3) == 0, (std_vector1 <=> std_vector3) == 0);
         tests::compare("Vector1 <=> vector3 vs std <", (vector1 <=> vector3) < 0, (std_vector1 <=> std_vector3) < 0);
         tests::compare("Vector1 <=> vector3 vs std >", (vector1 <=> vector3) > 0, (std_vector1 <=> std_vector3) > 0);
@@ -181,6 +207,29 @@ int main() // NOLINT(modernize-use-trailing-return-type)
             (vector1 <=> vector3) == std::weak_ordering::equivalent, (std_vector1 <=> std_vector3) == std::weak_ordering::equivalent);
         tests::compare("Vector1 <=> vector3 vs std <= ",
             (vector1 <=> vector3) != std::weak_ordering::greater, (std_vector1 <=> std_vector3) != std::weak_ordering::greater);
+
+        // test comparison categories
+        static_assert(std::is_same_v<std::compare_three_way_result_t<std::vector<int>>, std::strong_ordering>,
+            "Int vector should support strong ordering");
+
+        static_assert(std::is_same_v<std::compare_three_way_result_t<std::vector<double>>, std::partial_ordering>,
+            "Double vector should support strong ordering");
+
+        // test partial ordering
+        const std::vector<double> std_vector7{ 1.0, 2.0, 3.0 };
+        const std::vector<double> std_vector8{ 1.0, 2.0, std::numeric_limits<double>::quiet_NaN() };
+        assert((std_vector7 <=> std_vector8) == std::partial_ordering::unordered);
+        assert((vector7 <=> vector8) == (std_vector7 <=> std_vector8));
+        tests::compare("std_list7 <=> std_list8 weak ordering",
+            (std_vector7 <=> std_vector8) == std::partial_ordering::unordered, true);
+        tests::compare("(vector7 <=> vector8) == (std_vector7 <=> std_vector8)",
+            (vector7 <=> vector8) == (std_vector7 <=> std_vector8), true);
+
+        // test noexcept
+
+        // operators
+        static_assert(!noexcept(std::vector<tests::ThrowingType>{1} == std::vector<tests::ThrowingType>{1}));
+        static_assert(!noexcept(std::vector<tests::ThrowingType>{1} <=> std::vector<tests::ThrowingType>{1}));
 
 
         tests::print_stats();
