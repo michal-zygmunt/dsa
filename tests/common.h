@@ -655,6 +655,25 @@ namespace tests
     }
 
     /**
+     * @brief Function overloads out operator to print all elements of priority_queue
+     *
+     * @tparam T type of queue elements
+     * @param[in,out] out reference to output stream
+     * @param[in] std_queue input container of type T
+     * @return std::ostream&
+     */
+    template<typename T>
+    auto operator<<(std::ostream& out, std::priority_queue<T> std_priority_queue) -> std::ostream&
+    {
+        while (!std_priority_queue.empty())
+        {
+            out << std_priority_queue.top() << ' ';
+            std_priority_queue.pop();
+        }
+        return out;
+    }
+
+    /**
      * @brief Function overloads out operator to print all elements of queue
      *
      * @tparam T type of queue elements
