@@ -31,8 +31,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::cout << "Default ctor\n";
         dsa::PriorityQueue<int> priority_queue1;
-        priority_queue1.push(0);
         priority_queue1.push(10);
+        priority_queue1.push(0);
         priority_queue1.push(20);
         tests::compare("PriorityQueue1", priority_queue1, expected);
 
@@ -45,8 +45,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         priority_queue3.push(1);
         priority_queue3.push(2);
         priority_queue3.push(3);
-        priority_queue3.push(4);
         priority_queue3.push(5);
+        priority_queue3.push(4);
         priority_queue3 = priority_queue1;
         tests::compare("PriorityQueue3", priority_queue3, expected);
 
@@ -66,8 +66,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::cout << "Compare operations results with std container\n\n";
 
         std::priority_queue<int> std_priority_queue1;
-        std_priority_queue1.push(0);
         std_priority_queue1.push(10);
+        std_priority_queue1.push(0);
         std_priority_queue1.push(20);
         tests::compare("PriorityQueue1 vs std", priority_queue1, std_priority_queue1);
 
@@ -78,8 +78,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_priority_queue3.push(1);
         std_priority_queue3.push(2);
         std_priority_queue3.push(3);
-        std_priority_queue3.push(4);
         std_priority_queue3.push(5);
+        std_priority_queue3.push(4);
         std_priority_queue3 = std_priority_queue1;
         tests::compare("PriorityQueue3 vs std", priority_queue3, std_priority_queue3);
 
