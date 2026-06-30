@@ -662,8 +662,8 @@ namespace tests
      * @param[in] std_queue input container of type T
      * @return std::ostream&
      */
-    template<typename T>
-    auto operator<<(std::ostream& out, std::priority_queue<T> std_priority_queue) -> std::ostream&
+    template<typename T, typename Container, typename Compare>
+    auto operator<<(std::ostream& out, std::priority_queue<T, Container, Compare> std_priority_queue) -> std::ostream&
     {
         while (!std_priority_queue.empty())
         {
