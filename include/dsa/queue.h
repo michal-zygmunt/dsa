@@ -536,6 +536,45 @@ namespace dsa
         PriorityQueue(PriorityQueue&& other) noexcept;
 
         /**
+         * @brief Construct a new PriorityQueue object using elements from range [ \p first , \p last )
+         *
+         * @tparam InputIt
+         * @param[in] first element defining range of elements to insert
+         * @param[in] last element definig range of elements to insert
+         * @param[in] compare comparison function object
+         */
+        template<typename InputIt>
+            requires std::input_iterator<InputIt>
+        PriorityQueue(InputIt first, InputIt last, const Compare& compare = Compare());
+
+        /**
+         * @brief Construct a new PriorityQueue object using \p cont and elements from range [ \p first , \p last )
+         *
+         * @tparam InputIt
+         * @param[in] first element defining range of elements to insert
+         * @param[in] last element definig range of elements to insert
+         * @param[in] compare comparison function object
+         * @param[in] cont source container to which elements in range [\p first, \p last) will be inserted
+         */
+        template<typename InputIt>
+            requires std::input_iterator<InputIt>
+        PriorityQueue(InputIt first, InputIt last, const Compare& compare, const Container& cont);
+
+        /**
+         * @brief Construct a new PriorityQueue object using \p cont and elements from range [ \p first , \p last )
+         * @details Content of \p cont object will be taken by constructed object
+         *
+         * @tparam InputIt
+         * @param[in] first element defining range of elements to insert
+         * @param[in] last element definig range of elements to insert
+         * @param[in] compare comparison function object
+         * @param[in] cont source container to which elements in range [\p first, \p last) will be inserted
+         */
+        template<typename InputIt>
+            requires std::input_iterator<InputIt>
+        PriorityQueue(InputIt first, InputIt last, const Compare& compare, Container&& cont);
+
+        /**
          * @brief Constructs PriorityQueue using copy assignment
          *
          * @param[in] other PriorityQueue object of type T
@@ -659,6 +698,39 @@ namespace dsa
     PriorityQueue<T, Container, Compare>::PriorityQueue(PriorityQueue<T, Container, Compare>&& other) noexcept
         : PriorityQueue(Compare(), std::move(other.container))
     {}
+
+    template<typename T, typename Container, typename Compare>
+    template<typename InputIt>
+        requires std::input_iterator<InputIt>
+    PriorityQueue<T, Container, Compare>::PriorityQueue(
+        InputIt first, InputIt last, const Compare& compare)
+        : comp{ compare }
+    {
+        container.assign(first, last);
+        std::make_heap(container.begin(), container.end(), comp);
+    }
+
+    template<typename T, typename Container, typename Compare>
+    template<typename InputIt>
+        requires std::input_iterator<InputIt>
+    PriorityQueue<T, Container, Compare>::PriorityQueue(
+        InputIt first, InputIt last, const Compare& compare, const Container& cont)
+        : comp{ compare }, container{ cont }
+    {
+        container.insert(container.end(), first, last);
+        std::make_heap(container.begin(), container.end(), comp);
+    }
+
+    template<typename T, typename Container, typename Compare>
+    template<typename InputIt>
+        requires std::input_iterator<InputIt>
+    PriorityQueue<T, Container, Compare>::PriorityQueue(
+        InputIt first, InputIt last, const Compare& compare, Container&& cont)
+        : comp{ compare }, container{ std::move(cont) }
+    {
+        container.insert(container.end(), first, last);
+        std::make_heap(container.begin(), container.end(), comp);
+    }
 
     template<typename T, typename Container, typename Compare>
     auto PriorityQueue<T, Container, Compare>::operator=(const PriorityQueue& other) -> PriorityQueue&
