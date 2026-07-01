@@ -11,12 +11,15 @@
 
 #include "common.h"
 #include "dsa/queue.h"
+#include "dsa/vector.h"
 
 #include <exception>
+#include <functional>
 #include <initializer_list>
 #include <iostream>
 #include <queue>
 #include <utility>
+#include <vector>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
@@ -27,6 +30,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     {
         std::cout << "Start priority_queue_ctors_test:\n";
 
+        const std::initializer_list<int> data{ 20, 0, 10 };
         const std::initializer_list<int> expected{ 20, 10, 0 };
 
         std::cout << "Default ctor\n";
@@ -62,6 +66,27 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         priority_queue5 = std::move(temp_5);
         tests::compare("PriorityQueue5", priority_queue5, expected);
 
+        std::cout << "Iterator-pair constructor, default compare\n";
+        const dsa::PriorityQueue<int> priority_queue6(data.begin(), data.end());
+        tests::compare("PriorityQueue6", priority_queue6, expected);
+
+        std::cout << "Iterator-pair constructor, template compare - greater\n";
+        const dsa::PriorityQueue<int, dsa::Vector<int>, std::greater<>>
+            priority_queue7(data.begin(), data.end(), std::greater<>());
+        tests::compare("PriorityQueue7", priority_queue7, std::initializer_list<int>{ 0, 10, 20 });
+
+        std::cout << "Iterator-pair copy constructor, template compare - greater\n";
+        const dsa::Vector<int> temp_8({ -1, -2, -3 });
+        const dsa::PriorityQueue<int, dsa::Vector<int>, std::greater<>>
+            priority_queue8(data.begin(), data.end(), std::greater<>(), temp_8);
+        tests::compare("PriorityQueue8", priority_queue8, std::initializer_list<int>{ -3, -2, -1, 0, 10, 20 });
+
+        std::cout << "Iterator-pair move constructor, template compare - greater\n";
+        dsa::Vector<int> temp_9({ -1, -2, -3 });
+        const dsa::PriorityQueue<int, dsa::Vector<int>, std::greater<>>
+            priority_queue9(data.begin(), data.end(), std::greater<>(), std::move(temp_9));
+        tests::compare("PriorityQueue9", priority_queue9, std::initializer_list<int>{ -3, -2, -1, 0, 10, 20 });
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -92,6 +117,23 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_priority_queue5.push(0);
         std_priority_queue5 = std::move(std_temp_5);
         tests::compare("PriorityQueue5 vs std", priority_queue5, std_priority_queue5);
+
+        const std::priority_queue<int> std_priority_queue6(data.begin(), data.end());
+        tests::compare("PriorityQueue6 vs std", priority_queue6, std_priority_queue6);
+
+        const std::priority_queue<int, std::vector<int>, std::greater<>>
+            std_priority_queue7(data.begin(), data.end(), std::greater<>());
+        tests::compare("PriorityQueue7 vs std", priority_queue7, std_priority_queue7);
+
+        const std::vector<int> std_temp_8({ -1, -2, -3 });
+        const std::priority_queue<int, std::vector<int>, std::greater<>>
+            std_priority_queue8(data.begin(), data.end(), std::greater<>(), std_temp_8);
+        tests::compare("PriorityQueue8 vs std", priority_queue8, std_priority_queue8);
+
+        std::vector<int> std_temp_9({ -1, -2, -3 });
+        const std::priority_queue<int, std::vector<int>, std::greater<>>
+            std_priority_queue9(data.begin(), data.end(), std::greater<>(), std::move(std_temp_9));
+        tests::compare("PriorityQueue9 vs std", priority_queue9, std_priority_queue9);
 
 
         tests::print_stats();
