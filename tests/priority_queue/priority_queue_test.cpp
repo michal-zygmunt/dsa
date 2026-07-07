@@ -21,6 +21,26 @@
 #include <queue>
 #include <vector>
 
+namespace
+{
+    // Avoid const or ref data members
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
+    auto odd_even_asc = [](int lhs, int rhs) -> bool
+        {
+            const bool lhs_is_odd = lhs % 2 != 0;
+            const bool rhs_is_odd = rhs % 2 != 0;
+
+            // odd before even
+            if (lhs_is_odd != rhs_is_odd)
+            {
+                return rhs_is_odd;
+            }
+
+            // smalest first
+            return lhs > rhs;
+        };
+}
+
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
     // tests are based on hardcoded magic numbers for comparison of container content
@@ -93,6 +113,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::PriorityQueue<int> priority_queue6(il_1.begin(), il_1.end());
         dsa::PriorityQueue<int, dsa::Vector<int>, std::greater<>> priority_queue7(il_1.begin(), il_1.end());
 
+        const dsa::PriorityQueue<int, dsa::Vector<int>, decltype(odd_even_asc)> priority_queue8(il_1.begin(), il_1.end(), odd_even_asc);
+        const std::initializer_list<int> expected8{ 1, 3, 5, 2, 4 };
+        tests::compare("PriorityQueue8", priority_queue8, expected8);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -140,6 +164,9 @@ int main() // NOLINT(modernize-use-trailing-return-type)
             std_priority_queue7.pop();
         }
         tests::compare("PriorityQueue7 vs std", priority_queue7, std_priority_queue7);
+
+        const std::priority_queue<int, std::vector<int>, decltype(odd_even_asc)> std_priority_queue8(il_1.begin(), il_1.end(), odd_even_asc);
+        tests::compare("PriorityQueue8 vs std", priority_queue8, std_priority_queue8);
 
 
         tests::print_stats();
