@@ -39,6 +39,17 @@ namespace
             // smalest first
             return lhs > rhs;
         };
+
+    struct
+    {
+        auto operator()(int lhs, int rhs) -> bool
+        {
+            return odd_even_asc(lhs, rhs);
+        }
+    }
+    // Avoid const or ref data members
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
+    struct_compare;
 }
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -117,6 +128,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected8{ 1, 3, 5, 2, 4 };
         tests::compare("PriorityQueue8", priority_queue8, expected8);
 
+        const dsa::PriorityQueue<int, dsa::Vector<int>, decltype(struct_compare)> priority_queue9(il_1.begin(), il_1.end(), struct_compare);
+        const std::initializer_list<int> expected9{ 1, 3, 5, 2, 4 };
+        tests::compare("PriorityQueue9", priority_queue9, expected9);
+
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -167,6 +182,9 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         const std::priority_queue<int, std::vector<int>, decltype(odd_even_asc)> std_priority_queue8(il_1.begin(), il_1.end(), odd_even_asc);
         tests::compare("PriorityQueue8 vs std", priority_queue8, std_priority_queue8);
+
+        const std::priority_queue<int, std::vector<int>, decltype(struct_compare)> std_priority_queue9(il_1.begin(), il_1.end(), struct_compare);
+        tests::compare("PriorityQueue9 vs std", priority_queue9, std_priority_queue9);
 
 
         tests::print_stats();
