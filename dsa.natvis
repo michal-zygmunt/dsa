@@ -89,7 +89,7 @@
 		</Expand>
 	</Type>
 
-	
+
 	<Type Name="dsa::Vector&lt;*&gt;">
 		<DisplayString Condition="m_data==nullptr">uninitialized</DisplayString>
 		<DisplayString Condition="m_data!=nullptr">size = {m_size}, capacity={m_capacity}</DisplayString>
@@ -100,5 +100,14 @@
 			</ArrayItems>
 		</Expand>
 	</Type>
+
+
+	<Type Name="dsa::PriorityQueue&lt;*&gt;">
+		<Expand>
+			<Item Name="c [heap]">container</Item>
+			<Item Name="comp">comp</Item>
+		</Expand>
+	</Type>
+
 
 </AutoVisualizer>
