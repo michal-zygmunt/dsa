@@ -715,7 +715,7 @@ namespace dsa
         requires std::input_iterator<InputIt>
     PriorityQueue<T, Container, Compare>::PriorityQueue(
         InputIt first, InputIt last, const Compare& compare, const Container& cont)
-        : comp{ compare }, container{ cont }
+        : comp{ compare }, container{ std::move(cont) }
     {
         container.insert(container.end(), first, last);
         std::make_heap(container.begin(), container.end(), comp);
