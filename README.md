@@ -42,6 +42,7 @@ where applicable.
 
 - `dsa::Stack<T>`
 - `dsa::Queue<T>`
+- `dsa::PriorityQueue<T>`
 
 ## Requirements
 
