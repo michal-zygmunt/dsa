@@ -13,7 +13,7 @@ runs:
         chmod +x llvm.sh
         sudo ./llvm.sh 19
 
-        sudo apt-get install -y clang-19 lldb-19 lld-19 clang-tidy-19 --no-install-recommends
+        sudo apt-get install -y clang-19 lldb-19 lld-19 clang-tidy-19 clang-format-19 --no-install-recommends
 
         # Set LLVM/Clang 19 as default on Ubuntu
         sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 200
@@ -31,8 +31,13 @@ runs:
         sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-19 200
         sudo update-alternatives --set clang-tidy /usr/bin/clang-tidy-19
 
+        # Set LLVM/Clang tools used for clang-format
+        sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-19 200
+        sudo update-alternatives --set clang-format /usr/bin/clang-format-19
+
         # Check LLVM/Clang version
         clang --version
         llvm-cov --version
         llvm-profdata --version
         clang-tidy --version
+        clang-format --version
