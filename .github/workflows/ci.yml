@@ -10,8 +10,43 @@ on:
     branches: [ "**" ]
 
 jobs:
+  clang-format:
+    name: ubuntu-24.04-clang-format
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+  
+    - name: Show Ubuntu version
+      run: lsb_release -a
+
+    - name: Install LLVM/Clang 19 on Ubuntu
+      # Ubuntu 24.04 has installed Clang versions: 16.0.6, 17.0.6, 18.1.3
+      # Install Clang 19 as it was used initially on local Ubuntu OS
+      uses: ./.github/actions/setup-llvm-19
+
+    - name: Get list of changed C/C++ files
+      id: changed-files
+      run: |
+        git diff --name-only origin/${{ github.base_ref }}...HEAD > changed.txt
+        grep -E '\.(cpp|h)$' changed.txt > files.txt || true
+
+    - name: Run clang-format check
+      if: hashFiles('files.txt') != ''
+      run: |
+        clang-format --dry-run --Werror $(cat files.txt)
+
+    - name: Result
+      if: hashFiles('files.txt') == ''
+      run: echo "No C/C++ files to format"
+
+
+
   build:
     runs-on: ${{ matrix.os }}
+    needs: clang-format
 
     strategy:
       # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
