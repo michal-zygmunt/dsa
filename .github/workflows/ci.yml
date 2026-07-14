@@ -30,7 +30,15 @@ jobs:
     - name: Get list of changed C/C++ files
       id: changed-files
       run: |
-        git diff --name-only origin/${{ github.base_ref }}...HEAD > changed.txt
+        set -euo pipefail
+
+        if [ "${{ github.event_name }}" == "pull_request" ]; then
+          git fetch origin "${{ github.base_ref }}"
+          git diff --name-only "origin/${{ github.base_ref }}...HEAD" > changed.txt
+        elif [ "${{ github.event_name }}" == "push" ]; then
+          git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" > changed.txt
+        fi
+
         grep -E '\.(cpp|h)$' changed.txt > files.txt || true
 
     - name: Run clang-format check
