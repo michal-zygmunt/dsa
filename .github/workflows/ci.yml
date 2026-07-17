@@ -36,7 +36,15 @@ jobs:
           git fetch origin "${{ github.base_ref }}"
           git diff --name-only "origin/${{ github.base_ref }}...HEAD" > changed.txt
         elif [ "${{ github.event_name }}" == "push" ]; then
-          git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" > changed.txt
+          if git cat-file -e "${{ github.event.before }}^{commit}" 2>/dev/null; then
+            git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" > changed.txt
+          elif git rev-parse "${{ github.sha }}^" >/dev/null 2>&1; then
+            echo "Using parent of current commit"
+            git diff --name-only "${{ github.sha }}^" "${{ github.sha }}" > changed.txt
+          else
+            echo "First commit, checking all files."
+            git ls-tree --name-only -r "${{ github.sha }}" > changed.txt
+          fi
         fi
 
         grep -E '\.(cpp|h)$' changed.txt > files.txt || true
