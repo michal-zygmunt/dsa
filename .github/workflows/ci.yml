@@ -47,9 +47,17 @@ jobs:
           fi
         fi
 
-        grep -E '\.(cpp|h)$' changed.txt > files.txt || true
-
         echo "Changed files:"
+        cat changed.txt
+
+        if grep -qx ".clang-format" changed.txt; then
+          echo ".clang-format changed - checking all C/C++ files"
+          find . -type f \( -name "*.cpp" -o -name "*.h" \) > files.txt
+        else
+          grep -E '\.(cpp|h)$' changed.txt > files.txt || true
+        fi
+
+        echo "Files to check:"
         cat files.txt || true
 
         if [ -s files.txt ]; then
