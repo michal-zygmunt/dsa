@@ -64,7 +64,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list7.assign(expected7);
         tests::compare("ForwardList7", list7, expected7);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::forward_list<int> std_list1{ 0, 10, 20 };
@@ -94,7 +93,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::forward_list<int> std_list7{ 0, 10, 20 };
         std_list7.assign(expected7);
         tests::compare("ForwardList7 vs std", list7, std_list7);
-
 
         tests::print_stats();
     }

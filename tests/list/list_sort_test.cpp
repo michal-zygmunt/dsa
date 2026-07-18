@@ -78,7 +78,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected9{ -10, 0 };
         tests::compare("List9", list9, expected9);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         // ascending
@@ -119,7 +118,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::list<int> std_list9{ 0, -10 };
         std_list9.sort();
         tests::compare("List9", list9, std_list9);
-
 
         tests::print_stats();
     }

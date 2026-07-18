@@ -29,7 +29,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     {
         std::cout << "Start stack_ctors_test:\n";
 
-        const std::initializer_list<int> expected{ 20,10,0 };
+        const std::initializer_list<int> expected{ 20, 10, 0 };
 
         std::cout << "Default ctor\n";
         dsa::Stack<int> stack1;
@@ -48,7 +48,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const dsa::Stack<int> stack3({ 0, 10, 20 });
         tests::compare("Stack3", stack3, expected);
 
-
         std::cout << "Copy ctor\n";
         const dsa::Stack<int> stack4{ stack1 };
         tests::compare("Stack4", stack4, expected);
@@ -64,7 +63,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Stack5", stack5, expected);
 
         std::cout << "Copy self assignment ctor\n";
-        dsa::Stack<int> stack6{ dsa::List<int>({0, 10, 20}) };
+        dsa::Stack<int> stack6{ dsa::List<int>({ 0, 10, 20 }) };
         auto* pointer6 = &stack6;
         stack6 = *pointer6;
         tests::compare("Stack6", stack6, expected);
@@ -81,7 +80,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Stack8", stack8, expected);
 
         std::cout << "Move self assignment ctor\n";
-        dsa::Stack<int> stack9{ dsa::List<int>({0, 10, 20}) };
+        dsa::Stack<int> stack9{ dsa::List<int>({ 0, 10, 20 }) };
         auto* pointer9 = &stack9;
         stack9 = std::move(*pointer9);
         tests::compare("Stack9", stack9, expected);
@@ -101,7 +100,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const dsa::Stack<int> stack12(std::move(temp12));
         const std::initializer_list<int> expected12{ 30, 20, 10 };
         tests::compare("Stack12", stack12, expected12);
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -153,7 +151,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::deque<int> std_temp12 = { 10, 20, 30 };
         const std::stack<int> std_stack12(std::move(std_temp12));
         tests::compare("Stack12 vs std", stack12, std_stack12);
-
 
         tests::print_stats();
     }

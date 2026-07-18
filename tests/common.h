@@ -38,9 +38,9 @@
 #include <string>
 #include <vector>
 
- /**
-  * @brief Namespace with test results
-  */
+/**
+ * @brief Namespace with test results
+ */
 namespace tests
 {
     constexpr size_t throwing_type_size_limit = 5;
@@ -75,8 +75,8 @@ namespace tests
          *
          * @param[in] other unused parameter
          */
-         // move constructors intentionally throw exception
-         // NOLINTNEXTLINE(cppcoreguidelines-noexcept-move-operations,performance-noexcept-move-constructor,bugprone-exception-escape)
+        // move constructors intentionally throw exception
+        // NOLINTNEXTLINE(cppcoreguidelines-noexcept-move-operations,performance-noexcept-move-constructor,bugprone-exception-escape)
         ThrowingType(ThrowingType&& /*other*/)
         {
             conditional_exception("ThrowingType size limit reached in move ctor");
@@ -96,7 +96,9 @@ namespace tests
         auto operator=(const ThrowingType& other) noexcept(false) -> ThrowingType&
         {
             // empty if statement silences clang-tidy warning for copy assignment operator in mock struct
-            if (this != &other) {}
+            if (this != &other)
+            {
+            }
             return *this;
         }
 
@@ -168,13 +170,13 @@ namespace tests
      */
     enum class ExceptionCode : std::int8_t
     {
-        BadAlloc = -1,          ///< Memory allocation error
-        OutOfRange = -2,        ///< Accesing wrong range
-        RuntimeError = -3,      ///< Exception generated during program execution
-        LengthError = -4,       ///< Maximum allowed size exceeded
-        Exception = -5,         ///< General exception, exception reason should be moved into separate catch block
-        Unknown = -6,           ///< Unhandled exception from (...) block
-        Nullopt = -7            ///< Optional exception is invalid
+        BadAlloc = -1,     ///< Memory allocation error
+        OutOfRange = -2,   ///< Accesing wrong range
+        RuntimeError = -3, ///< Exception generated during program execution
+        LengthError = -4,  ///< Maximum allowed size exceeded
+        Exception = -5,    ///< General exception, exception reason should be moved into separate catch block
+        Unknown = -6,      ///< Unhandled exception from (...) block
+        Nullopt = -7       ///< Optional exception is invalid
     };
 
     /**
@@ -183,8 +185,8 @@ namespace tests
      */
     enum class Status : std::int8_t
     {
-        OK = 0,                 ///< Function executed sucessfully
-        Error = -1              ///< Function returned error
+        OK = 0,    ///< Function executed sucessfully
+        Error = -1 ///< Function returned error
     };
 
     /**
@@ -224,11 +226,8 @@ namespace tests
      *
      * @see requires
      */
-    template <typename T>
-    concept has_front = requires(T type)
-    {
-        type.front();
-    };
+    template<typename T>
+    concept has_front = requires(T type) { type.front(); };
 
     /**
      * @brief Concept that checks if an object of type T allows calling public `pop()` method
@@ -237,11 +236,8 @@ namespace tests
      *
      * @see requires
      */
-    template <typename T>
-    concept has_pop = requires(T type)
-    {
-        type.pop();
-    };
+    template<typename T>
+    concept has_pop = requires(T type) { type.pop(); };
 
     /**
      * @brief Concept that checks if an object of type T allows calling public `pop_front()` method
@@ -250,11 +246,8 @@ namespace tests
      *
      * @see requires
      */
-    template <typename T>
-    concept has_pop_front = requires(T type)
-    {
-        type.pop_front();
-    };
+    template<typename T>
+    concept has_pop_front = requires(T type) { type.pop_front(); };
 
     /**
      * @brief Concept that checks if an object provide printable range for not-string-like types
@@ -263,11 +256,10 @@ namespace tests
      *
      * @see requires
      */
-    template <typename T>
-    concept has_printable_range = std::ranges::range<T> &&
-        !std::same_as<std::remove_cvref_t<T>, std::string> &&
-        !std::same_as<std::remove_cvref_t<T>, std::string_view> &&
-        !std::is_convertible_v<T, const char*>;
+    template<typename T>
+    concept has_printable_range =
+        std::ranges::range<T> && !std::same_as<std::remove_cvref_t<T>, std::string> &&
+        !std::same_as<std::remove_cvref_t<T>, std::string_view> && !std::is_convertible_v<T, const char*>;
 
     /**
      * @brief Concept that defines the requirements of a type that allows iteration over elements
@@ -277,7 +269,7 @@ namespace tests
      *
      * @tparam T type checked agains the concept
      */
-    template <typename T>
+    template<typename T>
     concept has_ranges = std::ranges::range<T>;
 
     /**
@@ -287,11 +279,8 @@ namespace tests
      *
      * @see requires
      */
-    template <typename T>
-    concept has_size = requires(T type)
-    {
-        type.size();
-    };
+    template<typename T>
+    concept has_size = requires(T type) { type.size(); };
 
     /**
      * @brief Concept that checks if an object of type T allows calling public `top()` method
@@ -300,11 +289,8 @@ namespace tests
      *
      * @see requires
      */
-    template <typename T>
-    concept has_top = requires(T type)
-    {
-        type.top();
-    };
+    template<typename T>
+    concept has_top = requires(T type) { type.top(); };
 
     /**
      * @brief Function print error message
@@ -716,8 +702,7 @@ namespace tests
      */
     inline auto print_stats() -> void
     {
-        std::cout << total_count() - failed_count() << "/" << total_count() << " PASS, "
-            << failed_count() << " FAIL\n";
+        std::cout << total_count() - failed_count() << "/" << total_count() << " PASS, " << failed_count() << " FAIL\n";
     }
 
     /**
@@ -731,8 +716,8 @@ namespace tests
      * @param[in] container_2 second input container
      */
     template<typename T, typename U>
-    auto print_containers(const std::string& name_1, const T& container_1,
-        const std::string& name_2, const U& container_2) -> void
+    auto print_containers(const std::string& name_1, const T& container_1, const std::string& name_2,
+        const U& container_2) -> void
     {
         const int size{ static_cast<int>(std::max(name_1.length(), name_2.length())) };
         std::cout << std::setw(size) << std::left << name_1 << ": " << container_1 << '\n';
@@ -817,6 +802,6 @@ namespace tests
     {
         return cmp(val1, val2);
     }
-}
+} // namespace tests
 
 #endif // !COMMON_H

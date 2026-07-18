@@ -70,7 +70,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const dsa::ForwardList<int> list9;
         tests::compare("max_size()", list9.max_size(), UINTMAX_MAX);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::forward_list<int> std_list1{ 1, 2, 3, 4, 5 };
@@ -104,7 +103,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::forward_list<int> std_list8;
         std_list8.resize(5, 10);
         tests::compare("ForwardList8 vs std", list8, std_list8);
-
 
         tests::print_stats();
     }

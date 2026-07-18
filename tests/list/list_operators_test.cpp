@@ -123,9 +123,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         // test noexcept
 
         // operators
-        static_assert(!noexcept(dsa::List<tests::ThrowingType>{1} == dsa::List<tests::ThrowingType>{1}));
-        static_assert(!noexcept(dsa::List<tests::ThrowingType>{1} <=> dsa::List<tests::ThrowingType>{1}));
-
+        static_assert(!noexcept(dsa::List<tests::ThrowingType>{ 1 } == dsa::List<tests::ThrowingType>{ 1 }));
+        static_assert(!noexcept(dsa::List<tests::ThrowingType>{ 1 } <=> dsa::List<tests::ThrowingType>{ 1 }));
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -159,12 +158,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("list1 <=> list2 vs std <=", (list1 <=> list2) <= 0, (std_list1 <=> std_list2) <= 0);
         tests::compare("list1 <=> list2 vs std >=", (list1 <=> list2) >= 0, (std_list1 <=> std_list2) >= 0);
 
-        tests::compare("list1 <=> list2 vs std <",
-            (list1 <=> list2) == std::weak_ordering::less, (std_list1 <=> std_list2) == std::weak_ordering::less);
-        tests::compare("list1 <=> list2 vs std <>",
-            (list1 <=> list2) != std::weak_ordering::equivalent, (std_list1 <=> std_list2) != std::weak_ordering::equivalent);
-        tests::compare("list1 <=> list2 vs std <=",
-            (list1 <=> list2) != std::weak_ordering::greater, (std_list1 <=> std_list2) != std::weak_ordering::greater);
+        tests::compare("list1 <=> list2 vs std <", (list1 <=> list2) == std::weak_ordering::less,
+            (std_list1 <=> std_list2) == std::weak_ordering::less);
+        tests::compare("list1 <=> list2 vs std <>", (list1 <=> list2) != std::weak_ordering::equivalent,
+            (std_list1 <=> std_list2) != std::weak_ordering::equivalent);
+        tests::compare("list1 <=> list2 vs std <=", (list1 <=> list2) != std::weak_ordering::greater,
+            (std_list1 <=> std_list2) != std::weak_ordering::greater);
 
         std::cout << "Compare operators for objects of different size\n\n";
 
@@ -200,12 +199,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("list1 <=> list3 vs std <=", (list1 <=> list3) <= 0, (std_list1 <=> std_list3) <= 0);
         tests::compare("list1 <=> list3 vs std >=", (list1 <=> list3) >= 0, (std_list1 <=> std_list3) >= 0);
 
-        tests::compare("list1 <=> list3 vs std >=",
-            (list1 <=> list3) != std::weak_ordering::less, (std_list1 <=> std_list3) != std::weak_ordering::less);
-        tests::compare("list1 <=> list3 vs std ==",
-            (list1 <=> list3) == std::weak_ordering::equivalent, (std_list1 <=> std_list3) == std::weak_ordering::equivalent);
-        tests::compare("list1 <=> list3 vs std <= ",
-            (list1 <=> list3) != std::weak_ordering::greater, (std_list1 <=> std_list3) != std::weak_ordering::greater);
+        tests::compare("list1 <=> list3 vs std >=", (list1 <=> list3) != std::weak_ordering::less,
+            (std_list1 <=> std_list3) != std::weak_ordering::less);
+        tests::compare("list1 <=> list3 vs std ==", (list1 <=> list3) == std::weak_ordering::equivalent,
+            (std_list1 <=> std_list3) == std::weak_ordering::equivalent);
+        tests::compare("list1 <=> list3 vs std <= ", (list1 <=> list3) != std::weak_ordering::greater,
+            (std_list1 <=> std_list3) != std::weak_ordering::greater);
 
         // test comparison categories
         static_assert(std::is_same_v<std::compare_three_way_result_t<std::list<int>>, std::strong_ordering>,
@@ -221,15 +220,14 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         assert((list7 <=> list8) == (std_list7 <=> std_list8));
         tests::compare("std_list7 <=> std_list8 weak ordering",
             (std_list7 <=> std_list8) == std::partial_ordering::unordered, true);
-        tests::compare("(list7 <=> list8) == (std_list7 <=> std_list8)",
-            (list7 <=> list8) == (std_list7 <=> std_list8), true);
+        tests::compare("(list7 <=> list8) == (std_list7 <=> std_list8)", (list7 <=> list8) == (std_list7 <=> std_list8),
+            true);
 
         // test noexcept
 
         // operators
-        static_assert(!noexcept(std::list<tests::ThrowingType>{1} == std::list<tests::ThrowingType>{1}));
-        static_assert(!noexcept(std::list<tests::ThrowingType>{1} <=> std::list<tests::ThrowingType>{1}));
-
+        static_assert(!noexcept(std::list<tests::ThrowingType>{ 1 } == std::list<tests::ThrowingType>{ 1 }));
+        static_assert(!noexcept(std::list<tests::ThrowingType>{ 1 } <=> std::list<tests::ThrowingType>{ 1 }));
 
         tests::print_stats();
     }

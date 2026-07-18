@@ -64,7 +64,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list7.assign(expected7);
         tests::compare("List7", list7, expected7);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::list<int> std_list1{ 0, 10, 20 };
@@ -93,7 +92,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::list<int> std_list7{ 0, 10, 20 };
         std_list7.assign(expected7);
         tests::compare("List7 vs std", list7, std_list7);
-
 
         tests::print_stats();
     }

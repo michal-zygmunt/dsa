@@ -63,7 +63,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Queue5", queue5, expected);
 
         std::cout << "Copy self assignment ctor\n";
-        dsa::Queue<int> queue6{ dsa::List<int>({0, 10, 20}) };
+        dsa::Queue<int> queue6{ dsa::List<int>({ 0, 10, 20 }) };
         auto* pointer6 = &queue6;
         queue6 = *pointer6;
         tests::compare("Queue6", queue6, expected);
@@ -81,7 +81,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Queue8", queue8, expected);
 
         std::cout << "Move self assignment ctor\n";
-        dsa::Queue<int> queue9{ dsa::List<int>({0, 10, 20}) };
+        dsa::Queue<int> queue9{ dsa::List<int>({ 0, 10, 20 }) };
         auto* pointer9 = &queue9;
         queue9 = std::move(*pointer9);
         tests::compare("Queue9", queue9, expected);
@@ -101,7 +101,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const dsa::Queue<int> queue12(std::move(temp12));
         const std::initializer_list<int> expected12{ 10, 20, 30 };
         tests::compare("Queue12", queue12, expected12);
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -153,7 +152,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::deque<int> std_temp12 = { 10, 20, 30 };
         const std::queue<int> std_queue12(std::move(std_temp12));
         tests::compare("Queue12 vs std", queue12, std_queue12);
-
 
         tests::print_stats();
     }

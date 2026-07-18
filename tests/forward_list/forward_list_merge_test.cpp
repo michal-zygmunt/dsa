@@ -45,7 +45,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::ForwardList<int> list3 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list4;
         list4.merge(list3);
-        const std::initializer_list<int> expected3 = { };
+        const std::initializer_list<int> expected3 = {};
         tests::compare("ForwardList3", list3, expected3);
         const std::initializer_list<int> expected4 = il_1;
         tests::compare("ForwardList4", list4, expected4);
@@ -276,7 +276,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList45 it 47_2", std::next(list45.begin(), 2) == addr45_2, true);
         tests::compare("ForwardList45 it 48_2", std::next(list45.begin(), 3) == addr46_2, true);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::forward_list<int> std_list1{ il_1 };
@@ -461,7 +460,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList45 it 45_1 vs std", std::next(std_list45.begin(), 1) == std_addr45_1, true);
         tests::compare("ForwardList45 it 45_2 vs std", std::next(std_list45.begin(), 2) == std_addr45_2, true);
         tests::compare("ForwardList45 it 46_2 vs std", std::next(std_list45.begin(), 3) == std_addr46_2, true);
-
 
         tests::print_stats();
     }

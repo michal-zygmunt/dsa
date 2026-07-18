@@ -26,9 +26,9 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     {
         std::cout << "Start queue_get_test:\n";
 
-        const std::initializer_list<int> expected{ 0,10,20 };
+        const std::initializer_list<int> expected{ 0, 10, 20 };
 
-        dsa::Queue<int> queue1 = dsa::Queue<int>({ 0,10,20 });
+        dsa::Queue<int> queue1 = dsa::Queue<int>({ 0, 10, 20 });
         std::cout << "Queue1:\t";
         for (const auto& item : expected)
         {
@@ -43,28 +43,26 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::cout << '\n';
         tests::compare("Queue1", queue1, expected);
 
-        dsa::Queue<int> queue2 = dsa::Queue<int>({ 0,10,20 });
+        dsa::Queue<int> queue2 = dsa::Queue<int>({ 0, 10, 20 });
         tests::compare("Queue2 front", queue2.front(), 0);
         tests::compare("Queue2 back", queue2.back(), 20);
 
-        const dsa::Queue<int> queue3 = dsa::Queue<int>({ 0,10,20 });
+        const dsa::Queue<int> queue3 = dsa::Queue<int>({ 0, 10, 20 });
         tests::compare("Queue3 front", queue3.front(), 0);
         tests::compare("Queue3 back", queue3.back(), 20);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
-        const std::queue<int> std_queue1 = std::queue<int>({ 0,10,20 });
+        const std::queue<int> std_queue1 = std::queue<int>({ 0, 10, 20 });
         tests::compare("Queue1 vs std", queue1, std_queue1);
 
-        std::queue<int> std_queue2 = std::queue<int>({ 0,10,20 });
+        std::queue<int> std_queue2 = std::queue<int>({ 0, 10, 20 });
         tests::compare("Queue2 front vs std", queue2.front(), std_queue2.front());
         tests::compare("Queue2 back vs std", queue2.back(), std_queue2.back());
 
-        const std::queue<int> std_queue3 = std::queue<int>({ 0,10,20 });
+        const std::queue<int> std_queue3 = std::queue<int>({ 0, 10, 20 });
         tests::compare("Queue3 front vs std", queue3.front(), std_queue3.front());
         tests::compare("Queue3 back vs std", queue3.back(), std_queue3.back());
-
 
         tests::print_stats();
     }

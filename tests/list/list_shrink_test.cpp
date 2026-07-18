@@ -83,7 +83,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list9 = dsa::List<int>({ 0, 0, 0, 0, 0, 0 });
         list9.remove(0);
-        const std::initializer_list<int> expected9 = { };
+        const std::initializer_list<int> expected9 = {};
         tests::compare("List9", list9, expected9);
 
         dsa::List<int> list10 = dsa::List<int>({ 0, 10, 0, 0, 40, 0 });
@@ -94,7 +94,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list11 = dsa::List<int>({ 0, 0, 0, 0, 0, 0 });
         auto cnt11 = list11.remove_if([](int val) { return val == 0; });
-        const std::initializer_list<int> expected11 = { };
+        const std::initializer_list<int> expected11 = {};
         tests::compare("List11", list11, expected11);
         tests::compare("List11 removed count", cnt11, std::size_t{ 6 });
 
@@ -114,7 +114,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare(list14.empty(), false);
         list14.clear();
         tests::compare(list14.empty(), true);
-        const std::initializer_list<int> expected14 = { };
+        const std::initializer_list<int> expected14 = {};
         tests::compare("List14", list14, expected14);
 
         dsa::List<int> list15 = dsa::List<int>({ 10, 20, 30 });
@@ -122,7 +122,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list15.pop_front();
         list15.pop_front();
         list15.pop_front();
-        const std::initializer_list<int> expected15 = { };
+        const std::initializer_list<int> expected15 = {};
         tests::compare("List15", list15, expected15);
 
         dsa::List<int> list16 = dsa::List<int>({ 10, 20, 30 });
@@ -130,7 +130,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list16.pop_back();
         list16.pop_back();
         list16.pop_back();
-        const std::initializer_list<int> expected16 = { };
+        const std::initializer_list<int> expected16 = {};
         tests::compare("List16", list16, expected16);
 
         dsa::List<int> list17 = dsa::List<int>({ 0, 10, 0, 0, 40, 0 });
@@ -141,7 +141,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list18 = dsa::List<int>({ 0, 0, 0, 0, 0, 0 });
         auto cnt18 = dsa::erase(list18, 0);
-        const std::initializer_list<int> expected18 = { };
+        const std::initializer_list<int> expected18 = {};
         tests::compare("List18", list18, expected18);
         tests::compare("List18 erase count", cnt18, std::size_t{ 6 });
 
@@ -153,7 +153,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list20 = dsa::List<int>({ 0, 0, 0, 0, 0, 0 });
         auto cnt20 = dsa::erase_if(list20, [](int val) { return val == 0; });
-        const std::initializer_list<int> expected20 = { };
+        const std::initializer_list<int> expected20 = {};
         tests::compare("List20", list20, expected20);
         tests::compare("List20 erase_if count", cnt20, std::size_t{ 6 });
 
@@ -207,7 +207,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list22h = dsa::List<int>({ 0, 10, 2, 5, 7, 9 });
         auto cnt22h = dsa::erase_if(list22h, [](int val) { return val > (-5); });
-        const std::initializer_list<int> expected22h = { };
+        const std::initializer_list<int> expected22h = {};
         tests::compare("List22h", list22h, expected22h);
         tests::compare("List22h erase_if count", cnt22h, std::size_t{ 6 });
 
@@ -219,13 +219,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list22j = dsa::List<int>({ 0, 10, 2, 5, 7, 9 });
         auto cnt22j = dsa::erase_if(list22j, [](int val) { return val >= (-5); });
-        const std::initializer_list<int> expected22j = { };
+        const std::initializer_list<int> expected22j = {};
         tests::compare("List22j", list22j, expected22j);
         tests::compare("List22j erase_if count", cnt22j, std::size_t{ 6 });
 
         dsa::List<int> list22k = dsa::List<int>({ 0, 10, 2, 5, 7, 9 });
         auto cnt22k = dsa::erase_if(list22k, [](int val) { return val < 100; });
-        const std::initializer_list<int> expected22k = { };
+        const std::initializer_list<int> expected22k = {};
         tests::compare("List22k", list22k, expected22k);
         tests::compare("List22k erase_if count", cnt22k, std::size_t{ 6 });
 
@@ -237,7 +237,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list22m = dsa::List<int>({ 0, 10, 2, 5, 7, 9 });
         auto cnt22m = dsa::erase_if(list22m, [](int val) { return val <= 100; });
-        const std::initializer_list<int> expected22m = { };
+        const std::initializer_list<int> expected22m = {};
         tests::compare("List22m", list22m, expected22m);
         tests::compare("List22m erase_if count", cnt22m, std::size_t{ 6 });
 
@@ -249,37 +249,37 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list23a{};
         auto cnt23a = list23a.remove_if([](int val) { return val == 0; });
-        const std::initializer_list<int> expected23a = { };
+        const std::initializer_list<int> expected23a = {};
         tests::compare("List23a", list23a, expected23a);
         tests::compare("List23a removed count", cnt23a, std::size_t{ 0 });
 
         dsa::List<int> list23b{};
         auto cnt23b = list23b.remove_if([](int val) { return val != 0; });
-        const std::initializer_list<int> expected23b = { };
+        const std::initializer_list<int> expected23b = {};
         tests::compare("List23b", list23b, expected23b);
         tests::compare("List23b removed count", cnt23b, std::size_t{ 0 });
 
         dsa::List<int> list23c{};
         auto cnt23c = list23c.remove_if([](int val) { return val < 0; });
-        const std::initializer_list<int> expected23c = { };
+        const std::initializer_list<int> expected23c = {};
         tests::compare("List23c", list23c, expected23c);
         tests::compare("List23c removed count", cnt23c, std::size_t{ 0 });
 
         dsa::List<int> list23d{};
         auto cnt23d = list23d.remove_if([](int val) { return val > 0; });
-        const std::initializer_list<int> expected23d = { };
+        const std::initializer_list<int> expected23d = {};
         tests::compare("List23d", list23d, expected23d);
         tests::compare("List23d removed count", cnt23d, std::size_t{ 0 });
 
         dsa::List<int> list23e{};
         auto cnt23e = list23e.remove_if([](int val) { return val <= 0; });
-        const std::initializer_list<int> expected23e = { };
+        const std::initializer_list<int> expected23e = {};
         tests::compare("List23e", list23e, expected23e);
         tests::compare("List23e removed count", cnt23e, std::size_t{ 0 });
 
         dsa::List<int> list23f{};
         auto cnt23f = list23f.remove_if([](int val) { return val >= 0; });
-        const std::initializer_list<int> expected23f = { };
+        const std::initializer_list<int> expected23f = {};
         tests::compare("List23f", list23f, expected23f);
         tests::compare("List23f removed count", cnt23f, std::size_t{ 0 });
 
@@ -288,7 +288,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("iter24 == nullptr", iter24 == nullptr, true);
         iter24 = list24.erase(list24.begin(), std::next(list24.end()));
         tests::compare("iter24 == nullptr", iter24 == nullptr, true);
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -390,7 +389,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         auto std_cnt22e = std::erase_if(std_list22e, [](int val) { return val <= 5; });
         tests::compare("List22e vs std", list22e, std_list22e);
         tests::compare("List22e erase_if count vs std", cnt22e, std_cnt22e);
-
 
         tests::print_stats();
     }

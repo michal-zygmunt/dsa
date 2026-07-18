@@ -71,22 +71,21 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("PriorityQueue6", priority_queue6, expected);
 
         std::cout << "Iterator-pair constructor, template compare - greater\n";
-        const dsa::PriorityQueue<int, dsa::Vector<int>, std::greater<>>
-            priority_queue7(data.begin(), data.end(), std::greater<>());
+        const dsa::PriorityQueue<int, dsa::Vector<int>, std::greater<>> priority_queue7(data.begin(), data.end(),
+            std::greater<>());
         tests::compare("PriorityQueue7", priority_queue7, std::initializer_list<int>{ 0, 10, 20 });
 
         std::cout << "Iterator-pair copy constructor, template compare - greater\n";
         const dsa::Vector<int> temp_8({ -1, -2, -3 });
-        const dsa::PriorityQueue<int, dsa::Vector<int>, std::greater<>>
-            priority_queue8(data.begin(), data.end(), std::greater<>(), temp_8);
+        const dsa::PriorityQueue<int, dsa::Vector<int>, std::greater<>> priority_queue8(data.begin(), data.end(),
+            std::greater<>(), temp_8);
         tests::compare("PriorityQueue8", priority_queue8, std::initializer_list<int>{ -3, -2, -1, 0, 10, 20 });
 
         std::cout << "Iterator-pair move constructor, template compare - greater\n";
         dsa::Vector<int> temp_9({ -1, -2, -3 });
-        const dsa::PriorityQueue<int, dsa::Vector<int>, std::greater<>>
-            priority_queue9(data.begin(), data.end(), std::greater<>(), std::move(temp_9));
+        const dsa::PriorityQueue<int, dsa::Vector<int>, std::greater<>> priority_queue9(data.begin(), data.end(),
+            std::greater<>(), std::move(temp_9));
         tests::compare("PriorityQueue9", priority_queue9, std::initializer_list<int>{ -3, -2, -1, 0, 10, 20 });
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -121,20 +120,19 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::priority_queue<int> std_priority_queue6(data.begin(), data.end());
         tests::compare("PriorityQueue6 vs std", priority_queue6, std_priority_queue6);
 
-        const std::priority_queue<int, std::vector<int>, std::greater<>>
-            std_priority_queue7(data.begin(), data.end(), std::greater<>());
+        const std::priority_queue<int, std::vector<int>, std::greater<>> std_priority_queue7(data.begin(), data.end(),
+            std::greater<>());
         tests::compare("PriorityQueue7 vs std", priority_queue7, std_priority_queue7);
 
         const std::vector<int> std_temp_8({ -1, -2, -3 });
-        const std::priority_queue<int, std::vector<int>, std::greater<>>
-            std_priority_queue8(data.begin(), data.end(), std::greater<>(), std_temp_8);
+        const std::priority_queue<int, std::vector<int>, std::greater<>> std_priority_queue8(data.begin(), data.end(),
+            std::greater<>(), std_temp_8);
         tests::compare("PriorityQueue8 vs std", priority_queue8, std_priority_queue8);
 
         std::vector<int> std_temp_9({ -1, -2, -3 });
-        const std::priority_queue<int, std::vector<int>, std::greater<>>
-            std_priority_queue9(data.begin(), data.end(), std::greater<>(), std::move(std_temp_9));
+        const std::priority_queue<int, std::vector<int>, std::greater<>> std_priority_queue9(data.begin(), data.end(),
+            std::greater<>(), std::move(std_temp_9));
         tests::compare("PriorityQueue9 vs std", priority_queue9, std_priority_queue9);
-
 
         tests::print_stats();
     }

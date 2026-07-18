@@ -291,7 +291,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("vector19 rbegin() == rend()", vector19.rbegin() == vector19.rend(), true);
         tests::compare("vector19 rend() == crend()", vector19.rend() == vector19.crend(), true);
         tests::compare("vector19 size()", vector19.size(), static_cast<std::size_t>(0));
-        tests::compare("vector19 max_size()", vector19.max_size(), std::numeric_limits<std::size_t>::max() / sizeof(int));
+        tests::compare("vector19 max_size()", vector19.max_size(),
+            std::numeric_limits<std::size_t>::max() / sizeof(int));
         tests::compare("vector19 empty()", vector19.empty(), true);
 
         // test element access
@@ -337,11 +338,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // use lambda expression as workaround to prevent inlining call to const data()
         auto use_const_data = [](const auto& vector)
-            {
-                const int* ptr = vector.data();
-                (void)ptr;
-                return ptr;
-            };
+        {
+            const int* ptr = vector.data();
+            (void)ptr;
+            return ptr;
+        };
         const dsa::Vector<int> vector23{ 10, 20, 30 };
         const auto* ptr_vector23 = use_const_data(vector23);
         static_assert(std::is_same_v<decltype(vector23.data()), const int*>, "data() must return const T*");
@@ -357,7 +358,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         {
             std::cout << "vector24 out of range exception handled correctly\n\n";
         }
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -380,7 +380,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         const std::vector<int> std_vector3{ 0, 10, 20 };
         // NOLINTNEXTLINE(modernize-loop-convert, modernize-use-auto)
-        for (std::vector<int>::const_iterator std_iter = std_vector3.cbegin(); std_iter != std_vector3.cend(); std_iter++)
+        for (std::vector<int>::const_iterator std_iter = std_vector3.cbegin(); std_iter != std_vector3.cend();
+            std_iter++)
         {
             std::cout << (*std_iter) << '\t';
         }
@@ -401,7 +402,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector5 iterator vs std", expectedval5, val);
         tests::compare("Vector5 vs std", vector5, expected5);
 
-        std::vector<int>std_vector6 = std::vector<int>(1, 30);
+        std::vector<int> std_vector6 = std::vector<int>(1, 30);
         std_vector6.push_back(40);
         std_vector6.push_back(50);
         std_iterator = std_vector6.insert(std_vector6.cbegin(), 0, 5);
@@ -409,19 +410,19 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector6 iterator vs std", expectedval6, val);
         tests::compare("Vector6 vs std", vector6, std_vector6);
 
-        std::vector<int>std_vector9 = std::vector<int>{ 10, 20, 30, 40, 50 };
+        std::vector<int> std_vector9 = std::vector<int>{ 10, 20, 30, 40, 50 };
         // use classic iterator based algorithms, separate test was added to test std::ranges based algorithms
         // NOLINTNEXTLINE(modernize-use-ranges)
         std::fill(std_vector9.begin(), std_vector9.end(), 10);
         tests::compare("Vector9 vs std", vector9, std_vector9);
 
-        std::vector<int>std_vector10 = std::vector<int>{ 10, 20, 30 };
+        std::vector<int> std_vector10 = std::vector<int>{ 10, 20, 30 };
         auto std_iter10b = std_vector10.begin();
         *std_iter10b = 1;
         auto std_citer10b = std_vector10.cbegin();
         tests::compare("citer10b vs std", *citer10b, *std_citer10b);
 
-        const std::vector<int>std_vector11 = std::vector<int>{ 10, 20, 30 };
+        const std::vector<int> std_vector11 = std::vector<int>{ 10, 20, 30 };
         auto std_iter11b = std_vector11.begin();
         tests::compare("iter11b vs std", *iter11b, *std_iter11b);
 
@@ -441,7 +442,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::advance(iter16, -1);
         std::advance(std_iter16, -1);
         tests::compare("vector16 vs std end()--", *iter16, *std_iter16);
-        tests::compare("vector16 vs std end()-- == back()", *iter16 == vector16.back(), *std_iter16 == std_vector16.back());
+        tests::compare("vector16 vs std end()-- == back()", *iter16 == vector16.back(),
+            *std_iter16 == std_vector16.back());
         tests::compare("vector16 vs std iter", vector16, std_vector16);
 
         // test const iterator traversal
@@ -474,18 +476,18 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // test empty vector
         std::vector<int> std_vector19{};
-        tests::compare("vector19 vs std begin() == cbegin()",
-            vector19.begin() == vector19.cbegin(), std_vector19.begin() == std_vector19.cbegin());
-        tests::compare("vector19 vs std begin() == end()",
-            vector19.begin() == vector19.end(), std_vector19.begin() == std_vector19.end());
-        tests::compare("vector19 vs std end() == cend()",
-            vector19.end() == vector19.cend(), std_vector19.end() == std_vector19.cend());
-        tests::compare("vector19 vs std rbegin() == crbegin()",
-            vector19.rbegin() == vector19.crbegin(), std_vector19.rbegin() == std_vector19.crbegin());
-        tests::compare("vector19 vs std rbegin() == rend()",
-            vector19.rbegin() == vector19.rend(), std_vector19.rbegin() == std_vector19.rend());
-        tests::compare("vector19 vs std rend() == crend()",
-            vector19.rend() == vector19.crend(), std_vector19.rend() == std_vector19.crend());
+        tests::compare("vector19 vs std begin() == cbegin()", vector19.begin() == vector19.cbegin(),
+            std_vector19.begin() == std_vector19.cbegin());
+        tests::compare("vector19 vs std begin() == end()", vector19.begin() == vector19.end(),
+            std_vector19.begin() == std_vector19.end());
+        tests::compare("vector19 vs std end() == cend()", vector19.end() == vector19.cend(),
+            std_vector19.end() == std_vector19.cend());
+        tests::compare("vector19 vs std rbegin() == crbegin()", vector19.rbegin() == vector19.crbegin(),
+            std_vector19.rbegin() == std_vector19.crbegin());
+        tests::compare("vector19 vs std rbegin() == rend()", vector19.rbegin() == vector19.rend(),
+            std_vector19.rbegin() == std_vector19.rend());
+        tests::compare("vector19 vs std rend() == crend()", vector19.rend() == vector19.crend(),
+            std_vector19.rend() == std_vector19.crend());
 
         // test element access
         std::vector<int> std_vector20{ 10, 20, 30 };
@@ -503,7 +505,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("vector22 vs std at(1) ", vector22.at(1), std_vector22.at(1));
         tests::compare("vector22 vs std back()", vector22.back(), std_vector22.back());
         tests::compare("vector22() vs std", vector22, std_vector22);
-
 
         tests::print_stats();
     }

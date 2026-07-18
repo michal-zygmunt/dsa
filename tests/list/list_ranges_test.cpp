@@ -63,14 +63,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         static_assert(std::ranges::common_range<dsa::List<int>>);
         static_assert(std::ranges::common_range<const dsa::List<int>>);
 
-        // test if iterators are indirectly readable 
+        // test if iterators are indirectly readable
         static_assert(std::indirectly_readable<dsa::List<int>::iterator>);
         static_assert(std::indirectly_readable<dsa::List<int>::const_iterator>);
 
         // test if sentinel and iterators are comparable
         static_assert(std::sentinel_for<dsa::List<int>::iterator, dsa::List<int>::iterator>);
         static_assert(std::sentinel_for<dsa::List<int>::const_iterator, dsa::List<int>::const_iterator>);
-
 
         // test iterator forward and backward traversal and dereference correctness
         dsa::List<int> list1{ 10, 20, 30 };
@@ -122,9 +121,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const int sum = std::accumulate(list4.begin(), list4.end(), 0);
         tests::compare("List4 sum", sum, 80);
         std::list<int> expected4;
-        std::ranges::for_each(list4, [&](int item) {expected4.push_back(item); });
-        tests::compare("List4 for_each() equal()",
-            std::ranges::equal(expected4, std::list{ 30, 10, 40 }), true);
+        std::ranges::for_each(list4, [&](int item) { expected4.push_back(item); });
+        tests::compare("List4 for_each() equal()", std::ranges::equal(expected4, std::list{ 30, 10, 40 }), true);
 
         // test std::ranges::reverse_viev
         dsa::List<int> list5{ 10, 20, 30 };
@@ -212,7 +210,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List17", list17, expected17);
         tests::compare("List18", list18, expected18);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::list<int> std_list2;
@@ -238,29 +235,28 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::list<int> std_list12;
         tests::compare("List12 vs std empty()", list12.empty(), std_list12.empty());
-        tests::compare("List12 vs std begin() == end()",
-            list12.begin() == list12.end(), std_list12.begin() == std_list12.end());
-        tests::compare("List12 vs std distance == 0",
-            std::ranges::distance(list12) == 0, std::ranges::distance(list12) == 0);
+        tests::compare("List12 vs std begin() == end()", list12.begin() == list12.end(),
+            std_list12.begin() == std_list12.end());
+        tests::compare("List12 vs std distance == 0", std::ranges::distance(list12) == 0,
+            std::ranges::distance(list12) == 0);
 
         std::list<int> std_list13;
         std_list13.push_front(10);
         tests::compare("List13 vs std empty()", list13.empty(), std_list13.empty());
         tests::compare("List13 vs std front() == back()", list13.front(), std_list13.back());
         tests::compare("List13 vs std front() == back()", list13.back(), std_list13.back());
-        tests::compare("List13 vs std distance == 1",
-            std::ranges::distance(list13) == 1, std::ranges::distance(std_list13) == 1);
+        tests::compare("List13 vs std distance == 1", std::ranges::distance(list13) == 1,
+            std::ranges::distance(std_list13) == 1);
 
         std::list<int> std_list15{ 10, 20, 30, 40, 50 };
         std::ranges::fill(std_list15, 10);
         tests::compare("List15", list15, std_list15);
 
         std::list<int> std_list16;
-        tests::compare("List16 vs begin()",
-            std::ranges::begin(list16) == list16.begin(), std::ranges::begin(std_list16) == std_list16.begin());
-        tests::compare("List16 vs end()",
-            std::ranges::end(list16) == list16.end(), std::ranges::end(std_list16) == std_list16.end());
-
+        tests::compare("List16 vs begin()", std::ranges::begin(list16) == list16.begin(),
+            std::ranges::begin(std_list16) == std_list16.begin());
+        tests::compare("List16 vs end()", std::ranges::end(list16) == list16.end(),
+            std::ranges::end(std_list16) == std_list16.end());
 
         tests::print_stats();
     }

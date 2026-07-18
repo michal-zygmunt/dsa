@@ -72,7 +72,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list10 = dsa::List<int>({ 1, 2, 3, 4, 5 });
         list10.resize(0);
-        const std::initializer_list<int> expected10 = { };
+        const std::initializer_list<int> expected10 = {};
         tests::compare("List10", list10, expected10);
 
         std::cout << "Compare operations results with std container\n\n";
@@ -112,7 +112,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::list<int> std_list10{ 1, 2, 3, 4, 5 };
         std_list10.resize(0);
         tests::compare("List10 vs std", list10, std_list10);
-
 
         tests::print_stats();
     }

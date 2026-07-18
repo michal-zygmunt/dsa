@@ -80,7 +80,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array8 b", array8_b, expected8[1]);
         tests::compare("Array8 c", array8_c, expected8[2]);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         // test get<I>()
@@ -114,7 +113,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array8 a vs std", array8_a, std_a8);
         tests::compare("Array8 b vs std", array8_b, std_b8);
         tests::compare("Array8 c vs std", array8_c, std_c8);
-
 
         tests::print_stats();
     }

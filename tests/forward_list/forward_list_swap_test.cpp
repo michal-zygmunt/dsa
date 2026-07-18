@@ -41,7 +41,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::ForwardList<int> list3 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list4;
         list3.swap(list4);
-        const std::initializer_list<int> expected3 = { };
+        const std::initializer_list<int> expected3 = {};
         tests::compare("ForwardList3", list3, expected3);
         const std::initializer_list<int> expected4 = il_1;
         tests::compare("ForwardList4", list4, expected4);
@@ -57,18 +57,16 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::ForwardList<int> list7 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list8;
         dsa::swap(list7, list8);
-        const std::initializer_list<int> expected7 = { };
+        const std::initializer_list<int> expected7 = {};
         tests::compare("ForwardList7", list7, expected7);
         const std::initializer_list<int> expected8 = il_1;
         tests::compare("ForwardList8", list8, expected8);
 
         // swap safe type
-        static_assert(noexcept(swap(std::declval<dsa::ForwardList<int>&>(),
-            std::declval<dsa::ForwardList<int>&>())));
+        static_assert(noexcept(swap(std::declval<dsa::ForwardList<int>&>(), std::declval<dsa::ForwardList<int>&>())));
         // swap throwing type
         static_assert(noexcept(swap(std::declval<dsa::ForwardList<tests::ThrowingType>&>(),
             std::declval<dsa::ForwardList<tests::ThrowingType>&>())));
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -97,12 +95,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList8 vs std", list8, std_list8);
 
         // swap safe type
-        static_assert(noexcept(swap(std::declval<std::forward_list<int>&>(),
-            std::declval<std::forward_list<int>&>())));
+        static_assert(noexcept(swap(std::declval<std::forward_list<int>&>(), std::declval<std::forward_list<int>&>())));
         // swap throwing type
         static_assert(noexcept(swap(std::declval<std::forward_list<tests::ThrowingType>&>(),
             std::declval<std::forward_list<tests::ThrowingType>&>())));
-
 
         tests::print_stats();
     }

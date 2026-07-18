@@ -62,14 +62,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         static_assert(std::ranges::common_range<dsa::ForwardList<int>>);
         static_assert(std::ranges::common_range<const dsa::ForwardList<int>>);
 
-        // test if iterators are indirectly readable 
+        // test if iterators are indirectly readable
         static_assert(std::indirectly_readable<dsa::ForwardList<int>::iterator>);
         static_assert(std::indirectly_readable<dsa::ForwardList<int>::const_iterator>);
 
         // test if sentinel and iterators are comparable
         static_assert(std::sentinel_for<dsa::ForwardList<int>::iterator, dsa::ForwardList<int>::iterator>);
         static_assert(std::sentinel_for<dsa::ForwardList<int>::const_iterator, dsa::ForwardList<int>::const_iterator>);
-
 
         // test iterator traversal and dereference correctness
         dsa::ForwardList<int> list1{ 10, 20, 30 };
@@ -107,7 +106,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const int sum = std::accumulate(list4.begin(), list4.end(), 0);
         tests::compare("ForwardList4 sum", sum, 80);
         std::list<int> expected4;
-        std::ranges::for_each(list4, [&](int item) {expected4.push_back(item); });
+        std::ranges::for_each(list4, [&](int item) { expected4.push_back(item); });
         tests::compare("ForwardList4 for_each() equal()", std::ranges::equal(expected4, std::list{ 30, 10, 40 }), true);
 
         // test copy constructor and assignment, create deep copies
@@ -177,7 +176,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList15", list15, expected15);
         tests::compare("ForwardList16", list16, expected16);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::forward_list<int> std_list2;
@@ -201,17 +199,17 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::forward_list<int> std_list11;
         tests::compare("ForwardList11 vs std empty()", list11.empty(), std_list11.empty());
-        tests::compare("ForwardList11 vs std begin() == end()",
-            list11.begin() == list11.end(), std_list11.begin() == std_list11.end());
-        tests::compare("ForwardList11 vs std distance",
-            std::ranges::distance(list11), std::ranges::distance(std_list11));
+        tests::compare("ForwardList11 vs std begin() == end()", list11.begin() == list11.end(),
+            std_list11.begin() == std_list11.end());
+        tests::compare("ForwardList11 vs std distance", std::ranges::distance(list11),
+            std::ranges::distance(std_list11));
 
         std::forward_list<int> std_list12;
         std_list12.push_front(10);
         tests::compare("ForwardList12 vs std empty()", list12.empty(), std_list12.empty());
         tests::compare("ForwardList12 vs std begin() == end()", *list12.begin(), *std_list12.begin());
-        tests::compare("ForwardList12 vs std distance",
-            std::ranges::distance(list12), std::ranges::distance(std_list12));
+        tests::compare("ForwardList12 vs std distance", std::ranges::distance(list12),
+            std::ranges::distance(std_list12));
 
         std::forward_list<int> std_list13{ 10, 20, 30, 40, 50 };
         std::ranges::fill(std_list13, 10);
@@ -219,11 +217,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // test std::ranges::begin and ::end
         dsa::ForwardList<int> std_list14;
-        tests::compare("ForwardList14 vs begin()",
-            std::ranges::begin(list14) == list14.begin(), std::ranges::begin(std_list14) == std_list14.begin());
-        tests::compare("ForwardList14 vs end()",
-            std::ranges::end(list14) == list14.end(), std::ranges::end(std_list14) == std_list14.end());
-
+        tests::compare("ForwardList14 vs begin()", std::ranges::begin(list14) == list14.begin(),
+            std::ranges::begin(std_list14) == std_list14.begin());
+        tests::compare("ForwardList14 vs end()", std::ranges::end(list14) == list14.end(),
+            std::ranges::end(std_list14) == std_list14.end());
 
         tests::print_stats();
     }

@@ -64,7 +64,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list6 = dsa::ForwardList<int>({ 0, 0, 0, 0, 0, 0 });
         auto cnt6 = list6.remove(0);
-        const std::initializer_list<int> expected6 = { };
+        const std::initializer_list<int> expected6 = {};
         tests::compare("ForwardList6", list6, expected6);
         tests::compare("ForwardList6 removed count", cnt6, std::size_t{ 6 });
 
@@ -76,7 +76,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list8 = dsa::ForwardList<int>({ 0, 0, 0, 0, 0, 0 });
         auto cnt8 = list8.remove_if([](int val) { return val == 0; });
-        const std::initializer_list<int> expected8 = { };
+        const std::initializer_list<int> expected8 = {};
         tests::compare("ForwardList8", list8, expected8);
         tests::compare("ForwardList8 removed count", cnt8, std::size_t{ 6 });
 
@@ -96,7 +96,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare(list11.empty(), false);
         list11.clear();
         tests::compare(list11.empty(), true);
-        const std::initializer_list<int> expected11 = { };
+        const std::initializer_list<int> expected11 = {};
         tests::compare("ForwardList11", list11, expected11);
 
         dsa::ForwardList<int> list12 = dsa::ForwardList<int>({ 10, 20, 30 });
@@ -104,7 +104,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list12.pop_front();
         list12.pop_front();
         list12.pop_front();
-        const std::initializer_list<int> expected12 = { };
+        const std::initializer_list<int> expected12 = {};
         tests::compare("ForwardList12", list12, expected12);
 
         dsa::ForwardList<int> list13;
@@ -119,7 +119,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list15 = dsa::ForwardList<int>({ 0, 0, 0, 0, 0, 0 });
         auto cnt15 = dsa::erase(list15, 0);
-        const std::initializer_list<int> expected15 = { };
+        const std::initializer_list<int> expected15 = {};
         tests::compare("ForwardList15", list15, expected15);
         tests::compare("ForwardList15 erase count", cnt15, std::size_t{ 6 });
 
@@ -131,7 +131,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list17 = dsa::ForwardList<int>({ 0, 0, 0, 0, 0, 0 });
         auto cnt17 = dsa::erase_if(list17, [](int val) { return val == 0; });
-        const std::initializer_list<int> expected17 = { };
+        const std::initializer_list<int> expected17 = {};
         tests::compare("ForwardList17", list17, expected17);
         tests::compare("ForwardList17 erase_if count", cnt17, std::size_t{ 6 });
 
@@ -191,7 +191,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list20h = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
         auto cnt20h = dsa::erase_if(list20h, [](int val) { return val > (-5); });
-        const std::initializer_list<int> expected20h = { };
+        const std::initializer_list<int> expected20h = {};
         tests::compare("ForwardList20h", list20h, expected20h);
         tests::compare("ForwardList20h erase_if count", cnt20h, std::size_t{ 6 });
 
@@ -203,13 +203,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list20j = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
         auto cnt20j = dsa::erase_if(list20j, [](int val) { return val >= (-5); });
-        const std::initializer_list<int> expected20j = { };
+        const std::initializer_list<int> expected20j = {};
         tests::compare("ForwardList20j", list20j, expected20j);
         tests::compare("ForwardList20j erase_if count", cnt20j, std::size_t{ 6 });
 
         dsa::ForwardList<int> list20k = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
         auto cnt20k = dsa::erase_if(list20k, [](int val) { return val < 100; });
-        const std::initializer_list<int> expected20k = { };
+        const std::initializer_list<int> expected20k = {};
         tests::compare("ForwardList20k", list20k, expected20k);
         tests::compare("ForwardList20k erase_if count", cnt20k, std::size_t{ 6 });
 
@@ -221,7 +221,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list20m = dsa::ForwardList<int>({ 0, 10, 2, 5, 7, 9 });
         auto cnt20m = dsa::erase_if(list20m, [](int val) { return val <= 100; });
-        const std::initializer_list<int> expected20m = { };
+        const std::initializer_list<int> expected20m = {};
         tests::compare("ForwardList20m", list20m, expected20m);
         tests::compare("ForwardList20m erase_if count", cnt20m, std::size_t{ 6 });
 
@@ -233,37 +233,37 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list21a{};
         auto cnt21a = list21a.remove_if([](int val) { return val == 0; });
-        const std::initializer_list<int> expected21a = { };
+        const std::initializer_list<int> expected21a = {};
         tests::compare("ForwardList21a", list21a, expected21a);
         tests::compare("ForwardList21a removed count", cnt21a, std::size_t{ 0 });
 
         dsa::ForwardList<int> list21b{};
         auto cnt21b = list21b.remove_if([](int val) { return val != 0; });
-        const std::initializer_list<int> expected21b = { };
+        const std::initializer_list<int> expected21b = {};
         tests::compare("ForwardList21b", list21b, expected21b);
         tests::compare("ForwardList21b removed count", cnt21b, std::size_t{ 0 });
 
         dsa::ForwardList<int> list21c{};
         auto cnt21c = list21c.remove_if([](int val) { return val < 0; });
-        const std::initializer_list<int> expected21c = { };
+        const std::initializer_list<int> expected21c = {};
         tests::compare("ForwardList21c", list21c, expected21c);
         tests::compare("ForwardList21c removed count", cnt21c, std::size_t{ 0 });
 
         dsa::ForwardList<int> list21d{};
         auto cnt21d = list21d.remove_if([](int val) { return val > 0; });
-        const std::initializer_list<int> expected21d = { };
+        const std::initializer_list<int> expected21d = {};
         tests::compare("ForwardList21d", list21d, expected21d);
         tests::compare("ForwardList21d removed count", cnt21d, std::size_t{ 0 });
 
         dsa::ForwardList<int> list21e{};
         auto cnt21e = list21e.remove_if([](int val) { return val <= 0; });
-        const std::initializer_list<int> expected21e = { };
+        const std::initializer_list<int> expected21e = {};
         tests::compare("ForwardList21e", list21e, expected21e);
         tests::compare("ForwardList21e removed count", cnt21e, std::size_t{ 0 });
 
         dsa::ForwardList<int> list21f{};
         auto cnt21f = list21f.remove_if([](int val) { return val >= 0; });
-        const std::initializer_list<int> expected21f = { };
+        const std::initializer_list<int> expected21f = {};
         tests::compare("ForwardList21f", list21f, expected21f);
         tests::compare("ForwardList21f removed count", cnt21f, std::size_t{ 0 });
 
@@ -272,7 +272,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("iter22 == nullptr", iter22 == nullptr, true);
         iter22 = list22.erase_after(list22.begin(), std::next(list22.end()));
         tests::compare("iter22 == nullptr", iter22 == nullptr, true);
-
 
         std::cout << "Compare operations results with std container\n\n";
 

@@ -52,7 +52,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected5 = { 1, 2, 3 };
         tests::compare("vector5", vector5, expected5);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::vector<int> std_vector1 = std::vector<int>({ 0, 10, 20 });
@@ -74,7 +73,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::vector<int> std_vector5 = std::vector<int>({ 0, 10, 20 });
         std_vector5.assign(temp5.begin() + 1, temp5.begin() + 4);
         tests::compare("vector5 vs std", vector5, std_vector5);
-
 
         tests::print_stats();
     }

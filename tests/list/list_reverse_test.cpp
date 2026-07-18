@@ -51,7 +51,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected3{};
         tests::compare("List3", list3, expected3);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::list<int> std_list1{ 0, 10, 20, 30, 40, 50 };
@@ -77,7 +76,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::list<int> std_list3;
         std_list3.reverse();
         tests::compare("List3 vs std", list3, std_list3);
-
 
         tests::print_stats();
     }

@@ -116,21 +116,22 @@ int main() // NOLINT(modernize-use-trailing-return-type)
             "Double stack should support strong ordering");
 
         // test partial ordering
-        const dsa::Stack<double> stack7{ dsa::List<double>{1.0, 2.0, 3.0} };
-        const dsa::Stack<double> stack8{ dsa::List<double>{1.0, 2.0, std::numeric_limits<double>::quiet_NaN()} };
+        const dsa::Stack<double> stack7{
+            dsa::List<double>{ 1.0, 2.0, 3.0 }
+        };
+        const dsa::Stack<double> stack8{
+            dsa::List<double>{ 1.0, 2.0, std::numeric_limits<double>::quiet_NaN() }
+        };
         assert((stack7 <=> stack8) == std::partial_ordering::unordered);
         tests::compare("Stack7 <=> stack8 weak ordering", (stack7 <=> stack8) != std::weak_ordering::less, true);
 
         // test noexcept
 
         // operators
-        static_assert(!noexcept(
-            dsa::Stack<tests::ThrowingType>{dsa::List<tests::ThrowingType>(1)} ==
-            dsa::Stack<tests::ThrowingType>{dsa::List<tests::ThrowingType>(1)}));
-        static_assert(!noexcept(
-            dsa::Stack<tests::ThrowingType>{dsa::List<tests::ThrowingType>(1)} <=>
-            dsa::Stack<tests::ThrowingType>{dsa::List<tests::ThrowingType>(1)}));
-
+        static_assert(!noexcept(dsa::Stack<tests::ThrowingType>{ dsa::List<tests::ThrowingType>(1) } ==
+                                dsa::Stack<tests::ThrowingType>{ dsa::List<tests::ThrowingType>(1) }));
+        static_assert(!noexcept(dsa::Stack<tests::ThrowingType>{ dsa::List<tests::ThrowingType>(1) } <=>
+                                dsa::Stack<tests::ThrowingType>{ dsa::List<tests::ThrowingType>(1) }));
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -164,12 +165,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Stack1 <=> stack2 vs std <=", (stack1 <=> stack2) <= 0, (std_stack1 <=> std_stack2) <= 0);
         tests::compare("Stack1 <=> stack2 vs std >=", (stack1 <=> stack2) >= 0, (std_stack1 <=> std_stack2) >= 0);
 
-        tests::compare("Stack1 <=> stack2 vs std <",
-            (stack1 <=> stack2) == std::weak_ordering::less, (std_stack1 <=> std_stack2) == std::weak_ordering::less);
-        tests::compare("Stack1 <=> stack2 vs std <>",
-            (stack1 <=> stack2) != std::weak_ordering::equivalent, (std_stack1 <=> std_stack2) != std::weak_ordering::equivalent);
-        tests::compare("Stack1 <=> stack2 vs std <=",
-            (stack1 <=> stack2) != std::weak_ordering::greater, (std_stack1 <=> std_stack2) != std::weak_ordering::greater);
+        tests::compare("Stack1 <=> stack2 vs std <", (stack1 <=> stack2) == std::weak_ordering::less,
+            (std_stack1 <=> std_stack2) == std::weak_ordering::less);
+        tests::compare("Stack1 <=> stack2 vs std <>", (stack1 <=> stack2) != std::weak_ordering::equivalent,
+            (std_stack1 <=> std_stack2) != std::weak_ordering::equivalent);
+        tests::compare("Stack1 <=> stack2 vs std <=", (stack1 <=> stack2) != std::weak_ordering::greater,
+            (std_stack1 <=> std_stack2) != std::weak_ordering::greater);
 
         std::cout << "Compare operators for objects of different size\n\n";
 
@@ -205,12 +206,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Stack1 <=> stack3 vs std <=", (stack1 <=> stack3) <= 0, (std_stack1 <=> std_stack3) <= 0);
         tests::compare("Stack1 <=> stack3 vs std >=", (stack1 <=> stack3) >= 0, (std_stack1 <=> std_stack3) >= 0);
 
-        tests::compare("Stack1 <=> stack3 vs std >=",
-            (stack1 <=> stack3) != std::weak_ordering::less, (std_stack1 <=> std_stack3) != std::weak_ordering::less);
-        tests::compare("Stack1 <=> stack3 vs std ==",
-            (stack1 <=> stack3) == std::weak_ordering::equivalent, (std_stack1 <=> std_stack3) == std::weak_ordering::equivalent);
-        tests::compare("Stack1 <=> stack3 vs std <= ",
-            (stack1 <=> stack3) != std::weak_ordering::greater, (std_stack1 <=> std_stack3) != std::weak_ordering::greater);
+        tests::compare("Stack1 <=> stack3 vs std >=", (stack1 <=> stack3) != std::weak_ordering::less,
+            (std_stack1 <=> std_stack3) != std::weak_ordering::less);
+        tests::compare("Stack1 <=> stack3 vs std ==", (stack1 <=> stack3) == std::weak_ordering::equivalent,
+            (std_stack1 <=> std_stack3) == std::weak_ordering::equivalent);
+        tests::compare("Stack1 <=> stack3 vs std <= ", (stack1 <=> stack3) != std::weak_ordering::greater,
+            (std_stack1 <=> std_stack3) != std::weak_ordering::greater);
 
         // test comparison categories
         static_assert(std::is_same_v<std::compare_three_way_result_t<std::stack<int>>, std::strong_ordering>,
@@ -220,8 +221,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
             "Double stack should support strong ordering");
 
         // test partial ordering
-        const std::stack<double> std_stack7{ std::deque<double>{1.0, 2.0, 3.0} };
-        const std::stack<double> std_stack8{ std::deque<double>{1.0, 2.0, std::numeric_limits<double>::quiet_NaN()} };
+        const std::stack<double> std_stack7{
+            std::deque<double>{ 1.0, 2.0, 3.0 }
+        };
+        const std::stack<double> std_stack8{
+            std::deque<double>{ 1.0, 2.0, std::numeric_limits<double>::quiet_NaN() }
+        };
         assert((std_stack7 <=> std_stack8) == std::partial_ordering::unordered);
         assert((stack7 <=> stack8) == (std_stack7 <=> std_stack8));
         tests::compare("std_stack7 <=> std_stack8 weak ordering",
@@ -232,13 +237,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         // test noexcept
 
         // operators
-        static_assert(!noexcept(
-            std::stack<tests::ThrowingType>{std::deque<tests::ThrowingType>(1)} ==
-            std::stack<tests::ThrowingType>{std::deque<tests::ThrowingType>(1)}));
-        static_assert(!noexcept(
-            std::stack<tests::ThrowingType>{std::deque < tests::ThrowingType>(1)} <=>
-            std::stack<tests::ThrowingType>{std::deque < tests::ThrowingType>(1)}));
-
+        static_assert(!noexcept(std::stack<tests::ThrowingType>{ std::deque<tests::ThrowingType>(1) } ==
+                                std::stack<tests::ThrowingType>{ std::deque<tests::ThrowingType>(1) }));
+        static_assert(!noexcept(std::stack<tests::ThrowingType>{ std::deque<tests::ThrowingType>(1) } <=>
+                                std::stack<tests::ThrowingType>{ std::deque<tests::ThrowingType>(1) }));
 
         tests::print_stats();
     }

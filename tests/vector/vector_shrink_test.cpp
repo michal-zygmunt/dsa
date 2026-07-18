@@ -71,7 +71,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         // NOLINTNEXTLINE(modernize-use-ranges)
         auto* it6 = std::remove(vector6.begin(), vector6.end(), 0);
         vector6.erase(it6, vector6.end());
-        const std::initializer_list<int> expected6 = { };
+        const std::initializer_list<int> expected6 = {};
         tests::compare("Vector6", vector6, expected6);
 
         dsa::Vector<int> vector7 = dsa::Vector<int>({ 0 });
@@ -79,14 +79,14 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         vector7.clear();
         tests::compare(vector7.empty(), true);
         vector7.clear();
-        const std::initializer_list<int> expected7 = { };
+        const std::initializer_list<int> expected7 = {};
         tests::compare("Vector7", vector7, expected7);
 
         dsa::Vector<int> vector8 = dsa::Vector<int>({ 10, 20, 30 });
         vector8.erase(vector8.cbegin());
         vector8.erase(vector8.begin());
         vector8.erase(vector8.begin());
-        const std::initializer_list<int> expected8 = { };
+        const std::initializer_list<int> expected8 = {};
         tests::compare("Vector8", vector8, expected8);
         tests::compare("Vector8 size()", vector8.size(), static_cast<std::size_t>(0));
 
@@ -101,7 +101,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         vector10.pop_back();
         vector10.pop_back();
         vector10.pop_back();
-        const std::initializer_list<int> expected10 = { };
+        const std::initializer_list<int> expected10 = {};
         tests::compare("Vector10", vector10, expected10);
         tests::compare("Vector10 size()", vector10.size(), static_cast<std::size_t>(0));
 
@@ -124,7 +124,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::Vector<int> vector13 = dsa::Vector<int>({ 0, 0, 0, 0, 0, 0 });
         auto cnt13 = dsa::erase(vector13, 0);
-        const std::initializer_list<int> expected13 = { };
+        const std::initializer_list<int> expected13 = {};
         tests::compare("Vector13", vector13, expected13);
         tests::compare("Vector13 erase count", cnt13, std::size_t{ 6 });
 
@@ -136,7 +136,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::Vector<int> vector15 = dsa::Vector<int>({ 0, 0, 0, 0, 0, 0 });
         auto cnt15 = dsa::erase_if(vector15, [](int val) { return val == 0; });
-        const std::initializer_list<int> expected15 = { };
+        const std::initializer_list<int> expected15 = {};
         tests::compare("Vector15", vector15, expected15);
         tests::compare("Vector15 erase_if count", cnt15, std::size_t{ 6 });
 
@@ -151,7 +151,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected17 = { 10, 7, 9 };
         tests::compare("Vector17", vector17, expected17);
         tests::compare("Vector17 erase_if count", cnt17, std::size_t{ 3 });
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -211,7 +210,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         auto std_cnt17 = std::erase_if(std_vector17, [](int val) { return val <= 5; });
         tests::compare("Vector17 vs std", vector17, std_vector17);
         tests::compare("Vector17 vs std erase_if count", cnt17, std_cnt17);
-
 
         tests::print_stats();
     }

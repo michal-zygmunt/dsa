@@ -109,8 +109,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::ForwardList<int> list10{};
         const dsa::ForwardList<int> temp10{ 0, 10, 20, 30, 40, 50 };
         auto temp10_it = std::next(temp10.begin(), 3);
-        auto list10_it = list10.insert_after(
-            list10.before_begin(), std::next(temp10.begin(), 1), std::next(temp10.begin(), 4));
+        auto list10_it =
+            list10.insert_after(list10.before_begin(), std::next(temp10.begin(), 1), std::next(temp10.begin(), 4));
         const std::initializer_list<int> expected10{ 10, 20, 30 };
         tests::compare("ForwardList10", list10, expected10);
         tests::compare("ForwardList10 it", *list10_it, *temp10_it);
@@ -274,7 +274,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList26", list26, expected26);
         tests::compare("ForwardList26 it", list26_it == list26.begin(), true);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::forward_list<int> std_list5;
@@ -303,8 +302,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::forward_list<int> std_list10{};
         const std::forward_list<int> std_temp10{ 0, 10, 20, 30, 40, 50 };
         auto std_temp10_it = std::next(std_temp10.begin(), 3);
-        auto std_list10_it = std_list10.insert_after(
-            std_list10.before_begin(), std::next(std_temp10.begin(), 1), std::next(std_temp10.begin(), 4));
+        auto std_list10_it = std_list10.insert_after(std_list10.before_begin(), std::next(std_temp10.begin(), 1),
+            std::next(std_temp10.begin(), 4));
         tests::compare("ForwardList10 vs std", list10, std_list10);
         tests::compare("ForwardList10 it vs std", *list10_it, *std_list10_it);
         tests::compare("ForwardList10 temp it vs std", *temp10_it, *std_temp10_it);
@@ -312,8 +311,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::forward_list<int> std_list11{ 0, 10, 20 };
         const std::forward_list<int> std_temp11{ 30, 40, 50 };
         auto std_temp11_it = std::next(std_temp11.begin(), 2);
-        auto std_list11_it = std_list11.insert_after(
-            std::next(std_list11.begin(), 2), std_temp11.begin(), std_temp11.end());
+        auto std_list11_it =
+            std_list11.insert_after(std::next(std_list11.begin(), 2), std_temp11.begin(), std_temp11.end());
         tests::compare("ForwardList11 vs std", list11, std_list11);
         tests::compare("ForwardList11 it vs std", *list11_it, *std_list11_it);
         tests::compare("ForwardList11 temp it vs std", *temp11_it, *std_temp11_it);
@@ -323,7 +322,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_list16.push_front(std::move(std_ptr16));
         tests::compare("ForwardList17 vs std", *list16.front(), expected16);
         tests::compare("ptr16 == nullptr vs std", ptr16 == nullptr, std_ptr16 == nullptr);
-
 
         tests::print_stats();
     }

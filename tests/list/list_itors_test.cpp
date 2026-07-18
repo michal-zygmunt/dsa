@@ -461,7 +461,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const dsa::List<int> reversed23{ 4, 3, 2, 1, 0 };
         tests::compare("list23 reverse iter", reversed23, temp23);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::list<int> std_list1{ 0, 10, 20 };
@@ -504,7 +503,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List5 iterator vs std", expectedval5, val);
         tests::compare("List5 vs std", list5, expected5);
 
-        std::list<int>std_list6 = std::list<int>(1, 50);
+        std::list<int> std_list6 = std::list<int>(1, 50);
         std_list6.push_front(40);
         std_list6.push_front(30);
         std_iterator = std_list6.insert(std_list6.cbegin(), 0, 5);
@@ -512,25 +511,24 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List6 iterator vs std", expectedval6, val);
         tests::compare("List6 vs std", list6, std_list6);
 
-        std::list<int>std_list9 = std::list<int>{ 10, 20, 30, 40, 50 };
+        std::list<int> std_list9 = std::list<int>{ 10, 20, 30, 40, 50 };
         // use classic iterator based algorithms, separate test was added to test std::ranges based algorithms
         // NOLINTNEXTLINE(modernize-use-ranges)
         std::fill(std_list9.begin(), std_list9.end(), 10);
         tests::compare("List9 vs std", list9, std_list9);
 
-        std::list<int>std_list10 = std::list<int>{ 10, 20, 30 };
+        std::list<int> std_list10 = std::list<int>{ 10, 20, 30 };
         auto std_iter10b = std_list10.begin();
         *std_iter10b = 1;
         auto std_citer10b = std_list10.cbegin();
         tests::compare("citer10b vs std", *citer10b, *std_citer10b);
 
-        const std::list<int>std_list11 = std::list<int>{ 10, 20, 30 };
+        const std::list<int> std_list11 = std::list<int>{ 10, 20, 30 };
         auto std_iter11b = std_list11.begin();
         tests::compare("iter11b vs std", *iter11b, *std_iter11b);
 
         auto std_citer11b = std_list11.cbegin();
         tests::compare("citer11b vs std", *citer11b, *std_citer11b);
-
 
         tests::print_stats();
     }

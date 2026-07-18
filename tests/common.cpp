@@ -33,12 +33,11 @@ namespace tests
         std::cerr << '\n';
     }
 
-    auto handle_exception(const std::optional<std::exception_ptr>& exception,
-        const std::source_location& location) -> int
+    auto handle_exception(const std::optional<std::exception_ptr>& exception, const std::source_location& location)
+        -> int
     {
-        std::cerr << '[' << location.file_name()
-            << '(' << location.line() << ':' << location.column() << ")] "
-            << '\'' << location.function_name() << '\'';
+        std::cerr << '[' << location.file_name() << '(' << location.line() << ':' << location.column() << ")] " << '\''
+                  << location.function_name() << '\'';
 
         if (exception.has_value())
         {
@@ -79,4 +78,4 @@ namespace tests
         }
     }
 
-}
+} // namespace tests

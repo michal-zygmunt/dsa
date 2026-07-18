@@ -40,7 +40,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const dsa::ForwardList<int> list2 = dsa::ForwardList<int>({ 20, 10, 0 });
         tests::compare("ForwardList2 front", list2.front(), 20);
 
-
         tests::print_stats();
     }
     catch (...)

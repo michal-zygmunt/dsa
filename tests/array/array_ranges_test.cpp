@@ -76,7 +76,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         static_assert(std::ranges::view<array_t>);
         static_assert(!std::ranges::view<const_array_t>);
 
-
         // test constexpt access via iterators
         constexpr array_t array{ 1, 2, 3 };
         static_assert(*array.begin() == 1);
@@ -123,7 +122,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         static_assert(std::ranges::common_range<array_t>);
         static_assert(std::ranges::common_range<const_array_t>);
 
-        // test if iterators are indirectly readable 
+        // test if iterators are indirectly readable
         static_assert(std::indirectly_readable<array_t::iterator>);
         static_assert(std::indirectly_readable<array_t::const_iterator>);
 
@@ -182,8 +181,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array3 sum", sum, 80);
         std::list<int> expected3;
         std::ranges::for_each(array3, [&](int item) { expected3.push_back(item); });
-        tests::compare("Array3 for_each() equal()",
-            std::ranges::equal(expected3, std::list{ 30, 10, 40 }), true);
+        tests::compare("Array3 for_each() equal()", std::ranges::equal(expected3, std::list{ 30, 10, 40 }), true);
 
         // test std::ranges::reverse_viev
         const dsa::Array<int, 3> array4{ 10, 20, 30 };
@@ -270,7 +268,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array15", array15, expected15);
         tests::compare("Array16", array16, expected16);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::array<int, 3> std_array2{};
@@ -294,29 +291,28 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::array<int, 0> std_array10{};
         tests::compare("Array10 vs std empty()", array10.empty(), std_array10.empty());
-        tests::compare("Array10 vs std begin() == end()",
-            array10.begin() == array10.end(), std_array10.begin() == std_array10.end());
-        tests::compare("Array10 vs std distance == 0",
-            std::ranges::distance(array10) == 0, std::ranges::distance(array10) == 0);
+        tests::compare("Array10 vs std begin() == end()", array10.begin() == array10.end(),
+            std_array10.begin() == std_array10.end());
+        tests::compare("Array10 vs std distance == 0", std::ranges::distance(array10) == 0,
+            std::ranges::distance(array10) == 0);
 
         std::array<int, 3> std_array11{};
         std_array11.at(0) = 10;
         tests::compare("Array11 vs std empty()", array11.empty(), std_array11.empty());
         tests::compare("Array11 vs std front() == back()", array11.front(), std_array11.front());
         tests::compare("Array11 vs std front() == back()", array11.back(), std_array11.back());
-        tests::compare("Array11 vs std distance == 1",
-            std::ranges::distance(array11) == 1, std::ranges::distance(std_array11) == 1);
+        tests::compare("Array11 vs std distance == 1", std::ranges::distance(array11) == 1,
+            std::ranges::distance(std_array11) == 1);
 
         std::array<int, 5> std_array13{ 10, 20, 30, 40, 50 };
         std::ranges::fill(std_array13, 10);
         tests::compare("Array13", array13, std_array13);
 
         std::array<int, 3> std_array14{};
-        tests::compare("Array14 vs begin()",
-            std::ranges::begin(array14) == array14.begin(), std::ranges::begin(std_array14) == std_array14.begin());
-        tests::compare("Array14 vs end()",
-            std::ranges::end(array14) == array14.end(), std::ranges::end(std_array14) == std_array14.end());
-
+        tests::compare("Array14 vs begin()", std::ranges::begin(array14) == array14.begin(),
+            std::ranges::begin(std_array14) == std_array14.begin());
+        tests::compare("Array14 vs end()", std::ranges::end(array14) == array14.end(),
+            std::ranges::end(std_array14) == std_array14.end());
 
         tests::print_stats();
     }

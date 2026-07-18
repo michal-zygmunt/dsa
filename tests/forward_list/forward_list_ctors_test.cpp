@@ -94,7 +94,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected11{ 10, 20, 30 };
         tests::compare("ForwardList11", list11, expected11);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::forward_list<int> std_list1;
@@ -143,7 +142,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::forward_list<int> std_temp11 = { 0, 10, 20, 30, 40, 50 };
         const std::forward_list<int> std_list11(std::next(std_temp11.begin(), 1), std::next(std_temp11.begin(), 4));
         tests::compare("ForwardList11 vs std", list11, std_list11);
-
 
         tests::print_stats();
     }

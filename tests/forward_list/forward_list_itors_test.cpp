@@ -348,7 +348,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::advance(iter18, 1);
         tests::compare("iter18 == nullptr", iter18 == nullptr, true);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::forward_list<int> std_list1{ 0, 10, 20 };
@@ -370,7 +369,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         const std::forward_list<int> std_list3{ 0, 10, 20 };
         // NOLINTNEXTLINE(modernize-loop-convert, modernize-use-auto)
-        for (std::forward_list<int>::const_iterator std_iter = std_list3.cbegin(); std_iter != std_list3.cend(); std_iter++)
+        for (std::forward_list<int>::const_iterator std_iter = std_list3.cbegin(); std_iter != std_list3.cend();
+            std_iter++)
         {
             std::cout << (*std_iter) << '\t';
         }
@@ -391,7 +391,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList5 iterator vs std", expectedval5, val);
         tests::compare("ForwardList5 vs std", list5, expected5);
 
-        std::forward_list<int>std_list6 = std::forward_list<int>(1, 50);
+        std::forward_list<int> std_list6 = std::forward_list<int>(1, 50);
         std_list6.push_front(40);
         std_list6.push_front(30);
         iterator = std_list6.insert_after(std_list6.cbegin(), 0, 5);
@@ -399,25 +399,24 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList6 iterator vs std", expectedval6, val);
         tests::compare("ForwardList6 vs std", list6, std_list6);
 
-        std::forward_list<int>std_list9 = std::forward_list<int>{ 10, 20, 30, 40, 50 };
+        std::forward_list<int> std_list9 = std::forward_list<int>{ 10, 20, 30, 40, 50 };
         // use classic iterator based algorithms, separate test was added to test std::ranges based algorithms
         // NOLINTNEXTLINE(modernize-use-ranges)
         std::fill(std_list9.begin(), std_list9.end(), 10);
         tests::compare("ForwardList9 vs std", list9, std_list9);
 
-        std::forward_list<int>std_list10 = std::forward_list<int>{ 10, 20, 30 };
+        std::forward_list<int> std_list10 = std::forward_list<int>{ 10, 20, 30 };
         auto std_iter10b = std_list10.begin();
         *std_iter10b = 1;
         auto std_citer10b = std_list10.cbegin();
         tests::compare("citer10b vs std", *citer10b, *std_citer10b);
 
-        const std::forward_list<int>std_list11 = std::forward_list<int>{ 10, 20, 30 };
+        const std::forward_list<int> std_list11 = std::forward_list<int>{ 10, 20, 30 };
         auto std_iter11b = std_list11.begin();
         tests::compare("iter11b vs std", *iter11b, *std_iter11b);
 
         auto std_citer11b = std_list11.cbegin();
         tests::compare("citer11b vs std", *citer11b, *std_citer11b);
-
 
         tests::print_stats();
     }

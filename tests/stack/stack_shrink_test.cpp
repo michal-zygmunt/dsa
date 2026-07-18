@@ -27,20 +27,20 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     {
         std::cout << "Start stack_shrink_test:\n";
 
-        dsa::Stack<int> stack1 = dsa::Stack<int>({ 0,10,20,30,40,50 });
+        dsa::Stack<int> stack1 = dsa::Stack<int>({ 0, 10, 20, 30, 40, 50 });
         stack1.pop();
         stack1.pop();
-        const std::initializer_list<int> expected1 = { 30,20,10,0 };
+        const std::initializer_list<int> expected1 = { 30, 20, 10, 0 };
         tests::compare("Stack1", stack1, expected1);
 
-        dsa::Stack<int> stack2 = dsa::Stack<int>({ 0,10,20 });
+        dsa::Stack<int> stack2 = dsa::Stack<int>({ 0, 10, 20 });
         stack2.pop();
         stack2.pop();
         stack2.pop();
-        const std::initializer_list<int> expected2 = std::initializer_list<int>{ };
+        const std::initializer_list<int> expected2 = std::initializer_list<int>{};
         tests::compare("Stack2", stack2, expected2);
 
-        const dsa::Stack<int> stack3 = dsa::Stack<int>({ 0,10,20 });
+        const dsa::Stack<int> stack3 = dsa::Stack<int>({ 0, 10, 20 });
         tests::compare("Stack3.size()", stack3.size(), static_cast<size_t>(3));
 
         dsa::Stack<int> stack4 = dsa::Stack<int>();
@@ -50,21 +50,20 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const dsa::Stack<int> stack5;
         tests::compare("Stack5.size()", stack5.size(), static_cast<size_t>(0));
 
-
         std::cout << "Compare operations results with std container\n\n";
 
-        std::stack<int> std_stack1 = std::stack<int>({ 0,10,20,30,40,50 });
+        std::stack<int> std_stack1 = std::stack<int>({ 0, 10, 20, 30, 40, 50 });
         std_stack1.pop();
         std_stack1.pop();
         tests::compare("Stack1 vs std", stack1, std_stack1);
 
-        std::stack<int> std_stack2 = std::stack<int>({ 0,10,20 });
+        std::stack<int> std_stack2 = std::stack<int>({ 0, 10, 20 });
         std_stack2.pop();
         std_stack2.pop();
         std_stack2.pop();
         tests::compare("Stack2 vs std", stack2, std_stack2);
 
-        const std::stack<int> std_stack3 = std::stack<int>({ 0,10,20 });
+        const std::stack<int> std_stack3 = std::stack<int>({ 0, 10, 20 });
         tests::compare("Stack3.size() vs std", stack3.size(), std_stack3.size());
 
         const std::stack<int> std_stack4 = std::stack<int>();
@@ -73,7 +72,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         const std::stack<int> std_stack5;
         tests::compare("Stack5.empty() vs std", stack5.empty(), std_stack5.empty());
-
 
         tests::print_stats();
     }
