@@ -28,7 +28,7 @@ namespace dsa
     auto operator==(const Queue<T>& lhs, const Queue<T>& rhs) -> bool;
 
     template<typename T>
-    auto operator<=>(const Queue<T>& lhs, const Queue<T>& rhs)->std::compare_three_way_result_t<T>;
+    auto operator<=>(const Queue<T>& lhs, const Queue<T>& rhs) -> std::compare_three_way_result_t<T>;
 
     /**
      * @brief Implements Queue class
@@ -218,12 +218,12 @@ namespace dsa
         /**
          * @brief Forward friend declaration to access internal container comparison operator
          */
-        friend auto operator==<T>(const Queue<T>& lhs, const Queue<T>& rhs) -> bool;
+        friend auto operator== <T>(const Queue<T>& lhs, const Queue<T>& rhs) -> bool;
 
         /**
          * @brief Forward friend declaration to access internal container comparison operator
          */
-        friend auto operator<=><T>(const Queue<T>& lhs, const Queue<T>& rhs)->std::compare_three_way_result_t<T>;
+        friend auto operator<=> <T>(const Queue<T>& lhs, const Queue<T>& rhs) -> std::compare_three_way_result_t<T>;
 
         Container container{};
     };
@@ -231,7 +231,8 @@ namespace dsa
     template<typename T>
     Queue<T>::Queue()
         : Queue(Container())
-    {}
+    {
+    }
 
     template<typename T>
     Queue<T>::Queue(const Container& cont)
@@ -245,7 +246,8 @@ namespace dsa
     template<typename T>
     Queue<T>::Queue(Container&& cont) noexcept
         : container{ std::move(cont) }
-    {}
+    {
+    }
 
     template<typename T>
     Queue<T>::Queue(const Queue<T>& other)
@@ -262,7 +264,8 @@ namespace dsa
     template<typename T>
     Queue<T>::Queue(Queue<T>&& other) noexcept
         : container{ std::move(other.container) }
-    {}
+    {
+    }
 
     template<typename T>
     auto Queue<T>::operator=(const Queue<T>& other) -> Queue<T>&
@@ -430,7 +433,7 @@ namespace dsa
     {
         lhs.swap(rhs);
     }
-}
+} // namespace dsa
 
 namespace dsa
 {
@@ -441,14 +444,11 @@ namespace dsa
      * @tparam Container type of underlying container used in class
      * @tparam Compare type of comparison used in class
      */
-    template<
-        typename T,
-        typename Container = dsa::Vector<T>,
-        typename Compare = std::less<typename Container::value_type>
-    > class PriorityQueue
+    template<typename T, typename Container = dsa::Vector<T>,
+        typename Compare = std::less<typename Container::value_type>>
+    class PriorityQueue
     {
     public:
-
 
         /**
          * @brief Alias for underlying container type used in class
@@ -653,8 +653,7 @@ namespace dsa
          * @param[in,out] other object to swap content with
          */
         void swap(PriorityQueue& other) noexcept(
-            std::is_nothrow_swappable_v<Container>&&
-            std::is_nothrow_swappable_v<Compare>);
+            std::is_nothrow_swappable_v<Container> && std::is_nothrow_swappable_v<Compare>);
 
     private:
 
@@ -666,12 +665,14 @@ namespace dsa
     template<typename T, typename Container, typename Compare>
     PriorityQueue<T, Container, Compare>::PriorityQueue()
         : PriorityQueue(Compare(), Container())
-    {}
+    {
+    }
 
     template<typename T, typename Container, typename Compare>
     PriorityQueue<T, Container, Compare>::PriorityQueue(const Compare& compare)
         : PriorityQueue(compare, Container())
-    {}
+    {
+    }
 
     template<typename T, typename Container, typename Compare>
     PriorityQueue<T, Container, Compare>::PriorityQueue(const Compare& compare, const Container& cont)
@@ -686,24 +687,27 @@ namespace dsa
 
     template<typename T, typename Container, typename Compare>
     PriorityQueue<T, Container, Compare>::PriorityQueue(const Compare& compare, Container&& cont) noexcept
-        : comp{ compare }, container{ std::move(cont) }
-    {}
+        : comp{ compare },
+          container{ std::move(cont) }
+    {
+    }
 
     template<typename T, typename Container, typename Compare>
     PriorityQueue<T, Container, Compare>::PriorityQueue(const PriorityQueue& other)
         : PriorityQueue(Compare(), other.container)
-    {}
+    {
+    }
 
     template<typename T, typename Container, typename Compare>
     PriorityQueue<T, Container, Compare>::PriorityQueue(PriorityQueue<T, Container, Compare>&& other) noexcept
         : PriorityQueue(Compare(), std::move(other.container))
-    {}
+    {
+    }
 
     template<typename T, typename Container, typename Compare>
     template<typename InputIt>
         requires std::input_iterator<InputIt>
-    PriorityQueue<T, Container, Compare>::PriorityQueue(
-        InputIt first, InputIt last, const Compare& compare)
+    PriorityQueue<T, Container, Compare>::PriorityQueue(InputIt first, InputIt last, const Compare& compare)
         : comp{ compare }
     {
         container.assign(first, last);
@@ -713,9 +717,10 @@ namespace dsa
     template<typename T, typename Container, typename Compare>
     template<typename InputIt>
         requires std::input_iterator<InputIt>
-    PriorityQueue<T, Container, Compare>::PriorityQueue(
-        InputIt first, InputIt last, const Compare& compare, const Container& cont)
-        : comp{ compare }, container{ std::move(cont) }
+    PriorityQueue<T, Container, Compare>::PriorityQueue(InputIt first, InputIt last, const Compare& compare,
+        const Container& cont)
+        : comp{ compare },
+          container{ std::move(cont) }
     {
         container.insert(container.end(), first, last);
         std::make_heap(container.begin(), container.end(), comp);
@@ -724,9 +729,10 @@ namespace dsa
     template<typename T, typename Container, typename Compare>
     template<typename InputIt>
         requires std::input_iterator<InputIt>
-    PriorityQueue<T, Container, Compare>::PriorityQueue(
-        InputIt first, InputIt last, const Compare& compare, Container&& cont)
-        : comp{ compare }, container{ std::move(cont) }
+    PriorityQueue<T, Container, Compare>::PriorityQueue(InputIt first, InputIt last, const Compare& compare,
+        Container&& cont)
+        : comp{ compare },
+          container{ std::move(cont) }
     {
         container.insert(container.end(), first, last);
         std::make_heap(container.begin(), container.end(), comp);
@@ -805,8 +811,7 @@ namespace dsa
 
     template<typename T, typename Container, typename Compare>
     void PriorityQueue<T, Container, Compare>::swap(PriorityQueue& other) noexcept(
-        std::is_nothrow_swappable_v<Container>&&
-        std::is_nothrow_swappable_v<Compare>)
+        std::is_nothrow_swappable_v<Container> && std::is_nothrow_swappable_v<Compare>)
     {
         std::swap(container, other.container);
         std::swap(comp, other.comp);
@@ -842,12 +847,11 @@ namespace dsa
      * @param[in] rhs container to swap content
      */
     template<typename T, typename Container, typename Compare>
-    void swap(PriorityQueue<T, Container, Compare>& lhs, PriorityQueue<T, Container, Compare>& rhs)
-        noexcept(noexcept(lhs.swap(rhs)))
+    void swap(PriorityQueue<T, Container, Compare>& lhs, PriorityQueue<T, Container, Compare>& rhs) noexcept(
+        noexcept(lhs.swap(rhs)))
     {
         lhs.swap(rhs);
     }
-}
-
+} // namespace dsa
 
 #endif // !QUEUE_H

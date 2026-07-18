@@ -64,7 +64,7 @@ namespace dsa
              * @param[in] other NodeBase object
              * @return NodeBase& reference to NodeBase object
              */
-            auto operator=(const NodeBase& other) -> NodeBase & = default;
+            auto operator=(const NodeBase& other) -> NodeBase& = default;
 
             /**
              * @brief Construct NodeBase object using move constructor
@@ -81,7 +81,7 @@ namespace dsa
              * @param[in,out] other NodeBase object
              * @return NodeBase& reference to NodeBase object
              */
-            auto operator=(NodeBase&& other) -> NodeBase & = default;
+            auto operator=(NodeBase&& other) -> NodeBase& = default;
 
             /**
              * @brief Destroy the Node Base object
@@ -112,7 +112,8 @@ namespace dsa
              */
             Node(const T& value)
                 : m_value{ value }
-            {}
+            {
+            }
 
             /**
              * @brief Construct a new Node object with initial value using move semantics
@@ -122,7 +123,8 @@ namespace dsa
              */
             Node(T&& value)
                 : m_value{ std::move(value) }
-            {}
+            {
+            }
 
             /**
              * @brief Function returns value stored in Node object
@@ -229,7 +231,8 @@ namespace dsa
              */
             ForwardListIterator(NodeBase* node) noexcept
                 : m_current_node{ node }
-            {}
+            {
+            }
 
             /**
              * @brief Overload operator= to assign \p node to currently pointed ForwardListIterator
@@ -680,13 +683,13 @@ namespace dsa
         auto emplace_after(const_iterator pos, Args&&... args) -> iterator;
 
         /**
-        * @brief Function erases Node after specified ForwardList const_iterator
-        *
-        * @param[in] pos const_iterator after which element will be erased
-        * @return pointer to element after deleted iterator
-        * @retval iterator element after deleted element
-        * @retval nullptr if invalid iterator
-        */
+         * @brief Function erases Node after specified ForwardList const_iterator
+         *
+         * @param[in] pos const_iterator after which element will be erased
+         * @return pointer to element after deleted iterator
+         * @retval iterator element after deleted element
+         * @retval nullptr if invalid iterator
+         */
         auto erase_after(const const_iterator& pos) -> iterator;
 
         /**
@@ -884,8 +887,8 @@ namespace dsa
          *       iterators or references of objects moved from \p other will
          *       refer to the same elements of \p this
          */
-        void splice_after(const const_iterator& pos, ForwardList<T>& other,
-            const const_iterator& first, const const_iterator& last);
+        void splice_after(const const_iterator& pos, ForwardList<T>& other, const const_iterator& first,
+            const const_iterator& last);
 
         /**
          * @brief Function moves elements from other ForwardList object
@@ -1051,8 +1054,8 @@ namespace dsa
          * @param[in] iter const_iterator after which elements of \p other will be taken
          * @details Content of other object will be taken by constructed object
          */
-         // transfers ownership of nodes, moving entire container is not necessary
-         // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+        // transfers ownership of nodes, moving entire container is not necessary
+        // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
         void transfer(const const_iterator& pos, ForwardList<T>&& other, const const_iterator& iter);
 
         /**
@@ -1064,10 +1067,10 @@ namespace dsa
          * @param[in] last const_iterator until which elements of \p other will be taken
          * @details Content of other object will be taken by constructed object
          */
-         // transfers ownership of nodes, moving entire container is not necessary
-         // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
-        void transfer(const const_iterator& pos, ForwardList<T>&& other,
-            const const_iterator& first, const const_iterator& last);
+        // transfers ownership of nodes, moving entire container is not necessary
+        // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+        void transfer(const const_iterator& pos, ForwardList<T>&& other, const const_iterator& first,
+            const const_iterator& last);
 
         /**
          * @brief Function sorts nodes using merge sort algorithm
@@ -1126,7 +1129,8 @@ namespace dsa
     template<typename T>
     ForwardList<T>::ForwardList(size_type count)
         : ForwardList(count, T{})
-    {}
+    {
+    }
 
     template<typename T>
     ForwardList<T>::ForwardList(size_type count, const T& value)
@@ -1337,7 +1341,6 @@ namespace dsa
         return end();
     }
 
-
     template<typename T>
     auto ForwardList<T>::empty() const -> bool
     {
@@ -1366,15 +1369,14 @@ namespace dsa
     }
 
     template<typename T>
-    auto ForwardList<T>::insert_after(const const_iterator& pos, const_reference value)
-        -> typename ForwardList<T>::iterator
+    auto ForwardList<T>::insert_after(const const_iterator& pos, const_reference value) ->
+        typename ForwardList<T>::iterator
     {
         return insert_after(pos, 1, value);
     }
 
     template<typename T>
-    auto ForwardList<T>::insert_after(const const_iterator& pos, T&& value)
-        -> typename ForwardList<T>::iterator
+    auto ForwardList<T>::insert_after(const const_iterator& pos, T&& value) -> typename ForwardList<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1388,8 +1390,8 @@ namespace dsa
     }
 
     template<typename T>
-    auto ForwardList<T>::insert_after(const const_iterator& pos, size_type count, const_reference value)
-        -> typename ForwardList<T>::iterator
+    auto ForwardList<T>::insert_after(const const_iterator& pos, size_type count, const_reference value) ->
+        typename ForwardList<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1408,8 +1410,8 @@ namespace dsa
     template<typename T>
     template<typename InputIt>
         requires std::input_iterator<InputIt>
-    auto ForwardList<T>::insert_after(const const_iterator& pos, InputIt first, InputIt last)
-        -> typename ForwardList<T>::iterator
+    auto ForwardList<T>::insert_after(const const_iterator& pos, InputIt first, InputIt last) ->
+        typename ForwardList<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1427,8 +1429,8 @@ namespace dsa
     }
 
     template<typename T>
-    auto ForwardList<T>::insert_after(const const_iterator& pos, std::initializer_list<T> init_list)
-        -> typename ForwardList<T>::iterator
+    auto ForwardList<T>::insert_after(const const_iterator& pos, std::initializer_list<T> init_list) ->
+        typename ForwardList<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1472,8 +1474,8 @@ namespace dsa
     }
 
     template<typename T>
-    auto ForwardList<T>::erase_after(const const_iterator& first,
-        const const_iterator& last) -> typename ForwardList<T>::iterator
+    auto ForwardList<T>::erase_after(const const_iterator& first, const const_iterator& last) ->
+        typename ForwardList<T>::iterator
     {
         if (!if_valid_iterator(first) || !if_valid_iterator(last))
         {
@@ -1576,8 +1578,8 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::swap(ForwardList<T>& other)
-        noexcept(std::allocator_traits<allocator_type>::is_always_equal::value)
+    void ForwardList<T>::swap(ForwardList<T>& other) noexcept(
+        std::allocator_traits<allocator_type>::is_always_equal::value)
     {
         std::swap(m_head, other.m_head);
         std::swap(m_size, other.m_size);
@@ -1632,8 +1634,7 @@ namespace dsa
                 if (node_this && node_other)
                 {
                     // 2nd condition keeps correct order of equal elements
-                    if (comp(node_this->value(), node_other->value()) ||
-                        !comp(node_other->value(), node_this->value()))
+                    if (comp(node_this->value(), node_other->value()) || !comp(node_other->value(), node_this->value()))
                     {
                         to_move = m_head->m_next;
                         to_return = to_move->m_next;
@@ -1700,14 +1701,15 @@ namespace dsa
     }
 
     template<typename T>
-    void ForwardList<T>::splice_after(const const_iterator& pos, ForwardList<T>& other,
-        const const_iterator& first, const const_iterator& last)
+    void ForwardList<T>::splice_after(const const_iterator& pos, ForwardList<T>& other, const const_iterator& first,
+        const const_iterator& last)
     {
         transfer(pos, std::move(other), first, last);
     }
 
     template<typename T>
-    void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>&& other, const_iterator first, const_iterator last)
+    void ForwardList<T>::splice_after(const_iterator pos, ForwardList<T>&& other, const_iterator first,
+        const_iterator last)
     {
         transfer(pos, std::move(other), first, last);
     }
@@ -1864,8 +1866,8 @@ namespace dsa
      * @retval false if containers are not equal
      */
     template<typename T>
-    [[nodiscard]] auto operator==(const ForwardList<T>& lhs, const ForwardList<T>& rhs)
-        noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> bool
+    [[nodiscard]] auto operator==(const ForwardList<T>& lhs, const ForwardList<T>& rhs) noexcept(
+        noexcept(*lhs.begin() == *rhs.begin())) -> bool
     {
         if (lhs.size() != rhs.size())
         {
@@ -1903,8 +1905,8 @@ namespace dsa
      * @return three way comparison result type
      */
     template<typename T>
-    [[nodiscard]] auto operator<=>(const ForwardList<T>& lhs, const ForwardList<T>& rhs)
-        noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> std::compare_three_way_result_t<T>
+    [[nodiscard]] auto operator<=>(const ForwardList<T>& lhs, const ForwardList<T>& rhs) noexcept(
+        noexcept(*lhs.begin() == *rhs.begin())) -> std::compare_three_way_result_t<T>
     {
         auto lhs_iter = lhs.cbegin();
         auto rhs_iter = rhs.cbegin();
@@ -2091,8 +2093,8 @@ namespace dsa
     template<typename T>
     // transfers ownership of nodes, moving entire container is not necessary
     // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
-    void ForwardList<T>::transfer(const const_iterator& pos, ForwardList<T>&& other,
-        const const_iterator& first, const const_iterator& last)
+    void ForwardList<T>::transfer(const const_iterator& pos, ForwardList<T>&& other, const const_iterator& first,
+        const const_iterator& last)
     {
         if (&other != this && other.m_size > 0)
         {
@@ -2103,8 +2105,8 @@ namespace dsa
                 return;
             }
 
-            NodeBase* temp_prev{ pos.m_current_node };     // to append to
-            NodeBase* temp_next{ first.m_current_node };   // does not move
+            NodeBase* temp_prev{ pos.m_current_node };   // to append to
+            NodeBase* temp_next{ first.m_current_node }; // does not move
 
             NodeBase* first_to_move{ temp_next->m_next };
             NodeBase* last_to_move{ temp_next };
@@ -2196,6 +2198,6 @@ namespace dsa
 
         return result;
     }
-}
+} // namespace dsa
 
 #endif // !FORWARD_LIST_H

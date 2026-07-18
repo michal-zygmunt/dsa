@@ -188,7 +188,7 @@ namespace dsa
          */
         constexpr auto operator=(Vector<T>&& other) noexcept(
             std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value ||
-            std::allocator_traits<allocator_type>::is_always_equal::value)->Vector<T>&;
+            std::allocator_traits<allocator_type>::is_always_equal::value) -> Vector<T>&;
 
         /**
          * @brief Assign Vector object from \p init_list elements
@@ -258,7 +258,7 @@ namespace dsa
          * @param[in] pos index of element to return
          * @return reference to Vector element
          */
-        [[nodiscard]] constexpr auto operator[](size_type pos)->reference;
+        [[nodiscard]] constexpr auto operator[](size_type pos) -> reference;
 
         /**
          * @brief Returns a const_reference to Vector element at \p pos index.
@@ -267,7 +267,7 @@ namespace dsa
          * @param[in] pos index of element to return
          * @return const_reference to Vector element
          */
-        [[nodiscard]] constexpr auto operator[](size_type pos) const->const_reference;
+        [[nodiscard]] constexpr auto operator[](size_type pos) const -> const_reference;
 
         /**
          * @brief Returns reference to first Arary element
@@ -693,7 +693,8 @@ namespace dsa
     template<typename T>
     Vector<T>::Vector(size_type count)
         : Vector(count, T())
-    {}
+    {
+    }
 
     template<typename T>
     constexpr Vector<T>::Vector(size_type count, const T& value)
@@ -764,7 +765,7 @@ namespace dsa
     template<typename T>
     constexpr auto Vector<T>::operator=(Vector<T>&& other) noexcept(
         std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value ||
-        std::allocator_traits<allocator_type>::is_always_equal::value)-> Vector<T>&
+        std::allocator_traits<allocator_type>::is_always_equal::value) -> Vector<T>&
     {
         if (&other != this)
         {
@@ -1140,11 +1141,11 @@ namespace dsa
     constexpr auto Vector<T>::emplace_back(Args&&... args) -> reference
     {
         /*
-        * If an exception is thrown for any reason, this function has no effect
-        * strong exception guarantee by:
-        * - reallocate
-        * - if construction of new element fails, state of object does not change
-        */
+         * If an exception is thrown for any reason, this function has no effect
+         * strong exception guarantee by:
+         * - reallocate
+         * - if construction of new element fails, state of object does not change
+         */
 
         if (m_size >= m_capacity)
         {
@@ -1295,8 +1296,7 @@ namespace dsa
      * @retval false if containers are not equal
      */
     template<typename T>
-    auto operator==(const Vector<T>& lhs, const Vector<T>& rhs)
-        noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> bool
+    auto operator==(const Vector<T>& lhs, const Vector<T>& rhs) noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> bool
     {
         if (lhs.size() != rhs.size())
         {
@@ -1334,8 +1334,8 @@ namespace dsa
      * @return three way comparison result type
      */
     template<typename T>
-    auto operator<=>(const Vector<T>& lhs, const Vector<T>& rhs)
-        noexcept(noexcept(*lhs.begin() == *rhs.begin()))->std::compare_three_way_result_t<T>
+    auto operator<=>(const Vector<T>& lhs, const Vector<T>& rhs) noexcept(noexcept(*lhs.begin() == *rhs.begin()))
+        -> std::compare_three_way_result_t<T>
     {
         auto lhs_iter = lhs.cbegin();
         auto rhs_iter = rhs.cbegin();
@@ -1477,10 +1477,10 @@ namespace dsa
     void Vector<T>::reallocate(size_type new_cap)
     {
         /*
-        * strong exception guarantee by:
-        * - throwing exception in case container is too large
-        * - using std::move_if_noexcept during reallocation
-        */
+         * strong exception guarantee by:
+         * - throwing exception in case container is too large
+         * - using std::move_if_noexcept during reallocation
+         */
 
         if (new_cap > max_size())
         {
@@ -1490,8 +1490,8 @@ namespace dsa
         pointer new_data = allocator_type().allocate(new_cap);
         for (size_t i = 0; i < m_size; i++)
         {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-            std::allocator_traits<allocator_type>::construct(m_allocator, new_data + i, std::move_if_noexcept(m_data[i]));
+            std::allocator_traits<allocator_type>::construct(m_allocator, new_data + i,
+                std::move_if_noexcept(m_data[i])); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         }
         clear_allocation();
         m_data = new_data;
@@ -1520,6 +1520,6 @@ namespace dsa
             m_capacity = 0;
         }
     }
-}
+} // namespace dsa
 
 #endif // !VECTOR_H
