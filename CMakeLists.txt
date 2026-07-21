@@ -83,6 +83,15 @@ if(ENABLE_CLANG_FORMAT)
 		)
 		endforeach()
 
+		add_custom_target(check-format)
+		foreach(FILE IN LISTS SOURCE_FILES)
+		add_custom_command(
+			COMMENT "Check formatting of ${FILE} with clang-format"
+			TARGET check-format
+			COMMAND ${CLANG_FORMAT_EXE} --dry-run --Werror "${FILE}"
+		)
+		endforeach()
+
 	else()
 		message(WARNING "clang-format not found")
 	endif()
