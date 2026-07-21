@@ -73,11 +73,16 @@ if(ENABLE_CLANG_FORMAT)
 			"${CMAKE_SOURCE_DIR}/tests/*.cpp"
 			"${CMAKE_SOURCE_DIR}/tests/*.h"
 		)
-		add_custom_target(format
-			COMMAND ${CLANG_FORMAT_EXE} -i ${SOURCE_FILES}
-			WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-			COMMENT "Formatting source files with clang-format"
+
+		add_custom_target(format)
+		foreach(FILE IN LISTS SOURCE_FILES)
+		add_custom_command(
+			COMMENT "Formatting ${FILE} with clang-format"
+			TARGET format
+			COMMAND ${CLANG_FORMAT_EXE} -i "${FILE}"
 		)
+		endforeach()
+
 	else()
 		message(WARNING "clang-format not found")
 	endif()
