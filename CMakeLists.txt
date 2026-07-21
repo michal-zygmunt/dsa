@@ -66,9 +66,12 @@ if(ENABLE_CLANG_FORMAT)
 	
 	if(CLANG_FORMAT_EXE)
 		message(STATUS "clang-format found " ${CLANG_FORMAT_EXE})
-		
-		file(GLOB_RECURSE SOURCE_FILES
-			*.cpp *.h
+
+		file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS
+			"${CMAKE_SOURCE_DIR}/include/*.cpp"
+			"${CMAKE_SOURCE_DIR}/include/*.h"
+			"${CMAKE_SOURCE_DIR}/tests/*.cpp"
+			"${CMAKE_SOURCE_DIR}/tests/*.h"
 		)
 		add_custom_target(format
 			COMMAND ${CLANG_FORMAT_EXE} -i ${SOURCE_FILES}
