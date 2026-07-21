@@ -54,6 +54,7 @@ where applicable.
 ### Optional
 - Doxygen and Graphviz (dot) to generate documentation locally
 - Clang-tidy to check code quality and application of best practices
+- Clang-format to maintain a consistent coding style across the codebase
 - Python 3 and WSL/Linux tools to generate code coverage reports locally
 
 Adding CMake configuration options can be used to disable features that
@@ -133,6 +134,38 @@ cmake -S . -B build \
   -DCMAKE_C_COMPILER=clang-cl \
   -DENABLE_CLANG_TIDY=ON
 cmake --build build --config Release
+```
+
+## Code Formatting
+
+The project uses `clang-format` to maintain a consistent coding style
+across the codebase. The formatting rules are defined in the
+`.clang-format` file located in the repository root.
+
+It is recommended to configure your IDE to automatically
+format source files using the project's `.clang-format` configuration.
+This helps keep the codebase consistent and reduces formatting-only
+changes in commits.
+
+Code formatting is checked by CI workflow.
+
+### Formatting with CMake
+
+Enable the formatting target when configuring the project:
+
+```bash
+cmake -S . -B build -DENABLE_CLANG_FORMAT=ON
+```
+
+Then run the formatting target:
+```bash
+cmake --build build --target format
+```
+
+To only check formatting without making any changes to files
+run following target:
+```bash
+cmake --build build --target check-format
 ```
 
 ## Usage Example
