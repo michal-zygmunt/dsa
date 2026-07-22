@@ -26,7 +26,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     {
         std::cout << "Start stack_get_test:\n";
 
-        const std::initializer_list<int> expected{ 0,10,20 };
+        const std::initializer_list<int> expected{ 0, 10, 20 };
 
         dsa::Stack<int> stack1 = dsa::Stack<int>({ 20, 10, 0 });
         tests::compare("Stack1 top", stack1.top(), *expected.begin());
@@ -36,7 +36,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         const dsa::Stack<int> stack3 = dsa::Stack<int>({ 20, 10, 0 });
         tests::compare("Stack3 top", stack3.top(), *expected.begin());
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -48,7 +47,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         const std::stack<int> std_stack3 = std::stack<int>({ 20, 10, 0 });
         tests::compare("Stack3 top vs std", stack3.top(), std_stack3.top());
-
 
         tests::print_stats();
     }

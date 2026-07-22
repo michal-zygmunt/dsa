@@ -41,7 +41,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::Stack<int> stack3 = dsa::Stack<int>(il_1);
         dsa::Stack<int> stack4;
         stack3.swap(stack4);
-        const std::initializer_list<int> expected3 = { };
+        const std::initializer_list<int> expected3 = {};
         tests::compare("Stack3", stack3, expected3);
         const std::initializer_list<int> expected4 = { 5, 4, 3, 2, 1 };
         tests::compare("Stack4", stack4, expected4);
@@ -57,18 +57,16 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::Stack<int> stack7 = dsa::Stack<int>(il_1);
         dsa::Stack<int> stack8;
         dsa::swap(stack7, stack8);
-        const std::initializer_list<int> expected7 = { };
+        const std::initializer_list<int> expected7 = {};
         tests::compare("Stack7", stack7, expected7);
         const std::initializer_list<int> expected8 = { 5, 4, 3, 2, 1 };
         tests::compare("Stack8", stack8, expected8);
 
         // swap safe type
-        static_assert(noexcept(swap(std::declval<dsa::Stack<int>&>(),
-            std::declval<dsa::Stack<int>&>())));
+        static_assert(noexcept(swap(std::declval<dsa::Stack<int>&>(), std::declval<dsa::Stack<int>&>())));
         // swap throwing type
-        static_assert(noexcept(swap(std::declval<dsa::Stack<tests::ThrowingType>&>(),
-            std::declval<dsa::Stack<tests::ThrowingType>&>())));
-
+        static_assert(noexcept(
+            swap(std::declval<dsa::Stack<tests::ThrowingType>&>(), std::declval<dsa::Stack<tests::ThrowingType>&>())));
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -97,12 +95,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Stack8 vs std", stack8, std_stack8);
 
         // swap safe type
-        static_assert(noexcept(swap(std::declval<std::stack<int>&>(),
-            std::declval<std::stack<int>&>())));
+        static_assert(noexcept(swap(std::declval<std::stack<int>&>(), std::declval<std::stack<int>&>())));
         // swap throwing type
-        static_assert(noexcept(swap(std::declval<std::stack<tests::ThrowingType>&>(),
-            std::declval<std::stack<tests::ThrowingType>&>())));
-
+        static_assert(noexcept(
+            swap(std::declval<std::stack<tests::ThrowingType>&>(), std::declval<std::stack<tests::ThrowingType>&>())));
 
         tests::print_stats();
     }

@@ -116,21 +116,22 @@ int main() // NOLINT(modernize-use-trailing-return-type)
             "Double queue should support strong ordering");
 
         // test partial ordering
-        const dsa::Queue<double> queue7{ dsa::List<double>{1.0, 2.0, 3.0} };
-        const dsa::Queue<double> queue8{ dsa::List<double>{1.0, 2.0, std::numeric_limits<double>::quiet_NaN()} };
+        const dsa::Queue<double> queue7{
+            dsa::List<double>{ 1.0, 2.0, 3.0 }
+        };
+        const dsa::Queue<double> queue8{
+            dsa::List<double>{ 1.0, 2.0, std::numeric_limits<double>::quiet_NaN() }
+        };
         assert((queue7 <=> queue8) == std::partial_ordering::unordered);
         tests::compare("Queue7 <=> queue8 weak ordering", (queue7 <=> queue8) != std::weak_ordering::less, true);
 
         // test noexcept
 
         // operators
-        static_assert(!noexcept(
-            dsa::Queue<tests::ThrowingType>{dsa::List<tests::ThrowingType>(1)} ==
-            dsa::Queue<tests::ThrowingType>{dsa::List<tests::ThrowingType>(1)}));
-        static_assert(!noexcept(
-            dsa::Queue<tests::ThrowingType>{dsa::List<tests::ThrowingType>(1)} <=>
-            dsa::Queue<tests::ThrowingType>{dsa::List<tests::ThrowingType>(1)}));
-
+        static_assert(!noexcept(dsa::Queue<tests::ThrowingType>{ dsa::List<tests::ThrowingType>(1) } ==
+                                dsa::Queue<tests::ThrowingType>{ dsa::List<tests::ThrowingType>(1) }));
+        static_assert(!noexcept(dsa::Queue<tests::ThrowingType>{ dsa::List<tests::ThrowingType>(1) } <=>
+                                dsa::Queue<tests::ThrowingType>{ dsa::List<tests::ThrowingType>(1) }));
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -164,12 +165,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Queue1 <=> queue2 vs std <=", (queue1 <=> queue2) <= 0, (std_queue1 <=> std_queue2) <= 0);
         tests::compare("Queue1 <=> queue2 vs std >=", (queue1 <=> queue2) >= 0, (std_queue1 <=> std_queue2) >= 0);
 
-        tests::compare("Queue1 <=> queue2 vs std <",
-            (queue1 <=> queue2) == std::weak_ordering::less, (std_queue1 <=> std_queue2) == std::weak_ordering::less);
-        tests::compare("Queue1 <=> queue2 vs std <>",
-            (queue1 <=> queue2) != std::weak_ordering::equivalent, (std_queue1 <=> std_queue2) != std::weak_ordering::equivalent);
-        tests::compare("Queue1 <=> queue2 vs std <=",
-            (queue1 <=> queue2) != std::weak_ordering::greater, (std_queue1 <=> std_queue2) != std::weak_ordering::greater);
+        tests::compare("Queue1 <=> queue2 vs std <", (queue1 <=> queue2) == std::weak_ordering::less,
+            (std_queue1 <=> std_queue2) == std::weak_ordering::less);
+        tests::compare("Queue1 <=> queue2 vs std <>", (queue1 <=> queue2) != std::weak_ordering::equivalent,
+            (std_queue1 <=> std_queue2) != std::weak_ordering::equivalent);
+        tests::compare("Queue1 <=> queue2 vs std <=", (queue1 <=> queue2) != std::weak_ordering::greater,
+            (std_queue1 <=> std_queue2) != std::weak_ordering::greater);
 
         std::cout << "Compare operators for objects of different size\n\n";
 
@@ -205,12 +206,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Queue1 <=> queue3 vs std <=", (queue1 <=> queue3) <= 0, (std_queue1 <=> std_queue3) <= 0);
         tests::compare("Queue1 <=> queue3 vs std >=", (queue1 <=> queue3) >= 0, (std_queue1 <=> std_queue3) >= 0);
 
-        tests::compare("Queue1 <=> queue3 vs std >=",
-            (queue1 <=> queue3) != std::weak_ordering::less, (std_queue1 <=> std_queue3) != std::weak_ordering::less);
-        tests::compare("Queue1 <=> queue3 vs std ==",
-            (queue1 <=> queue3) == std::weak_ordering::equivalent, (std_queue1 <=> std_queue3) == std::weak_ordering::equivalent);
-        tests::compare("Queue1 <=> queue3 vs std <= ",
-            (queue1 <=> queue3) != std::weak_ordering::greater, (std_queue1 <=> std_queue3) != std::weak_ordering::greater);
+        tests::compare("Queue1 <=> queue3 vs std >=", (queue1 <=> queue3) != std::weak_ordering::less,
+            (std_queue1 <=> std_queue3) != std::weak_ordering::less);
+        tests::compare("Queue1 <=> queue3 vs std ==", (queue1 <=> queue3) == std::weak_ordering::equivalent,
+            (std_queue1 <=> std_queue3) == std::weak_ordering::equivalent);
+        tests::compare("Queue1 <=> queue3 vs std <= ", (queue1 <=> queue3) != std::weak_ordering::greater,
+            (std_queue1 <=> std_queue3) != std::weak_ordering::greater);
 
         // test comparison categories
         static_assert(std::is_same_v<std::compare_three_way_result_t<std::queue<int>>, std::strong_ordering>,
@@ -220,8 +221,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
             "Double queue should support strong ordering");
 
         // test partial ordering
-        const std::queue<double> std_queue7{ std::deque<double>{1.0, 2.0, 3.0} };
-        const std::queue<double> std_queue8{ std::deque<double>{1.0, 2.0, std::numeric_limits<double>::quiet_NaN()} };
+        const std::queue<double> std_queue7{
+            std::deque<double>{ 1.0, 2.0, 3.0 }
+        };
+        const std::queue<double> std_queue8{
+            std::deque<double>{ 1.0, 2.0, std::numeric_limits<double>::quiet_NaN() }
+        };
         assert((std_queue7 <=> std_queue8) == std::partial_ordering::unordered);
         assert((queue7 <=> queue8) == (std_queue7 <=> std_queue8));
         tests::compare("std_queue7 <=> std_queue8 weak ordering",
@@ -232,13 +237,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         // test noexcept
 
         // operators
-        static_assert(!noexcept(
-            std::queue<tests::ThrowingType>{std::deque<tests::ThrowingType>(1)} ==
-            std::queue<tests::ThrowingType>{std::deque<tests::ThrowingType>(1)}));
-        static_assert(!noexcept(
-            std::queue<tests::ThrowingType>{std::deque < tests::ThrowingType>(1)} <=>
-            std::queue<tests::ThrowingType>{std::deque < tests::ThrowingType>(1)}));
-
+        static_assert(!noexcept(std::queue<tests::ThrowingType>{ std::deque<tests::ThrowingType>(1) } ==
+                                std::queue<tests::ThrowingType>{ std::deque<tests::ThrowingType>(1) }));
+        static_assert(!noexcept(std::queue<tests::ThrowingType>{ std::deque<tests::ThrowingType>(1) } <=>
+                                std::queue<tests::ThrowingType>{ std::deque<tests::ThrowingType>(1) }));
 
         tests::print_stats();
     }

@@ -75,14 +75,15 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::Vector<int> vector10 = dsa::Vector<int>({ 1, 2, 3, 4, 5 });
         vector10.resize(0);
-        const std::initializer_list<int> expected10 = { };
+        const std::initializer_list<int> expected10 = {};
         tests::compare("Vector10", vector10, expected10);
 
         // test empty vector
         const dsa::Vector<int> vector11;
         tests::compare("vector11 empty()", vector11.empty(), true);
         tests::compare("vector11 size()", vector11.size(), static_cast<std::size_t>(0));
-        tests::compare("vector11 max_size()", vector11.max_size(), std::numeric_limits<std::size_t>::max() / sizeof(int));
+        tests::compare("vector11 max_size()", vector11.max_size(),
+            std::numeric_limits<std::size_t>::max() / sizeof(int));
 
         // test throwing 'length_error' exception from resize
         try
@@ -105,7 +106,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         {
             std::cout << "vector13 length error exception handled correctly for reserve\n\n";
         }
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -152,7 +152,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("vector11 vs std empty()", vector11.empty(), std_vector11.empty());
         tests::compare("vector11 vs std size()", vector11.size(), std_vector11.size());
         tests::compare("vector11 vs std max_size()", vector11.max_size(), std_vector11_max_size);
-
 
         tests::print_stats();
     }

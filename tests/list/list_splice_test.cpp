@@ -58,7 +58,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected6 = {};
         tests::compare("List6", list6, expected6);
 
-
         std::cout << "Testing moving empty list\n\n";
 
         dsa::List<int> list7 = dsa::List<int>(il_1);
@@ -68,7 +67,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List7", list7, expected7);
         const std::initializer_list<int> expected8 = {};
         tests::compare("List8", list8, expected8);
-
 
         std::cout << "Testing moving one element from other list\n\n";
 
@@ -96,7 +94,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected14 = { 10, 20, 30, 50 };
         tests::compare("List14", list14, expected14);
 
-
         dsa::List<int> list15 = dsa::List<int>(il_1);
         dsa::List<int> list16 = dsa::List<int>(il_2);
         list15.splice(std::next(list15.begin(), 3), list16, list16.begin());
@@ -115,13 +112,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list19 = dsa::List<int>(il_1);
         dsa::List<int> list20 = dsa::List<int>(il_2);
-        list19.splice(std::next(list19.begin(), 3),
-            list20, std::next(list20.begin(), static_cast<ptrdiff_t>(list20.size() - 2)));
+        list19.splice(std::next(list19.begin(), 3), list20,
+            std::next(list20.begin(), static_cast<ptrdiff_t>(list20.size() - 2)));
         const std::initializer_list<int> expected19 = { 1, 2, 3, 40, 4, 5 };
         tests::compare("List19", list19, expected19);
         const std::initializer_list<int> expected20 = { 10, 20, 30, 50 };
         tests::compare("List20", list20, expected20);
-
 
         dsa::List<int> list21 = dsa::List<int>(il_1);
         dsa::List<int> list22 = dsa::List<int>(il_2);
@@ -133,7 +129,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list23 = dsa::List<int>(il_1);
         dsa::List<int> list24 = dsa::List<int>(il_2);
-        list23.splice(std::next(list23.begin(), static_cast<ptrdiff_t>(list23.size() - 1)), list24, std::next(list24.begin(), 3));
+        list23.splice(std::next(list23.begin(), static_cast<ptrdiff_t>(list23.size() - 1)), list24,
+            std::next(list24.begin(), 3));
         const std::initializer_list<int> expected23 = { 1, 2, 3, 4, 40, 5 };
         tests::compare("List23", list23, expected23);
         const std::initializer_list<int> expected24 = { 10, 20, 30, 50 };
@@ -141,13 +138,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list25 = dsa::List<int>(il_1);
         dsa::List<int> list26 = dsa::List<int>(il_2);
-        list25.splice(std::next(list25.begin(), static_cast<ptrdiff_t>(list25.size() - 1)),
-            list26, std::next(list26.begin(), static_cast<ptrdiff_t>(list26.size() - 2)));
+        list25.splice(std::next(list25.begin(), static_cast<ptrdiff_t>(list25.size() - 1)), list26,
+            std::next(list26.begin(), static_cast<ptrdiff_t>(list26.size() - 2)));
         const std::initializer_list<int> expected25 = { 1, 2, 3, 4, 40, 5 };
         tests::compare("List25", list25, expected25);
         const std::initializer_list<int> expected26 = { 10, 20, 30, 50 };
         tests::compare("List26", list26, expected26);
-
 
         std::cout << "Testing moving range of element from other list\n\n";
 
@@ -169,13 +165,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list31 = dsa::List<int>(il_1);
         dsa::List<int> list32 = dsa::List<int>(il_2);
-        list31.splice(list31.begin(),
-            list32, list32.begin(), std::next(list32.begin(), static_cast<ptrdiff_t>(list32.size() - 1)));
+        list31.splice(list31.begin(), list32, list32.begin(),
+            std::next(list32.begin(), static_cast<ptrdiff_t>(list32.size() - 1)));
         const std::initializer_list<int> expected31 = { 10, 20, 30, 40, 1, 2, 3, 4, 5 };
         tests::compare("List31", list31, expected31);
         const std::initializer_list<int> expected32 = { 50 };
         tests::compare("List32", list32, expected32);
-
 
         dsa::List<int> list33 = dsa::List<int>(il_1);
         dsa::List<int> list34 = dsa::List<int>(il_2);
@@ -195,18 +190,17 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list37 = dsa::List<int>(il_1);
         dsa::List<int> list38 = dsa::List<int>(il_2);
-        list37.splice(std::next(list37.begin(), 2),
-            list38, list38.begin(), std::next(list38.begin(), static_cast<ptrdiff_t>(list38.size() - 1)));
+        list37.splice(std::next(list37.begin(), 2), list38, list38.begin(),
+            std::next(list38.begin(), static_cast<ptrdiff_t>(list38.size() - 1)));
         const std::initializer_list<int> expected37 = { 1, 2, 10, 20, 30, 40, 3, 4, 5 };
         tests::compare("List37", list37, expected37);
         const std::initializer_list<int> expected38 = { 50 };
         tests::compare("List38", list38, expected38);
 
-
         dsa::List<int> list39 = dsa::List<int>(il_1);
         dsa::List<int> list40 = dsa::List<int>(il_2);
-        list39.splice(std::next(list39.begin(), static_cast<ptrdiff_t>(list39.size() - 1)),
-            list40, list40.begin(), std::next(list40.begin(), 1));
+        list39.splice(std::next(list39.begin(), static_cast<ptrdiff_t>(list39.size() - 1)), list40, list40.begin(),
+            std::next(list40.begin(), 1));
         const std::initializer_list<int> expected39 = { 1, 2, 3, 4, 10, 5 };
         tests::compare("List39", list39, expected39);
         const std::initializer_list<int> expected40 = { 20, 30, 40, 50 };
@@ -214,8 +208,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list41 = dsa::List<int>(il_1);
         dsa::List<int> list42 = dsa::List<int>(il_2);
-        list41.splice(std::next(list41.begin(), static_cast<ptrdiff_t>(list41.size() - 1)),
-            list42, std::next(list42.begin(), 1), std::next(list42.begin(), 3));
+        list41.splice(std::next(list41.begin(), static_cast<ptrdiff_t>(list41.size() - 1)), list42,
+            std::next(list42.begin(), 1), std::next(list42.begin(), 3));
         const std::initializer_list<int> expected41 = { 1, 2, 3, 4, 20, 30, 5 };
         tests::compare("List41", list41, expected41);
         const std::initializer_list<int> expected42 = { 10, 40, 50 };
@@ -223,8 +217,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list43 = dsa::List<int>(il_1);
         dsa::List<int> list44 = dsa::List<int>(il_2);
-        list43.splice(std::next(list43.begin(), static_cast<ptrdiff_t>(list43.size() - 1)),
-            list44, list44.begin(), std::next(list44.begin(), static_cast<ptrdiff_t>(list44.size() - 1)));
+        list43.splice(std::next(list43.begin(), static_cast<ptrdiff_t>(list43.size() - 1)), list44, list44.begin(),
+            std::next(list44.begin(), static_cast<ptrdiff_t>(list44.size() - 1)));
         const std::initializer_list<int> expected43 = { 1, 2, 3, 4, 10, 20, 30, 40, 5 };
         tests::compare("List43", list43, expected43);
         const std::initializer_list<int> expected44 = { 50 };
@@ -232,8 +226,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list45 = dsa::List<int>(il_1);
         dsa::List<int> list46 = dsa::List<int>(il_2);
-        list45.splice(std::next(list45.begin(), static_cast<ptrdiff_t>(list45.size())),
-            list46, list46.begin(), std::next(list46.begin(), static_cast<ptrdiff_t>(list46.size() - 1)));
+        list45.splice(std::next(list45.begin(), static_cast<ptrdiff_t>(list45.size())), list46, list46.begin(),
+            std::next(list46.begin(), static_cast<ptrdiff_t>(list46.size() - 1)));
         const std::initializer_list<int> expected45 = { 1, 2, 3, 4, 5, 10, 20, 30, 40 };
         tests::compare("List45", list45, expected45);
         const std::initializer_list<int> expected46 = { 50 };
@@ -241,8 +235,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list47 = dsa::List<int>(il_1);
         dsa::List<int> list48 = dsa::List<int>(il_2);
-        list47.splice(std::next(list47.begin(), static_cast<ptrdiff_t>(list47.size() - 1)),
-            list48, list48.begin(), std::next(list48.begin(), static_cast<ptrdiff_t>(list48.size())));
+        list47.splice(std::next(list47.begin(), static_cast<ptrdiff_t>(list47.size() - 1)), list48, list48.begin(),
+            std::next(list48.begin(), static_cast<ptrdiff_t>(list48.size())));
         const std::initializer_list<int> expected47 = { 1, 2, 3, 4, 10, 20, 30, 40, 50, 5 };
         tests::compare("List47", list47, expected47);
         const std::initializer_list<int> expected48 = {};
@@ -250,13 +244,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list49 = dsa::List<int>(il_1);
         dsa::List<int> list50 = dsa::List<int>(il_2);
-        list49.splice(std::next(list49.begin(), static_cast<ptrdiff_t>(list49.size())),
-            list50, list50.begin(), std::next(list50.begin(), static_cast<ptrdiff_t>(list50.size())));
+        list49.splice(std::next(list49.begin(), static_cast<ptrdiff_t>(list49.size())), list50, list50.begin(),
+            std::next(list50.begin(), static_cast<ptrdiff_t>(list50.size())));
         const std::initializer_list<int> expected49 = { 1, 2, 3, 4, 5, 10, 20, 30, 40, 50 };
         tests::compare("List49", list49, expected49);
         const std::initializer_list<int> expected50 = {};
         tests::compare("List50", list50, expected50);
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -330,7 +323,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List61", list61, il_1);
         tests::compare("List62", list62, il_2);
 
-
         std::cout << "Testing moving other list\n\n";
 
         dsa::List<int> list63 = dsa::List<int>(il_1);
@@ -379,7 +371,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list71.splice(list71.begin(), list71, list71.begin());
         const std::initializer_list<int> expected71 = { 1, 2, 3, 4, 5 };
         tests::compare("List71", list71, expected71);
-
 
         tests::print_stats();
     }

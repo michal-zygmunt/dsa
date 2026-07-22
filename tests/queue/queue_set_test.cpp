@@ -27,22 +27,21 @@ int main() // NOLINT(modernize-use-trailing-return-type)
     {
         std::cout << "Start queue_set_test:\n";
 
-        const std::initializer_list<int> expected{ 50,10,20 };
+        const std::initializer_list<int> expected{ 50, 10, 20 };
 
-        dsa::Queue<int> queue1 = dsa::Queue<int>({ 0,10,20 });
+        dsa::Queue<int> queue1 = dsa::Queue<int>({ 0, 10, 20 });
         queue1.front() = 50;
         tests::compare("Queue1", queue1, expected);
 
-        dsa::Queue<int> queue2 = dsa::Queue<int>({ 0,10,20 });
-        dsa::Queue<int> queue3 = dsa::Queue<int>({ 50,10,20 });
+        dsa::Queue<int> queue2 = dsa::Queue<int>({ 0, 10, 20 });
+        dsa::Queue<int> queue3 = dsa::Queue<int>({ 50, 10, 20 });
         queue2.swap(queue3);
         tests::compare("Queue2", queue2, dsa::Queue(dsa::List<int>{ 50, 10, 20 }));
-        tests::compare("Queue3", queue3, dsa::Queue(dsa::List<int>{  0, 10, 20 }));
+        tests::compare("Queue3", queue3, dsa::Queue(dsa::List<int>{ 0, 10, 20 }));
 
-        dsa::Queue<int> queue4 = dsa::Queue<int>({ 50,10,20 });
+        dsa::Queue<int> queue4 = dsa::Queue<int>({ 50, 10, 20 });
         queue4.swap(queue4);
         tests::compare("Queue4", queue4, expected);
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -71,7 +70,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_queue4.push(20);
         std_queue4.swap(std_queue4);
         tests::compare("Queue4 vs std", queue4, std_queue4);
-
 
         tests::print_stats();
     }

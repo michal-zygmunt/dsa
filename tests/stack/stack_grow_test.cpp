@@ -41,7 +41,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         stack2.emplace(10);
         tests::compare("Stack2", stack2, expected);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::stack<int> std_stack1 = std::stack<int>({ 40 });
@@ -56,7 +55,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_stack2.emplace(20);
         std_stack2.emplace(10);
         tests::compare("Stack2 vs std", stack2, std_stack2);
-
 
         tests::print_stats();
     }

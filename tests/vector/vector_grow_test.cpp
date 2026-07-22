@@ -141,7 +141,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected15 = { 0, 10, 20, 30, 40 };
         tests::compare("Vector15", vector15, expected15);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::vector<int> std_vector5{ 10, 20, 30 };
@@ -155,7 +154,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::vector<int> std_vector7{ 40 };
         std_vector7.insert(std_vector7.begin(), { 10, 20, 30 });
         tests::compare("Vector7 vs std", vector7, std_vector7);
-
 
         tests::print_stats();
     }

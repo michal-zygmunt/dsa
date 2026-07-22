@@ -41,7 +41,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::Vector<int> vector3 = dsa::Vector<int>(il_1);
         dsa::Vector<int> vector4;
         vector3.swap(vector4);
-        const std::initializer_list<int> expected3 = { };
+        const std::initializer_list<int> expected3 = {};
         tests::compare("Vector3", vector3, expected3);
         const std::initializer_list<int> expected4 = { 1, 2, 3, 4, 5 };
         tests::compare("Vector4", vector4, expected4);
@@ -62,18 +62,16 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::Vector<int> vector8 = dsa::Vector<int>(il_1);
         dsa::Vector<int> vector9;
         dsa::swap(vector8, vector9);
-        const std::initializer_list<int> expected8 = { };
+        const std::initializer_list<int> expected8 = {};
         tests::compare("Vector8", vector8, expected8);
         const std::initializer_list<int> expected9 = il_1;
         tests::compare("Vector9", vector9, expected9);
 
         // swap safe type
-        static_assert(noexcept(swap(std::declval<dsa::Vector<int>&>(),
-            std::declval<dsa::Vector<int>&>())));
+        static_assert(noexcept(swap(std::declval<dsa::Vector<int>&>(), std::declval<dsa::Vector<int>&>())));
         // swap throwing type
         static_assert(noexcept(swap(std::declval<dsa::Vector<tests::ThrowingType>&>(),
             std::declval<dsa::Vector<tests::ThrowingType>&>())));
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -108,12 +106,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector9 vs std", vector9, std_vector9);
 
         // swap safe type
-        static_assert(noexcept(swap(std::declval<std::vector<int>&>(),
-            std::declval<std::vector<int>&>())));
+        static_assert(noexcept(swap(std::declval<std::vector<int>&>(), std::declval<std::vector<int>&>())));
         // swap throwing type
         static_assert(noexcept(swap(std::declval<std::vector<tests::ThrowingType>&>(),
             std::declval<std::vector<tests::ThrowingType>&>())));
-
 
         tests::print_stats();
     }

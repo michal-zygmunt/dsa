@@ -28,7 +28,7 @@ namespace dsa
     auto operator==(const Stack<T>& lhs, const Stack<T>& rhs) -> bool;
 
     template<typename T>
-    auto operator<=>(const Stack<T>& lhs, const Stack<T>& rhs)->std::compare_three_way_result_t<T>;
+    auto operator<=>(const Stack<T>& lhs, const Stack<T>& rhs) -> std::compare_three_way_result_t<T>;
 
     /**
      * @brief Implements Stack class
@@ -203,12 +203,12 @@ namespace dsa
         /**
          * @brief Forward friend declaration to access internal container comparison operator
          */
-        friend auto operator==<T>(const Stack<T>& lhs, const Stack<T>& rhs) -> bool;
+        friend auto operator== <T>(const Stack<T>& lhs, const Stack<T>& rhs) -> bool;
 
         /**
          * @brief Forward friend declaration to access internal container comparison operator
          */
-        friend auto operator<=><T>(const Stack<T>& lhs, const Stack<T>& rhs)->std::compare_three_way_result_t<T>;
+        friend auto operator<=> <T>(const Stack<T>& lhs, const Stack<T>& rhs) -> std::compare_three_way_result_t<T>;
 
         Container container{};
     };
@@ -216,7 +216,8 @@ namespace dsa
     template<typename T>
     Stack<T>::Stack()
         : Stack(Container())
-    {}
+    {
+    }
 
     template<typename T>
     Stack<T>::Stack(const Container& cont)
@@ -230,7 +231,8 @@ namespace dsa
     template<typename T>
     Stack<T>::Stack(Container&& cont) noexcept
         : container{ std::move(cont) }
-    {}
+    {
+    }
 
     template<typename T>
     Stack<T>::Stack(const Stack<T>& other)
@@ -403,5 +405,5 @@ namespace dsa
     {
         lhs.swap(rhs);
     }
-}
+} // namespace dsa
 #endif // !STACK_H

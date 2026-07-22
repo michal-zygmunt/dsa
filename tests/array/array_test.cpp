@@ -65,11 +65,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // use lambda expression as workaround to prevent inlining call to const data()
         auto use_const_data = [](const auto& array)
-            {
-                const int* ptr = array.data();
-                (void)ptr;
-                return ptr;
-            };
+        {
+            const int* ptr = array.data();
+            (void)ptr;
+            return ptr;
+        };
         const dsa::Array<int, 3> const_array3{ 10, 20, 30 };
         const auto* ptr_cd3 = use_const_data(const_array3);
         static_assert(std::is_same_v<decltype(expected3.data()), const int*>, "data() must return const T*");
@@ -425,11 +425,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // modyfing elements
         constexpr dsa::Array<int, 3> array20 = []
-            {
-                dsa::Array<int, 3> tmp = { 1, 2, 3 };
-                tmp[0] = 100;
-                return tmp;
-            }();
+        {
+            dsa::Array<int, 3> tmp = { 1, 2, 3 };
+            tmp[0] = 100;
+            return tmp;
+        }();
         static_assert(array20[0] == 100);
 
         // Test to_array
@@ -447,13 +447,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<std::string> expected22{ "A", "B", "C" };
         tests::compare("Array22", array22, expected22);
 
-        auto array23 = dsa::to_array<std::string>({ std::string{"A"}, std::string{"B"}, std::string{"C"} });
+        auto array23 = dsa::to_array<std::string>({ std::string{ "A" }, std::string{ "B" }, std::string{ "C" } });
         const std::initializer_list<std::string> expected23{ "A", "B", "C" };
         tests::compare("Array23", array23, expected23);
 
         // Intentional use of C-style arrays
         // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
-        auto array24 = dsa::to_array<std::string>({ std::string{"A"}, std::string{"B"}, std::string{"C"} });
+        auto array24 = dsa::to_array<std::string>({ std::string{ "A" }, std::string{ "B" }, std::string{ "C" } });
         // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
         std::string array25[] = { "X", "Y", "Z" };
         array24 = dsa::to_array(std::move(array25));
@@ -461,7 +461,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<std::string> expected25{ "", "", "" };
         tests::compare("Array24", array24, expected24);
         tests::compare("Array25", dsa::to_array(array25), expected25);
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -587,18 +586,18 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // Test empty array
         std::array<int, 0> std_array14{};
-        tests::compare("Array14 vs std begin() == cbegin()",
-            array14.begin() == array14.cbegin(), std_array14.begin() == std_array14.cbegin());
-        tests::compare("Array14 vs std begin() == end()",
-            array14.begin() == array14.end(), std_array14.begin() == std_array14.end());
-        tests::compare("Array14 vs std end() == cend()",
-            array14.end() == array14.cend(), std_array14.end() == std_array14.cend());
-        tests::compare("Array14 vs std rbegin() == crbegin()",
-            array14.rbegin() == array14.crbegin(), std_array14.rbegin() == std_array14.crbegin());
-        tests::compare("Array14 vs std rbegin() == rend()",
-            array14.rbegin() == array14.rend(), std_array14.rbegin() == std_array14.rend());
-        tests::compare("Array14 vs std rend() == crend()",
-            array14.rend() == array14.crend(), std_array14.rend() == std_array14.crend());
+        tests::compare("Array14 vs std begin() == cbegin()", array14.begin() == array14.cbegin(),
+            std_array14.begin() == std_array14.cbegin());
+        tests::compare("Array14 vs std begin() == end()", array14.begin() == array14.end(),
+            std_array14.begin() == std_array14.end());
+        tests::compare("Array14 vs std end() == cend()", array14.end() == array14.cend(),
+            std_array14.end() == std_array14.cend());
+        tests::compare("Array14 vs std rbegin() == crbegin()", array14.rbegin() == array14.crbegin(),
+            std_array14.rbegin() == std_array14.crbegin());
+        tests::compare("Array14 vs std rbegin() == rend()", array14.rbegin() == array14.rend(),
+            std_array14.rbegin() == std_array14.rend());
+        tests::compare("Array14 vs std rend() == crend()", array14.rend() == array14.crend(),
+            std_array14.rend() == std_array14.crend());
         tests::compare("Array14 vs std size()", array14.size(), std_array14.size());
         tests::compare("Array14 vs std max_size()", array14.max_size(), std_array14.max_size());
         tests::compare("Array14 vs std empty()", array14.empty(), std_array14.empty());
@@ -635,11 +634,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // modyfing elements
         constexpr std::array<int, 3> std_array20 = []
-            {
-                std::array<int, 3> std_tmp = { 1, 2, 3 };
-                std_tmp[0] = 100;
-                return std_tmp;
-            }();
+        {
+            std::array<int, 3> std_tmp = { 1, 2, 3 };
+            std_tmp[0] = 100;
+            return std_tmp;
+        }();
         static_assert(std_array20[0] == 100);
 
         // Test to_array
@@ -649,9 +648,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         auto std_array22 = std::to_array(temp22);
         tests::compare("Array22 vs std", array22, std_array22);
 
-        auto std_array23 = std::to_array<std::string>({ std::string{"A"}, std::string{"B"}, std::string{"C"} });
+        auto std_array23 = std::to_array<std::string>({ std::string{ "A" }, std::string{ "B" }, std::string{ "C" } });
         tests::compare("Array23 vs std", array23, std_array23);
-
 
         tests::print_stats();
     }

@@ -22,6 +22,7 @@ option(ENABLE_WARNINGS "Enable strict compiler flags" ON)
 option(ENABLE_SANITIZERS "Enable sanitizers ASan/UBSan" ON)
 option(ENABLE_CLANG_TIDY "Enable clang-tidy static code analysis" OFF)
 option(ENABLE_CLANG_TIDY_STRICT "Fail on first clang-tidy warning/error" OFF)
+option(ENABLE_CLANG_FORMAT "Enable custom target for formatting using clang-format rules" ON)
 option(DOCS_ENABLED "Enable documentation generation" ON)
 option(CODE_TESTING "Enable code testing" ON)
 option(CODE_COVERAGE "Enable coverage reporting" ON)
@@ -54,6 +55,45 @@ if(ENABLE_CLANG_TIDY)
 		)
 	else()
 		message(WARNING "clang-tidy not found")
+	endif()
+endif()
+
+
+if(ENABLE_CLANG_FORMAT)
+	message(STATUS "Project files formatting with clang-format option enabled")
+
+	find_program(CLANG_FORMAT_EXE NAMES clang-format)
+	
+	if(CLANG_FORMAT_EXE)
+		message(STATUS "clang-format found " ${CLANG_FORMAT_EXE})
+
+		file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS
+			"${CMAKE_SOURCE_DIR}/include/*.cpp"
+			"${CMAKE_SOURCE_DIR}/include/*.h"
+			"${CMAKE_SOURCE_DIR}/tests/*.cpp"
+			"${CMAKE_SOURCE_DIR}/tests/*.h"
+		)
+
+		add_custom_target(format)
+		foreach(FILE IN LISTS SOURCE_FILES)
+		add_custom_command(
+			COMMENT "Formatting ${FILE} with clang-format"
+			TARGET format
+			COMMAND ${CLANG_FORMAT_EXE} -i "${FILE}"
+		)
+		endforeach()
+
+		add_custom_target(check-format)
+		foreach(FILE IN LISTS SOURCE_FILES)
+		add_custom_command(
+			COMMENT "Check formatting of ${FILE} with clang-format"
+			TARGET check-format
+			COMMAND ${CLANG_FORMAT_EXE} --dry-run --Werror "${FILE}"
+		)
+		endforeach()
+
+	else()
+		message(WARNING "clang-format not found")
 	endif()
 endif()
 

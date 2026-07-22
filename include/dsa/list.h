@@ -64,7 +64,7 @@ namespace dsa
              * @param[in] other NodeBase object
              * @return NodeBase& reference to NodeBase object
              */
-            auto operator=(const NodeBase& other) -> NodeBase & = default;
+            auto operator=(const NodeBase& other) -> NodeBase& = default;
 
             /**
              * @brief Construct NodeBase object using move constructor
@@ -81,7 +81,7 @@ namespace dsa
              * @param[in,out] other NodeBase object
              * @return NodeBase& reference to NodeBase object
              */
-            auto operator=(NodeBase&& other) -> NodeBase & = default;
+            auto operator=(NodeBase&& other) -> NodeBase& = default;
 
             /**
              * @brief Destroy the Node Base object
@@ -117,7 +117,8 @@ namespace dsa
              */
             Node(const T& value)
                 : m_value{ value }
-            {}
+            {
+            }
 
             /**
              * @brief Construct a new Node object with initial value using move semantics
@@ -127,7 +128,8 @@ namespace dsa
              */
             Node(T&& value)
                 : m_value{ std::move(value) }
-            {}
+            {
+            }
 
             /**
              * @brief Function returns value stored in Node object
@@ -235,7 +237,8 @@ namespace dsa
              */
             ListIterator(NodeBase* node) noexcept
                 : m_current_node{ node }
-            {}
+            {
+            }
 
             /**
              * @brief Overload operator= to assign \p node to currently pointed ListIterator
@@ -519,7 +522,8 @@ namespace dsa
          * @param[in,out] other List object of type T
          * @return List&
          */
-        auto operator=(List<T>&& other) noexcept(std::allocator_traits<allocator_type>::is_always_equal::value)->List&;
+        auto operator=(List<T>&& other) noexcept(std::allocator_traits<allocator_type>::is_always_equal::value)
+            -> List&;
 
         /**
          * @brief Assign elements from initializer list to List object
@@ -795,14 +799,14 @@ namespace dsa
         auto emplace(const_iterator pos, Args&&... args) -> iterator;
 
         /**
-        * @brief Function erases Node object at specified \p pos
-        *
-        * @param[in] pos iterator to element to erase
-        * @return iterator following erased element
-        * @retval iterator to element following \p pos
-        * @retval begin iterator if \p pos was first element prior to removal
-        * @retval end iterator if \p pos was last element prior to removal
-        */
+         * @brief Function erases Node object at specified \p pos
+         *
+         * @param[in] pos iterator to element to erase
+         * @return iterator following erased element
+         * @retval iterator to element following \p pos
+         * @retval begin iterator if \p pos was first element prior to removal
+         * @retval end iterator if \p pos was last element prior to removal
+         */
         auto erase(const_iterator pos) -> iterator;
 
         /**
@@ -941,8 +945,8 @@ namespace dsa
          * @param[in,out] other container to take elements from
          * @details Content of other object will be taken by constructed object
          */
-         // transfers ownership of nodes, moving entire container is not necessary
-         // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+        // transfers ownership of nodes, moving entire container is not necessary
+        // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
         void merge(List<T>&& other);
 
         /**
@@ -1195,8 +1199,8 @@ namespace dsa
          * @param[in] last const_iterator until which elements of \p other will be taken
          * @details Content of other object will be taken by constructed object
          */
-         // transfers ownership of nodes, moving entire container is not necessary
-         // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
+        // transfers ownership of nodes, moving entire container is not necessary
+        // NOLINTNEXTLINE(cppcoreguidelines-rvalue-reference-param-not-moved)
         void transfer(const_iterator pos, List<T>&& other, const_iterator first, const const_iterator& last);
 
         /**
@@ -1259,7 +1263,8 @@ namespace dsa
     template<typename T>
     List<T>::List(size_type count)
         : List(count, T{})
-    {}
+    {
+    }
 
     template<typename T>
     List<T>::List(size_type count, const T& value)
@@ -1314,7 +1319,7 @@ namespace dsa
 
     template<typename T>
     auto List<T>::operator=(List<T>&& other) noexcept(std::allocator_traits<allocator_type>::is_always_equal::value)
-        ->List&
+        -> List&
     {
         if (&other != this)
         {
@@ -1546,8 +1551,8 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::insert(const const_iterator& pos, size_type count, const_reference value)
-        -> typename List<T>::iterator
+    auto List<T>::insert(const const_iterator& pos, size_type count, const_reference value) ->
+        typename List<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1619,7 +1624,6 @@ namespace dsa
         ++m_size;
         return iterator(newNode);
     }
-
 
     template<typename T>
     auto List<T>::erase(const_iterator pos) -> typename List<T>::iterator
@@ -1837,8 +1841,7 @@ namespace dsa
                 if (node_this && node_other)
                 {
                     // 2nd condition keeps correct order of equal elements
-                    if (comp(node_this->value(), node_other->value()) ||
-                        !comp(node_other->value(), node_this->value()))
+                    if (comp(node_this->value(), node_other->value()) || !comp(node_other->value(), node_this->value()))
                     {
                         to_move = m_head;
                         to_move->m_prev = temp_tail;
@@ -1919,8 +1922,8 @@ namespace dsa
     }
 
     template<typename T>
-    void List<T>::splice(const const_iterator& pos, List<T>& other,
-        const const_iterator& first, const const_iterator& last)
+    void List<T>::splice(const const_iterator& pos, List<T>& other, const const_iterator& first,
+        const const_iterator& last)
     {
         transfer(pos, std::move(other), first, last);
     }
@@ -2104,8 +2107,7 @@ namespace dsa
      * @retval false if containers are not equal
      */
     template<typename T>
-    auto operator==(const List<T>& lhs, const List<T>& rhs)
-        noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> bool
+    auto operator==(const List<T>& lhs, const List<T>& rhs) noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> bool
     {
         if (lhs.size() != rhs.size())
         {
@@ -2143,8 +2145,8 @@ namespace dsa
      * @return three way comparison result type
      */
     template<typename T>
-    auto operator<=>(const List<T>& lhs, const List<T>& rhs)
-        noexcept(noexcept(*lhs.begin() == *rhs.begin()))->std::compare_three_way_result_t<T>
+    auto operator<=>(const List<T>& lhs, const List<T>& rhs) noexcept(noexcept(*lhs.begin() == *rhs.begin()))
+        -> std::compare_three_way_result_t<T>
     {
         auto lhs_iter = lhs.cbegin();
         auto rhs_iter = rhs.cbegin();
@@ -2442,6 +2444,6 @@ namespace dsa
 
         return result;
     }
-}
+} // namespace dsa
 
 #endif // !LIST_H

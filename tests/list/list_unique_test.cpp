@@ -60,7 +60,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::List<int> list6 = dsa::List<int>();
         auto removed6 = list6.unique();
-        const std::initializer_list<int> expected6 = { };
+        const std::initializer_list<int> expected6 = {};
         tests::compare("List6", list6, expected6);
         tests::compare("List6 removed", removed6, size_t{ 0 });
 
@@ -71,10 +71,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List7 removed", removed7, size_t{ 0 });
 
         // find unique values using predicate
-        auto predicate = [](const int& input_a, const int& input_b)
-            {
-                return std::abs(input_a - input_b) <= 5;
-            };
+        auto predicate = [](const int& input_a, const int& input_b) { return std::abs(input_a - input_b) <= 5; };
 
         dsa::List<int> list8 = dsa::List<int>({ 1, 5, 7, 15, 25 });
         auto removed8 = list8.unique(predicate);
@@ -87,7 +84,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected9 = { 1, 12, 3, 15, 1 };
         tests::compare("List9", list9, expected9);
         tests::compare("List9 removed", removed9, size_t{ 4 });
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -135,7 +131,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         auto std_removed9 = std_list9.unique(predicate);
         tests::compare("List9 vs std", list9, std_list9);
         tests::compare("List9 removed vs std", removed9, std_removed9);
-
 
         tests::print_stats();
     }

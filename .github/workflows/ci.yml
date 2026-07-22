@@ -10,8 +10,82 @@ on:
     branches: [ "**" ]
 
 jobs:
+  clang-format:
+    name: ubuntu-24.04-clang-format
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+  
+    - name: Show Ubuntu version
+      run: lsb_release -a
+
+    - name: Install LLVM/Clang 19 on Ubuntu
+      # Ubuntu 24.04 has installed Clang versions: 16.0.6, 17.0.6, 18.1.3
+      # Install Clang 19 as it was used initially on local Ubuntu OS
+      uses: ./.github/actions/setup-llvm-19
+
+    - name: Get list of changed C/C++ files
+      id: changed-files
+      run: |
+        set -euo pipefail
+
+        if [ "${{ github.event_name }}" == "pull_request" ]; then
+          git fetch origin "${{ github.base_ref }}"
+          git diff --name-only "origin/${{ github.base_ref }}...HEAD" > changed.txt
+        elif [ "${{ github.event_name }}" == "push" ]; then
+          if git cat-file -e "${{ github.event.before }}^{commit}" 2>/dev/null; then
+            git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" > changed.txt
+          elif git rev-parse "${{ github.sha }}^" >/dev/null 2>&1; then
+            echo "Using parent of current commit"
+            git diff --name-only "${{ github.sha }}^" "${{ github.sha }}" > changed.txt
+          else
+            echo "First commit, checking all files."
+            git ls-tree --name-only -r "${{ github.sha }}" > changed.txt
+          fi
+        fi
+
+        echo "Changed files:"
+        cat changed.txt
+
+        if grep -qx ".clang-format" changed.txt; then
+          echo ".clang-format changed - checking all C/C++ files"
+          find . -type f \( -name "*.cpp" -o -name "*.h" \) > files.txt
+        else
+          grep -E '\.(cpp|h)$' changed.txt > files.txt || true
+        fi
+
+        echo "Files to check:"
+        cat files.txt || true
+
+        if [ -s files.txt ]; then
+          echo "has_files=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "has_files=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Run clang-format check on changed files
+      if: steps.changed-files.outputs.has_files == 'true'
+      run: |
+        if clang-format --dry-run --Werror $(cat files.txt); then
+          echo "::notice::Formatting check passed."
+        else
+          echo "::error::Formatting check failed."
+          echo "::error::Run clang-format on the affected files and commit the changes."
+          exit 1
+        fi
+
+    - name: No changed files detected
+      if: steps.changed-files.outputs.has_files == 'false'
+      run: echo "::notice::No .cpp or .h files changed. Skipping formatting check."
+
+
+
   build:
     runs-on: ${{ matrix.os }}
+    needs: clang-format
 
     strategy:
       # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.

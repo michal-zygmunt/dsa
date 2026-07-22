@@ -68,7 +68,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector1 <=> vector2 <>", (vector1 <=> vector2) != std::weak_ordering::equivalent, true);
         tests::compare("Vector1 <=> vector2 <=", (vector1 <=> vector2) != std::weak_ordering::greater, true);
 
-
         std::cout << "Compare operators for objects of different size\n\n";
 
         tests::compare("Vector1 == vector3", vector1 == vector3, false);
@@ -106,7 +105,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector1 <=> vector3 ==", (vector1 <=> vector3) == std::weak_ordering::equivalent, false);
         tests::compare("Vector1 <=> vector3 <=", (vector1 <=> vector3) != std::weak_ordering::greater, true);
 
-
         // test comparison categories
         static_assert(std::is_same_v<std::compare_three_way_result_t<dsa::Vector<int>>, std::strong_ordering>,
             "Int vector should support strong ordering");
@@ -123,9 +121,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         // test noexcept
 
         // operators
-        static_assert(!noexcept(dsa::Vector<tests::ThrowingType>{1} == dsa::Vector<tests::ThrowingType>{1}));
-        static_assert(!noexcept(dsa::Vector<tests::ThrowingType>{1} <=> dsa::Vector<tests::ThrowingType>{1}));
-
+        static_assert(!noexcept(dsa::Vector<tests::ThrowingType>{ 1 } == dsa::Vector<tests::ThrowingType>{ 1 }));
+        static_assert(!noexcept(dsa::Vector<tests::ThrowingType>{ 1 } <=> dsa::Vector<tests::ThrowingType>{ 1 }));
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -159,13 +156,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector1 <=> vector2 vs std <=", (vector1 <=> vector2) <= 0, (std_vector1 <=> std_vector2) <= 0);
         tests::compare("Vector1 <=> vector2 vs std >=", (vector1 <=> vector2) >= 0, (std_vector1 <=> std_vector2) >= 0);
 
-        tests::compare("Vector1 <=> vector2 vs std <",
-            (vector1 <=> vector2) == std::weak_ordering::less, (std_vector1 <=> std_vector2) == std::weak_ordering::less);
-        tests::compare("Vector1 <=> vector2 vs std <>",
-            (vector1 <=> vector2) != std::weak_ordering::equivalent, (std_vector1 <=> std_vector2) != std::weak_ordering::equivalent);
-        tests::compare("Vector1 <=> vector2 vs std <=",
-            (vector1 <=> vector2) != std::weak_ordering::greater, (std_vector1 <=> std_vector2) != std::weak_ordering::greater);
-
+        tests::compare("Vector1 <=> vector2 vs std <", (vector1 <=> vector2) == std::weak_ordering::less,
+            (std_vector1 <=> std_vector2) == std::weak_ordering::less);
+        tests::compare("Vector1 <=> vector2 vs std <>", (vector1 <=> vector2) != std::weak_ordering::equivalent,
+            (std_vector1 <=> std_vector2) != std::weak_ordering::equivalent);
+        tests::compare("Vector1 <=> vector2 vs std <=", (vector1 <=> vector2) != std::weak_ordering::greater,
+            (std_vector1 <=> std_vector2) != std::weak_ordering::greater);
 
         std::cout << "Compare operators for objects of different size\n\n";
 
@@ -201,12 +197,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector1 <=> vector3 vs std <=", (vector1 <=> vector3) <= 0, (std_vector1 <=> std_vector3) <= 0);
         tests::compare("Vector1 <=> vector3 vs std >=", (vector1 <=> vector3) >= 0, (std_vector1 <=> std_vector3) >= 0);
 
-        tests::compare("Vector1 <=> vector3 vs std >=",
-            (vector1 <=> vector3) != std::weak_ordering::less, (std_vector1 <=> std_vector3) != std::weak_ordering::less);
-        tests::compare("Vector1 <=> vector3 vs std ==",
-            (vector1 <=> vector3) == std::weak_ordering::equivalent, (std_vector1 <=> std_vector3) == std::weak_ordering::equivalent);
-        tests::compare("Vector1 <=> vector3 vs std <= ",
-            (vector1 <=> vector3) != std::weak_ordering::greater, (std_vector1 <=> std_vector3) != std::weak_ordering::greater);
+        tests::compare("Vector1 <=> vector3 vs std >=", (vector1 <=> vector3) != std::weak_ordering::less,
+            (std_vector1 <=> std_vector3) != std::weak_ordering::less);
+        tests::compare("Vector1 <=> vector3 vs std ==", (vector1 <=> vector3) == std::weak_ordering::equivalent,
+            (std_vector1 <=> std_vector3) == std::weak_ordering::equivalent);
+        tests::compare("Vector1 <=> vector3 vs std <= ", (vector1 <=> vector3) != std::weak_ordering::greater,
+            (std_vector1 <=> std_vector3) != std::weak_ordering::greater);
 
         // test comparison categories
         static_assert(std::is_same_v<std::compare_three_way_result_t<std::vector<int>>, std::strong_ordering>,
@@ -228,9 +224,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         // test noexcept
 
         // operators
-        static_assert(!noexcept(std::vector<tests::ThrowingType>{1} == std::vector<tests::ThrowingType>{1}));
-        static_assert(!noexcept(std::vector<tests::ThrowingType>{1} <=> std::vector<tests::ThrowingType>{1}));
-
+        static_assert(!noexcept(std::vector<tests::ThrowingType>{ 1 } == std::vector<tests::ThrowingType>{ 1 }));
+        static_assert(!noexcept(std::vector<tests::ThrowingType>{ 1 } <=> std::vector<tests::ThrowingType>{ 1 }));
 
         tests::print_stats();
     }

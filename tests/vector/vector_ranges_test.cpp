@@ -122,7 +122,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         static_assert(std::ranges::common_range<vector_t>);
         static_assert(std::ranges::common_range<const_vector_t>);
 
-        // test if iterators are indirectly readable 
+        // test if iterators are indirectly readable
         static_assert(std::indirectly_readable<vector_t::iterator>);
         static_assert(std::indirectly_readable<vector_t::const_iterator>);
 
@@ -180,9 +180,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const int sum = std::accumulate(vector3.begin(), vector3.end(), 0);
         tests::compare("Vector3 sum", sum, 80);
         std::list<int> expected3;
-        std::ranges::for_each(vector3, [&](int item) {expected3.push_back(item); });
-        tests::compare("Vector3 for_each() equal()",
-            std::ranges::equal(expected3, std::list{ 30, 10, 40 }), true);
+        std::ranges::for_each(vector3, [&](int item) { expected3.push_back(item); });
+        tests::compare("Vector3 for_each() equal()", std::ranges::equal(expected3, std::list{ 30, 10, 40 }), true);
 
         // test std::ranges::reverse_viev
         const dsa::Vector<int> vector4{ 10, 20, 30 };
@@ -259,7 +258,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::Vector<int> vector15 = dsa::Vector<int>({ 0, 0, 0, 0, 0, 0 });
         auto it15 = std::ranges::remove(vector15, 0);
         vector15.erase(it15.begin(), vector15.end());
-        const std::initializer_list<int> expected15 = { };
+        const std::initializer_list<int> expected15 = {};
         tests::compare("vector15", vector15, expected15);
 
         // test std::ranges::begin and ::end
@@ -320,7 +319,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector22[2]", *std::next(vector22.begin(), 2), 30);
         tests::compare("Vector22[3]", *std::next(vector22.begin(), 3), 40);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::vector<int> std_vector2{};
@@ -344,18 +342,17 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::vector<int> std_vector10{};
         tests::compare("Vector10 vs std empty()", vector10.empty(), std_vector10.empty());
-        tests::compare("Vector10 vs std begin() == end()",
-            vector10.begin() == vector10.end(), std_vector10.begin() == std_vector10.end());
-        tests::compare("Vector10 vs std distance",
-            std::ranges::distance(vector10), std::ranges::distance(vector10));
+        tests::compare("Vector10 vs std begin() == end()", vector10.begin() == vector10.end(),
+            std_vector10.begin() == std_vector10.end());
+        tests::compare("Vector10 vs std distance", std::ranges::distance(vector10), std::ranges::distance(vector10));
 
         std::vector<int> std_vector11(3);
         std_vector11.at(0) = 10;
         tests::compare("Vector11 vs std empty()", vector11.empty(), std_vector11.empty());
         tests::compare("Vector11 vs std front() == back()", vector11.front(), std_vector11.front());
         tests::compare("Vector11 vs std front() == back()", vector11.back(), std_vector11.back());
-        tests::compare("Vector11 vs std distance",
-            std::ranges::distance(vector11), std::ranges::distance(std_vector11));
+        tests::compare("Vector11 vs std distance", std::ranges::distance(vector11),
+            std::ranges::distance(std_vector11));
 
         std::vector<int> std_vector12{ 40, 30, 20, 10 };
         std::ranges::sort(std_vector12);
@@ -376,10 +373,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("vector15 vs std", vector15, std_vector15);
 
         std::vector<int> std_vector16{};
-        tests::compare("Vector16 vs std begin()",
-            std::ranges::begin(vector16) == vector16.begin(), std::ranges::begin(std_vector16) == std_vector16.begin());
-        tests::compare("Vector16 vs std end()",
-            std::ranges::end(vector16) == vector16.end(), std::ranges::end(std_vector16) == std_vector16.end());
+        tests::compare("Vector16 vs std begin()", std::ranges::begin(vector16) == vector16.begin(),
+            std::ranges::begin(std_vector16) == std_vector16.begin());
+        tests::compare("Vector16 vs std end()", std::ranges::end(vector16) == vector16.end(),
+            std::ranges::end(std_vector16) == std_vector16.end());
 
         std::vector<int> std_vector17{ 10, 20, 30, 40, 50 };
         auto std_vector17_begin{ std::ranges::begin(std_vector17) };
@@ -395,7 +392,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::advance(std_it21, 1);
         *std_it21 = 30;
         tests::compare("Vector21 vs std", vector21, std_vector21);
-
 
         tests::print_stats();
     }

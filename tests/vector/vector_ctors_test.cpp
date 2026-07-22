@@ -96,7 +96,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected12{ 10, 20, 30 };
         tests::compare("Vector12", vector12, expected12);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::vector<int> std_vector1;

@@ -41,7 +41,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List2 front", list2.front(), 0);
         tests::compare("List2 back", list2.back(), 20);
 
-
         tests::print_stats();
     }
     catch (...)

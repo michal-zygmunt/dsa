@@ -106,8 +106,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::List<int> list10{};
         const dsa::List<int> temp10{ 0, 10, 20, 30, 40, 50 };
         auto temp10_it = std::next(temp10.begin(), 1);
-        auto list10_it = list10.insert(
-            list10.begin(), std::next(temp10.begin(), 1), std::next(temp10.begin(), 4));
+        auto list10_it = list10.insert(list10.begin(), std::next(temp10.begin(), 1), std::next(temp10.begin(), 4));
         const std::initializer_list<int> expected10{ 10, 20, 30 };
         tests::compare("List10", list10, expected10);
         tests::compare("List10 it", *list10_it, *temp10_it);
@@ -428,7 +427,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List34", list34, expected34);
         tests::compare("List34 it", *list34_it, *(std::next(list34.begin(), 2)));
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::list<int> std_list5{ 10, 20, 30 };
@@ -451,8 +449,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::list<int> std_list10{};
         const std::list<int> std_temp10{ 0, 10, 20, 30, 40, 50 };
-        auto std_list10_it = std_list10.insert(
-            std_list10.begin(), std::next(std_temp10.begin(), 1), std::next(std_temp10.begin(), 4));
+        auto std_list10_it =
+            std_list10.insert(std_list10.begin(), std::next(std_temp10.begin(), 1), std::next(std_temp10.begin(), 4));
         tests::compare("List10 vs std", list10, std_list10);
         tests::compare("List10 it vs std", *list10_it, *std_list10_it);
 
@@ -505,7 +503,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("List18 front vs std", *list18.front(), *std_list18.front());
         tests::compare("List18 backvs std", *list18.back(), *std_list18.back());
         tests::compare("ptr18 == nullptr vs std", ptr18 == std_ptr18, true);
-
 
         tests::print_stats();
     }

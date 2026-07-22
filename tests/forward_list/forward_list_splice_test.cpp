@@ -88,8 +88,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list13 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list14 = dsa::ForwardList<int>(il_2);
-        list13.splice_after(list13.begin(),
-            list14, std::next(list14.begin(), static_cast<ptrdiff_t>(list14.size() - 2)));
+        list13.splice_after(list13.begin(), list14,
+            std::next(list14.begin(), static_cast<ptrdiff_t>(list14.size() - 2)));
         const std::initializer_list<int> expected13 = { 1, 50, 2, 3, 4, 5 };
         tests::compare("ForwardList13", list13, expected13);
         const std::initializer_list<int> expected14 = { 10, 20, 30, 40 };
@@ -113,18 +113,17 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list19 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list20 = dsa::ForwardList<int>(il_2);
-        list19.splice_after(std::next(list19.begin(), 3),
-            list20, std::next(list20.begin(), static_cast<ptrdiff_t>(list20.size() - 2)));
+        list19.splice_after(std::next(list19.begin(), 3), list20,
+            std::next(list20.begin(), static_cast<ptrdiff_t>(list20.size() - 2)));
         const std::initializer_list<int> expected19 = { 1, 2, 3, 4, 50, 5 };
         tests::compare("ForwardList19", list19, expected19);
         const std::initializer_list<int> expected20 = { 10, 20, 30, 40 };
         tests::compare("ForwardList20", list20, expected20);
 
-
         dsa::ForwardList<int> list21 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list22 = dsa::ForwardList<int>(il_2);
-        list21.splice_after(std::next(list21.begin(), static_cast<ptrdiff_t>(list21.size() - 1)),
-            list22, list22.begin());
+        list21.splice_after(std::next(list21.begin(), static_cast<ptrdiff_t>(list21.size() - 1)), list22,
+            list22.begin());
         const std::initializer_list<int> expected21 = { 1, 2, 3, 4, 5, 20 };
         tests::compare("ForwardList21", list21, expected21);
         const std::initializer_list<int> expected22 = { 10, 30, 40, 50 };
@@ -132,8 +131,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list23 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list24 = dsa::ForwardList<int>(il_2);
-        list23.splice_after(std::next(list23.begin(), static_cast<ptrdiff_t>(list23.size() - 1)),
-            list24, std::next(list24.begin(), 3));
+        list23.splice_after(std::next(list23.begin(), static_cast<ptrdiff_t>(list23.size() - 1)), list24,
+            std::next(list24.begin(), 3));
         const std::initializer_list<int> expected23 = { 1, 2, 3, 4, 5, 50 };
         tests::compare("ForwardList23", list23, expected23);
         const std::initializer_list<int> expected24 = { 10, 20, 30, 40 };
@@ -141,13 +140,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list25 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list26 = dsa::ForwardList<int>(il_2);
-        list25.splice_after(std::next(list25.begin(), static_cast<ptrdiff_t>(list25.size() - 1)),
-            list26, std::next(list26.begin(), static_cast<ptrdiff_t>(list26.size() - 2)));
+        list25.splice_after(std::next(list25.begin(), static_cast<ptrdiff_t>(list25.size() - 1)), list26,
+            std::next(list26.begin(), static_cast<ptrdiff_t>(list26.size() - 2)));
         const std::initializer_list<int> expected25 = { 1, 2, 3, 4, 5, 50 };
         tests::compare("ForwardList25", list25, expected25);
         const std::initializer_list<int> expected26 = { 10, 20, 30, 40 };
         tests::compare("ForwardList26", list26, expected26);
-
 
         std::cout << "Testing moving range of element from other list\n\n";
 
@@ -169,13 +167,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list31 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list32 = dsa::ForwardList<int>(il_2);
-        list31.splice_after(list31.begin(),
-            list32, list32.begin(), std::next(list32.begin(), static_cast<ptrdiff_t>(list32.size() - 1)));
+        list31.splice_after(list31.begin(), list32, list32.begin(),
+            std::next(list32.begin(), static_cast<ptrdiff_t>(list32.size() - 1)));
         const std::initializer_list<int> expected31 = { 1, 20, 30, 40, 2, 3, 4, 5 };
         tests::compare("ForwardList31", list31, expected31);
         const std::initializer_list<int> expected32 = { 10, 50 };
         tests::compare("ForwardList32", list32, expected32);
-
 
         dsa::ForwardList<int> list33 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list34 = dsa::ForwardList<int>(il_2);
@@ -187,8 +184,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list35 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list36 = dsa::ForwardList<int>(il_2);
-        list35.splice_after(std::next(list35.begin(), 2),
-            list36, std::next(list36.begin(), 1), std::next(list36.begin(), 3));
+        list35.splice_after(std::next(list35.begin(), 2), list36, std::next(list36.begin(), 1),
+            std::next(list36.begin(), 3));
         const std::initializer_list<int> expected35 = { 1, 2, 3, 30, 4, 5 };
         tests::compare("ForwardList35", list35, expected35);
         const std::initializer_list<int> expected36 = { 10, 20, 40, 50 };
@@ -196,18 +193,17 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list37 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list38 = dsa::ForwardList<int>(il_2);
-        list37.splice_after(std::next(list37.begin(), 2),
-            list38, list38.begin(), std::next(list38.begin(), static_cast<ptrdiff_t>(list38.size() - 1)));
+        list37.splice_after(std::next(list37.begin(), 2), list38, list38.begin(),
+            std::next(list38.begin(), static_cast<ptrdiff_t>(list38.size() - 1)));
         const std::initializer_list<int> expected37 = { 1, 2, 3, 20, 30, 40, 4, 5 };
         tests::compare("ForwardList37", list37, expected37);
         const std::initializer_list<int> expected38 = { 10, 50 };
         tests::compare("ForwardList38", list38, expected38);
 
-
         dsa::ForwardList<int> list39 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list40 = dsa::ForwardList<int>(il_2);
-        list39.splice_after(std::next(list39.begin(), static_cast<ptrdiff_t>(list39.size() - 1)),
-            list40, list40.begin(), std::next(list40.begin(), 1));
+        list39.splice_after(std::next(list39.begin(), static_cast<ptrdiff_t>(list39.size() - 1)), list40,
+            list40.begin(), std::next(list40.begin(), 1));
         const std::initializer_list<int> expected39 = { 1, 2, 3, 4, 5 };
         tests::compare("ForwardList39", list39, expected39);
         const std::initializer_list<int> expected40 = { 10, 20, 30, 40, 50 };
@@ -215,8 +211,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list41 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list42 = dsa::ForwardList<int>(il_2);
-        list41.splice_after(std::next(list41.begin(), static_cast<ptrdiff_t>(list41.size() - 1)),
-            list42, std::next(list42.begin(), 1), std::next(list42.begin(), 3));
+        list41.splice_after(std::next(list41.begin(), static_cast<ptrdiff_t>(list41.size() - 1)), list42,
+            std::next(list42.begin(), 1), std::next(list42.begin(), 3));
         const std::initializer_list<int> expected41 = { 1, 2, 3, 4, 5, 30 };
         tests::compare("ForwardList41", list41, expected41);
         const std::initializer_list<int> expected42 = { 10, 20, 40, 50 };
@@ -224,18 +220,17 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list43 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list44 = dsa::ForwardList<int>(il_2);
-        list43.splice_after(std::next(list43.begin(), static_cast<ptrdiff_t>(list43.size() - 1)),
-            list44, list44.begin(), std::next(list44.begin(), static_cast<ptrdiff_t>(list44.size() - 1)));
+        list43.splice_after(std::next(list43.begin(), static_cast<ptrdiff_t>(list43.size() - 1)), list44,
+            list44.begin(), std::next(list44.begin(), static_cast<ptrdiff_t>(list44.size() - 1)));
         const std::initializer_list<int> expected43 = { 1, 2, 3, 4, 5, 20, 30, 40 };
         tests::compare("ForwardList43", list43, expected43);
         const std::initializer_list<int> expected44 = { 10, 50 };
         tests::compare("ForwardList44", list44, expected44);
 
-
         dsa::ForwardList<int> list45 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list46 = dsa::ForwardList<int>(il_2);
-        list45.splice_after(list45.before_begin(),
-            list46, list46.begin(), std::next(list46.begin(), static_cast<ptrdiff_t>(list46.size() - 1)));
+        list45.splice_after(list45.before_begin(), list46, list46.begin(),
+            std::next(list46.begin(), static_cast<ptrdiff_t>(list46.size() - 1)));
         const std::initializer_list<int> expected45 = { 20, 30, 40, 1, 2, 3, 4, 5 };
         tests::compare("ForwardList45", list45, expected45);
         const std::initializer_list<int> expected46 = { 10, 50 };
@@ -243,8 +238,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list47 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list48 = dsa::ForwardList<int>(il_2);
-        list47.splice_after(std::next(list47.before_begin(), static_cast<ptrdiff_t>(list47.size() - 1)),
-            list48, list48.begin(), list48.end());
+        list47.splice_after(std::next(list47.before_begin(), static_cast<ptrdiff_t>(list47.size() - 1)), list48,
+            list48.begin(), list48.end());
         const std::initializer_list<int> expected47 = { 1, 2, 3, 4, 20, 30, 40, 50, 5 };
         tests::compare("ForwardList47", list47, expected47);
         const std::initializer_list<int> expected48 = { 10 };
@@ -252,13 +247,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::ForwardList<int> list49 = dsa::ForwardList<int>(il_1);
         dsa::ForwardList<int> list50 = dsa::ForwardList<int>(il_2);
-        list49.splice_after(std::next(list49.before_begin(), static_cast<ptrdiff_t>(list49.size())),
-            list50, list50.before_begin(), list50.end());
+        list49.splice_after(std::next(list49.before_begin(), static_cast<ptrdiff_t>(list49.size())), list50,
+            list50.before_begin(), list50.end());
         const std::initializer_list<int> expected49 = { 1, 2, 3, 4, 5, 10, 20, 30, 40, 50 };
         tests::compare("ForwardList49", list49, expected49);
         const std::initializer_list<int> expected50 = {};
         tests::compare("ForwardList50", list50, expected50);
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -389,7 +383,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         list74.splice_after(list74.begin(), list74, list74.begin(), list74.end());
         const std::initializer_list<int> expected74 = { 1, 2, 3, 4, 5 };
         tests::compare("ForwardList74", list74, expected74);
-
 
         tests::print_stats();
     }

@@ -40,12 +40,12 @@ namespace dsa
 
 #else // c++14 and newer
 
-    // use original implementation of std::make_unique when newer c++ version is used 
-    // and prevent clang-tidy warning 
+    // use original implementation of std::make_unique when newer c++ version is used
+    // and prevent clang-tidy warning
     // NOLINTNEXTLINE(misc-unused-using-decls)
     using std::make_unique;
 
 #endif
-}
+} // namespace dsa
 
 #endif // !MEMORY_H

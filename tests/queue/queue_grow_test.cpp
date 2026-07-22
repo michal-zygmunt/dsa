@@ -41,7 +41,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         queue2.emplace(40);
         tests::compare("Queue2", queue2, expected);
 
-
         std::cout << "Compare operations results with std container\n\n";
 
         std::queue<int> std_queue1 = std::queue<int>({ 10 });
@@ -56,7 +55,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_queue2.emplace(30);
         std_queue2.emplace(40);
         tests::compare("Queue2 vs std", queue2, std_queue2);
-
 
         tests::print_stats();
     }

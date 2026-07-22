@@ -429,8 +429,8 @@ namespace dsa
          * @brief Underlaying fixed size array containing all elements
          *        Conditional size is used to handle zero sized array without template specialization
          */
-         // Public for aggregate initialization, same as std::array
-         // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays, modernize-avoid-c-arrays, misc-non-private-member-variables-in-classes)
+        // Public for aggregate initialization, same as std::array
+        // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays, modernize-avoid-c-arrays, misc-non-private-member-variables-in-classes)
         value_type m_data[N == 0 ? 1 : N]{};
     };
 
@@ -530,12 +530,12 @@ namespace dsa
     // Intentional use of C-style array: the array bound must be part of the type
     // to enable compile-time size deduction
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
-    [[nodiscard]] constexpr auto to_array(T(&array)[N]) -> Array<std::remove_cv_t<T>, N>
+    [[nodiscard]] constexpr auto to_array(T (&array)[N]) -> Array<std::remove_cv_t<T>, N>
     {
-        return[&]<std::size_t... I>(std::index_sequence<I...>)
+        return [&]<std::size_t... I>(std::index_sequence<I...>)
         {
             // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
-            return dsa::Array<std::remove_cv_t<T>, N>{array[I]...};
+            return dsa::Array<std::remove_cv_t<T>, N>{ array[I]... };
         }(std::make_index_sequence<N>{});
     }
 
@@ -551,12 +551,12 @@ namespace dsa
     // Intentional use of C-style array: the array bound must be part of the type
     // to enable compile-time size deduction
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-rvalue-reference-param-not-moved)
-    [[nodiscard]] constexpr auto to_array(T(&& array)[N]) -> Array<std::remove_cv_t<T>, N>
+    [[nodiscard]] constexpr auto to_array(T (&&array)[N]) -> Array<std::remove_cv_t<T>, N>
     {
-        return[&]<std::size_t... I>(std::index_sequence<I...>)
+        return [&]<std::size_t... I>(std::index_sequence<I...>)
         {
             // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
-            return dsa::Array<std::remove_cv_t<T>, N>{std::move(array[I])...};
+            return dsa::Array<std::remove_cv_t<T>, N>{ std::move(array[I])... };
         }(std::make_index_sequence<N>{});
     }
 
@@ -588,8 +588,8 @@ namespace dsa
      * @retval false if input containers are not equal
      */
     template<typename T, std::size_t N>
-    [[nodiscard]] constexpr auto operator==(const Array<T, N>& lhs, const Array<T, N>& rhs)
-        noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> bool
+    [[nodiscard]] constexpr auto operator==(const Array<T, N>& lhs, const Array<T, N>& rhs) noexcept(
+        noexcept(*lhs.begin() == *rhs.begin())) -> bool
     {
         auto lhs_iter = lhs.cbegin();
         auto rhs_iter = rhs.cbegin();
@@ -622,8 +622,8 @@ namespace dsa
      * @return three way comparison result type
      */
     template<typename T, std::size_t N>
-    [[nodiscard]] constexpr auto operator<=>(const Array<T, N>& lhs, const Array<T, N>& rhs)
-        noexcept(noexcept(*lhs.begin() == *rhs.begin())) -> std::compare_three_way_result_t<T>
+    [[nodiscard]] constexpr auto operator<=>(const Array<T, N>& lhs, const Array<T, N>& rhs) noexcept(
+        noexcept(*lhs.begin() == *rhs.begin())) -> std::compare_three_way_result_t<T>
     {
         auto lhs_iter = lhs.cbegin();
         auto rhs_iter = rhs.cbegin();
@@ -642,18 +642,18 @@ namespace dsa
 
         return std::compare_three_way_result_t<T>::equivalent;
     }
-}
+} // namespace dsa
 
 namespace std
 {
     /*
-    * These are explicit specializations of standard templates 'tuple_size' and 'tuple_element'
-    * for a user-defined type dsa::Array. This is allowed by C++ standard and required
-    * to enable structured bindings and tuple-like behaviour.
-    *
-    * No new symbols or modification of standard library behaviour was introduced,
-    * only providing valid specialization for user-defined type.
-    */
+     * These are explicit specializations of standard templates 'tuple_size' and 'tuple_element'
+     * for a user-defined type dsa::Array. This is allowed by C++ standard and required
+     * to enable structured bindings and tuple-like behaviour.
+     *
+     * No new symbols or modification of standard library behaviour was introduced,
+     * only providing valid specialization for user-defined type.
+     */
     // NOLINTBEGIN(cert-dcl58-cpp)
 
     /// @cond SPECIALIZATION
@@ -666,7 +666,7 @@ namespace std
      * @see https://en.cppreference.com/w/cpp/container/array/tuple_size.html
      */
     template<typename T, std::size_t N>
-    struct tuple_size <dsa::Array<T, N>> : std::integral_constant<std::size_t, N>
+    struct tuple_size<dsa::Array<T, N>> : std::integral_constant<std::size_t, N>
     {
     };
     /// @endcond
@@ -695,9 +695,9 @@ namespace std
     namespace ranges
     {
         /*
-        * These are explicit specializations of range semantics for a user-defined type dsa::Array
-        * specifically to be recognized as 'borrowed range' or 'view'
-        */
+         * These are explicit specializations of range semantics for a user-defined type dsa::Array
+         * specifically to be recognized as 'borrowed range' or 'view'
+         */
 
         /// @cond SPECIALIZATION
         /**
@@ -744,9 +744,9 @@ namespace std
         template<typename T, std::size_t N>
         inline constexpr bool enable_view<const dsa::Array<T, N>> = true;
         /// @endcond
-    }
+    } // namespace ranges
 
     // NOLINTEND(cert-dcl58-cpp)
-}
+} // namespace std
 
 #endif // !ARRAY_H

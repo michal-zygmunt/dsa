@@ -93,8 +93,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array4 <=> Array5 weak ordering", (Array1 <=> Array3) != std::weak_ordering::less, true);
 
         // swap safe type
-        static_assert(noexcept(swap(std::declval<dsa::Array<int, 3>&>(),
-            std::declval<dsa::Array<int, 3>&>())));
+        static_assert(noexcept(swap(std::declval<dsa::Array<int, 3>&>(), std::declval<dsa::Array<int, 3>&>())));
         // swap throwing type
         static_assert(!noexcept(swap(std::declval<dsa::Array<tests::ThrowingType, 3>&>(),
             std::declval<dsa::Array<tests::ThrowingType, 3>&>())));
@@ -102,7 +101,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         // operators
         static_assert(!noexcept(dsa::Array<tests::ThrowingType, 3>{} == dsa::Array<tests::ThrowingType, 3>{}));
         static_assert(!noexcept(dsa::Array<tests::ThrowingType, 3>{} <=> dsa::Array<tests::ThrowingType, 3>{}));
-
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -136,12 +134,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array1 <=> Array2 vs std <=", (Array1 <=> Array2) <= 0, (std_Array1 <=> std_Array2) <= 0);
         tests::compare("Array1 <=> Array2 vs std >=", (Array1 <=> Array2) >= 0, (std_Array1 <=> std_Array2) >= 0);
 
-        tests::compare("Array1 <=> Array2 vs std <",
-            (Array1 <=> Array2) == std::weak_ordering::less, (std_Array1 <=> std_Array2) == std::weak_ordering::less);
-        tests::compare("Array1 <=> Array2 vs std <>",
-            (Array1 <=> Array2) != std::weak_ordering::equivalent, (std_Array1 <=> std_Array2) != std::weak_ordering::equivalent);
-        tests::compare("Array1 <=> Array2 vs std <=",
-            (Array1 <=> Array2) != std::weak_ordering::greater, (std_Array1 <=> std_Array2) != std::weak_ordering::greater);
+        tests::compare("Array1 <=> Array2 vs std <", (Array1 <=> Array2) == std::weak_ordering::less,
+            (std_Array1 <=> std_Array2) == std::weak_ordering::less);
+        tests::compare("Array1 <=> Array2 vs std <>", (Array1 <=> Array2) != std::weak_ordering::equivalent,
+            (std_Array1 <=> std_Array2) != std::weak_ordering::equivalent);
+        tests::compare("Array1 <=> Array2 vs std <=", (Array1 <=> Array2) != std::weak_ordering::greater,
+            (std_Array1 <=> std_Array2) != std::weak_ordering::greater);
 
         tests::compare("Array1 <=> Array3 vs std ==", (Array1 <=> Array3) == 0, (std_Array1 <=> std_Array3) == 0);
         tests::compare("Array1 <=> Array3 vs std <", (Array1 <=> Array3) < 0, (std_Array1 <=> std_Array3) < 0);
@@ -149,12 +147,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array1 <=> Array3 vs std <=", (Array1 <=> Array3) <= 0, (std_Array1 <=> std_Array3) <= 0);
         tests::compare("Array1 <=> Array3 vs std >=", (Array1 <=> Array3) >= 0, (std_Array1 <=> std_Array3) >= 0);
 
-        tests::compare("Array1 <=> Array3 vs std >=",
-            (Array1 <=> Array3) != std::weak_ordering::less, (std_Array1 <=> std_Array3) != std::weak_ordering::less);
-        tests::compare("Array1 <=> Array3 vs std ==",
-            (Array1 <=> Array3) == std::weak_ordering::equivalent, (std_Array1 <=> std_Array3) == std::weak_ordering::equivalent);
-        tests::compare("Array1 <=> Array3 vs std <= ",
-            (Array1 <=> Array3) != std::weak_ordering::greater, (std_Array1 <=> std_Array3) != std::weak_ordering::greater);
+        tests::compare("Array1 <=> Array3 vs std >=", (Array1 <=> Array3) != std::weak_ordering::less,
+            (std_Array1 <=> std_Array3) != std::weak_ordering::less);
+        tests::compare("Array1 <=> Array3 vs std ==", (Array1 <=> Array3) == std::weak_ordering::equivalent,
+            (std_Array1 <=> std_Array3) == std::weak_ordering::equivalent);
+        tests::compare("Array1 <=> Array3 vs std <= ", (Array1 <=> Array3) != std::weak_ordering::greater,
+            (std_Array1 <=> std_Array3) != std::weak_ordering::greater);
 
         // test comparison categories
         static_assert(std::is_same_v<std::compare_three_way_result_t<std::array<int, 3>>, std::strong_ordering>,
@@ -172,7 +170,6 @@ int main() // NOLINT(modernize-use-trailing-return-type)
             (std_Array4 <=> std_Array5) == std::partial_ordering::unordered, true);
         tests::compare("(Array4 <=> Array5) == (std_Array4 <=> std_Array5)",
             (Array4 <=> Array5) == (std_Array4 <=> std_Array5), true);
-
 
         tests::print_stats();
     }
