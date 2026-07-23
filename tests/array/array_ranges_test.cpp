@@ -21,6 +21,7 @@
 #include <list>
 #include <numeric>
 #include <ranges>
+#include <tuple>
 #include <type_traits>
 #include <vector>
 
@@ -84,7 +85,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // test structured binding / tuple interface
         static_assert(std::tuple_size<array_t>::value == 3);
-        static_assert(std::is_same_v<std::tuple_element<0, array_t>::type, int>);
+        static_assert(std::is_same_v<std::tuple_element_t<0, array_t>, int>);
         static_assert(get<0>(array) == 1);
         static_assert(get<1>(array) == 2);
         static_assert(get<2>(array) == 3);
