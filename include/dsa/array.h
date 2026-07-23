@@ -601,8 +601,8 @@ namespace dsa
                 return false;
             }
 
-            lhs_iter++;
-            rhs_iter++;
+            std::advance(lhs_iter, 1);
+            std::advance(rhs_iter, 1);
         }
 
         return true;
@@ -636,8 +636,8 @@ namespace dsa
                 return cmp;
             }
 
-            lhs_iter++;
-            rhs_iter++;
+            std::advance(lhs_iter, 1);
+            std::advance(rhs_iter, 1);
         }
 
         return std::compare_three_way_result_t<T>::equivalent;

@@ -78,8 +78,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // test constexpt access via iterators
         constexpr array_t array{ 1, 2, 3 };
-        static_assert(*array.begin() == 1);
-        static_assert(*(array.end() - 1) == 3);
+        static_assert(array.front() == 1);
+        static_assert(array.back() == 3);
         static_assert(std::ranges::size(array) == 3);
 
         // test structured binding / tuple interface
