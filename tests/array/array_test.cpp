@@ -64,7 +64,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array3[0]", *ptr_d3, 10);
 
         // use lambda expression as workaround to prevent inlining call to const data()
-        auto use_const_data = [](const auto& array)
+        auto use_const_data = [](const auto& array) -> const int*
         {
             const int* ptr = array.data();
             (void)ptr;
@@ -424,7 +424,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array19", array19, expected19);
 
         // modyfing elements
-        constexpr dsa::Array<int, 3> array20 = []
+        constexpr auto array20 = []() -> dsa::Array<int, 3>
         {
             dsa::Array<int, 3> tmp = { 1, 2, 3 };
             tmp[0] = 100;
@@ -633,7 +633,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array19 vs std", expected19, std_expected19);
 
         // modyfing elements
-        constexpr std::array<int, 3> std_array20 = []
+        constexpr auto std_array20 = []() -> std::array<int, 3>
         {
             std::array<int, 3> std_tmp = { 1, 2, 3 };
             std_tmp[0] = 100;

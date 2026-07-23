@@ -532,7 +532,7 @@ namespace dsa
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
     [[nodiscard]] constexpr auto to_array(T (&array)[N]) -> Array<std::remove_cv_t<T>, N>
     {
-        return [&]<std::size_t... I>(std::index_sequence<I...>)
+        return [&]<std::size_t... I>(std::index_sequence<I...>) -> dsa::Array<std::remove_cv_t<T>, N>
         {
             // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
             return dsa::Array<std::remove_cv_t<T>, N>{ array[I]... };
@@ -553,7 +553,7 @@ namespace dsa
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-rvalue-reference-param-not-moved)
     [[nodiscard]] constexpr auto to_array(T (&&array)[N]) -> Array<std::remove_cv_t<T>, N>
     {
-        return [&]<std::size_t... I>(std::index_sequence<I...>)
+        return [&]<std::size_t... I>(std::index_sequence<I...>) -> dsa::Array<std::remove_cv_t<T>, N>
         {
             // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
             return dsa::Array<std::remove_cv_t<T>, N>{ std::move(array[I])... };

@@ -181,7 +181,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const int sum = std::accumulate(array3.begin(), array3.end(), 0);
         tests::compare("Array3 sum", sum, 80);
         std::list<int> expected3;
-        std::ranges::for_each(array3, [&](int item) { expected3.push_back(item); });
+        std::ranges::for_each(array3, [&](int item) -> void { expected3.push_back(item); });
         tests::compare("Array3 for_each() equal()", std::ranges::equal(expected3, std::list{ 30, 10, 40 }), true);
 
         // test std::ranges::reverse_viev
@@ -261,7 +261,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected15 = { 10, 20, 30, 40, 50, 60 };
         std::vector<int> expected16;
         const dsa::Array<int, 3> array16 = { 20, 40, 60 };
-        auto even = array15 | std::views::filter([](int item) { return item % 20 == 0; });
+        auto even = array15 | std::views::filter([](int item) -> bool { return item % 20 == 0; });
         for (const int& item : even)
         {
             expected16.push_back(item);
