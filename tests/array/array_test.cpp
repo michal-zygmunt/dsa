@@ -59,7 +59,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array3()", array3, expected3);
 
         // Test data access
-        int* ptr_d3 = array3.data();
+        const int* ptr_d3 = array3.data();
         static_assert(std::is_same_v<decltype(array3.data()), int*>, "data() must return T*");
         tests::compare("Array3[0]", *ptr_d3, 10);
 
