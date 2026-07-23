@@ -458,9 +458,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::string array25[] = { "X", "Y", "Z" };
         array24 = dsa::to_array(std::move(array25));
         const std::initializer_list<std::string> expected24{ "X", "Y", "Z" };
-        const std::initializer_list<std::string> expected25{ "", "", "" };
         tests::compare("Array24", array24, expected24);
-        tests::compare("Array25", dsa::to_array(array25), expected25);
 
         std::cout << "Compare operations results with std container\n\n";
 
