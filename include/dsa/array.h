@@ -658,7 +658,7 @@ namespace std
      * No new symbols or modification of standard library behaviour was introduced,
      * only providing valid specialization for user-defined type.
      */
-    // NOLINTBEGIN(cert-dcl58-cpp)
+    // NOLINTBEGIN(cert-dcl58-cpp, bugprone-std-namespace-modification)
 
     /// @cond SPECIALIZATION
     /**
@@ -750,7 +750,7 @@ namespace std
         /// @endcond
     } // namespace ranges
 
-    // NOLINTEND(cert-dcl58-cpp)
+    // NOLINTEND(cert-dcl58-cpp, bugprone-std-namespace-modification)
 } // namespace std
 
 #endif // !ARRAY_H
