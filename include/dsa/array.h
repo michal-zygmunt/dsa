@@ -447,6 +447,7 @@ namespace dsa
     [[nodiscard]] constexpr auto get(Array<T, N>& array) noexcept -> T&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         return array[I];
     }
 
@@ -463,6 +464,7 @@ namespace dsa
     [[nodiscard]] constexpr auto get(const Array<T, N>& array) noexcept -> const T&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         return array[I];
     }
 
@@ -485,6 +487,7 @@ namespace dsa
     [[nodiscard]] constexpr auto get(Array<T, N>&& array) noexcept -> T&&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         return std::move(array[I]);
     }
 
@@ -501,6 +504,7 @@ namespace dsa
     [[nodiscard]] constexpr auto get(const Array<T, N>&& array) noexcept -> const T&&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         return std::move(array[I]);
     }
 
