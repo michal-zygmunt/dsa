@@ -571,9 +571,9 @@ namespace dsa
     template<typename T, std::size_t N>
     auto operator<<(std::ostream& out, const Array<T, N>& array) -> std::ostream&
     {
-        for (size_t i = 0; i < N; i++)
+        for (const auto& item : array)
         {
-            out << array[i] << ' ';
+            out << item << ' ';
         }
 
         return out;
