@@ -1107,7 +1107,7 @@ namespace dsa
         /**
          * @brief Rebind allocator to create new objects of type Node
          */
-        using node_allocator = typename std::allocator_traits<allocator_type>::template rebind_alloc<Node>;
+        using node_allocator = std::allocator_traits<allocator_type>::template rebind_alloc<Node>;
 
         /**
          * @brief Setup allocator traits used for Node creation and deletion
@@ -1276,67 +1276,67 @@ namespace dsa
     }
 
     template<typename T>
-    auto ForwardList<T>::front() -> typename ForwardList<T>::reference
+    auto ForwardList<T>::front() -> ForwardList<T>::reference
     {
         return *begin();
     }
 
     template<typename T>
-    auto ForwardList<T>::front() const -> typename ForwardList<T>::const_reference
+    auto ForwardList<T>::front() const -> ForwardList<T>::const_reference
     {
         return *cbegin();
     }
 
     template<typename T>
-    auto ForwardList<T>::before_begin() noexcept -> typename ForwardList<T>::iterator
+    auto ForwardList<T>::before_begin() noexcept -> ForwardList<T>::iterator
     {
         return iterator(m_head);
     }
 
     template<typename T>
-    auto ForwardList<T>::before_begin() const noexcept -> typename ForwardList<T>::const_iterator
+    auto ForwardList<T>::before_begin() const noexcept -> ForwardList<T>::const_iterator
     {
         return const_iterator(m_head);
     }
 
     template<typename T>
-    auto ForwardList<T>::cbefore_begin() const noexcept -> typename ForwardList<T>::const_iterator
+    auto ForwardList<T>::cbefore_begin() const noexcept -> ForwardList<T>::const_iterator
     {
         return before_begin();
     }
 
     template<typename T>
-    auto ForwardList<T>::begin() noexcept -> typename ForwardList<T>::iterator
+    auto ForwardList<T>::begin() noexcept -> ForwardList<T>::iterator
     {
         return iterator(m_head->m_next);
     }
 
     template<typename T>
-    auto ForwardList<T>::begin() const noexcept -> typename ForwardList<T>::const_iterator
+    auto ForwardList<T>::begin() const noexcept -> ForwardList<T>::const_iterator
     {
         return const_iterator(m_head->m_next);
     }
 
     template<typename T>
-    auto ForwardList<T>::cbegin() const noexcept -> typename ForwardList<T>::const_iterator
+    auto ForwardList<T>::cbegin() const noexcept -> ForwardList<T>::const_iterator
     {
         return begin();
     }
 
     template<typename T>
-    auto ForwardList<T>::end() noexcept -> typename ForwardList<T>::iterator
+    auto ForwardList<T>::end() noexcept -> ForwardList<T>::iterator
     {
         return iterator(nullptr);
     }
 
     template<typename T>
-    auto ForwardList<T>::end() const noexcept -> typename ForwardList<T>::const_iterator
+    auto ForwardList<T>::end() const noexcept -> ForwardList<T>::const_iterator
     {
         return const_iterator(nullptr);
     }
 
     template<typename T>
-    auto ForwardList<T>::cend() const noexcept -> typename ForwardList<T>::const_iterator
+    auto ForwardList<T>::cend() const noexcept -> ForwardList<T>::const_iterator
     {
         return end();
     }
@@ -1369,14 +1369,13 @@ namespace dsa
     }
 
     template<typename T>
-    auto ForwardList<T>::insert_after(const const_iterator& pos, const_reference value) ->
-        typename ForwardList<T>::iterator
+    auto ForwardList<T>::insert_after(const const_iterator& pos, const_reference value) -> ForwardList<T>::iterator
     {
         return insert_after(pos, 1, value);
     }
 
     template<typename T>
-    auto ForwardList<T>::insert_after(const const_iterator& pos, T&& value) -> typename ForwardList<T>::iterator
+    auto ForwardList<T>::insert_after(const const_iterator& pos, T&& value) -> ForwardList<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1390,8 +1389,8 @@ namespace dsa
     }
 
     template<typename T>
-    auto ForwardList<T>::insert_after(const const_iterator& pos, size_type count, const_reference value) ->
-        typename ForwardList<T>::iterator
+    auto ForwardList<T>::insert_after(const const_iterator& pos, size_type count, const_reference value)
+        -> ForwardList<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1410,8 +1409,8 @@ namespace dsa
     template<typename T>
     template<typename InputIt>
         requires std::input_iterator<InputIt>
-    auto ForwardList<T>::insert_after(const const_iterator& pos, InputIt first, InputIt last) ->
-        typename ForwardList<T>::iterator
+    auto ForwardList<T>::insert_after(const const_iterator& pos, InputIt first, InputIt last)
+        -> ForwardList<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1429,8 +1428,8 @@ namespace dsa
     }
 
     template<typename T>
-    auto ForwardList<T>::insert_after(const const_iterator& pos, std::initializer_list<T> init_list) ->
-        typename ForwardList<T>::iterator
+    auto ForwardList<T>::insert_after(const const_iterator& pos, std::initializer_list<T> init_list)
+        -> ForwardList<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1460,7 +1459,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto ForwardList<T>::erase_after(const const_iterator& pos) -> typename ForwardList<T>::iterator
+    auto ForwardList<T>::erase_after(const const_iterator& pos) -> ForwardList<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1474,8 +1473,8 @@ namespace dsa
     }
 
     template<typename T>
-    auto ForwardList<T>::erase_after(const const_iterator& first, const const_iterator& last) ->
-        typename ForwardList<T>::iterator
+    auto ForwardList<T>::erase_after(const const_iterator& first, const const_iterator& last)
+        -> ForwardList<T>::iterator
     {
         if (!if_valid_iterator(first) || !if_valid_iterator(last))
         {
