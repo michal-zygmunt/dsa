@@ -2141,7 +2141,7 @@ namespace dsa
 
         // Use slow and fast pointer to find half of list
         NodeBase* slow{ source };
-        NodeBase* fast{ source->m_next };
+        const NodeBase* fast{ source->m_next };
         while (fast && fast->m_next)
         {
             slow = slow->m_next;
