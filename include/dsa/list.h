@@ -1241,7 +1241,7 @@ namespace dsa
         /**
          * @brief Rebind allocator to create new objects of type Node
          */
-        using node_allocator = typename std::allocator_traits<allocator_type>::template rebind_alloc<Node>;
+        using node_allocator = std::allocator_traits<allocator_type>::template rebind_alloc<Node>;
 
         /**
          * @brief Setup allocator traits used for Node creation and deletion
@@ -1401,61 +1401,61 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::front() -> typename List<T>::reference
+    auto List<T>::front() -> List<T>::reference
     {
         return *begin();
     }
 
     template<typename T>
-    auto List<T>::front() const -> typename List<T>::const_reference
+    auto List<T>::front() const -> List<T>::const_reference
     {
         return *cbegin();
     }
 
     template<typename T>
-    auto List<T>::back() -> typename List<T>::reference
+    auto List<T>::back() -> List<T>::reference
     {
         return *(--end());
     }
 
     template<typename T>
-    auto List<T>::back() const -> typename List<T>::const_reference
+    auto List<T>::back() const -> List<T>::const_reference
     {
         return *(--cend());
     }
 
     template<typename T>
-    auto List<T>::begin() noexcept -> typename List<T>::iterator
+    auto List<T>::begin() noexcept -> List<T>::iterator
     {
         return iterator(m_head);
     }
 
     template<typename T>
-    auto List<T>::begin() const noexcept -> typename List<T>::const_iterator
+    auto List<T>::begin() const noexcept -> List<T>::const_iterator
     {
         return const_iterator(m_head);
     }
 
     template<typename T>
-    auto List<T>::cbegin() const noexcept -> typename List<T>::const_iterator
+    auto List<T>::cbegin() const noexcept -> List<T>::const_iterator
     {
         return begin();
     }
 
     template<typename T>
-    auto List<T>::end() noexcept -> typename List<T>::iterator
+    auto List<T>::end() noexcept -> List<T>::iterator
     {
         return iterator(m_tail);
     }
 
     template<typename T>
-    auto List<T>::end() const noexcept -> typename List<T>::const_iterator
+    auto List<T>::end() const noexcept -> List<T>::const_iterator
     {
         return const_iterator(m_tail);
     }
 
     template<typename T>
-    auto List<T>::cend() const noexcept -> typename List<T>::const_iterator
+    auto List<T>::cend() const noexcept -> List<T>::const_iterator
     {
         return end();
     }
@@ -1531,13 +1531,13 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::insert(const const_iterator& pos, const_reference value) -> typename List<T>::iterator
+    auto List<T>::insert(const const_iterator& pos, const_reference value) -> List<T>::iterator
     {
         return insert(pos, 1, value);
     }
 
     template<typename T>
-    auto List<T>::insert(const const_iterator& pos, T&& value) -> typename List<T>::iterator
+    auto List<T>::insert(const const_iterator& pos, T&& value) -> List<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1551,8 +1551,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::insert(const const_iterator& pos, size_type count, const_reference value) ->
-        typename List<T>::iterator
+    auto List<T>::insert(const const_iterator& pos, size_type count, const_reference value) -> List<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1571,7 +1570,7 @@ namespace dsa
     template<typename T>
     template<typename InputIt>
         requires std::input_iterator<InputIt>
-    auto List<T>::insert(const const_iterator& pos, InputIt first, InputIt last) -> typename List<T>::iterator
+    auto List<T>::insert(const const_iterator& pos, InputIt first, InputIt last) -> List<T>::iterator
     {
         iterator iter{};
         while (first != last)
@@ -1589,7 +1588,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::insert(const const_iterator& pos, std::initializer_list<T> ilist) -> typename List<T>::iterator
+    auto List<T>::insert(const const_iterator& pos, std::initializer_list<T> ilist) -> List<T>::iterator
     {
         return insert(pos, ilist.begin(), ilist.end());
     }
@@ -1626,7 +1625,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::erase(const_iterator pos) -> typename List<T>::iterator
+    auto List<T>::erase(const_iterator pos) -> List<T>::iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1637,7 +1636,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::erase(const_iterator first, const_iterator last) -> typename List<T>::iterator
+    auto List<T>::erase(const_iterator first, const_iterator last) -> List<T>::iterator
     {
         if (!if_valid_iterator(first) || !if_valid_iterator(last))
         {
