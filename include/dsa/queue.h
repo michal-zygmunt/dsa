@@ -298,25 +298,25 @@ namespace dsa
     }
 
     template<typename T>
-    auto Queue<T>::front() -> typename Queue<T>::reference
+    auto Queue<T>::front() -> Queue<T>::reference
     {
         return container.front();
     }
 
     template<typename T>
-    auto Queue<T>::front() const -> typename Queue<T>::const_reference
+    auto Queue<T>::front() const -> Queue<T>::const_reference
     {
         return container.front();
     }
 
     template<typename T>
-    auto Queue<T>::back() -> typename Queue<T>::reference
+    auto Queue<T>::back() -> Queue<T>::reference
     {
         return container.back();
     }
 
     template<typename T>
-    auto Queue<T>::back() const -> typename Queue<T>::const_reference
+    auto Queue<T>::back() const -> Queue<T>::const_reference
     {
         return container.back();
     }
@@ -763,7 +763,7 @@ namespace dsa
     }
 
     template<typename T, typename Container, typename Compare>
-    auto PriorityQueue<T, Container, Compare>::top() const -> typename PriorityQueue::const_reference
+    auto PriorityQueue<T, Container, Compare>::top() const -> PriorityQueue::const_reference
     {
         return container.front();
     }
