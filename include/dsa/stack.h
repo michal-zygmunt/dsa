@@ -283,13 +283,13 @@ namespace dsa
     }
 
     template<typename T>
-    auto Stack<T>::top() -> typename Stack<T>::reference
+    auto Stack<T>::top() -> Stack<T>::reference
     {
         return container.back();
     }
 
     template<typename T>
-    auto Stack<T>::top() const -> typename Stack<T>::const_reference
+    auto Stack<T>::top() const -> Stack<T>::const_reference
     {
         return container.back();
     }
