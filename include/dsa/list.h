@@ -1581,7 +1581,7 @@ namespace dsa
                 iter = res;
             }
 
-            ++first;
+            std::advance(first, 1);
         }
 
         return iter == nullptr ? pos.m_current_node : iter;
