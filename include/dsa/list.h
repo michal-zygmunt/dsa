@@ -1830,7 +1830,7 @@ namespace dsa
             NodeBase* to_return{};
 
             NodeBase* sentinel_this{ m_tail };
-            NodeBase* sentinel_other{ other.m_tail };
+            const NodeBase* sentinel_other{ other.m_tail };
 
             while (m_head->m_next && other.m_head->m_next)
             {
@@ -2385,7 +2385,7 @@ namespace dsa
 
         // Use slow and fast pointer to find half of list
         NodeBase* slow{ source };
-        NodeBase* fast{ source->m_next };
+        const NodeBase* fast{ source->m_next };
         while (fast && fast->m_next)
         {
             slow = slow->m_next;
