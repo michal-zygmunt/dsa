@@ -1936,7 +1936,7 @@ namespace dsa
     template<typename T>
     auto List<T>::remove(const_reference value) -> size_type
     {
-        return remove_if([value](T node_val) { return node_val == value; });
+        return remove_if([value](T node_val) -> size_type { return node_val == value; });
     }
 
     template<typename T>
@@ -2192,7 +2192,7 @@ namespace dsa
     template<typename T, typename U>
     auto erase(List<T>& container, const U& value) -> List<T>::size_type
     {
-        return erase_if(container, [&value](U node_val) { return node_val == value; });
+        return erase_if(container, [&value](U node_val) -> List<T>::size_type { return node_val == value; });
     }
 
     /**
