@@ -113,6 +113,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         {
             vector11.push_back(static_cast<int>(i));
             tests::compare("Vector11 size()", vector11.size(), i + 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
             tests::compare("Vector11 capacity()", vector11.capacity(), static_cast<std::size_t>(expected11[i]));
         }
         vector11.resize(0);
