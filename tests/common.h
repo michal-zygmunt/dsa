@@ -422,7 +422,7 @@ namespace tests
                 return Status::Error;
             }
 
-            ++iter;
+            std::advance(iter, 1);
         }
 
         return Status::OK;
