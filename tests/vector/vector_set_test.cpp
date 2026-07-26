@@ -15,6 +15,7 @@
 #include <exception>
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
 #include <vector>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
@@ -48,7 +49,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::Vector<int> vector5 = dsa::Vector<int>({ 0, 10, 20 });
         dsa::Vector<int> temp5 = dsa::Vector<int>({ 0, 1, 2, 3, 4, 5 });
-        vector5.assign(temp5.begin() + 1, temp5.begin() + 4);
+        vector5.assign(std::next(temp5.begin()), std::next(temp5.begin(), 4));
         const std::initializer_list<int> expected5 = { 1, 2, 3 };
         tests::compare("vector5", vector5, expected5);
 
@@ -71,7 +72,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("vector4 vs std", vector4, std_vector4);
 
         std::vector<int> std_vector5 = std::vector<int>({ 0, 10, 20 });
-        std_vector5.assign(temp5.begin() + 1, temp5.begin() + 4);
+        std_vector5.assign(std::next(temp5.begin()), std::next(temp5.begin(), 4));
         tests::compare("vector5 vs std", vector5, std_vector5);
 
         tests::print_stats();

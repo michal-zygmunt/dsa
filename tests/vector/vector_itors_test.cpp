@@ -34,7 +34,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::cout << "Explicit iterator\n";
         dsa::Vector<int> vector1{ 0, 10, 20 };
-        // NOLINTNEXTLINE(modernize-loop-convert)
+        // NOLINTNEXTLINE(modernize-loop-convert, cppcoreguidelines-pro-bounds-pointer-arithmetic)
         for (dsa::Vector<int>::iterator iterator = vector1.begin(); iterator != vector1.end(); iterator++)
         {
             *iterator += 100;
@@ -57,7 +57,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::cout << "Explicit const_iterator\n";
         const dsa::Vector<int> vector3{ 0, 10, 20 };
-        // NOLINTNEXTLINE(modernize-loop-convert)
+        // NOLINTNEXTLINE(modernize-loop-convert, cppcoreguidelines-pro-bounds-pointer-arithmetic)
         for (dsa::Vector<int>::const_iterator iterator = vector3.cbegin(); iterator != vector3.cend(); iterator++)
         {
             std::cout << (*iterator) << '\t';
@@ -105,28 +105,32 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         for (const auto& item : vector7)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected7.begin();
         for (const auto& item : vector7)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected7.begin();
         for (const auto& item : vector7)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected7.begin();
         for (const auto& item : vector7)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << "\n\n";
 
@@ -138,28 +142,32 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         for (const auto& item : vector8)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected8.begin();
         for (const auto& item : vector8)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected8.begin();
         for (const auto& item : vector8)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected8.begin();
         for (const auto& item : vector8)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << "\n\n";
 

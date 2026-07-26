@@ -91,7 +91,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector8 size()", vector8.size(), static_cast<std::size_t>(0));
 
         dsa::Vector<int> vector9{ 10, 20, 30, 40, 50 };
-        vector9.erase(vector9.cbegin() + 1, vector9.cbegin() + 3);
+        vector9.erase(std::next(vector9.cbegin()), std::next(vector9.cbegin(), 3));
         const std::initializer_list<int> expected9 = { 10, 40, 50 };
         tests::compare("Vector9", vector9, expected9);
         tests::compare("Vector9 size()", vector9.size(), static_cast<std::size_t>(3));
