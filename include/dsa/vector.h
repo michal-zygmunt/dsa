@@ -1281,9 +1281,9 @@ namespace dsa
     template<typename T>
     auto operator<<(std::ostream& out, const Vector<T>& vector) -> std::ostream&
     {
-        for (size_t i = 0; i < vector.size(); i++)
+        for (const auto& item : vector)
         {
-            out << vector[i] << ' ';
+            out << item << ' ';
         }
 
         return out;
