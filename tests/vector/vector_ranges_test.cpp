@@ -180,7 +180,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const int sum = std::accumulate(vector3.begin(), vector3.end(), 0);
         tests::compare("Vector3 sum", sum, 80);
         std::list<int> expected3;
-        std::ranges::for_each(vector3, [&](int item) { expected3.push_back(item); });
+        std::ranges::for_each(vector3, [&](int item) -> void { expected3.push_back(item); });
         tests::compare("Vector3 for_each() equal()", std::ranges::equal(expected3, std::list{ 30, 10, 40 }), true);
 
         // test std::ranges::reverse_viev
@@ -276,7 +276,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::Vector<int> vector18 = { 10, 20, 30, 40, 50, 60 };
         const std::initializer_list<int> expected18 = { 10, 20, 30, 40, 50, 60 };
         const dsa::Vector<int> vector19 = { 20, 40, 60 };
-        auto even = vector18 | std::views::filter([](int item) { return item % 20 == 0; });
+        auto even = vector18 | std::views::filter([](int item) -> bool { return item % 20 == 0; });
         std::vector<int> expected19;
         for (const int& item : even)
         {

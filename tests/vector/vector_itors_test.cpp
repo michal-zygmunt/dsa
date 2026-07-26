@@ -345,7 +345,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("vector21[0]", *ptr_vector22, 10);
 
         // use lambda expression as workaround to prevent inlining call to const data()
-        auto use_const_data = [](const auto& vector)
+        auto use_const_data = [](const auto& vector) -> const int*
         {
             const int* ptr = vector.data();
             (void)ptr;
