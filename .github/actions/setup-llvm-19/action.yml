@@ -1,39 +1,50 @@
-name: Install LLVM/lang 19
-description: Install LLVM/Clang 19 on Ubuntu and set as default
+name: Install LLVM/Clang
+description: Install LLVM/Clang on Linux and set as default
+
+inputs:
+  llvm-version:
+    description: LLVM/Clang version
+    required: false
+    default: "19"
+
 runs:
   using: composite
   steps:
     - shell: bash
       run: |
-        # Install LLVM/Clang 19 on Ubuntu
+        LLVM_VERSION="${{ inputs.llvm-version }}"
+
+        # Install LLVM/Clang on Ubuntu
         sudo apt-get update
         sudo apt-get install -y wget gnupg lsb-release --no-install-recommends
 
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
-        sudo ./llvm.sh 19
+        sudo ./llvm.sh ${LLVM_VERSION}
 
-        sudo apt-get install -y clang-19 lldb-19 lld-19 clang-tidy-19 clang-format-19 --no-install-recommends
+        sudo apt-get install -y \
+          clang-${LLVM_VERSION} lldb-${LLVM_VERSION} lld-${LLVM_VERSION} \
+          clang-tidy-${LLVM_VERSION} clang-format-${LLVM_VERSION} --no-install-recommends
 
-        # Set LLVM/Clang 19 as default on Ubuntu
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 200
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-19 200
-        sudo update-alternatives --set clang /usr/bin/clang-19
-        sudo update-alternatives --set clang++ /usr/bin/clang++-19
+        # Set LLVM/Clang as default on Ubuntu
+        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM_VERSION} 200
+        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM_VERSION} 200
+        sudo update-alternatives --set clang /usr/bin/clang-${LLVM_VERSION}
+        sudo update-alternatives --set clang++ /usr/bin/clang++-${LLVM_VERSION}
 
         # Set LLVM/Clang tools used for coverage
-        sudo update-alternatives --install /usr/bin/llvm-cov llvm-cov /usr/bin/llvm-cov-19 200
-        sudo update-alternatives --install /usr/bin/llvm-profdata llvm-profdata /usr/bin/llvm-profdata-19 200
-        sudo update-alternatives --set llvm-cov /usr/bin/llvm-cov-19
-        sudo update-alternatives --set llvm-profdata /usr/bin/llvm-profdata-19
+        sudo update-alternatives --install /usr/bin/llvm-cov llvm-cov /usr/bin/llvm-cov-${LLVM_VERSION} 200
+        sudo update-alternatives --install /usr/bin/llvm-profdata llvm-profdata /usr/bin/llvm-profdata-${LLVM_VERSION} 200
+        sudo update-alternatives --set llvm-cov /usr/bin/llvm-cov-${LLVM_VERSION}
+        sudo update-alternatives --set llvm-profdata /usr/bin/llvm-profdata-${LLVM_VERSION}
 
         # Set LLVM/Clang tools used for clang-tidy
-        sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-19 200
-        sudo update-alternatives --set clang-tidy /usr/bin/clang-tidy-19
+        sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-${LLVM_VERSION} 200
+        sudo update-alternatives --set clang-tidy /usr/bin/clang-tidy-${LLVM_VERSION}
 
         # Set LLVM/Clang tools used for clang-format
-        sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-19 200
-        sudo update-alternatives --set clang-format /usr/bin/clang-format-19
+        sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-${LLVM_VERSION} 200
+        sudo update-alternatives --set clang-format /usr/bin/clang-format-${LLVM_VERSION}
 
         # Check LLVM/Clang version
         clang --version
