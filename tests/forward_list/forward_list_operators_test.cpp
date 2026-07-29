@@ -59,11 +59,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // test three way comparison
 
-        tests::compare("list1 <=> list2 !=", (list1 <=> list2) != 0, (list1 <=> list2) != 0);
-        tests::compare("list1 <=> list2 <", (list1 <=> list2) < 0, (list1 <=> list2) < 0);
-        tests::compare("list1 <=> list2 >", (list1 <=> list2) > 0, (list1 <=> list2) > 0);
-        tests::compare("list1 <=> list2 <=", (list1 <=> list2) <= 0, (list1 <=> list2) <= 0);
-        tests::compare("list1 <=> list2 >=", (list1 <=> list2) >= 0, (list1 <=> list2) >= 0);
+        tests::compare("list1 <=> list2 !=", (list1 <=> list2) != 0, true);
+        tests::compare("list1 <=> list2 <", (list1 <=> list2) < 0, true);
+        tests::compare("list1 <=> list2 >", (list1 <=> list2) > 0, false);
+        tests::compare("list1 <=> list2 <=", (list1 <=> list2) <= 0, true);
+        tests::compare("list1 <=> list2 >=", (list1 <=> list2) >= 0, false);
 
         tests::compare("list1 <=> list2 <", (list1 <=> list2) == std::weak_ordering::less, true);
         tests::compare("list1 <=> list2 <>", (list1 <=> list2) != std::weak_ordering::equivalent, true);
