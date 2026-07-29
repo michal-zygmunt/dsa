@@ -60,11 +60,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // test three way comparison
 
-        tests::compare("Stack1 <=> stack2 !=", (stack1 <=> stack2) != 0, (stack1 <=> stack2) != 0);
-        tests::compare("Stack1 <=> stack2 <", (stack1 <=> stack2) < 0, (stack1 <=> stack2) < 0);
-        tests::compare("Stack1 <=> stack2 >", (stack1 <=> stack2) > 0, (stack1 <=> stack2) > 0);
-        tests::compare("Stack1 <=> stack2 <=", (stack1 <=> stack2) <= 0, (stack1 <=> stack2) <= 0);
-        tests::compare("Stack1 <=> stack2 >=", (stack1 <=> stack2) >= 0, (stack1 <=> stack2) >= 0);
+        tests::compare("Stack1 <=> stack2 !=", (stack1 <=> stack2) != 0, true);
+        tests::compare("Stack1 <=> stack2 <", (stack1 <=> stack2) < 0, true);
+        tests::compare("Stack1 <=> stack2 >", (stack1 <=> stack2) > 0, false);
+        tests::compare("Stack1 <=> stack2 <=", (stack1 <=> stack2) <= 0, true);
+        tests::compare("Stack1 <=> stack2 >=", (stack1 <=> stack2) >= 0, false);
 
         tests::compare("Stack1 <=> stack2 <", (stack1 <=> stack2) == std::weak_ordering::less, true);
         tests::compare("Stack1 <=> stack2 <>", (stack1 <=> stack2) != std::weak_ordering::equivalent, true);
