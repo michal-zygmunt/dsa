@@ -14,7 +14,7 @@ runs:
           -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
           -property installationPath
 
-        if(-not $vsPath)
+        if (-not (Test-Path "$vsPath"))
         {
            throw "Visual Studio installation not found"
         }
