@@ -30,6 +30,17 @@ runs:
           }
         }
 
+
+        $llvmPath = Join-Path $vsPath "VC\Tools\Llvm\x64\bin"
+        $ctPath = Join-Path $llvmPath "clang-tidy.exe"
+
+        if (-not (Test-Path "$ctPath"))
+        {
+           throw "clang-tidy from Visual Studio installation not found"
+        }
+
+        Add-Content $env:GITHUB_PATH $llvmPath
+
     - name: Check MSVC toolchain
       shell: pwsh
       run: |
