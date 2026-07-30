@@ -2423,8 +2423,8 @@ namespace dsa
         }
 
         NodeBase* result{};
-        Node* node_left = dynamic_cast<Node*>(left);
-        Node* node_right = dynamic_cast<Node*>(right);
+        const Node* node_left = dynamic_cast<Node*>(left);
+        const Node* node_right = dynamic_cast<Node*>(right);
         if (node_left && node_right)
         {
             // Recursively merge nodes
