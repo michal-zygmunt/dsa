@@ -21,13 +21,14 @@
 #include <list>
 #include <numeric>
 #include <ranges>
+#include <tuple>
 #include <type_traits>
 #include <vector>
 
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
     // tests are based on hardcoded magic numbers for comparison of container content
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers, cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
 
     try
     {
@@ -78,13 +79,13 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // test constexpt access via iterators
         constexpr array_t array{ 1, 2, 3 };
-        static_assert(*array.begin() == 1);
-        static_assert(*(array.end() - 1) == 3);
+        static_assert(array.front() == 1);
+        static_assert(array.back() == 3);
         static_assert(std::ranges::size(array) == 3);
 
         // test structured binding / tuple interface
-        static_assert(std::tuple_size<array_t>::value == 3);
-        static_assert(std::is_same_v<std::tuple_element<0, array_t>::type, int>);
+        static_assert(std::tuple_size_v<array_t> == 3);
+        static_assert(std::is_same_v<std::tuple_element_t<0, array_t>, int>);
         static_assert(get<0>(array) == 1);
         static_assert(get<1>(array) == 2);
         static_assert(get<2>(array) == 3);
@@ -180,7 +181,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const int sum = std::accumulate(array3.begin(), array3.end(), 0);
         tests::compare("Array3 sum", sum, 80);
         std::list<int> expected3;
-        std::ranges::for_each(array3, [&](int item) { expected3.push_back(item); });
+        std::ranges::for_each(array3, [&](int item) -> void { expected3.push_back(item); });
         tests::compare("Array3 for_each() equal()", std::ranges::equal(expected3, std::list{ 30, 10, 40 }), true);
 
         // test std::ranges::reverse_viev
@@ -260,7 +261,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected15 = { 10, 20, 30, 40, 50, 60 };
         std::vector<int> expected16;
         const dsa::Array<int, 3> array16 = { 20, 40, 60 };
-        auto even = array15 | std::views::filter([](int item) { return item % 20 == 0; });
+        auto even = array15 | std::views::filter([](int item) -> bool { return item % 20 == 0; });
         for (const int& item : even)
         {
             expected16.push_back(item);
@@ -323,5 +324,5 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     return tests::failed_count();
 
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers, cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
 }

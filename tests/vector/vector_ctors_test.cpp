@@ -15,6 +15,7 @@
 #include <exception>
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
 #include <utility>
 #include <vector>
 
@@ -92,7 +93,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::cout << "Construct from other Vector\n";
         dsa::Vector<int> temp12 = { 0, 10, 20, 30, 40, 50 };
-        const dsa::Vector<int> vector12(temp12.begin() + 1, temp12.begin() + 4);
+        const dsa::Vector<int> vector12(std::next(temp12.begin()), std::next(temp12.begin(), 4));
         const std::initializer_list<int> expected12{ 10, 20, 30 };
         tests::compare("Vector12", vector12, expected12);
 

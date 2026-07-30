@@ -91,7 +91,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector8 size()", vector8.size(), static_cast<std::size_t>(0));
 
         dsa::Vector<int> vector9{ 10, 20, 30, 40, 50 };
-        vector9.erase(vector9.cbegin() + 1, vector9.cbegin() + 3);
+        vector9.erase(std::next(vector9.cbegin()), std::next(vector9.cbegin(), 3));
         const std::initializer_list<int> expected9 = { 10, 40, 50 };
         tests::compare("Vector9", vector9, expected9);
         tests::compare("Vector9 size()", vector9.size(), static_cast<std::size_t>(3));
@@ -129,25 +129,25 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector13 erase count", cnt13, std::size_t{ 6 });
 
         dsa::Vector<int> vector14 = dsa::Vector<int>({ 0, 10, 0, 0, 40, 0 });
-        auto cnt14 = dsa::erase_if(vector14, [](int val) { return val == 0; });
+        auto cnt14 = dsa::erase_if(vector14, [](int val) -> bool { return val == 0; });
         const std::initializer_list<int> expected14 = { 10, 40 };
         tests::compare("Vector14", vector14, expected14);
         tests::compare("Vector14 erase count", cnt14, std::size_t{ 4 });
 
         dsa::Vector<int> vector15 = dsa::Vector<int>({ 0, 0, 0, 0, 0, 0 });
-        auto cnt15 = dsa::erase_if(vector15, [](int val) { return val == 0; });
+        auto cnt15 = dsa::erase_if(vector15, [](int val) -> bool { return val == 0; });
         const std::initializer_list<int> expected15 = {};
         tests::compare("Vector15", vector15, expected15);
         tests::compare("Vector15 erase_if count", cnt15, std::size_t{ 6 });
 
         dsa::Vector<int> vector16 = dsa::Vector<int>({ 0, 1, 2, 3, 4, 5 });
-        auto cnt16 = dsa::erase_if(vector16, [](int val) { return val % 2 == 0; });
+        auto cnt16 = dsa::erase_if(vector16, [](int val) -> bool { return val % 2 == 0; });
         const std::initializer_list<int> expected16 = { 1, 3, 5 };
         tests::compare("Vector16", vector16, expected16);
         tests::compare("Vector16 erase_if count", cnt16, std::size_t{ 3 });
 
         dsa::Vector<int> vector17 = dsa::Vector<int>({ 0, 10, 2, 5, 7, 9 });
-        auto cnt17 = dsa::erase_if(vector17, [](int val) { return val <= 5; });
+        auto cnt17 = dsa::erase_if(vector17, [](int val) -> bool { return val <= 5; });
         const std::initializer_list<int> expected17 = { 10, 7, 9 };
         tests::compare("Vector17", vector17, expected17);
         tests::compare("Vector17 erase_if count", cnt17, std::size_t{ 3 });
@@ -192,22 +192,22 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector13 vs std erase count", cnt13, std_cnt13);
 
         std::vector<int> std_vector14 = std::vector<int>({ 0, 10, 0, 0, 40, 0 });
-        auto std_cnt14 = std::erase_if(std_vector14, [](int val) { return val == 0; });
+        auto std_cnt14 = std::erase_if(std_vector14, [](int val) -> bool { return val == 0; });
         tests::compare("Vector14 vs std", vector14, std_vector14);
         tests::compare("Vector14 vs std erase count", cnt14, std_cnt14);
 
         std::vector<int> std_vector15 = std::vector<int>({ 0, 0, 0, 0, 0, 0 });
-        auto std_cnt15 = std::erase_if(std_vector15, [](int val) { return val == 0; });
+        auto std_cnt15 = std::erase_if(std_vector15, [](int val) -> bool { return val == 0; });
         tests::compare("Vector15 vs std", vector15, std_vector15);
         tests::compare("Vector15 vs std erase_if count", cnt15, std_cnt15);
 
         std::vector<int> std_vector16 = std::vector<int>({ 0, 1, 2, 3, 4, 5 });
-        auto std_cnt16 = std::erase_if(std_vector16, [](int val) { return val % 2 == 0; });
+        auto std_cnt16 = std::erase_if(std_vector16, [](int val) -> bool { return val % 2 == 0; });
         tests::compare("Vector16 vs std", vector16, std_vector16);
         tests::compare("Vector16 vs std erase_if count", cnt16, std_cnt16);
 
         std::vector<int> std_vector17 = std::vector<int>({ 0, 10, 2, 5, 7, 9 });
-        auto std_cnt17 = std::erase_if(std_vector17, [](int val) { return val <= 5; });
+        auto std_cnt17 = std::erase_if(std_vector17, [](int val) -> bool { return val <= 5; });
         tests::compare("Vector17 vs std", vector17, std_vector17);
         tests::compare("Vector17 vs std erase_if count", cnt17, std_cnt17);
 

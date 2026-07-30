@@ -34,7 +34,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::cout << "Explicit iterator\n";
         dsa::Vector<int> vector1{ 0, 10, 20 };
-        // NOLINTNEXTLINE(modernize-loop-convert)
+        // NOLINTNEXTLINE(modernize-loop-convert, cppcoreguidelines-pro-bounds-pointer-arithmetic)
         for (dsa::Vector<int>::iterator iterator = vector1.begin(); iterator != vector1.end(); iterator++)
         {
             *iterator += 100;
@@ -57,7 +57,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         std::cout << "Explicit const_iterator\n";
         const dsa::Vector<int> vector3{ 0, 10, 20 };
-        // NOLINTNEXTLINE(modernize-loop-convert)
+        // NOLINTNEXTLINE(modernize-loop-convert, cppcoreguidelines-pro-bounds-pointer-arithmetic)
         for (dsa::Vector<int>::const_iterator iterator = vector3.cbegin(); iterator != vector3.cend(); iterator++)
         {
             std::cout << (*iterator) << '\t';
@@ -105,28 +105,32 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         for (const auto& item : vector7)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected7.begin();
         for (const auto& item : vector7)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected7.begin();
         for (const auto& item : vector7)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected7.begin();
         for (const auto& item : vector7)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << "\n\n";
 
@@ -138,28 +142,32 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         for (const auto& item : vector8)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected8.begin();
         for (const auto& item : vector8)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected8.begin();
         for (const auto& item : vector8)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected8.begin();
         for (const auto& item : vector8)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << "\n\n";
 
@@ -298,8 +306,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         // test element access
         dsa::Vector<int> vector20{ 10, 20, 30 };
         tests::compare("vector20 front()", vector20.front(), 10);
+        // NOLINTBEGIN(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         tests::compare("vector20[0]", vector20[0], 10);
         tests::compare("vector20[1]", vector20[1], 20);
+        // NOLINTEND(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         tests::compare("vector20 at(1)", vector20.at(1), 20);
         tests::compare("vector20 back()", vector20.back(), 30);
         const std::vector<int> expected20{ 10, 20, 30 };
@@ -324,8 +334,10 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         // test element access
         const dsa::Vector<int> vector22{ 10, 20, 30 };
         tests::compare("vector22 front()", vector22.front(), 10);
+        // NOLINTBEGIN(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         tests::compare("vector22[0]", vector22[0], 10);
         tests::compare("vector22[1]", vector22[1], 20);
+        // NOLINTEND(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         tests::compare("vector22 at(1)", vector22.at(1), 20);
         tests::compare("vector22 back()", vector22.back(), 30);
         const std::vector<int> expected22{ 10, 20, 30 };
@@ -337,7 +349,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("vector21[0]", *ptr_vector22, 10);
 
         // use lambda expression as workaround to prevent inlining call to const data()
-        auto use_const_data = [](const auto& vector)
+        auto use_const_data = [](const auto& vector) -> const int*
         {
             const int* ptr = vector.data();
             (void)ptr;
@@ -492,16 +504,20 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         // test element access
         std::vector<int> std_vector20{ 10, 20, 30 };
         tests::compare("vector20 front() vs std", vector20.front(), std_vector20.front());
+        // NOLINTBEGIN(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         tests::compare("vector20[0] vs std", vector20[0], std_vector20[0]);
         tests::compare("vector20[1] vs std", vector20[1], std_vector20[1]);
+        // NOLINTEND(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         tests::compare("vector20 vs std at(1) ", vector20.at(1), std_vector20.at(1));
         tests::compare("vector20 vs std back()", vector20.back(), std_vector20.back());
         tests::compare("vector20() vs std", vector20, std_vector20);
 
         const std::vector<int> std_vector22{ 10, 20, 30 };
         tests::compare("vector22 front() vs std", vector22.front(), std_vector22.front());
+        // NOLINTBEGIN(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         tests::compare("vector22[0] vs std", vector22[0], std_vector22[0]);
         tests::compare("vector22[1] vs std", vector22[1], std_vector22[1]);
+        // NOLINTEND(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         tests::compare("vector22 vs std at(1) ", vector22.at(1), std_vector22.at(1));
         tests::compare("vector22 vs std back()", vector22.back(), std_vector22.back());
         tests::compare("vector22() vs std", vector22, std_vector22);

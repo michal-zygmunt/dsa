@@ -92,14 +92,14 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         dsa::Vector<int> vector9 = dsa::Vector<int>({ 0, 10, 20 });
         dsa::Vector<int> temp9 = dsa::Vector<int>({ 0, 1, 2, 3, 4, 5 });
-        vector9.insert(vector9.begin() + 1, temp9.begin() + 1, temp9.begin() + 4);
+        vector9.insert(std::next(vector9.begin()), std::next(temp9.begin()), std::next(temp9.begin(), 4));
         const std::initializer_list<int> expected9 = { 0, 1, 2, 3, 10, 20 };
         tests::compare("Vector9", vector9, expected9);
 
         dsa::Vector<int> vector10 = dsa::Vector<int>({ 0, 10, 20 });
         vector10.reserve(10);
         dsa::Vector<int> temp10 = dsa::Vector<int>({ 0, 1, 2, 3, 4, 5 });
-        vector10.insert(vector10.begin() + 1, temp10.begin() + 1, temp10.begin() + 4);
+        vector10.insert(std::next(vector10.begin()), std::next(temp10.begin()), std::next(temp10.begin(), 4));
         const std::initializer_list<int> expected10 = { 0, 1, 2, 3, 10, 20 };
         tests::compare("Vector10", vector10, expected10);
 
@@ -113,6 +113,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         {
             vector11.push_back(static_cast<int>(i));
             tests::compare("Vector11 size()", vector11.size(), i + 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
             tests::compare("Vector11 capacity()", vector11.capacity(), static_cast<std::size_t>(expected11[i]));
         }
         vector11.resize(0);
@@ -120,7 +121,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Vector11 capacity()", vector11.capacity(), static_cast<std::size_t>(8));
 
         dsa::Vector<int> vector12{ 0, 10, 20, 30 };
-        vector12.emplace(vector12.begin() + 1, 5);
+        vector12.emplace(std::next(vector12.begin()), 5);
         const std::initializer_list<int> expected12 = { 0, 5, 10, 20, 30 };
         tests::compare("Vector12", vector12, expected12);
 

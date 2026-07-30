@@ -102,28 +102,32 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         for (const auto& item : list7)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected7.begin();
         for (const auto& item : list7)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected7.begin();
         for (const auto& item : list7)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected7.begin();
         for (const auto& item : list7)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << "\n\n";
 
@@ -135,28 +139,32 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         for (const auto& item : list8)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected8.begin();
         for (const auto& item : list8)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected8.begin();
         for (const auto& item : list8)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << '\n';
         il_iterator = expected8.begin();
         for (const auto& item : list8)
         {
             std::cout << item << ' ' << *il_iterator << ' ';
-            tests::compare(item, *(il_iterator++));
+            tests::compare(item, *il_iterator);
+            std::advance(il_iterator, 1);
         }
         std::cout << "\n\n";
 

@@ -71,7 +71,8 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("ForwardList7 removed", removed7, size_t{ 0 });
 
         // find unique values using predicate
-        auto predicate = [](const int& input_a, const int& input_b) { return std::abs(input_a - input_b) <= 5; };
+        auto predicate = [](const int& input_a, const int& input_b) -> bool
+        { return std::abs(input_a - input_b) <= 5; };
 
         dsa::ForwardList<int> list8 = dsa::ForwardList<int>({ 1, 5, 7, 15, 25 });
         auto removed8 = list8.unique(predicate);

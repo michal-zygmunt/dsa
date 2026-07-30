@@ -447,6 +447,7 @@ namespace dsa
     [[nodiscard]] constexpr auto get(Array<T, N>& array) noexcept -> T&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         return array[I];
     }
 
@@ -463,6 +464,7 @@ namespace dsa
     [[nodiscard]] constexpr auto get(const Array<T, N>& array) noexcept -> const T&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         return array[I];
     }
 
@@ -485,6 +487,7 @@ namespace dsa
     [[nodiscard]] constexpr auto get(Array<T, N>&& array) noexcept -> T&&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         return std::move(array[I]);
     }
 
@@ -501,6 +504,7 @@ namespace dsa
     [[nodiscard]] constexpr auto get(const Array<T, N>&& array) noexcept -> const T&&
     {
         static_assert(I < N, "Index out of range in dsa::Array::get");
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         return std::move(array[I]);
     }
 
@@ -532,7 +536,7 @@ namespace dsa
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
     [[nodiscard]] constexpr auto to_array(T (&array)[N]) -> Array<std::remove_cv_t<T>, N>
     {
-        return [&]<std::size_t... I>(std::index_sequence<I...>)
+        return [&]<std::size_t... I>(std::index_sequence<I...>) -> dsa::Array<std::remove_cv_t<T>, N>
         {
             // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
             return dsa::Array<std::remove_cv_t<T>, N>{ array[I]... };
@@ -553,7 +557,7 @@ namespace dsa
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays,cppcoreguidelines-rvalue-reference-param-not-moved)
     [[nodiscard]] constexpr auto to_array(T (&&array)[N]) -> Array<std::remove_cv_t<T>, N>
     {
-        return [&]<std::size_t... I>(std::index_sequence<I...>)
+        return [&]<std::size_t... I>(std::index_sequence<I...>) -> dsa::Array<std::remove_cv_t<T>, N>
         {
             // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,modernize-avoid-c-arrays)
             return dsa::Array<std::remove_cv_t<T>, N>{ std::move(array[I])... };
@@ -571,9 +575,9 @@ namespace dsa
     template<typename T, std::size_t N>
     auto operator<<(std::ostream& out, const Array<T, N>& array) -> std::ostream&
     {
-        for (size_t i = 0; i < N; i++)
+        for (const auto& item : array)
         {
-            out << array[i] << ' ';
+            out << item << ' ';
         }
 
         return out;
@@ -601,8 +605,8 @@ namespace dsa
                 return false;
             }
 
-            lhs_iter++;
-            rhs_iter++;
+            std::advance(lhs_iter, 1);
+            std::advance(rhs_iter, 1);
         }
 
         return true;
@@ -636,8 +640,8 @@ namespace dsa
                 return cmp;
             }
 
-            lhs_iter++;
-            rhs_iter++;
+            std::advance(lhs_iter, 1);
+            std::advance(rhs_iter, 1);
         }
 
         return std::compare_three_way_result_t<T>::equivalent;
@@ -654,7 +658,7 @@ namespace std
      * No new symbols or modification of standard library behaviour was introduced,
      * only providing valid specialization for user-defined type.
      */
-    // NOLINTBEGIN(cert-dcl58-cpp)
+    // NOLINTBEGIN(cert-dcl58-cpp, bugprone-std-namespace-modification)
 
     /// @cond SPECIALIZATION
     /**
@@ -746,7 +750,7 @@ namespace std
         /// @endcond
     } // namespace ranges
 
-    // NOLINTEND(cert-dcl58-cpp)
+    // NOLINTEND(cert-dcl58-cpp, bugprone-std-namespace-modification)
 } // namespace std
 
 #endif // !ARRAY_H

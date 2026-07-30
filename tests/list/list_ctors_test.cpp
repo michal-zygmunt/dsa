@@ -120,16 +120,16 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_list5.push_front(2);
         std_list5.push_front(1);
         std_list5 = std_list1;
-        tests::compare("List5 vs std", list5, expected);
+        tests::compare("List5 vs std", list5, std_list5);
 
         std::list<int> std_temp_1(std_list1);
         const std::list<int> std_list6 = std::move(std_temp_1);
-        tests::compare("List6 vs std", list6, expected);
+        tests::compare("List6 vs std", list6, std_list6);
 
         std::list<int> std_temp_2(std_list1);
         std::list<int> std_list7(1, 0);
         std_list7 = std::move(std_temp_2);
-        tests::compare("List7 vs std", list7, expected);
+        tests::compare("List7 vs std", list7, std_list7);
 
         std::list<int> std_temp_8(std_list1);
         std::list<int> std_list8(1, 0);

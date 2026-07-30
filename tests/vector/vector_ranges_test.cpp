@@ -180,7 +180,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const int sum = std::accumulate(vector3.begin(), vector3.end(), 0);
         tests::compare("Vector3 sum", sum, 80);
         std::list<int> expected3;
-        std::ranges::for_each(vector3, [&](int item) { expected3.push_back(item); });
+        std::ranges::for_each(vector3, [&](int item) -> void { expected3.push_back(item); });
         tests::compare("Vector3 for_each() equal()", std::ranges::equal(expected3, std::list{ 30, 10, 40 }), true);
 
         // test std::ranges::reverse_viev
@@ -276,7 +276,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         dsa::Vector<int> vector18 = { 10, 20, 30, 40, 50, 60 };
         const std::initializer_list<int> expected18 = { 10, 20, 30, 40, 50, 60 };
         const dsa::Vector<int> vector19 = { 20, 40, 60 };
-        auto even = vector18 | std::views::filter([](int item) { return item % 20 == 0; });
+        auto even = vector18 | std::views::filter([](int item) -> bool { return item % 20 == 0; });
         std::vector<int> expected19;
         for (const int& item : even)
         {
@@ -308,14 +308,18 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         *it21 = 20;
         std::advance(it21, 1);
         *it21 = 30;
+        // NOLINTBEGIN(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         tests::compare("Vector21[0]", vector21[0], 10);
         tests::compare("Vector21[1]", vector21[1], 20);
         tests::compare("Vector21[2]", vector21[2], 30);
+        // NOLINTEND(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
 
         // test random access iterator
         dsa::Vector<int> vector22{ 10, 20, 30, 40 };
+        // NOLINTBEGIN(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         tests::compare("Vector22[0]", vector22[0], 10);
         tests::compare("Vector22[1]", vector22[1], 20);
+        // NOLINTEND(cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
         tests::compare("Vector22[2]", *std::next(vector22.begin(), 2), 30);
         tests::compare("Vector22[3]", *std::next(vector22.begin(), 3), 40);
 

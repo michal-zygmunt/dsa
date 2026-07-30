@@ -118,7 +118,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Stack3 vs std", stack3, std_stack3);
 
         const std::stack<int> std_stack4{ std_stack1 };
-        tests::compare("Stack4 vs std", stack4, expected);
+        tests::compare("Stack4 vs std", stack4, std_stack4);
 
         std::stack<int> std_stack5{ std_stack1 };
         std_stack5.push(1);

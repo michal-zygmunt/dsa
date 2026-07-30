@@ -120,7 +120,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std_list5.push_front(2);
         std_list5.push_front(1);
         std_list5 = std_list1;
-        tests::compare("ForwardList5 vs std", list5, expected);
+        tests::compare("ForwardList5 vs std", list5, std_list5);
 
         std::forward_list<int> std_list6{ 0, 10, 20 };
         auto* std_pointer6 = &std_list6;

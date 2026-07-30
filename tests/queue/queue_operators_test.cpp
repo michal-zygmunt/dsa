@@ -60,11 +60,11 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
         // test three way comparison
 
-        tests::compare("Queue1 <=> queue2 !=", (queue1 <=> queue2) != 0, (queue1 <=> queue2) != 0);
-        tests::compare("Queue1 <=> queue2 <", (queue1 <=> queue2) < 0, (queue1 <=> queue2) < 0);
-        tests::compare("Queue1 <=> queue2 >", (queue1 <=> queue2) > 0, (queue1 <=> queue2) > 0);
-        tests::compare("Queue1 <=> queue2 <=", (queue1 <=> queue2) <= 0, (queue1 <=> queue2) <= 0);
-        tests::compare("Queue1 <=> queue2 >=", (queue1 <=> queue2) >= 0, (queue1 <=> queue2) >= 0);
+        tests::compare("Queue1 <=> queue2 !=", (queue1 <=> queue2) != 0, true);
+        tests::compare("Queue1 <=> queue2 <", (queue1 <=> queue2) < 0, true);
+        tests::compare("Queue1 <=> queue2 >", (queue1 <=> queue2) > 0, false);
+        tests::compare("Queue1 <=> queue2 <=", (queue1 <=> queue2) <= 0, true);
+        tests::compare("Queue1 <=> queue2 >=", (queue1 <=> queue2) >= 0, false);
 
         tests::compare("Queue1 <=> queue2 <", (queue1 <=> queue2) == std::weak_ordering::less, true);
         tests::compare("Queue1 <=> queue2 <>", (queue1 <=> queue2) != std::weak_ordering::equivalent, true);

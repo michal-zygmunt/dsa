@@ -79,6 +79,7 @@ if(ENABLE_CLANG_FORMAT)
 		add_custom_command(
 			COMMENT "Formatting ${FILE} with clang-format"
 			TARGET format
+			POST_BUILD
 			COMMAND ${CLANG_FORMAT_EXE} -i "${FILE}"
 		)
 		endforeach()
@@ -88,6 +89,7 @@ if(ENABLE_CLANG_FORMAT)
 		add_custom_command(
 			COMMENT "Check formatting of ${FILE} with clang-format"
 			TARGET check-format
+			POST_BUILD
 			COMMAND ${CLANG_FORMAT_EXE} --dry-run --Werror "${FILE}"
 		)
 		endforeach()

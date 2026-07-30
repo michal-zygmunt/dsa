@@ -106,7 +106,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const int sum = std::accumulate(list4.begin(), list4.end(), 0);
         tests::compare("ForwardList4 sum", sum, 80);
         std::list<int> expected4;
-        std::ranges::for_each(list4, [&](int item) { expected4.push_back(item); });
+        std::ranges::for_each(list4, [&](int item) -> void { expected4.push_back(item); });
         tests::compare("ForwardList4 for_each() equal()", std::ranges::equal(expected4, std::list{ 30, 10, 40 }), true);
 
         // test copy constructor and assignment, create deep copies
@@ -166,7 +166,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         const std::initializer_list<int> expected15 = { 10, 20, 30, 40, 50, 60 };
         dsa::ForwardList<int> list16;
         const std::initializer_list<int> expected16 = { 20, 40, 60 };
-        auto even = list15 | std::views::filter([](int item) { return item % 20 == 0; });
+        auto even = list15 | std::views::filter([](int item) -> bool { return item % 20 == 0; });
         auto list16_iter = list16.before_begin();
         for (const int& item : even)
         {

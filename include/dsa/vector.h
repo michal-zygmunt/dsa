@@ -830,7 +830,7 @@ namespace dsa
         while (first != last)
         {
             push_back(*first);
-            first++;
+            std::advance(first, 1);
         }
     }
 
@@ -1081,7 +1081,7 @@ namespace dsa
         for (size_t i = 0; i < count; i++)
         {
             std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, value);
-            ++new_iter;
+            std::advance(new_iter, 1);
         }
 
         return new_pos;
@@ -1100,8 +1100,8 @@ namespace dsa
         while (first != last)
         {
             std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, *first);
-            ++new_iter;
-            ++first;
+            std::advance(new_iter, 1);
+            std::advance(first, 1);
         }
 
         return new_pos;
@@ -1118,7 +1118,7 @@ namespace dsa
         for (const auto& value : init_list)
         {
             std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, value);
-            ++new_iter;
+            std::advance(new_iter, 1);
         }
 
         return new_pos;
@@ -1161,6 +1161,7 @@ namespace dsa
     template<typename T>
     constexpr auto Vector<T>::erase(const_iterator pos) -> iterator
     {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         return erase(pos, pos + 1);
     }
 
@@ -1175,14 +1176,16 @@ namespace dsa
         while (first != last)
         {
             std::allocator_traits<allocator_type>::destroy(m_allocator, first);
-            ++first;
+            std::advance(first, 1);
         }
 
         // move remaining objects into empty space
         // this moves memory in range [last, end()] to addres pointed by `first`, that was already released
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         std::move(begin() + offset_last, end(), begin() + offset_first);
 
         m_size -= count;
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         return begin() + offset_first;
     }
 
@@ -1278,9 +1281,9 @@ namespace dsa
     template<typename T>
     auto operator<<(std::ostream& out, const Vector<T>& vector) -> std::ostream&
     {
-        for (size_t i = 0; i < vector.size(); i++)
+        for (const auto& item : vector)
         {
-            out << vector[i] << ' ';
+            out << item << ' ';
         }
 
         return out;
@@ -1313,8 +1316,8 @@ namespace dsa
                 return false;
             }
 
-            lhs_iter++;
-            rhs_iter++;
+            std::advance(lhs_iter, 1);
+            std::advance(rhs_iter, 1);
         }
 
         return true;
@@ -1348,8 +1351,8 @@ namespace dsa
                 return cmp;
             }
 
-            lhs_iter++;
-            rhs_iter++;
+            std::advance(lhs_iter, 1);
+            std::advance(rhs_iter, 1);
         }
 
         // first n elements are equal
@@ -1433,23 +1436,20 @@ namespace dsa
             while (iter != pos)
             {
                 std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
-                ++iter;
-                ++new_iter;
+                std::advance(iter, 1);
+                std::advance(new_iter, 1);
             }
 
             // make space for new elements
             new_pos = new_iter;
-            for (size_t i = 0; i < count; i++)
-            {
-                ++new_iter;
-            }
+            std::advance(new_iter, count);
 
             // move all remaining objects from original memory
             while (iter != end())
             {
                 std::allocator_traits<allocator_type>::construct(m_allocator, new_iter, std::move(*iter));
-                ++iter;
-                ++new_iter;
+                std::advance(iter, 1);
+                std::advance(new_iter, 1);
             }
 
             clear_allocation();
@@ -1465,6 +1465,7 @@ namespace dsa
             new_pos = iter;
 
             // move object to the right
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
             std::move(iter, end(), iter + count);
 
             m_size += count;
@@ -1490,8 +1491,10 @@ namespace dsa
         pointer new_data = allocator_type().allocate(new_cap);
         for (size_t i = 0; i < m_size; i++)
         {
+            // NOLINTBEGIN(cppcoreguidelines-pro-bounds-pointer-arithmetic)
             std::allocator_traits<allocator_type>::construct(m_allocator, new_data + i,
-                std::move_if_noexcept(m_data[i])); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                std::move_if_noexcept(m_data[i]));
+            // NOLINTEND(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         }
         clear_allocation();
         m_data = new_data;
@@ -1506,7 +1509,7 @@ namespace dsa
         while (iter != end())
         {
             std::allocator_traits<allocator_type>::destroy(m_allocator, iter);
-            ++iter;
+            std::advance(iter, 1);
         }
     }
 

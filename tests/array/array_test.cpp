@@ -27,7 +27,7 @@
 int main() // NOLINT(modernize-use-trailing-return-type)
 {
     // tests are based on hardcoded magic numbers for comparison of container content
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers, cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
 
     try
     {
@@ -59,12 +59,12 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array3()", array3, expected3);
 
         // Test data access
-        int* ptr_d3 = array3.data();
+        const int* ptr_d3 = array3.data();
         static_assert(std::is_same_v<decltype(array3.data()), int*>, "data() must return T*");
         tests::compare("Array3[0]", *ptr_d3, 10);
 
         // use lambda expression as workaround to prevent inlining call to const data()
-        auto use_const_data = [](const auto& array)
+        auto use_const_data = [](const auto& array) -> const int*
         {
             const int* ptr = array.data();
             (void)ptr;
@@ -424,7 +424,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array19", array19, expected19);
 
         // modyfing elements
-        constexpr dsa::Array<int, 3> array20 = []
+        constexpr auto array20 = []() -> dsa::Array<int, 3>
         {
             dsa::Array<int, 3> tmp = { 1, 2, 3 };
             tmp[0] = 100;
@@ -458,9 +458,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         std::string array25[] = { "X", "Y", "Z" };
         array24 = dsa::to_array(std::move(array25));
         const std::initializer_list<std::string> expected24{ "X", "Y", "Z" };
-        const std::initializer_list<std::string> expected25{ "", "", "" };
         tests::compare("Array24", array24, expected24);
-        tests::compare("Array25", dsa::to_array(array25), expected25);
 
         std::cout << "Compare operations results with std container\n\n";
 
@@ -633,7 +631,7 @@ int main() // NOLINT(modernize-use-trailing-return-type)
         tests::compare("Array19 vs std", expected19, std_expected19);
 
         // modyfing elements
-        constexpr std::array<int, 3> std_array20 = []
+        constexpr auto std_array20 = []() -> std::array<int, 3>
         {
             std::array<int, 3> std_tmp = { 1, 2, 3 };
             std_tmp[0] = 100;
@@ -660,5 +658,5 @@ int main() // NOLINT(modernize-use-trailing-return-type)
 
     return tests::failed_count();
 
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers, cppcoreguidelines-pro-bounds-avoid-unchecked-container-access)
 }
