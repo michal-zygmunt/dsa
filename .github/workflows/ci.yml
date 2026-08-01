@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 0
   
@@ -135,7 +135,7 @@ jobs:
     name: ${{ matrix.os }}-${{ matrix.cpp_compiler }}
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
   
     - name: Show Ubuntu version
       if: runner.os == 'Linux'
@@ -148,7 +148,7 @@ jobs:
     # Install dependencies
     - name: Install Python on Ubuntu
       if: runner.os == 'Linux'
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@v7
       with:
         python-version: '3.13.5'
 
@@ -237,7 +237,7 @@ jobs:
 
     - name: Upload coverage reports to Codecov
       if: runner.os == 'Linux' && (matrix.cpp_compiler == 'clang++' || matrix.cpp_compiler == 'g++')
-      uses: codecov/codecov-action@v6
+      uses: codecov/codecov-action@v7
       with:
         files: ${{ github.workspace }}/docs/coverage/coverage.info
         fail_ci_if_error: true
@@ -253,7 +253,7 @@ jobs:
     if: github.event_name == 'pull_request'
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
   
     - name: Show Ubuntu version
       run: lsb_release -a
@@ -302,7 +302,7 @@ jobs:
     if: github.event_name == 'pull_request'
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
   
     - name: Show Windows version
       run: systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
