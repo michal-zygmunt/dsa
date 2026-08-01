@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 0
   
@@ -135,7 +135,7 @@ jobs:
     name: ${{ matrix.os }}-${{ matrix.cpp_compiler }}
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
   
     - name: Show Ubuntu version
       if: runner.os == 'Linux'
@@ -253,7 +253,7 @@ jobs:
     if: github.event_name == 'pull_request'
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
   
     - name: Show Ubuntu version
       run: lsb_release -a
@@ -302,7 +302,7 @@ jobs:
     if: github.event_name == 'pull_request'
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
   
     - name: Show Windows version
       run: systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
