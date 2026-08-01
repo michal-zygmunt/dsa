@@ -24,9 +24,31 @@ namespace dsa
     template<typename T>
     class Queue;
 
+    /**
+     * @brief The relational operator compares two Queue objects
+     *
+     * @tparam T type of data stored in Queue
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @retval true if containers are equal
+     * @retval false if containers are not equal
+     */
     template<typename T>
     auto operator==(const Queue<T>& lhs, const Queue<T>& rhs) -> bool;
 
+    /**
+     * @brief The relational operator compares two Queue objects
+     *
+     * Depending on type T, function returns one of following objects:
+     * std::strong_ordering::less / equal / greater
+     * std::weak_ordering::less / equivalent / greater
+     * std::partial_ordering::less / equivalent / greater / unordered
+     * It is best to compare results with 0 to determine if lhs is <, >, or == to rhs
+     *
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @return three way comparison result type
+     */
     template<typename T>
     auto operator<=>(const Queue<T>& lhs, const Queue<T>& rhs) -> std::compare_three_way_result_t<T>;
 
@@ -117,7 +139,7 @@ namespace dsa
          * @param[in] other Queue object of type T
          * @return Queue& reference to Queue object
          */
-        auto operator=(const Queue<T>& other) -> Queue&;
+        auto operator=(const Queue<T>& other) -> Queue<T>&;
 
         /**
          * @brief Assign Queue object using move assignment
@@ -126,7 +148,7 @@ namespace dsa
          * @param[in,out] other Queue object of type T
          * @return Queue& reference to Queue object
          */
-        auto operator=(Queue<T>&& other) noexcept -> Queue&;
+        auto operator=(Queue<T>&& other) noexcept -> Queue<T>&;
 
         /**
          * @brief Destroy the Queue object
@@ -215,14 +237,8 @@ namespace dsa
 
     private:
 
-        /**
-         * @brief Forward friend declaration to access internal container comparison operator
-         */
         friend auto operator== <T>(const Queue<T>& lhs, const Queue<T>& rhs) -> bool;
 
-        /**
-         * @brief Forward friend declaration to access internal container comparison operator
-         */
         friend auto operator<=> <T>(const Queue<T>& lhs, const Queue<T>& rhs) -> std::compare_three_way_result_t<T>;
 
         Container container{};
@@ -298,25 +314,25 @@ namespace dsa
     }
 
     template<typename T>
-    auto Queue<T>::front() -> Queue<T>::reference
+    auto Queue<T>::front() -> reference
     {
         return container.front();
     }
 
     template<typename T>
-    auto Queue<T>::front() const -> Queue<T>::const_reference
+    auto Queue<T>::front() const -> const_reference
     {
         return container.front();
     }
 
     template<typename T>
-    auto Queue<T>::back() -> Queue<T>::reference
+    auto Queue<T>::back() -> reference
     {
         return container.back();
     }
 
     template<typename T>
-    auto Queue<T>::back() const -> Queue<T>::const_reference
+    auto Queue<T>::back() const -> const_reference
     {
         return container.back();
     }
@@ -387,34 +403,12 @@ namespace dsa
         return out;
     }
 
-    /**
-     * @brief The relational operator compares two Queue objects
-     *
-     * @tparam T type of data stored in Queue
-     * @param[in] lhs input container
-     * @param[in] rhs input container
-     * @retval true if containers are equal
-     * @retval false if containers are not equal
-     */
     template<typename T>
     auto operator==(const Queue<T>& lhs, const Queue<T>& rhs) -> bool
     {
         return lhs.container == rhs.container;
     }
 
-    /**
-     * @brief The relational operator compares two Queue objects
-     *
-     * Depending on type T, function returns one of following objects:
-     * std::strong_ordering::less / equal / greater
-     * std::weak_ordering::less / equivalent / greater
-     * std::partial_ordering::less / equivalent / greater / unordered
-     * It is best to compare results with 0 to determine if lhs is <, >, or == to rhs
-     *
-     * @param[in] lhs input container
-     * @param[in] rhs input container
-     * @return three way comparison result type
-     */
     template<typename T>
     auto operator<=>(const Queue<T>& lhs, const Queue<T>& rhs) -> std::compare_three_way_result_t<T>
     {
