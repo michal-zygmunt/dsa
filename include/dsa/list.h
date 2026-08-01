@@ -505,7 +505,7 @@ namespace dsa
          * @param[in] other List object of type T
          * @return List&
          */
-        auto operator=(const List<T>& other) -> List&;
+        auto operator=(const List<T>& other) -> List<T>&;
 
         /**
          * @brief Construct a new List object using move constructor
@@ -523,7 +523,7 @@ namespace dsa
          * @return List&
          */
         auto operator=(List<T>&& other) noexcept(std::allocator_traits<allocator_type>::is_always_equal::value)
-            -> List&;
+            -> List<T>&;
 
         /**
          * @brief Assign elements from initializer list to List object
@@ -531,7 +531,7 @@ namespace dsa
          * @param[in] ilist initializer list to copy elements from
          * @return List&
          */
-        auto operator=(std::initializer_list<value_type> ilist) -> List&;
+        auto operator=(std::initializer_list<value_type> ilist) -> List<T>&;
 
         /**
          * @brief Destroy the List object
@@ -1319,7 +1319,7 @@ namespace dsa
 
     template<typename T>
     auto List<T>::operator=(List<T>&& other) noexcept(std::allocator_traits<allocator_type>::is_always_equal::value)
-        -> List&
+        -> List<T>&
     {
         if (&other != this)
         {
@@ -1339,7 +1339,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::operator=(std::initializer_list<value_type> ilist) -> List&
+    auto List<T>::operator=(std::initializer_list<value_type> ilist) -> List<T>&
     {
         clear();
 
@@ -1401,61 +1401,61 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::front() -> List<T>::reference
+    auto List<T>::front() -> reference
     {
         return *begin();
     }
 
     template<typename T>
-    auto List<T>::front() const -> List<T>::const_reference
+    auto List<T>::front() const -> const_reference
     {
         return *cbegin();
     }
 
     template<typename T>
-    auto List<T>::back() -> List<T>::reference
+    auto List<T>::back() -> reference
     {
         return *(--end());
     }
 
     template<typename T>
-    auto List<T>::back() const -> List<T>::const_reference
+    auto List<T>::back() const -> const_reference
     {
         return *(--cend());
     }
 
     template<typename T>
-    auto List<T>::begin() noexcept -> List<T>::iterator
+    auto List<T>::begin() noexcept -> iterator
     {
         return iterator(m_head);
     }
 
     template<typename T>
-    auto List<T>::begin() const noexcept -> List<T>::const_iterator
+    auto List<T>::begin() const noexcept -> const_iterator
     {
         return const_iterator(m_head);
     }
 
     template<typename T>
-    auto List<T>::cbegin() const noexcept -> List<T>::const_iterator
+    auto List<T>::cbegin() const noexcept -> const_iterator
     {
         return begin();
     }
 
     template<typename T>
-    auto List<T>::end() noexcept -> List<T>::iterator
+    auto List<T>::end() noexcept -> iterator
     {
         return iterator(m_tail);
     }
 
     template<typename T>
-    auto List<T>::end() const noexcept -> List<T>::const_iterator
+    auto List<T>::end() const noexcept -> const_iterator
     {
         return const_iterator(m_tail);
     }
 
     template<typename T>
-    auto List<T>::cend() const noexcept -> List<T>::const_iterator
+    auto List<T>::cend() const noexcept -> const_iterator
     {
         return end();
     }
@@ -1531,13 +1531,13 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::insert(const const_iterator& pos, const_reference value) -> List<T>::iterator
+    auto List<T>::insert(const const_iterator& pos, const_reference value) -> iterator
     {
         return insert(pos, 1, value);
     }
 
     template<typename T>
-    auto List<T>::insert(const const_iterator& pos, T&& value) -> List<T>::iterator
+    auto List<T>::insert(const const_iterator& pos, T&& value) -> iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1551,7 +1551,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::insert(const const_iterator& pos, size_type count, const_reference value) -> List<T>::iterator
+    auto List<T>::insert(const const_iterator& pos, size_type count, const_reference value) -> iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1570,7 +1570,7 @@ namespace dsa
     template<typename T>
     template<typename InputIt>
         requires std::input_iterator<InputIt>
-    auto List<T>::insert(const const_iterator& pos, InputIt first, InputIt last) -> List<T>::iterator
+    auto List<T>::insert(const const_iterator& pos, InputIt first, InputIt last) -> iterator
     {
         iterator iter{};
         while (first != last)
@@ -1588,7 +1588,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::insert(const const_iterator& pos, std::initializer_list<T> ilist) -> List<T>::iterator
+    auto List<T>::insert(const const_iterator& pos, std::initializer_list<T> ilist) -> iterator
     {
         return insert(pos, ilist.begin(), ilist.end());
     }
@@ -1625,7 +1625,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::erase(const_iterator pos) -> List<T>::iterator
+    auto List<T>::erase(const_iterator pos) -> iterator
     {
         if (!if_valid_iterator(pos))
         {
@@ -1636,7 +1636,7 @@ namespace dsa
     }
 
     template<typename T>
-    auto List<T>::erase(const_iterator first, const_iterator last) -> List<T>::iterator
+    auto List<T>::erase(const_iterator first, const_iterator last) -> iterator
     {
         if (!if_valid_iterator(first) || !if_valid_iterator(last))
         {
