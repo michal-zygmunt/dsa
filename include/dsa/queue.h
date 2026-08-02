@@ -56,6 +56,8 @@ namespace dsa
      * @brief Implements Queue class
      *
      * @tparam T type of data stored in Queue
+     *
+     * @todo Add support for custom container type in template parameters
      */
     template<typename T>
     class Queue

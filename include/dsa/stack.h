@@ -56,6 +56,8 @@ namespace dsa
      * @brief Implements Stack class
      *
      * @tparam T type of data stored in Stack
+     *
+     * @todo Add support for custom container type in template parameters
      */
     template<typename T>
     class Stack

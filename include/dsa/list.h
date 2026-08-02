@@ -33,6 +33,8 @@ namespace dsa
      *        elements as internal base
      *
      * @tparam T type of data stored in List Node
+     *
+     * @todo Add support for custom allocator type in template parameters
      */
     template<typename T>
     class List

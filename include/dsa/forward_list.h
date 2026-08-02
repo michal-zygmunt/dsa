@@ -33,6 +33,8 @@ namespace dsa
      *        as internal base
      *
      * @tparam T type of data stored in ForwardList Node
+     *
+     * @todo Add support for custom allocator type in template parameters
      */
     template<typename T>
     class ForwardList
