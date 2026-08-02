@@ -495,14 +495,15 @@ namespace dsa
         /**
          * @brief Construct a new PriorityQueue object from base Container using copy constructor
          *
-         * @param[in] cont object of type Container
+         * @param[in] compare comparison function object
          */
         explicit PriorityQueue(const Compare& compare);
 
         /**
          * @brief Construct a new PriorityQueue object from base Container using move constructor
          *
-         * @param[in,out] cont PriorityQueue object of type Container
+         * @param[in] compare comparison function object
+         * @param[in] cont container to be used as source for initialization od underlying container
          */
         PriorityQueue(const Compare& compare, const Container& cont);
 
@@ -510,7 +511,8 @@ namespace dsa
          * @brief Construct a new PriorityQueue object from base Container using move constructor
          * @details Content of other object will be taken by constructed object
          *
-         * @param[in,out] cont PriorityQueue object of type Container
+         * @param[in] compare comparison function object
+         * @param[in, out] cont container to be used as source for initialization od underlying container
          */
         PriorityQueue(const Compare& compare, Container&& cont) noexcept;
 
@@ -816,7 +818,7 @@ namespace dsa
      *
      * @tparam T type of initializer list elements
      * @param[in,out] out reference to output stream
-     * @param[in] PriorityQueue PriorityQueue to print
+     * @param[in] priorityQueue PriorityQueue to print
      * @return std::ostream& reference to std::ostream
      */
     template<typename T, typename Container, typename Compare>
