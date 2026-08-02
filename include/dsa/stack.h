@@ -24,9 +24,31 @@ namespace dsa
     template<typename T>
     class Stack;
 
+    /**
+     * @brief The relational operator compares two Stack objects
+     *
+     * @tparam T type of data stored in Stack
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @retval true if containers are equal
+     * @retval false if containers are not equal
+     */
     template<typename T>
     auto operator==(const Stack<T>& lhs, const Stack<T>& rhs) -> bool;
 
+    /**
+     * @brief The relational operator compares two Stack objects
+     *
+     * Depending on type T, function returns one of following objects:
+     * std::strong_ordering::less / equal / greater
+     * std::weak_ordering::less / equivalent / greater
+     * std::partial_ordering::less / equivalent / greater / unordered
+     * It is best to compare results with 0 to determine if lhs is <, >, or == to rhs
+     *
+     * @param[in] lhs input container
+     * @param[in] rhs input container
+     * @return three way comparison result type
+     */
     template<typename T>
     auto operator<=>(const Stack<T>& lhs, const Stack<T>& rhs) -> std::compare_three_way_result_t<T>;
 
@@ -116,7 +138,7 @@ namespace dsa
          * @param[in] other Stack object of type T
          * @return Stack& reference to Stack object
          */
-        auto operator=(const Stack<T>& other) -> Stack&;
+        auto operator=(const Stack<T>& other) -> Stack<T>&;
 
         /**
          * @brief Assign Stack object using move assignment
@@ -125,7 +147,7 @@ namespace dsa
          * @param[in,out] other Stack object of type T
          * @return Stack& reference to Stack object
          */
-        auto operator=(Stack<T>&& other) noexcept -> Stack&;
+        auto operator=(Stack<T>&& other) noexcept -> Stack<T>&;
 
         /**
          * @brief Destroy the Stack object
@@ -283,13 +305,13 @@ namespace dsa
     }
 
     template<typename T>
-    auto Stack<T>::top() -> Stack<T>::reference
+    auto Stack<T>::top() -> reference
     {
         return container.back();
     }
 
     template<typename T>
-    auto Stack<T>::top() const -> Stack<T>::const_reference
+    auto Stack<T>::top() const -> const_reference
     {
         return container.back();
     }
@@ -359,34 +381,12 @@ namespace dsa
         return out;
     }
 
-    /**
-     * @brief The relational operator compares two Stack objects
-     *
-     * @tparam T type of data stored in Stack
-     * @param[in] lhs input container
-     * @param[in] rhs input container
-     * @retval true if containers are equal
-     * @retval false if containers are not equal
-     */
     template<typename T>
     auto operator==(const Stack<T>& lhs, const Stack<T>& rhs) -> bool
     {
         return lhs.container == rhs.container;
     }
 
-    /**
-     * @brief The relational operator compares two Stack objects
-     *
-     * Depending on type T, function returns one of following objects:
-     * std::strong_ordering::less / equal / greater
-     * std::weak_ordering::less / equivalent / greater
-     * std::partial_ordering::less / equivalent / greater / unordered
-     * It is best to compare results with 0 to determine if lhs is <, >, or == to rhs
-     *
-     * @param[in] lhs input container
-     * @param[in] rhs input container
-     * @return three way comparison result type
-     */
     template<typename T>
     auto operator<=>(const Stack<T>& lhs, const Stack<T>& rhs) -> std::compare_three_way_result_t<T>
     {
