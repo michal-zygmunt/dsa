@@ -34,6 +34,8 @@ namespace dsa
      *       `dsa::Vector<bool>` behaves like a regular container,
      *       without bit-packing. This design choice prioritizes correctness
      *       and predictable semantics over memory optimization.
+     *
+     * @todo Add support for custom allocator type in template parameters
      */
     template<typename T>
     class Vector

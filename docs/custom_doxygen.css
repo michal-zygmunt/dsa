@@ -1,0 +1,10 @@
+
+/*
+	All SVG graphs were embedded as iframes and drawn with white background
+	in light and dark mode.
+	Condition apply transparent background to all iframes with SVG source.
+*/
+
+iframe[src*=".svg"] {
+	background-color: transparent;
+}
